@@ -16,6 +16,8 @@ export default function GroceryLayout() {
       }}
     >
       <Stack.Screen name="[id]" options={{ title: t('grocery.title') }} />
+      <Stack.Screen name="link/[itemId]" options={{ title: t('grocery.selectProduct') }} />
+      <Stack.Screen name="compare/[id]" options={{ title: t('grocery.compare.title') }} />
     </Stack>
   );
 }

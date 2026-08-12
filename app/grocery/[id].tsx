@@ -1,6 +1,6 @@
 /** Grocery list detail: live items, purchase toggle, totals, and checkout. */
 
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -21,6 +21,7 @@ import {
 import { addItemSchema } from '@/features/grocery/schemas';
 import { actualTotalMinor, estimatedTotalMinor, purchasedCount } from '@/features/grocery/totals';
 import { listMembers } from '@/features/household/api';
+import { listProducts } from '@/features/retail/api';
 import type { AccountRow, CategoryRow, GroceryItemRow, GroceryListRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
@@ -29,6 +30,7 @@ import { validate } from '@/lib/validation';
 
 export default function GroceryListScreen() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const listId = String(id);
 
@@ -37,6 +39,7 @@ export default function GroceryListScreen() {
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [names, setNames] = useState<Record<string, string>>({});
+  const [productNames, setProductNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -68,7 +71,11 @@ export default function GroceryListScreen() {
           members.map((m) => [m.user_id, m.profile?.display_name || m.profile?.email || '']),
         ),
       );
-      if (l) setCategories(await listCategories(l.household_id, 'expense'));
+      if (l) {
+        setCategories(await listCategories(l.household_id, 'expense'));
+        const prods = await listProducts(l.household_id);
+        setProductNames(Object.fromEntries(prods.map((p) => [p.id, p.name])));
+      }
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -181,6 +188,13 @@ export default function GroceryListScreen() {
           <Text variant="caption" muted>
             {t('grocery.purchasedOf', { done: purchasedCount(items), total: items.length })}
           </Text>
+          {items.some((it) => it.product_id) && (
+            <Button
+              label={t('grocery.compareCta')}
+              variant="secondary"
+              onPress={() => router.push(`/grocery/compare/${listId}`)}
+            />
+          )}
         </View>
 
         <View style={styles.list}>
@@ -198,6 +212,13 @@ export default function GroceryListScreen() {
                 {t('grocery.addedBy', { name: nameFor(it.added_by) })}
                 {it.is_purchased ? ` · ${t('grocery.purchasedBy', { name: nameFor(it.purchased_by) })}` : ''}
               </Text>
+              <Pressable onPress={() => router.push(`/grocery/link/${it.id}`)}>
+                <Text variant="caption" style={{ color: palette.brand }}>
+                  {it.product_id
+                    ? t('grocery.linkedTo', { name: productNames[it.product_id] ?? '…' })
+                    : t('grocery.linkProduct')}
+                </Text>
+              </Pressable>
               {!isCompleted && (
                 <View style={styles.inlineRow}>
                   {!it.is_purchased && (
