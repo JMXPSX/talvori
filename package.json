@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:rls": "node tests/integration/rls-isolation.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",

@@ -17,8 +17,15 @@ export type ValidationResult<T> =
   | { success: true; data: T }
   | { success: false; error: AppError; fieldErrors: Record<string, string[]> };
 
-/** Safe parse that never throws; ideal for form validation with field errors. */
-export function validate<T>(schema: z.ZodType<T>, input: unknown): ValidationResult<T> {
+/**
+ * Safe parse that never throws; ideal for form validation with field errors.
+ * Inferring from `S extends ZodTypeAny` (not `ZodType<T>`) yields the schema's
+ * OUTPUT type, so `.default()`/`.transform()` fields are correctly non-optional.
+ */
+export function validate<S extends z.ZodTypeAny>(
+  schema: S,
+  input: unknown,
+): ValidationResult<z.infer<S>> {
   const result = schema.safeParse(input);
   if (result.success) {
     return { success: true, data: result.data };
@@ -36,7 +43,7 @@ export function validate<T>(schema: z.ZodType<T>, input: unknown): ValidationRes
 }
 
 /** Parse-or-throw for non-form boundaries (deep links, config, API responses). */
-export function parseOrThrow<T>(schema: z.ZodType<T>, input: unknown): T {
+export function parseOrThrow<S extends z.ZodTypeAny>(schema: S, input: unknown): z.infer<S> {
   const result = schema.safeParse(input);
   if (!result.success) {
     throw new AppError('validation', {

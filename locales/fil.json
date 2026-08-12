@@ -51,6 +51,44 @@
     "moreTitle": "Iba pa",
     "moreBody": "Dito lalabas ang sambahayan, mga layunin, seguridad at settings."
   },
+  "household": {
+    "open": "Pamahalaan ang mga sambahayan",
+    "title": "Mga Sambahayan",
+    "empty": "Wala ka pang sambahayan. Gumawa ng isa para magsimula.",
+    "createTitle": "Gumawa ng sambahayan",
+    "nameLabel": "Pangalan ng sambahayan",
+    "currencyLabel": "Reporting currency",
+    "currencyHint": "ISO code, hal. USD, PHP, SAR",
+    "crossBorderLabel": "Nakatira sa magkakaibang bansa ang mga miyembro",
+    "createCta": "Gumawa ng sambahayan",
+    "membersTitle": "Mga Miyembro",
+    "invitationsTitle": "Mga nakabinbing imbitasyon",
+    "inviteTitle": "Mag-imbita gamit ang email",
+    "roleLabel": "Tungkulin",
+    "inviteCta": "Ipadala ang imbitasyon",
+    "inviteCreatedTitle": "Nagawa ang imbitasyon",
+    "inviteCreatedBody": "Ibahagi ang token na ito kay {{email}}. Tatanggapin nila ito habang naka-sign in sa email na iyon.",
+    "revoke": "Bawiin",
+    "joinTitle": "Sumali sa sambahayan",
+    "tokenLabel": "Token ng imbitasyon",
+    "joinCta": "Tanggapin ang imbitasyon",
+    "joined": "Sumali ka na sa sambahayan.",
+    "you": "(ikaw)",
+    "noInvitations": "Walang nakabinbing imbitasyon.",
+    "roles": {
+      "owner": "May-ari",
+      "admin": "Admin",
+      "member": "Miyembro",
+      "viewer": "Viewer"
+    },
+    "errors": {
+      "createFailed": "Hindi nagawa ang sambahayan. Pakisubukang muli.",
+      "loadFailed": "Hindi ma-load ang datos ng sambahayan.",
+      "inviteFailed": "Hindi naipadala ang imbitasyon.",
+      "revokeFailed": "Hindi nabawi ang imbitasyon.",
+      "acceptFailed": "Ang imbitasyon ay hindi wasto, expired, o para sa ibang email."
+    }
+  },
   "errors": {
     "unknown": "May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",

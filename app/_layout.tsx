@@ -58,6 +58,7 @@ function RootNavigator() {
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="household" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ title: t('auth.loginTitle') }} />
       <Stack.Screen name="signup" options={{ title: t('auth.signupTitle') }} />
     </Stack>

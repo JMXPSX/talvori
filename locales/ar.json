@@ -51,6 +51,44 @@
     "moreTitle": "المزيد",
     "moreBody": "ستظهر هنا الأسرة والأهداف والأمان والإعدادات."
   },
+  "household": {
+    "open": "إدارة الأسر",
+    "title": "الأسر",
+    "empty": "لست في أي أسرة بعد. أنشئ واحدة للبدء.",
+    "createTitle": "إنشاء أسرة",
+    "nameLabel": "اسم الأسرة",
+    "currencyLabel": "عملة التقارير",
+    "currencyHint": "رمز ISO، مثل USD أو PHP أو SAR",
+    "crossBorderLabel": "يعيش أفراد الأسرة في بلدان مختلفة",
+    "createCta": "إنشاء أسرة",
+    "membersTitle": "الأعضاء",
+    "invitationsTitle": "الدعوات المعلّقة",
+    "inviteTitle": "دعوة عبر البريد الإلكتروني",
+    "roleLabel": "الدور",
+    "inviteCta": "إرسال الدعوة",
+    "inviteCreatedTitle": "تم إنشاء الدعوة",
+    "inviteCreatedBody": "شارك هذا الرمز مع {{email}}. يقبلونه بعد تسجيل الدخول بذلك البريد.",
+    "revoke": "إلغاء",
+    "joinTitle": "الانضمام إلى أسرة",
+    "tokenLabel": "رمز الدعوة",
+    "joinCta": "قبول الدعوة",
+    "joined": "لقد انضممت إلى الأسرة.",
+    "you": "(أنت)",
+    "noInvitations": "لا توجد دعوات معلّقة.",
+    "roles": {
+      "owner": "المالك",
+      "admin": "مشرف",
+      "member": "عضو",
+      "viewer": "مشاهد"
+    },
+    "errors": {
+      "createFailed": "تعذّر إنشاء الأسرة. يرجى المحاولة مرة أخرى.",
+      "loadFailed": "تعذّر تحميل بيانات الأسرة.",
+      "inviteFailed": "تعذّر إرسال الدعوة.",
+      "revokeFailed": "تعذّر إلغاء الدعوة.",
+      "acceptFailed": "هذه الدعوة غير صالحة أو منتهية أو لبريد مختلف."
+    }
+  },
   "errors": {
     "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "network": "مشكلة في الشبكة. تحقق من اتصالك وأعد المحاولة.",

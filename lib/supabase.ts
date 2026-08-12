@@ -17,7 +17,11 @@ import { Platform } from 'react-native';
 import { env } from '@/lib/env';
 import { AppError } from '@/lib/errors';
 
-function createSupabaseClient(): SupabaseClient | null {
+// The client is left schema-agnostic; the data layer (features/*/api.ts) casts
+// query results to the domain types in lib/database.types.ts at the boundary.
+export type AppSupabaseClient = SupabaseClient;
+
+function createSupabaseClient(): AppSupabaseClient | null {
   if (!env.isSupabaseConfigured) return null;
 
   const isWeb = Platform.OS === 'web';
@@ -43,7 +47,7 @@ export const isSupabaseConfigured = env.isSupabaseConfigured;
  * Returns the client or throws a typed config error. Use this in feature code
  * (Phase 2+) so a missing backend fails loudly and consistently.
  */
-export function getSupabase(): SupabaseClient {
+export function getSupabase(): AppSupabaseClient {
   if (!supabase) {
     throw new AppError('config', {
       messageKey: 'errors.config',

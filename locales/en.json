@@ -51,6 +51,44 @@
     "moreTitle": "More",
     "moreBody": "Household, goals, security and settings will appear here."
   },
+  "household": {
+    "open": "Manage households",
+    "title": "Households",
+    "empty": "You're not in a household yet. Create one to get started.",
+    "createTitle": "Create household",
+    "nameLabel": "Household name",
+    "currencyLabel": "Reporting currency",
+    "currencyHint": "ISO code, e.g. USD, PHP, SAR",
+    "crossBorderLabel": "Members live in different countries",
+    "createCta": "Create household",
+    "membersTitle": "Members",
+    "invitationsTitle": "Pending invitations",
+    "inviteTitle": "Invite by email",
+    "roleLabel": "Role",
+    "inviteCta": "Send invite",
+    "inviteCreatedTitle": "Invitation created",
+    "inviteCreatedBody": "Share this token with {{email}}. They accept it while signed in with that email.",
+    "revoke": "Revoke",
+    "joinTitle": "Join a household",
+    "tokenLabel": "Invitation token",
+    "joinCta": "Accept invitation",
+    "joined": "You've joined the household.",
+    "you": "(you)",
+    "noInvitations": "No pending invitations.",
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member",
+      "viewer": "Viewer"
+    },
+    "errors": {
+      "createFailed": "Couldn't create the household. Please try again.",
+      "loadFailed": "Couldn't load household data.",
+      "inviteFailed": "Couldn't send the invitation.",
+      "revokeFailed": "Couldn't revoke the invitation.",
+      "acceptFailed": "That invitation is invalid, expired, or for a different email."
+    }
+  },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
     "network": "Network problem. Check your connection and retry.",

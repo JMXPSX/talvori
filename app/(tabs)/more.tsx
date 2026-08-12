@@ -1,10 +1,11 @@
 /** More tab. Hosts sign-out now; household, goals, security, settings land later. */
 
+import { Link } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { spacing } from '@/components/theme';
+import { palette, spacing } from '@/components/theme';
 import { Button, Screen, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 
@@ -31,6 +32,10 @@ export default function MoreScreen() {
           {user.email}
         </Text>
       ) : null}
+      <Link href="/household" style={styles.link}>
+        <Text style={{ color: palette.brand }}>{t('household.open')}</Text>
+      </Link>
+
       <View style={styles.actions}>
         <Button
           label={t('auth.signOut')}
@@ -44,6 +49,9 @@ export default function MoreScreen() {
 }
 
 const styles = StyleSheet.create({
+  link: {
+    marginTop: spacing.md,
+  },
   actions: {
     marginTop: spacing.lg,
   },
