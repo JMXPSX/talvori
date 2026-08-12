@@ -352,6 +352,42 @@
       "deleteFailed": "Hindi mabura."
     }
   },
+  "coupons": {
+    "title": "Mga kupon",
+    "open": "Mga kupon",
+    "active": "Aktibo",
+    "expired": "Paso na",
+    "scheduled": "Nakatakda",
+    "addTitle": "Magdagdag ng kupon",
+    "couponTitle": "Pamagat",
+    "chooseRetailer": "Tindahan",
+    "chooseProduct": "Produkto (opsyonal)",
+    "anyProduct": "Kahit anong produkto",
+    "discountType": "Uri ng diskwento",
+    "fixed": "Takdang halaga",
+    "percent": "Porsyento",
+    "amount": "Halaga",
+    "percentValue": "Porsyento (0-100)",
+    "currency": "Pera",
+    "minPurchase": "Pinakamababang bili",
+    "maxDiscount": "Pinakamataas na diskwento",
+    "code": "Code",
+    "sourceUrl": "Saan makukuha (URL)",
+    "expiresAt": "Paso (YYYY-MM-DD)",
+    "addCta": "Magdagdag ng kupon",
+    "empty": "Wala pang kupon.",
+    "applicableTitle": "Mga kupon",
+    "expectedFinal": "Panghuli: {{price}}",
+    "expectedSavings": "Makakatipid ng {{amount}}",
+    "notApplicable": "Hindi magamit dito",
+    "openLink": "Kunin ang kupon",
+    "delete": "Burahin",
+    "errors": {
+      "loadFailed": "Hindi ma-load ang mga kupon.",
+      "saveFailed": "Hindi ma-save ang kupon.",
+      "deleteFailed": "Hindi mabura ang kupon."
+    }
+  },
   "errors": {
     "unknown": "May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",

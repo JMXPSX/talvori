@@ -352,6 +352,42 @@
       "deleteFailed": "تعذّر الحذف."
     }
   },
+  "coupons": {
+    "title": "الكوبونات",
+    "open": "الكوبونات",
+    "active": "نشط",
+    "expired": "منتهٍ",
+    "scheduled": "مجدول",
+    "addTitle": "إضافة كوبون",
+    "couponTitle": "العنوان",
+    "chooseRetailer": "المتجر",
+    "chooseProduct": "المنتج (اختياري)",
+    "anyProduct": "أي منتج",
+    "discountType": "نوع الخصم",
+    "fixed": "مبلغ ثابت",
+    "percent": "نسبة مئوية",
+    "amount": "المبلغ",
+    "percentValue": "النسبة (0-100)",
+    "currency": "العملة",
+    "minPurchase": "الحد الأدنى للشراء",
+    "maxDiscount": "أقصى خصم",
+    "code": "الرمز",
+    "sourceUrl": "أين تحصل عليه (رابط)",
+    "expiresAt": "ينتهي (YYYY-MM-DD)",
+    "addCta": "إضافة كوبون",
+    "empty": "لا توجد كوبونات بعد.",
+    "applicableTitle": "الكوبونات",
+    "expectedFinal": "النهائي: {{price}}",
+    "expectedSavings": "وفّر {{amount}}",
+    "notApplicable": "غير قابل للتطبيق هنا",
+    "openLink": "احصل على الكوبون",
+    "delete": "حذف",
+    "errors": {
+      "loadFailed": "تعذّر تحميل الكوبونات.",
+      "saveFailed": "تعذّر حفظ الكوبون.",
+      "deleteFailed": "تعذّر حذف الكوبون."
+    }
+  },
   "errors": {
     "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "network": "مشكلة في الشبكة. تحقق من اتصالك وأعد المحاولة.",

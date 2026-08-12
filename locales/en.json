@@ -352,6 +352,42 @@
       "deleteFailed": "Couldn't delete."
     }
   },
+  "coupons": {
+    "title": "Coupons",
+    "open": "Coupons",
+    "active": "Active",
+    "expired": "Expired",
+    "scheduled": "Scheduled",
+    "addTitle": "Add coupon",
+    "couponTitle": "Title",
+    "chooseRetailer": "Retailer",
+    "chooseProduct": "Product (optional)",
+    "anyProduct": "Any product",
+    "discountType": "Discount type",
+    "fixed": "Fixed amount",
+    "percent": "Percent",
+    "amount": "Amount",
+    "percentValue": "Percent (0-100)",
+    "currency": "Currency",
+    "minPurchase": "Minimum purchase",
+    "maxDiscount": "Max discount",
+    "code": "Code",
+    "sourceUrl": "Where to get it (URL)",
+    "expiresAt": "Expires (YYYY-MM-DD)",
+    "addCta": "Add coupon",
+    "empty": "No coupons yet.",
+    "applicableTitle": "Coupons",
+    "expectedFinal": "Final: {{price}}",
+    "expectedSavings": "Save {{amount}}",
+    "notApplicable": "Not applicable here",
+    "openLink": "Get coupon",
+    "delete": "Delete",
+    "errors": {
+      "loadFailed": "Couldn't load coupons.",
+      "saveFailed": "Couldn't save the coupon.",
+      "deleteFailed": "Couldn't delete the coupon."
+    }
+  },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
     "network": "Network problem. Check your connection and retry.",
