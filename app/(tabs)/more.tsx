@@ -35,6 +35,9 @@ export default function MoreScreen() {
       <Link href="/household" style={styles.link}>
         <Text style={{ color: palette.brand }}>{t('household.open')}</Text>
       </Link>
+      <Link href="/retail" style={styles.link}>
+        <Text style={{ color: palette.brand }}>{t('retail.open')}</Text>
+      </Link>
 
       <View style={styles.actions}>
         <Button

@@ -21,6 +21,7 @@
     "expo-constants": "~57.0.10",
     "expo-linking": "~57.0.5",
     "expo-localization": "~57.0.1",
+    "expo-location": "~57.0.9",
     "expo-router": "~57.0.12",
     "expo-status-bar": "~57.0.1",
     "expo-system-ui": "~57.0.2",
