@@ -325,6 +325,7 @@ export interface GroceryItemRow {
   id: string;
   list_id: string;
   household_id: string;
+  product_id: string | null;
   name: string;
   quantity: number;
   unit: string | null;

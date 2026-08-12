@@ -173,6 +173,18 @@ export async function completeList(
   return data as string;
 }
 
+/** Link (or clear) the catalog product a list item refers to. */
+export async function setGroceryItemProduct(
+  itemId: string,
+  productId: string | null,
+): Promise<void> {
+  const { error } = await getSupabase()
+    .from('grocery_items')
+    .update({ product_id: productId })
+    .eq('id', itemId);
+  if (error) fail('grocery.errors.saveFailed', error);
+}
+
 // --- realtime --------------------------------------------------------------
 /** Subscribe to any list change in a household. Returns an unsubscribe fn. */
 export function subscribeToLists(householdId: string, onChange: () => void): () => void {
