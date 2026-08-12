@@ -304,3 +304,37 @@ export interface Database {
     CompositeTypes: Record<string, never>;
   };
 }
+
+// --- Phase 4: shared shopping (grocery) ------------------------------------
+export type GroceryListStatus = 'active' | 'completed' | 'archived';
+
+export interface GroceryListRow {
+  id: string;
+  household_id: string;
+  name: string;
+  currency_code: string;
+  status: GroceryListStatus;
+  completed_at: string | null;
+  completed_transaction_id: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GroceryItemRow {
+  id: string;
+  list_id: string;
+  household_id: string;
+  name: string;
+  quantity: number;
+  unit: string | null;
+  estimated_price_minor: number | null;
+  actual_price_minor: number | null;
+  is_purchased: boolean;
+  added_by: string;
+  purchased_by: string | null;
+  purchased_at: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
