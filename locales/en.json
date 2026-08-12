@@ -158,6 +158,69 @@
       "deleteFailed": "Couldn't delete that."
     }
   },
+  "planning": {
+    "hubTitle": "Planning",
+    "budgets": {
+      "title": "Budgets",
+      "hub": "Budgets",
+      "empty": "No budgets yet.",
+      "addTitle": "New budget",
+      "nameLabel": "Budget name",
+      "currencyLabel": "Currency",
+      "startLabel": "Period start (YYYY-MM-DD)",
+      "endLabel": "Period end (YYYY-MM-DD)",
+      "createCta": "Create budget",
+      "allocationsTitle": "Category limits",
+      "categoryLabel": "Category",
+      "limitLabel": "Limit",
+      "addAllocationCta": "Add limit",
+      "uncategorized": "Uncategorized",
+      "limit": "Limit",
+      "spent": "Spent",
+      "remaining": "Remaining"
+    },
+    "goals": {
+      "title": "Savings goals",
+      "hub": "Savings goals",
+      "empty": "No goals yet.",
+      "addTitle": "New goal",
+      "nameLabel": "Goal name",
+      "currencyLabel": "Currency",
+      "targetLabel": "Target amount",
+      "targetDateLabel": "Target date (optional, YYYY-MM-DD)",
+      "createCta": "Create goal",
+      "saved": "Saved",
+      "remaining": "Remaining",
+      "contributeCta": "Add contribution",
+      "amountLabel": "Amount",
+      "noteLabel": "Note (optional)"
+    },
+    "debts": {
+      "title": "Debts",
+      "hub": "Debts",
+      "empty": "No debts yet.",
+      "addTitle": "New debt",
+      "nameLabel": "Debt name",
+      "currencyLabel": "Currency",
+      "principalLabel": "Amount owed",
+      "aprLabel": "APR % (optional)",
+      "dueDayLabel": "Due day 1-31 (optional)",
+      "createCta": "Add debt",
+      "balance": "Balance",
+      "payCta": "Record payment",
+      "amountLabel": "Amount",
+      "noteLabel": "Note (optional)"
+    },
+    "errors": {
+      "loadFailed": "Couldn't load planning data.",
+      "budgetFailed": "Couldn't save the budget.",
+      "allocationFailed": "Couldn't save the limit.",
+      "goalFailed": "Couldn't save the goal.",
+      "contributeFailed": "Couldn't save the contribution.",
+      "debtFailed": "Couldn't save the debt.",
+      "payFailed": "Couldn't record the payment."
+    }
+  },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
     "network": "Network problem. Check your connection and retry.",

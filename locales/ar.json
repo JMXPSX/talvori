@@ -158,6 +158,69 @@
       "deleteFailed": "تعذّر حذف ذلك."
     }
   },
+  "planning": {
+    "hubTitle": "التخطيط",
+    "budgets": {
+      "title": "الميزانيات",
+      "hub": "الميزانيات",
+      "empty": "لا توجد ميزانيات بعد.",
+      "addTitle": "ميزانية جديدة",
+      "nameLabel": "اسم الميزانية",
+      "currencyLabel": "العملة",
+      "startLabel": "بداية الفترة (YYYY-MM-DD)",
+      "endLabel": "نهاية الفترة (YYYY-MM-DD)",
+      "createCta": "إنشاء ميزانية",
+      "allocationsTitle": "حدود الفئات",
+      "categoryLabel": "الفئة",
+      "limitLabel": "الحد",
+      "addAllocationCta": "إضافة حد",
+      "uncategorized": "بدون فئة",
+      "limit": "الحد",
+      "spent": "المصروف",
+      "remaining": "المتبقي"
+    },
+    "goals": {
+      "title": "أهداف الادخار",
+      "hub": "أهداف الادخار",
+      "empty": "لا توجد أهداف بعد.",
+      "addTitle": "هدف جديد",
+      "nameLabel": "اسم الهدف",
+      "currencyLabel": "العملة",
+      "targetLabel": "المبلغ المستهدف",
+      "targetDateLabel": "التاريخ المستهدف (اختياري، YYYY-MM-DD)",
+      "createCta": "إنشاء هدف",
+      "saved": "المُدّخر",
+      "remaining": "المتبقي",
+      "contributeCta": "إضافة مساهمة",
+      "amountLabel": "المبلغ",
+      "noteLabel": "ملاحظة (اختياري)"
+    },
+    "debts": {
+      "title": "الديون",
+      "hub": "الديون",
+      "empty": "لا توجد ديون بعد.",
+      "addTitle": "دين جديد",
+      "nameLabel": "اسم الدين",
+      "currencyLabel": "العملة",
+      "principalLabel": "المبلغ المستحق",
+      "aprLabel": "٪ APR (اختياري)",
+      "dueDayLabel": "يوم الاستحقاق 1-31 (اختياري)",
+      "createCta": "إضافة دين",
+      "balance": "الرصيد",
+      "payCta": "تسجيل دفعة",
+      "amountLabel": "المبلغ",
+      "noteLabel": "ملاحظة (اختياري)"
+    },
+    "errors": {
+      "loadFailed": "تعذّر تحميل بيانات التخطيط.",
+      "budgetFailed": "تعذّر حفظ الميزانية.",
+      "allocationFailed": "تعذّر حفظ الحد.",
+      "goalFailed": "تعذّر حفظ الهدف.",
+      "contributeFailed": "تعذّر حفظ المساهمة.",
+      "debtFailed": "تعذّر حفظ الدين.",
+      "payFailed": "تعذّر تسجيل الدفعة."
+    }
+  },
   "errors": {
     "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "network": "مشكلة في الشبكة. تحقق من اتصالك وأعد المحاولة.",

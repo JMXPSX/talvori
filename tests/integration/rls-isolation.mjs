@@ -168,6 +168,37 @@ async function main() {
     .eq('type', 'transfer');
   ok('transfer created two legs', (legs ?? []).length === 2);
 
+  // A sets up a savings goal (+contribution) and a debt (+payment).
+  const { data: goal } = await a
+    .from('savings_goals')
+    .insert({ household_id: hid, name: 'Emergency', currency_code: 'PHP', target_minor: 100000, created_by: idA })
+    .select('*')
+    .single();
+  await a
+    .from('goal_contributions')
+    .insert({ goal_id: goal?.id, household_id: hid, amount_minor: 25000, created_by: idA });
+  const { data: gs } = await a
+    .from('savings_goal_status')
+    .select('saved_minor')
+    .eq('goal_id', goal?.id)
+    .single();
+  ok('goal status reflects contribution (25000)', gs?.saved_minor === 25000);
+
+  const { data: debt } = await a
+    .from('debts')
+    .insert({ household_id: hid, name: 'Loan', currency_code: 'PHP', principal_minor: 500000, created_by: idA })
+    .select('*')
+    .single();
+  await a
+    .from('debt_payments')
+    .insert({ debt_id: debt?.id, household_id: hid, amount_minor: 100000, created_by: idA });
+  const { data: ds } = await a
+    .from('debt_status')
+    .select('balance_minor')
+    .eq('debt_id', debt?.id)
+    .single();
+  ok('debt status reflects payment (balance 400000)', ds?.balance_minor === 400000);
+
   // B CANNOT read A's household.
   const { data: bSeesHousehold } = await b.from('households').select('id').eq('id', hid);
   ok('B cannot read A\'s household (RLS)', (bSeesHousehold ?? []).length === 0);
@@ -215,6 +246,12 @@ async function main() {
     created_by: idB,
   });
   ok('B cannot write a transaction into A\'s household', Boolean(bTxErr));
+
+  // B CANNOT read A's savings goals or debts (not a member yet).
+  const { data: bGoals } = await b.from('savings_goals').select('id').eq('household_id', hid);
+  ok('B cannot read A\'s savings goals (RLS)', (bGoals ?? []).length === 0);
+  const { data: bDebts } = await b.from('debts').select('id').eq('household_id', hid);
+  ok('B cannot read A\'s debts (RLS)', (bDebts ?? []).length === 0);
 
   // Positive path: A invites B, B accepts, B becomes a member.
   const { error: inviteErr } = await a.from('household_invitations').insert({

@@ -158,6 +158,69 @@
       "deleteFailed": "Hindi nabura iyon."
     }
   },
+  "planning": {
+    "hubTitle": "Pagpaplano",
+    "budgets": {
+      "title": "Mga Badyet",
+      "hub": "Mga Badyet",
+      "empty": "Wala pang badyet.",
+      "addTitle": "Bagong badyet",
+      "nameLabel": "Pangalan ng badyet",
+      "currencyLabel": "Currency",
+      "startLabel": "Simula ng panahon (YYYY-MM-DD)",
+      "endLabel": "Katapusan ng panahon (YYYY-MM-DD)",
+      "createCta": "Gumawa ng badyet",
+      "allocationsTitle": "Mga limitasyon sa kategorya",
+      "categoryLabel": "Kategorya",
+      "limitLabel": "Limitasyon",
+      "addAllocationCta": "Magdagdag ng limitasyon",
+      "uncategorized": "Walang kategorya",
+      "limit": "Limitasyon",
+      "spent": "Nagastos",
+      "remaining": "Natitira"
+    },
+    "goals": {
+      "title": "Mga Layunin sa Ipon",
+      "hub": "Mga Layunin sa Ipon",
+      "empty": "Wala pang layunin.",
+      "addTitle": "Bagong layunin",
+      "nameLabel": "Pangalan ng layunin",
+      "currencyLabel": "Currency",
+      "targetLabel": "Target na halaga",
+      "targetDateLabel": "Target na petsa (opsyonal, YYYY-MM-DD)",
+      "createCta": "Gumawa ng layunin",
+      "saved": "Naipon",
+      "remaining": "Natitira",
+      "contributeCta": "Magdagdag ng kontribusyon",
+      "amountLabel": "Halaga",
+      "noteLabel": "Tala (opsyonal)"
+    },
+    "debts": {
+      "title": "Mga Utang",
+      "hub": "Mga Utang",
+      "empty": "Wala pang utang.",
+      "addTitle": "Bagong utang",
+      "nameLabel": "Pangalan ng utang",
+      "currencyLabel": "Currency",
+      "principalLabel": "Halagang utang",
+      "aprLabel": "APR % (opsyonal)",
+      "dueDayLabel": "Araw ng bayad 1-31 (opsyonal)",
+      "createCta": "Magdagdag ng utang",
+      "balance": "Balanse",
+      "payCta": "Magtala ng bayad",
+      "amountLabel": "Halaga",
+      "noteLabel": "Tala (opsyonal)"
+    },
+    "errors": {
+      "loadFailed": "Hindi ma-load ang datos ng pagpaplano.",
+      "budgetFailed": "Hindi na-save ang badyet.",
+      "allocationFailed": "Hindi na-save ang limitasyon.",
+      "goalFailed": "Hindi na-save ang layunin.",
+      "contributeFailed": "Hindi na-save ang kontribusyon.",
+      "debtFailed": "Hindi na-save ang utang.",
+      "payFailed": "Hindi naitala ang bayad."
+    }
+  },
   "errors": {
     "unknown": "May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",

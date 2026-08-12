@@ -109,6 +109,105 @@ export interface AccountBalanceRow {
   balance_minor: number;
 }
 
+// --- Phase 3 slice 3b: budgets / goals / debts -----------------------------
+export interface BudgetRow {
+  id: string;
+  household_id: string;
+  name: string;
+  currency_code: string;
+  period_start: string;
+  period_end: string;
+  is_archived: boolean;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BudgetAllocationRow {
+  id: string;
+  budget_id: string;
+  household_id: string;
+  category_id: string | null;
+  limit_minor: number;
+  created_at: string;
+}
+
+export interface BudgetStatusRow {
+  allocation_id: string;
+  budget_id: string;
+  household_id: string;
+  category_id: string | null;
+  currency_code: string;
+  limit_minor: number;
+  spent_minor: number;
+}
+
+export interface SavingsGoalRow {
+  id: string;
+  household_id: string;
+  name: string;
+  currency_code: string;
+  target_minor: number;
+  target_date: string | null;
+  is_archived: boolean;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GoalContributionRow {
+  id: string;
+  goal_id: string;
+  household_id: string;
+  amount_minor: number;
+  occurred_at: string;
+  note: string | null;
+  created_by: string;
+  created_at: string;
+}
+
+export interface SavingsGoalStatusRow {
+  goal_id: string;
+  household_id: string;
+  currency_code: string;
+  target_minor: number;
+  saved_minor: number;
+}
+
+export interface DebtRow {
+  id: string;
+  household_id: string;
+  name: string;
+  currency_code: string;
+  principal_minor: number;
+  apr: number | null;
+  due_day: number | null;
+  is_archived: boolean;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DebtPaymentRow {
+  id: string;
+  debt_id: string;
+  household_id: string;
+  amount_minor: number;
+  occurred_at: string;
+  note: string | null;
+  created_by: string;
+  created_at: string;
+}
+
+export interface DebtStatusRow {
+  debt_id: string;
+  household_id: string;
+  currency_code: string;
+  principal_minor: number;
+  paid_minor: number;
+  balance_minor: number;
+}
+
 export interface Database {
   public: {
     Tables: {

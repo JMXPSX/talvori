@@ -19,6 +19,9 @@ export default function FinanceLayout() {
       <Stack.Screen name="entry" options={{ title: t('finance.entry.saveCta') }} />
       <Stack.Screen name="transfer" options={{ title: t('finance.transfer.title') }} />
       <Stack.Screen name="categories" options={{ title: t('finance.categories.title') }} />
+      <Stack.Screen name="budgets" options={{ title: t('planning.budgets.title') }} />
+      <Stack.Screen name="goals" options={{ title: t('planning.goals.title') }} />
+      <Stack.Screen name="debts" options={{ title: t('planning.debts.title') }} />
     </Stack>
   );
 }
