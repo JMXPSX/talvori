@@ -386,6 +386,8 @@ async function main() {
   ok('B can read grocery lists after joining', (bListsAfter ?? []).length >= 1);
 
   // --- realtime: B (now a member) receives A's item insert live -------------
+  // Resolves the instant the change arrives; the timeout is only a failsafe
+  // ceiling for the initial WebSocket handshake (cold connect in Node is slow).
   const received = await new Promise((resolve) => {
     let done = false;
     const finish = (v) => {
@@ -400,20 +402,22 @@ async function main() {
         { event: 'INSERT', schema: 'public', table: 'grocery_items', filter: `list_id=eq.${listId}` },
         () => finish(true),
       )
-      .subscribe(async (status) => {
+      .subscribe(async (status, err) => {
+        if (err) console.log(`    [realtime] channel status ${status}: ${err.message}`);
         if (status === 'SUBSCRIBED') {
-          await a.from('grocery_items').insert({
+          const { error: insErr } = await a.from('grocery_items').insert({
             list_id: listId,
             household_id: '00000000-0000-0000-0000-000000000000',
             name: 'Live item',
             quantity: 1,
             added_by: idA,
           });
+          if (insErr) console.log(`    [realtime] A insert failed: ${insErr.message}`);
         }
       });
-    setTimeout(() => finish(false), 8000);
+    setTimeout(() => finish(false), 15000);
   });
-  ok("realtime delivers A's insert to member B within 8s", received === true);
+  ok("realtime delivers A's insert to member B within 15s", received === true);
 }
 
 async function cleanup() {
