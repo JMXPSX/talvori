@@ -327,6 +327,21 @@ async function main() {
     .from('saved_locations').select('is_active').eq('id', loc?.id).single();
   ok('saved location is now active', activeLoc?.is_active === true);
 
+  // --- coupons: A creates a valid coupon; malformed one is rejected ---------
+  const { data: coup, error: coupErr } = await a
+    .from('coupons')
+    .insert({ household_id: hid, retailer_id: ret?.id, title: '10% off',
+      discount_type: 'percent', discount_percent: 10, created_by: idA })
+    .select('id').single();
+  ok('A can create a percent coupon', !coupErr && Boolean(coup?.id));
+
+  // CHECK: a percent coupon may not carry a fixed amount.
+  const { error: badErr } = await a
+    .from('coupons')
+    .insert({ household_id: hid, retailer_id: ret?.id, title: 'bad',
+      discount_type: 'percent', discount_percent: 10, discount_amount_minor: 500, created_by: idA });
+  ok('coupon CHECK rejects a mixed fixed/percent shape', Boolean(badErr));
+
   // B CANNOT read A's household.
   const { data: bSeesHousehold } = await b.from('households').select('id').eq('id', hid);
   ok('B cannot read A\'s household (RLS)', (bSeesHousehold ?? []).length === 0);
@@ -411,6 +426,15 @@ async function main() {
   const { error: bActErr } = await b.rpc('set_active_saved_location', { _id: loc?.id });
   ok("B cannot set-active A's location via RPC", Boolean(bActErr));
 
+  // B CANNOT read or write A's coupons (not a member yet).
+  const { data: bCoupons } = await b.from('coupons').select('id').eq('household_id', hid);
+  ok("B cannot read A's coupons (RLS)", (bCoupons ?? []).length === 0);
+  const { error: bCoupErr } = await b
+    .from('coupons')
+    .insert({ household_id: hid, retailer_id: ret?.id, title: 'x',
+      discount_type: 'percent', discount_percent: 5, created_by: idB });
+  ok("B cannot create a coupon in A's household", Boolean(bCoupErr));
+
   // Positive path: A invites B, B accepts, B becomes a member.
   const { error: inviteErr } = await a.from('household_invitations').insert({
     household_id: hid,
@@ -442,6 +466,9 @@ async function main() {
 
   const { data: bRetAfter } = await b.from('retailers').select('id').eq('household_id', hid);
   ok('B can read retailers after joining', (bRetAfter ?? []).length >= 1);
+
+  const { data: bCouponsAfter } = await b.from('coupons').select('id').eq('household_id', hid);
+  ok('B can read coupons after joining', (bCouponsAfter ?? []).length >= 1);
 
   // --- realtime: B (now a member) receives A's item insert live -------------
   // Resolves the instant the change arrives; the timeout is only a failsafe
