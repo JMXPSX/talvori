@@ -55,6 +55,60 @@ export interface HouseholdInvitationRow {
   accepted_at: string | null;
 }
 
+// --- Phase 3: finance core -------------------------------------------------
+export type AccountType = 'cash' | 'bank' | 'card' | 'wallet' | 'other';
+export type TransactionType = 'income' | 'expense' | 'transfer';
+export type FlowDirection = 'in' | 'out';
+export type CategoryKind = 'income' | 'expense';
+
+export interface AccountRow {
+  id: string;
+  household_id: string;
+  name: string;
+  type: AccountType;
+  currency_code: string;
+  opening_balance_minor: number;
+  is_archived: boolean;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CategoryRow {
+  id: string;
+  household_id: string;
+  name: string;
+  kind: CategoryKind;
+  parent_id: string | null;
+  is_archived: boolean;
+  created_at: string;
+}
+
+export interface TransactionRow {
+  id: string;
+  household_id: string;
+  account_id: string;
+  type: TransactionType;
+  direction: FlowDirection;
+  amount_minor: number;
+  currency_code: string;
+  category_id: string | null;
+  description: string | null;
+  occurred_at: string;
+  transfer_group_id: string | null;
+  fx_rate: number | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AccountBalanceRow {
+  account_id: string;
+  household_id: string;
+  currency_code: string;
+  balance_minor: number;
+}
+
 export interface Database {
   public: {
     Tables: {

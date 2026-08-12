@@ -89,6 +89,75 @@
       "acceptFailed": "That invitation is invalid, expired, or for a different email."
     }
   },
+  "finance": {
+    "overviewTitle": "Accounts",
+    "noHousehold": "Create a household first to start tracking money.",
+    "goToHouseholds": "Go to households",
+    "noAccounts": "No accounts yet. Add one to get started.",
+    "manageAccounts": "Manage accounts",
+    "addIncome": "Add income",
+    "addExpense": "Add expense",
+    "addTransfer": "Transfer",
+    "recentTitle": "Recent transactions",
+    "noTransactions": "No transactions yet.",
+    "delete": "Delete",
+    "accounts": {
+      "title": "Accounts",
+      "addTitle": "Add account",
+      "nameLabel": "Account name",
+      "typeLabel": "Type",
+      "currencyLabel": "Currency",
+      "openingBalanceLabel": "Opening balance",
+      "createCta": "Add account",
+      "types": {
+        "cash": "Cash",
+        "bank": "Bank",
+        "card": "Card",
+        "wallet": "Wallet",
+        "other": "Other"
+      }
+    },
+    "entry": {
+      "incomeTitle": "Add income",
+      "expenseTitle": "Add expense",
+      "accountLabel": "Account",
+      "amountLabel": "Amount",
+      "categoryLabel": "Category (optional)",
+      "descriptionLabel": "Note (optional)",
+      "saveCta": "Save",
+      "noAccounts": "Add an account first."
+    },
+    "transfer": {
+      "title": "Transfer",
+      "fromLabel": "From",
+      "toLabel": "To",
+      "fromAmountLabel": "Amount sent",
+      "toAmountLabel": "Amount received",
+      "saveCta": "Transfer",
+      "needTwo": "You need at least two accounts to transfer.",
+      "crossCurrencyHint": "Different currencies — enter the amount in each account's currency."
+    },
+    "categories": {
+      "title": "Categories",
+      "addTitle": "Add category",
+      "nameLabel": "Category name",
+      "kindLabel": "Type",
+      "createCta": "Add category",
+      "income": "Income",
+      "expense": "Expense",
+      "none": "None",
+      "manage": "Manage categories",
+      "empty": "No categories yet."
+    },
+    "errors": {
+      "loadFailed": "Couldn't load your finances.",
+      "accountFailed": "Couldn't save the account.",
+      "categoryFailed": "Couldn't save the category.",
+      "entryFailed": "Couldn't save the transaction.",
+      "transferFailed": "Couldn't complete the transfer.",
+      "deleteFailed": "Couldn't delete that."
+    }
+  },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
     "network": "Network problem. Check your connection and retry.",

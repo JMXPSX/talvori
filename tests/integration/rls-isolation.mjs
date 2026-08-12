@@ -122,6 +122,52 @@ async function main() {
   const { data: aHouseholds } = await a.from('households').select('id');
   ok('A can read own household', (aHouseholds ?? []).some((h) => h.id === hid));
 
+  // --- finance: A sets up an account and records an expense ------------------
+  const { data: acc, error: accErr } = await a
+    .from('accounts')
+    .insert({ household_id: hid, name: 'Cash', currency_code: 'PHP', created_by: idA })
+    .select('*')
+    .single();
+  ok('A can create an account', !accErr && Boolean(acc?.id));
+  const accId = acc?.id;
+
+  const { error: exErr } = await a.from('transactions').insert({
+    household_id: hid,
+    account_id: accId,
+    type: 'expense',
+    direction: 'out',
+    amount_minor: 10000, // 100.00 PHP
+    currency_code: 'PHP',
+    created_by: idA,
+  });
+  ok('A can record an expense', !exErr);
+
+  const { data: bal } = await a
+    .from('account_balances')
+    .select('balance_minor')
+    .eq('account_id', accId)
+    .single();
+  ok('account_balances reflects the expense (-10000)', bal?.balance_minor === -10000);
+
+  // A creates a second account and transfers 40.00 PHP into it (two legs).
+  const { data: acc2 } = await a
+    .from('accounts')
+    .insert({ household_id: hid, name: 'Wallet', currency_code: 'PHP', created_by: idA })
+    .select('*')
+    .single();
+  const { error: trErr } = await a.rpc('create_transfer', {
+    _from_account: accId,
+    _to_account: acc2?.id,
+    _from_amount_minor: 4000,
+    _to_amount_minor: 4000,
+  });
+  ok('A can transfer between own accounts', !trErr);
+  const { data: legs } = await a
+    .from('transactions')
+    .select('id')
+    .eq('type', 'transfer');
+  ok('transfer created two legs', (legs ?? []).length === 2);
+
   // B CANNOT read A's household.
   const { data: bSeesHousehold } = await b.from('households').select('id').eq('id', hid);
   ok('B cannot read A\'s household (RLS)', (bSeesHousehold ?? []).length === 0);
@@ -152,6 +198,24 @@ async function main() {
   });
   ok('B cannot invite into A\'s household', Boolean(bInviteErr));
 
+  // B CANNOT read A's accounts or transactions (not a member yet).
+  const { data: bAccs } = await b.from('accounts').select('id').eq('household_id', hid);
+  ok('B cannot read A\'s accounts (RLS)', (bAccs ?? []).length === 0);
+  const { data: bTx } = await b.from('transactions').select('id').eq('household_id', hid);
+  ok('B cannot read A\'s transactions (RLS)', (bTx ?? []).length === 0);
+
+  // B CANNOT record a transaction against A's account.
+  const { error: bTxErr } = await b.from('transactions').insert({
+    household_id: hid,
+    account_id: accId,
+    type: 'expense',
+    direction: 'out',
+    amount_minor: 1,
+    currency_code: 'PHP',
+    created_by: idB,
+  });
+  ok('B cannot write a transaction into A\'s household', Boolean(bTxErr));
+
   // Positive path: A invites B, B accepts, B becomes a member.
   const { error: inviteErr } = await a.from('household_invitations').insert({
     household_id: hid,
@@ -172,6 +236,10 @@ async function main() {
 
   const { data: bNowSees } = await b.from('households').select('id').eq('id', hid);
   ok('B can read the household after joining', (bNowSees ?? []).length === 1);
+
+  // After joining, B can read the shared accounts too.
+  const { data: bAccsAfter } = await b.from('accounts').select('id').eq('household_id', hid);
+  ok('B can read accounts after joining', (bAccsAfter ?? []).length === 2);
 }
 
 async function cleanup() {

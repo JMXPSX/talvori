@@ -15,6 +15,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { palette } from '@/components/theme';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
+import { ActiveHouseholdProvider } from '@/features/household/ActiveHouseholdProvider';
 
 const AUTH_ROUTES = ['login', 'signup'];
 
@@ -59,6 +60,7 @@ function RootNavigator() {
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="household" options={{ headerShown: false }} />
+      <Stack.Screen name="finance" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ title: t('auth.loginTitle') }} />
       <Stack.Screen name="signup" options={{ title: t('auth.signupTitle') }} />
     </Stack>
@@ -70,7 +72,9 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <AuthProvider>
-        <RootNavigator />
+        <ActiveHouseholdProvider>
+          <RootNavigator />
+        </ActiveHouseholdProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

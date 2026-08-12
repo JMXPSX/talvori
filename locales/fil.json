@@ -89,6 +89,75 @@
       "acceptFailed": "Ang imbitasyon ay hindi wasto, expired, o para sa ibang email."
     }
   },
+  "finance": {
+    "overviewTitle": "Mga Account",
+    "noHousehold": "Gumawa muna ng sambahayan para magsimulang mag-track ng pera.",
+    "goToHouseholds": "Pumunta sa mga sambahayan",
+    "noAccounts": "Wala pang account. Magdagdag para magsimula.",
+    "manageAccounts": "Pamahalaan ang mga account",
+    "addIncome": "Magdagdag ng kita",
+    "addExpense": "Magdagdag ng gastos",
+    "addTransfer": "Ilipat",
+    "recentTitle": "Mga kamakailang transaksyon",
+    "noTransactions": "Wala pang transaksyon.",
+    "delete": "Burahin",
+    "accounts": {
+      "title": "Mga Account",
+      "addTitle": "Magdagdag ng account",
+      "nameLabel": "Pangalan ng account",
+      "typeLabel": "Uri",
+      "currencyLabel": "Currency",
+      "openingBalanceLabel": "Panimulang balanse",
+      "createCta": "Magdagdag ng account",
+      "types": {
+        "cash": "Cash",
+        "bank": "Bangko",
+        "card": "Card",
+        "wallet": "Wallet",
+        "other": "Iba pa"
+      }
+    },
+    "entry": {
+      "incomeTitle": "Magdagdag ng kita",
+      "expenseTitle": "Magdagdag ng gastos",
+      "accountLabel": "Account",
+      "amountLabel": "Halaga",
+      "categoryLabel": "Kategorya (opsyonal)",
+      "descriptionLabel": "Tala (opsyonal)",
+      "saveCta": "I-save",
+      "noAccounts": "Magdagdag muna ng account."
+    },
+    "transfer": {
+      "title": "Ilipat",
+      "fromLabel": "Mula sa",
+      "toLabel": "Papunta sa",
+      "fromAmountLabel": "Halagang ipinadala",
+      "toAmountLabel": "Halagang natanggap",
+      "saveCta": "Ilipat",
+      "needTwo": "Kailangan mo ng dalawang account para maglipat.",
+      "crossCurrencyHint": "Magkaibang currency — ilagay ang halaga sa currency ng bawat account."
+    },
+    "categories": {
+      "title": "Mga Kategorya",
+      "addTitle": "Magdagdag ng kategorya",
+      "nameLabel": "Pangalan ng kategorya",
+      "kindLabel": "Uri",
+      "createCta": "Magdagdag ng kategorya",
+      "income": "Kita",
+      "expense": "Gastos",
+      "none": "Wala",
+      "manage": "Pamahalaan ang mga kategorya",
+      "empty": "Wala pang kategorya."
+    },
+    "errors": {
+      "loadFailed": "Hindi ma-load ang iyong pananalapi.",
+      "accountFailed": "Hindi na-save ang account.",
+      "categoryFailed": "Hindi na-save ang kategorya.",
+      "entryFailed": "Hindi na-save ang transaksyon.",
+      "transferFailed": "Hindi nakumpleto ang paglipat.",
+      "deleteFailed": "Hindi nabura iyon."
+    }
+  },
   "errors": {
     "unknown": "May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",

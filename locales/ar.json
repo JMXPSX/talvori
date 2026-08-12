@@ -89,6 +89,75 @@
       "acceptFailed": "هذه الدعوة غير صالحة أو منتهية أو لبريد مختلف."
     }
   },
+  "finance": {
+    "overviewTitle": "الحسابات",
+    "noHousehold": "أنشئ أسرة أولًا لبدء تتبّع أموالك.",
+    "goToHouseholds": "الذهاب إلى الأسر",
+    "noAccounts": "لا توجد حسابات بعد. أضف واحدًا للبدء.",
+    "manageAccounts": "إدارة الحسابات",
+    "addIncome": "إضافة دخل",
+    "addExpense": "إضافة مصروف",
+    "addTransfer": "تحويل",
+    "recentTitle": "أحدث المعاملات",
+    "noTransactions": "لا توجد معاملات بعد.",
+    "delete": "حذف",
+    "accounts": {
+      "title": "الحسابات",
+      "addTitle": "إضافة حساب",
+      "nameLabel": "اسم الحساب",
+      "typeLabel": "النوع",
+      "currencyLabel": "العملة",
+      "openingBalanceLabel": "الرصيد الافتتاحي",
+      "createCta": "إضافة حساب",
+      "types": {
+        "cash": "نقد",
+        "bank": "بنك",
+        "card": "بطاقة",
+        "wallet": "محفظة",
+        "other": "أخرى"
+      }
+    },
+    "entry": {
+      "incomeTitle": "إضافة دخل",
+      "expenseTitle": "إضافة مصروف",
+      "accountLabel": "الحساب",
+      "amountLabel": "المبلغ",
+      "categoryLabel": "الفئة (اختياري)",
+      "descriptionLabel": "ملاحظة (اختياري)",
+      "saveCta": "حفظ",
+      "noAccounts": "أضف حسابًا أولًا."
+    },
+    "transfer": {
+      "title": "تحويل",
+      "fromLabel": "من",
+      "toLabel": "إلى",
+      "fromAmountLabel": "المبلغ المُرسَل",
+      "toAmountLabel": "المبلغ المُستَلَم",
+      "saveCta": "تحويل",
+      "needTwo": "تحتاج إلى حسابين على الأقل لإجراء تحويل.",
+      "crossCurrencyHint": "عملتان مختلفتان — أدخل المبلغ بعملة كل حساب."
+    },
+    "categories": {
+      "title": "الفئات",
+      "addTitle": "إضافة فئة",
+      "nameLabel": "اسم الفئة",
+      "kindLabel": "النوع",
+      "createCta": "إضافة فئة",
+      "income": "دخل",
+      "expense": "مصروف",
+      "none": "بدون",
+      "manage": "إدارة الفئات",
+      "empty": "لا توجد فئات بعد."
+    },
+    "errors": {
+      "loadFailed": "تعذّر تحميل بياناتك المالية.",
+      "accountFailed": "تعذّر حفظ الحساب.",
+      "categoryFailed": "تعذّر حفظ الفئة.",
+      "entryFailed": "تعذّر حفظ المعاملة.",
+      "transferFailed": "تعذّر إكمال التحويل.",
+      "deleteFailed": "تعذّر حذف ذلك."
+    }
+  },
   "errors": {
     "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "network": "مشكلة في الشبكة. تحقق من اتصالك وأعد المحاولة.",
