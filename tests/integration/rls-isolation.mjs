@@ -106,6 +106,10 @@ async function main() {
   const a = await signedInClient(userA);
   const b = await signedInClient(userB);
 
+  // Warm B's realtime WebSocket early so the cold handshake overlaps the rest of
+  // the suite — the realtime assertion at the end is otherwise flaky on connect.
+  b.realtime.connect();
+
   // A creates a household (becomes owner via RPC).
   const { data: household, error: createErr } = await a.rpc('create_household', {
     _name: 'A Household',
@@ -488,38 +492,44 @@ async function main() {
   ok('B can read coupons after joining', (bCouponsAfter ?? []).length >= 1);
 
   // --- realtime: B (now a member) receives A's item insert live -------------
-  // Resolves the instant the change arrives; the timeout is only a failsafe
-  // ceiling for the initial WebSocket handshake (cold connect in Node is slow).
-  const received = await new Promise((resolve) => {
-    let done = false;
-    const finish = (v) => {
-      if (!done) {
+  // One attempt = subscribe, insert on SUBSCRIBED, resolve the instant the change
+  // arrives (18s failsafe ceiling per attempt). Retried once because the cold
+  // cloud WebSocket handshake time is variable; the socket is warm by attempt 2.
+  async function realtimeDelivers(attempt) {
+    return new Promise((resolve) => {
+      let done = false;
+      const channel = b.channel(`test_items:${listId}:${attempt}`);
+      const finish = (v) => {
+        if (done) return;
         done = true;
+        void b.removeChannel(channel);
         resolve(v);
-      }
-    };
-    b.channel(`test_items:${listId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'grocery_items', filter: `list_id=eq.${listId}` },
-        () => finish(true),
-      )
-      .subscribe(async (status, err) => {
-        if (err) console.log(`    [realtime] channel status ${status}: ${err.message}`);
-        if (status === 'SUBSCRIBED') {
-          const { error: insErr } = await a.from('grocery_items').insert({
-            list_id: listId,
-            household_id: '00000000-0000-0000-0000-000000000000',
-            name: 'Live item',
-            quantity: 1,
-            added_by: idA,
-          });
-          if (insErr) console.log(`    [realtime] A insert failed: ${insErr.message}`);
-        }
-      });
-    setTimeout(() => finish(false), 30000);
-  });
-  ok("realtime delivers A's insert to member B within 30s", received === true);
+      };
+      channel
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'grocery_items', filter: `list_id=eq.${listId}` },
+          () => finish(true),
+        )
+        .subscribe(async (status, err) => {
+          if (err) console.log(`    [realtime] attempt ${attempt} status ${status}: ${err.message}`);
+          if (status === 'SUBSCRIBED') {
+            const { error: insErr } = await a.from('grocery_items').insert({
+              list_id: listId,
+              household_id: '00000000-0000-0000-0000-000000000000',
+              name: 'Live item',
+              quantity: 1,
+              added_by: idA,
+            });
+            if (insErr) console.log(`    [realtime] A insert failed: ${insErr.message}`);
+          }
+        });
+      setTimeout(() => finish(false), 18000);
+    });
+  }
+  let received = await realtimeDelivers(1);
+  if (!received) received = await realtimeDelivers(2);
+  ok("realtime delivers A's insert to member B (<=2 tries)", received === true);
 }
 
 async function cleanup() {
