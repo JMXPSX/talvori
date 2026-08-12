@@ -1,0 +1,51 @@
+{
+  "common": {
+    "appName": "Global Household App",
+    "loading": "Naglo-load…",
+    "save": "I-save",
+    "cancel": "Kanselahin",
+    "continue": "Magpatuloy",
+    "comingSoon": "Malapit nang dumating"
+  },
+  "nav": {
+    "home": "Home",
+    "budget": "Badyet",
+    "transactions": "Mga Transaksyon",
+    "grocery": "Grocery",
+    "more": "Iba pa"
+  },
+  "auth": {
+    "loginTitle": "Maligayang pagbabalik",
+    "loginSubtitle": "Mag-sign in sa iyong sambahayan",
+    "signupTitle": "Gumawa ng account",
+    "signupSubtitle": "Simulan ang inyong sambahayan",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "loginCta": "Mag-sign in",
+    "signupCta": "Gumawa ng account",
+    "toSignup": "Wala pang account? Mag-sign up",
+    "toLogin": "May account na? Mag-sign in"
+  },
+  "screens": {
+    "homeTitle": "Home",
+    "homeBody": "Dito lalabas ang larawan ng pananalapi ng inyong sambahayan.",
+    "budgetTitle": "Badyet",
+    "budgetBody": "Dito lalabas ang mga badyet at alokasyon.",
+    "transactionsTitle": "Mga Transaksyon",
+    "transactionsBody": "Dito lalabas ang kita, gastos at mga transfer.",
+    "groceryTitle": "Grocery",
+    "groceryBody": "Dito lalabas ang mga shared na listahan ng pamimili.",
+    "moreTitle": "Iba pa",
+    "moreBody": "Dito lalabas ang sambahayan, mga layunin, seguridad at settings."
+  },
+  "errors": {
+    "unknown": "May naganap na mali. Pakisubukang muli.",
+    "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",
+    "unauthorized": "Mangyaring mag-sign in upang magpatuloy.",
+    "forbidden": "Wala kang access dito.",
+    "not_found": "Hindi namin iyon nahanap.",
+    "validation": "Pakisuri ang mga naka-highlight na field.",
+    "rate_limited": "Masyadong maraming pagsubok. Maghintay at subukang muli.",
+    "config": "Hindi pa ganap na na-configure ang app."
+  }
+}

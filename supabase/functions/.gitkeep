@@ -1,0 +1,4 @@
+# Supabase Edge Functions live here (Phase 2+): privileged server-side work
+# (FX sync, subscription webhooks, retailer normalization). Third-party secrets
+# are configured as function secrets — never committed. Keep this file so the
+# empty directory is tracked until the first function lands.

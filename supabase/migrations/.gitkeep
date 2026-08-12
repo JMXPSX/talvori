@@ -1,0 +1,2 @@
+# Versioned SQL migrations live here (Phase 2+). Keep this file so the empty
+# directory is tracked by git until the first migration lands.

@@ -1,0 +1,51 @@
+{
+  "common": {
+    "appName": "Global Household App",
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "comingSoon": "Coming soon"
+  },
+  "nav": {
+    "home": "Home",
+    "budget": "Budget",
+    "transactions": "Transactions",
+    "grocery": "Grocery",
+    "more": "More"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to your household",
+    "signupTitle": "Create your account",
+    "signupSubtitle": "Start your shared household",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "loginCta": "Sign in",
+    "signupCta": "Create account",
+    "toSignup": "Need an account? Sign up",
+    "toLogin": "Already have an account? Sign in"
+  },
+  "screens": {
+    "homeTitle": "Home",
+    "homeBody": "Your household's financial picture will appear here.",
+    "budgetTitle": "Budget",
+    "budgetBody": "Budgets and allocations will appear here.",
+    "transactionsTitle": "Transactions",
+    "transactionsBody": "Income, expenses and transfers will appear here.",
+    "groceryTitle": "Grocery",
+    "groceryBody": "Shared shopping lists will appear here.",
+    "moreTitle": "More",
+    "moreBody": "Household, goals, security and settings will appear here."
+  },
+  "errors": {
+    "unknown": "Something went wrong. Please try again.",
+    "network": "Network problem. Check your connection and retry.",
+    "unauthorized": "Please sign in to continue.",
+    "forbidden": "You don't have access to this.",
+    "not_found": "We couldn't find that.",
+    "validation": "Please check the highlighted fields.",
+    "rate_limited": "Too many attempts. Please wait and try again.",
+    "config": "The app isn't fully configured yet."
+  }
+}

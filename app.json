@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Global Household App",
+    "slug": "global-household-app",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "globalhousehold",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-localization"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {}
+    }
+  }
+}
