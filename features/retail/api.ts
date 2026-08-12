@@ -48,6 +48,7 @@ export interface CreatePriceMinorInput {
   saleMinor?: number;
   memberMinor?: number;
   currencyCode: string;
+  source?: string;
 }
 
 function fail(messageKey: string, cause?: unknown): never {
@@ -176,7 +177,8 @@ export async function createPrice(hid: string, input: CreatePriceMinorInput): Pr
   const { data, error } = await getSupabase().from('price_snapshots').insert({
     household_id: hid, retailer_product_id: input.retailerProductId, store_id: input.storeId ?? null,
     regular_price_minor: input.regularMinor, sale_price_minor: input.saleMinor ?? null,
-    member_price_minor: input.memberMinor ?? null, currency_code: input.currencyCode, created_by,
+    member_price_minor: input.memberMinor ?? null, currency_code: input.currencyCode,
+    source: input.source ?? 'manual', created_by,
   }).select('*').single();
   if (error) fail('retail.errors.priceFailed', error);
   return data as PriceSnapshotRow;
