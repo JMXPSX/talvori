@@ -24,7 +24,20 @@
     "loginCta": "Sign in",
     "signupCta": "Create account",
     "toSignup": "Need an account? Sign up",
-    "toLogin": "Already have an account? Sign in"
+    "toLogin": "Already have an account? Sign in",
+    "displayNameLabel": "Name (optional)",
+    "passwordHint": "At least 8 characters",
+    "processing": "Please wait…",
+    "signOut": "Sign out",
+    "verifyEmailTitle": "Check your email",
+    "verifyEmailBody": "We sent a verification link to {{email}}. Confirm it, then sign in.",
+    "errors": {
+      "invalidCredentials": "Incorrect email or password.",
+      "emailNotConfirmed": "Please verify your email first, then sign in.",
+      "emailInUse": "That email is already registered. Try signing in.",
+      "weakPassword": "Password must be at least 8 characters.",
+      "generic": "Couldn't complete that. Please try again."
+    }
   },
   "screens": {
     "homeTitle": "Home",

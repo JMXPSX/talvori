@@ -24,7 +24,20 @@
     "loginCta": "Mag-sign in",
     "signupCta": "Gumawa ng account",
     "toSignup": "Wala pang account? Mag-sign up",
-    "toLogin": "May account na? Mag-sign in"
+    "toLogin": "May account na? Mag-sign in",
+    "displayNameLabel": "Pangalan (opsyonal)",
+    "passwordHint": "Hindi bababa sa 8 karakter",
+    "processing": "Mangyaring maghintay…",
+    "signOut": "Mag-sign out",
+    "verifyEmailTitle": "Tingnan ang iyong email",
+    "verifyEmailBody": "Nagpadala kami ng verification link sa {{email}}. Kumpirmahin ito, pagkatapos ay mag-sign in.",
+    "errors": {
+      "invalidCredentials": "Maling email o password.",
+      "emailNotConfirmed": "Pakiverify muna ang iyong email, pagkatapos ay mag-sign in.",
+      "emailInUse": "Nakarehistro na ang email na iyan. Subukang mag-sign in.",
+      "weakPassword": "Ang password ay dapat hindi bababa sa 8 karakter.",
+      "generic": "Hindi makumpleto iyon. Pakisubukang muli."
+    }
   },
   "screens": {
     "homeTitle": "Home",
