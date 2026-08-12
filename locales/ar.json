@@ -278,6 +278,22 @@
       "deleteFailed": "تعذّر حذف العنصر.",
       "checkoutFailed": "تعذّر الإنهاء. تأكد من تطابق عملة الحساب مع القائمة.",
       "noAccount": "أضف حسابًا بهذه العملة أولاً."
+    },
+    "linkProduct": "ربط منتج",
+    "linkedTo": "مرتبط: {{name}}",
+    "unlink": "إلغاء الربط",
+    "selectProduct": "اختر منتجًا",
+    "compareCta": "قارن الأسعار",
+    "compare": {
+      "title": "مقارنة الأسعار",
+      "noLinked": "اربط العناصر بالمنتجات لمقارنة الأسعار.",
+      "column": "{{label}}",
+      "columnTotal": "{{total}}",
+      "coverage": "{{priced}} من {{total}} عناصر مُسعّرة",
+      "missing": "{{count}} بدون سعر هنا",
+      "floor": "أفضل سعر في أي مكان: {{total}} ({{priced}} من {{total_items}})",
+      "potentialSavings": "توفير محتمل بالكوبونات: {{amount}}",
+      "cheapest": "الأرخص"
     }
   },
   "retail": {

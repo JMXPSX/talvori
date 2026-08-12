@@ -278,6 +278,22 @@
       "deleteFailed": "Hindi mabura ang item.",
       "checkoutFailed": "Hindi matapos. Tiyaking tugma ang pera ng account sa listahan.",
       "noAccount": "Magdagdag muna ng account sa perang ito."
+    },
+    "linkProduct": "I-link ang produkto",
+    "linkedTo": "Naka-link: {{name}}",
+    "unlink": "I-unlink",
+    "selectProduct": "Pumili ng produkto",
+    "compareCta": "Ihambing ang presyo",
+    "compare": {
+      "title": "Paghahambing ng presyo",
+      "noLinked": "I-link ang mga item sa produkto para maihambing ang presyo.",
+      "column": "{{label}}",
+      "columnTotal": "{{total}}",
+      "coverage": "{{priced}} sa {{total}} item may presyo",
+      "missing": "{{count}} walang presyo dito",
+      "floor": "Pinakamurang presyo kahit saan: {{total}} ({{priced}} sa {{total_items}})",
+      "potentialSavings": "Posibleng matipid sa kupon: {{amount}}",
+      "cheapest": "Pinakamura"
     }
   },
   "retail": {

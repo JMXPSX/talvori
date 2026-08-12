@@ -278,6 +278,22 @@
       "deleteFailed": "Couldn't delete the item.",
       "checkoutFailed": "Couldn't complete the trip. Check the account currency matches the list.",
       "noAccount": "Add an account in this currency first."
+    },
+    "linkProduct": "Link product",
+    "linkedTo": "Linked: {{name}}",
+    "unlink": "Unlink",
+    "selectProduct": "Select a product",
+    "compareCta": "Compare prices",
+    "compare": {
+      "title": "Price comparison",
+      "noLinked": "Link items to products to compare prices.",
+      "column": "{{label}}",
+      "columnTotal": "{{total}}",
+      "coverage": "{{priced}} of {{total}} items priced",
+      "missing": "{{count}} unpriced here",
+      "floor": "Best price anywhere: {{total}} ({{priced}} of {{total_items}})",
+      "potentialSavings": "Potential coupon savings: {{amount}}",
+      "cheapest": "Cheapest"
     }
   },
   "retail": {
