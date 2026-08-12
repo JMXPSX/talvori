@@ -284,6 +284,49 @@ async function main() {
   });
   ok('checkout rejects account/list currency mismatch', Boolean(mismatchErr));
 
+  // --- retail: A builds a small catalog -------------------------------------
+  const { data: ret, error: retErr } = await a
+    .from('retailers')
+    .insert({ household_id: hid, name: 'MegaMart', country_code: 'PH', created_by: idA })
+    .select('id').single();
+  ok('A can create a retailer', !retErr && Boolean(ret?.id));
+
+  const { data: store, error: stErr } = await a
+    .from('retailer_stores')
+    .insert({ household_id: hid, retailer_id: ret?.id, name: 'MegaMart Makati',
+      currency_code: 'PHP', latitude: 14.55, longitude: 121.02, created_by: idA })
+    .select('id, currency_code').single();
+  ok('A can create a store', !stErr && Boolean(store?.id));
+
+  const { data: prod } = await a
+    .from('products')
+    .insert({ household_id: hid, name: 'Rice 5kg', size_value: 5, size_unit: 'kg', pack_count: 1, created_by: idA })
+    .select('id').single();
+  const { data: rp } = await a
+    .from('retailer_products')
+    .insert({ household_id: hid, product_id: prod?.id, retailer_id: ret?.id, created_by: idA })
+    .select('id').single();
+  ok('A can link a product to a retailer', Boolean(rp?.id));
+
+  // Price with a USD currency but a PHP store — trigger must force PHP.
+  const { data: price } = await a
+    .from('price_snapshots')
+    .insert({ household_id: hid, retailer_product_id: rp?.id, store_id: store?.id,
+      regular_price_minor: 25000, currency_code: 'USD', created_by: idA })
+    .select('currency_code').single();
+  ok('price currency follows the store (PHP, not USD)', price?.currency_code === 'PHP');
+
+  // Saved location + set-active RPC.
+  const { data: loc } = await a
+    .from('saved_locations')
+    .insert({ household_id: hid, label: 'Home', store_id: store?.id, created_by: idA })
+    .select('id').single();
+  const { error: activeErr } = await a.rpc('set_active_saved_location', { _id: loc?.id });
+  ok('A can set a saved location active (RPC)', !activeErr);
+  const { data: activeLoc } = await a
+    .from('saved_locations').select('is_active').eq('id', loc?.id).single();
+  ok('saved location is now active', activeLoc?.is_active === true);
+
   // B CANNOT read A's household.
   const { data: bSeesHousehold } = await b.from('households').select('id').eq('id', hid);
   ok('B cannot read A\'s household (RLS)', (bSeesHousehold ?? []).length === 0);
@@ -356,6 +399,18 @@ async function main() {
   });
   ok("B cannot complete A's list via RPC", Boolean(bCoErr));
 
+  // B CANNOT read or write A's retail catalog (not a member yet).
+  const { data: bRet } = await b.from('retailers').select('id').eq('household_id', hid);
+  ok("B cannot read A's retailers (RLS)", (bRet ?? []).length === 0);
+  const { data: bPrices } = await b.from('price_snapshots').select('id').eq('household_id', hid);
+  ok("B cannot read A's prices (RLS)", (bPrices ?? []).length === 0);
+  const { error: bRetErr } = await b
+    .from('retailers')
+    .insert({ household_id: hid, name: 'X', created_by: idB });
+  ok("B cannot create a retailer in A's household", Boolean(bRetErr));
+  const { error: bActErr } = await b.rpc('set_active_saved_location', { _id: loc?.id });
+  ok("B cannot set-active A's location via RPC", Boolean(bActErr));
+
   // Positive path: A invites B, B accepts, B becomes a member.
   const { error: inviteErr } = await a.from('household_invitations').insert({
     household_id: hid,
@@ -384,6 +439,9 @@ async function main() {
   // After joining, B can also read the shared grocery lists.
   const { data: bListsAfter } = await b.from('grocery_lists').select('id').eq('household_id', hid);
   ok('B can read grocery lists after joining', (bListsAfter ?? []).length >= 1);
+
+  const { data: bRetAfter } = await b.from('retailers').select('id').eq('household_id', hid);
+  ok('B can read retailers after joining', (bRetAfter ?? []).length >= 1);
 
   // --- realtime: B (now a member) receives A's item insert live -------------
   // Resolves the instant the change arrives; the timeout is only a failsafe
