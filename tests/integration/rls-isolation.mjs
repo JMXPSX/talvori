@@ -327,6 +327,23 @@ async function main() {
     .from('saved_locations').select('is_active').eq('id', loc?.id).single();
   ok('saved location is now active', activeLoc?.is_active === true);
 
+  // --- 5c: A links a grocery item to a product; cross-household is rejected --
+  const { error: linkErr } = await a
+    .from('grocery_items')
+    .update({ product_id: prod?.id })
+    .eq('id', gi?.id);
+  ok('A can link a grocery item to a product', !linkErr);
+  const { data: linked } = await a
+    .from('grocery_items').select('product_id').eq('id', gi?.id).single();
+  ok('grocery item product_id reads back', linked?.product_id === prod?.id);
+
+  // Linking a product not in the household is rejected by the trigger.
+  const { error: badLinkErr } = await a
+    .from('grocery_items')
+    .update({ product_id: '00000000-0000-0000-0000-000000000000' })
+    .eq('id', gi?.id);
+  ok('linking a non-household product is rejected', Boolean(badLinkErr));
+
   // --- coupons: A creates a valid coupon; malformed one is rejected ---------
   const { data: coup, error: coupErr } = await a
     .from('coupons')
