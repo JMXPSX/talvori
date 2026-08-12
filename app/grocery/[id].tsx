@@ -20,6 +20,7 @@ import {
 } from '@/features/grocery/api';
 import { addItemSchema } from '@/features/grocery/schemas';
 import { actualTotalMinor, estimatedTotalMinor, purchasedCount } from '@/features/grocery/totals';
+import { listMembers } from '@/features/household/api';
 import type { AccountRow, CategoryRow, GroceryItemRow, GroceryListRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
@@ -35,6 +36,7 @@ export default function GroceryListScreen() {
   const [items, setItems] = useState<GroceryItemRow[]>([]);
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
+  const [names, setNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -43,6 +45,8 @@ export default function GroceryListScreen() {
   const [est, setEst] = useState('');
   const [actualInputs, setActualInputs] = useState<Record<string, string>>({});
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [accountId, setAccountId] = useState<string | null>(null);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
   const [checkingOut, setCheckingOut] = useState(false);
 
   const load = useCallback(async () => {
@@ -50,12 +54,20 @@ export default function GroceryListScreen() {
     try {
       const l = await getList(listId);
       setList(l);
-      const [its, accs] = await Promise.all([
+      const [its, accs, members] = await Promise.all([
         listItems(listId),
         l ? listAccounts(l.household_id) : Promise.resolve<AccountRow[]>([]),
+        l ? listMembers(l.household_id) : Promise.resolve([]),
       ]);
       setItems(its);
-      setAccounts(accs.filter((a) => !l || a.currency_code === l.currency_code));
+      const sameCcy = accs.filter((a) => !l || a.currency_code === l.currency_code);
+      setAccounts(sameCcy);
+      setAccountId((prev) => prev ?? sameCcy[0]?.id ?? null);
+      setNames(
+        Object.fromEntries(
+          members.map((m) => [m.user_id, m.profile?.display_name || m.profile?.email || '']),
+        ),
+      );
       if (l) setCategories(await listCategories(l.household_id, 'expense'));
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
@@ -125,15 +137,13 @@ export default function GroceryListScreen() {
   }
 
   async function onComplete() {
-    const account = accounts[0];
-    if (!list || !account) {
+    if (!list || !accountId) {
       setErrorKey('grocery.errors.noAccount');
       return;
     }
     setCheckingOut(true);
     try {
-      // MVP: pay from the first same-currency account; category optional (first expense category).
-      await completeList(listId, account.id, categories[0]?.id);
+      await completeList(listId, accountId, categoryId ?? undefined);
       await load();
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
@@ -141,6 +151,9 @@ export default function GroceryListScreen() {
       setCheckingOut(false);
     }
   }
+
+  const nameFor = (id: string | null): string =>
+    (id && names[id]) || t('grocery.someone');
 
   if (loading) {
     return (
@@ -181,6 +194,10 @@ export default function GroceryListScreen() {
                   {formatAmount(it.actual_price_minor ?? it.estimated_price_minor ?? 0, ccy)}
                 </Text>
               </View>
+              <Text variant="caption" muted>
+                {t('grocery.addedBy', { name: nameFor(it.added_by) })}
+                {it.is_purchased ? ` · ${t('grocery.purchasedBy', { name: nameFor(it.purchased_by) })}` : ''}
+              </Text>
               {!isCompleted && (
                 <View style={styles.inlineRow}>
                   {!it.is_purchased && (
@@ -227,11 +244,65 @@ export default function GroceryListScreen() {
 
             <View style={styles.divider} />
             <Text variant="heading">{t('grocery.completeTitle')}</Text>
-            <Button
-              label={checkingOut ? t('auth.processing') : t('grocery.completeCta')}
-              onPress={onComplete}
-              loading={checkingOut}
-            />
+            {accounts.length === 0 ? (
+              <Text muted>{t('grocery.errors.noAccount')}</Text>
+            ) : (
+              <View style={styles.form}>
+                <Text variant="caption" muted>{t('grocery.accountLabel')}</Text>
+                <View style={styles.chips}>
+                  {accounts.map((a) => {
+                    const on = a.id === accountId;
+                    return (
+                      <Pressable
+                        key={a.id}
+                        onPress={() => setAccountId(a.id)}
+                        style={[styles.chip, on ? styles.chipActive : null]}
+                      >
+                        <Text variant="caption" style={{ color: on ? palette.white : palette.text }}>
+                          {a.name} ({a.currency_code})
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+
+                {categories.length > 0 && (
+                  <>
+                    <Text variant="caption" muted>{t('grocery.categoryLabel')}</Text>
+                    <View style={styles.chips}>
+                      <Pressable
+                        onPress={() => setCategoryId(null)}
+                        style={[styles.chip, categoryId === null ? styles.chipActive : null]}
+                      >
+                        <Text variant="caption" style={{ color: categoryId === null ? palette.white : palette.text }}>
+                          {t('finance.categories.none')}
+                        </Text>
+                      </Pressable>
+                      {categories.map((c) => {
+                        const on = c.id === categoryId;
+                        return (
+                          <Pressable
+                            key={c.id}
+                            onPress={() => setCategoryId(c.id)}
+                            style={[styles.chip, on ? styles.chipActive : null]}
+                          >
+                            <Text variant="caption" style={{ color: on ? palette.white : palette.text }}>
+                              {c.name}
+                            </Text>
+                          </Pressable>
+                        );
+                      })}
+                    </View>
+                  </>
+                )}
+
+                <Button
+                  label={checkingOut ? t('auth.processing') : t('grocery.completeCta')}
+                  onPress={onComplete}
+                  loading={checkingOut}
+                />
+              </View>
+            )}
           </>
         )}
 
@@ -260,4 +331,13 @@ const styles = StyleSheet.create({
   inlineField: { flex: 1 },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
+  chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
+  chip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: palette.brand,
+  },
+  chipActive: { backgroundColor: palette.brand },
 });
