@@ -91,6 +91,43 @@ export const createSavedLocationSchema = z.object({
   storeId: z.string().uuid(),
 });
 
+export const createCouponSchema = z
+  .object({
+    retailerId: z.string().uuid(),
+    retailerProductId: z.string().uuid().optional(),
+    title: name,
+    code: optionalText(60),
+    sourceUrl: optionalText(300),
+    discountType: z.enum(['fixed', 'percent']),
+    amountMajor: optionalMajor,
+    currencyCode: z
+      .string()
+      .trim()
+      .transform((s) => s.toUpperCase())
+      .refine((s) => s === '' || /^[A-Z]{3}$/.test(s), { message: 'invalid_currency' })
+      .optional()
+      .transform((v) => (v ? v : undefined)),
+    percent: z
+      .union([z.number(), z.string()])
+      .optional()
+      .transform((v) => (v === undefined || v === '' ? undefined : Number(v)))
+      .refine((v) => v === undefined || (Number.isFinite(v) && v > 0 && v <= 100), {
+        message: 'invalid_percent',
+      }),
+    minPurchaseMajor: optionalMajor,
+    maxDiscountMajor: optionalMajor,
+    expiresAt: optionalText(40),
+  })
+  .refine(
+    (v) =>
+      v.discountType === 'fixed'
+        ? v.amountMajor !== undefined && v.currencyCode !== undefined
+        : v.percent !== undefined,
+    { message: 'incomplete_discount', path: ['discountType'] },
+  );
+
+export type CreateCouponInput = z.infer<typeof createCouponSchema>;
+
 export type CreateRetailerInput = z.infer<typeof createRetailerSchema>;
 export type CreateStoreInput = z.infer<typeof createStoreSchema>;
 export type CreateProductInput = z.infer<typeof createProductSchema>;

@@ -427,3 +427,28 @@ export interface SavedLocationRow {
   created_at: string;
   updated_at: string;
 }
+
+// --- Phase 5 (5b): coupons -------------------------------------------------
+export type CouponDiscountType = 'fixed' | 'percent';
+
+export interface CouponRow {
+  id: string;
+  household_id: string;
+  retailer_id: string;
+  retailer_product_id: string | null;
+  title: string;
+  code: string | null;
+  source_url: string | null;
+  notes: string | null;
+  discount_type: CouponDiscountType;
+  discount_amount_minor: number | null;
+  discount_percent: number | null;
+  currency_code: string | null;
+  min_purchase_minor: number | null;
+  max_discount_minor: number | null;
+  starts_at: string | null;
+  expires_at: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
