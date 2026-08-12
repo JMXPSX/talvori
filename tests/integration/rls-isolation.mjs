@@ -216,6 +216,74 @@ async function main() {
     .single();
   ok('latest_fx_rates returns the rate (56.5)', Number(lr?.rate) === 56.5);
 
+  // --- grocery: A creates a list + item -------------------------------------
+  const { data: gl, error: glErr } = await a
+    .from('grocery_lists')
+    .insert({ household_id: hid, name: 'Weekly', currency_code: 'PHP', created_by: idA })
+    .select('id')
+    .single();
+  ok('A can create a grocery list', !glErr && Boolean(gl?.id));
+  const listId = gl?.id;
+
+  const { data: gi, error: giErr } = await a
+    .from('grocery_items')
+    .insert({
+      list_id: listId,
+      household_id: '00000000-0000-0000-0000-000000000000', // overwritten by trigger
+      name: 'Rice',
+      quantity: 2,
+      estimated_price_minor: 30000,
+      added_by: idA,
+    })
+    .select('id, household_id')
+    .single();
+  ok('A can add an item; trigger sets household_id', !giErr && gi?.household_id === hid);
+
+  // Mark purchased with an actual price, then complete the trip.
+  await a
+    .from('grocery_items')
+    .update({ is_purchased: true, purchased_by: idA, actual_price_minor: 28500 })
+    .eq('id', gi?.id);
+  const { data: txId, error: coErr } = await a.rpc('complete_grocery_list', {
+    _list_id: listId,
+    _account_id: accId,
+    _category_id: null,
+  });
+  ok('A can complete the trip (checkout RPC)', !coErr && Boolean(txId));
+
+  const { data: coTx } = await a
+    .from('transactions')
+    .select('amount_minor, type')
+    .eq('id', txId)
+    .single();
+  ok(
+    'checkout created one expense equal to purchased sum (28500)',
+    coTx?.type === 'expense' && coTx?.amount_minor === 28500,
+  );
+
+  // A second list in a different currency cannot check out against a PHP account.
+  const { data: gl2 } = await a
+    .from('grocery_lists')
+    .insert({ household_id: hid, name: 'USD trip', currency_code: 'USD', created_by: idA })
+    .select('id')
+    .single();
+  await a.from('grocery_items').insert({
+    list_id: gl2?.id,
+    household_id: '00000000-0000-0000-0000-000000000000',
+    name: 'Item',
+    quantity: 1,
+    is_purchased: true,
+    purchased_by: idA,
+    actual_price_minor: 500,
+    added_by: idA,
+  });
+  const { error: mismatchErr } = await a.rpc('complete_grocery_list', {
+    _list_id: gl2?.id,
+    _account_id: accId, // PHP account
+    _category_id: null,
+  });
+  ok('checkout rejects account/list currency mismatch', Boolean(mismatchErr));
+
   // B CANNOT read A's household.
   const { data: bSeesHousehold } = await b.from('households').select('id').eq('id', hid);
   ok('B cannot read A\'s household (RLS)', (bSeesHousehold ?? []).length === 0);
@@ -272,6 +340,22 @@ async function main() {
   const { data: bFx } = await b.from('fx_rate_snapshots').select('id').eq('household_id', hid);
   ok('B cannot read A\'s FX rates (RLS)', (bFx ?? []).length === 0);
 
+  // B CANNOT read or write A's grocery lists/items (not a member yet).
+  const { data: bLists } = await b.from('grocery_lists').select('id').eq('household_id', hid);
+  ok("B cannot read A's grocery lists (RLS)", (bLists ?? []).length === 0);
+  const { data: bItems } = await b.from('grocery_items').select('id').eq('household_id', hid);
+  ok("B cannot read A's grocery items (RLS)", (bItems ?? []).length === 0);
+  const { error: bListErr } = await b
+    .from('grocery_lists')
+    .insert({ household_id: hid, name: 'X', currency_code: 'PHP', created_by: idB });
+  ok("B cannot create a list in A's household", Boolean(bListErr));
+  const { error: bCoErr } = await b.rpc('complete_grocery_list', {
+    _list_id: listId,
+    _account_id: accId,
+    _category_id: null,
+  });
+  ok("B cannot complete A's list via RPC", Boolean(bCoErr));
+
   // Positive path: A invites B, B accepts, B becomes a member.
   const { error: inviteErr } = await a.from('household_invitations').insert({
     household_id: hid,
@@ -296,6 +380,40 @@ async function main() {
   // After joining, B can read the shared accounts too.
   const { data: bAccsAfter } = await b.from('accounts').select('id').eq('household_id', hid);
   ok('B can read accounts after joining', (bAccsAfter ?? []).length === 2);
+
+  // After joining, B can also read the shared grocery lists.
+  const { data: bListsAfter } = await b.from('grocery_lists').select('id').eq('household_id', hid);
+  ok('B can read grocery lists after joining', (bListsAfter ?? []).length >= 1);
+
+  // --- realtime: B (now a member) receives A's item insert live -------------
+  const received = await new Promise((resolve) => {
+    let done = false;
+    const finish = (v) => {
+      if (!done) {
+        done = true;
+        resolve(v);
+      }
+    };
+    b.channel(`test_items:${listId}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'grocery_items', filter: `list_id=eq.${listId}` },
+        () => finish(true),
+      )
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await a.from('grocery_items').insert({
+            list_id: listId,
+            household_id: '00000000-0000-0000-0000-000000000000',
+            name: 'Live item',
+            quantity: 1,
+            added_by: idA,
+          });
+        }
+      });
+    setTimeout(() => finish(false), 8000);
+  });
+  ok("realtime delivers A's insert to member B within 8s", received === true);
 }
 
 async function cleanup() {
