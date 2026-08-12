@@ -338,3 +338,92 @@ export interface GroceryItemRow {
   created_at: string;
   updated_at: string;
 }
+
+// --- Phase 5 (5a): retail foundation ---------------------------------------
+export interface RetailerRow {
+  id: string;
+  household_id: string;
+  name: string;
+  country_code: string | null;
+  website: string | null;
+  notes: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RetailerStoreRow {
+  id: string;
+  household_id: string;
+  retailer_id: string;
+  name: string;
+  street: string | null;
+  city: string | null;
+  region: string | null;
+  postal_code: string | null;
+  country_code: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  currency_code: string;
+  is_online: boolean;
+  timezone: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProductRow {
+  id: string;
+  household_id: string;
+  name: string;
+  brand: string | null;
+  gtin: string | null;
+  upc: string | null;
+  ean: string | null;
+  size_value: number | null;
+  size_unit: string | null;
+  pack_count: number;
+  category: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RetailerProductRow {
+  id: string;
+  household_id: string;
+  product_id: string;
+  retailer_id: string;
+  retailer_sku: string | null;
+  display_name: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PriceSnapshotRow {
+  id: string;
+  household_id: string;
+  retailer_product_id: string;
+  store_id: string | null;
+  regular_price_minor: number;
+  sale_price_minor: number | null;
+  member_price_minor: number | null;
+  currency_code: string;
+  observed_at: string;
+  valid_until: string | null;
+  source: string;
+  created_by: string;
+  created_at: string;
+}
+
+export interface SavedLocationRow {
+  id: string;
+  household_id: string;
+  label: string;
+  store_id: string;
+  is_active: boolean;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
