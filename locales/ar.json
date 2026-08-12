@@ -221,6 +221,22 @@
       "payFailed": "تعذّر تسجيل الدفعة."
     }
   },
+  "fx": {
+    "title": "أسعار الصرف",
+    "manageRates": "أسعار الصرف",
+    "empty": "لا توجد أسعار بعد.",
+    "addTitle": "إضافة سعر",
+    "baseLabel": "من (الأساس)",
+    "quoteLabel": "إلى (المقابل)",
+    "rateLabel": "السعر (1 أساس = ؟ مقابل)",
+    "createCta": "حفظ السعر",
+    "reportingTotal": "الإجمالي ({{currency}})",
+    "missingRates": "أضف أسعارًا لتضمين: {{currencies}}",
+    "errors": {
+      "loadFailed": "تعذّر تحميل أسعار الصرف.",
+      "rateFailed": "تعذّر حفظ السعر."
+    }
+  },
   "errors": {
     "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "network": "مشكلة في الشبكة. تحقق من اتصالك وأعد المحاولة.",

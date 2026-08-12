@@ -64,3 +64,15 @@ export const payDebtSchema = z.object({
   note: z.string().trim().max(200).optional(),
 });
 export type PayDebtInput = z.infer<typeof payDebtSchema>;
+
+export const createRateSchema = z
+  .object({
+    baseCurrency: currency,
+    quoteCurrency: currency,
+    rate: z.coerce.number().positive(),
+  })
+  .refine((d) => d.baseCurrency !== d.quoteCurrency, {
+    message: 'currencies must differ',
+    path: ['quoteCurrency'],
+  });
+export type CreateRateInput = z.infer<typeof createRateSchema>;

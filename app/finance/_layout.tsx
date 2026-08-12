@@ -22,6 +22,7 @@ export default function FinanceLayout() {
       <Stack.Screen name="budgets" options={{ title: t('planning.budgets.title') }} />
       <Stack.Screen name="goals" options={{ title: t('planning.goals.title') }} />
       <Stack.Screen name="debts" options={{ title: t('planning.debts.title') }} />
+      <Stack.Screen name="rates" options={{ title: t('fx.title') }} />
     </Stack>
   );
 }

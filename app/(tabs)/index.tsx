@@ -14,7 +14,9 @@ import { palette, radius, spacing } from '@/components/theme';
 import { Button, Text } from '@/components/ui';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { listAccountBalances, listAccounts } from '@/features/finance/api';
-import type { AccountBalanceRow, AccountRow } from '@/lib/database.types';
+import { sumInReporting } from '@/features/finance/fx';
+import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
+import type { AccountBalanceRow, AccountRow, LatestFxRateRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
 
@@ -25,6 +27,7 @@ export default function HomeScreen() {
 
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [balances, setBalances] = useState<Record<string, AccountBalanceRow>>({});
+  const [rates, setRates] = useState<LatestFxRateRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -36,12 +39,14 @@ export default function HomeScreen() {
     setErrorKey(null);
     setLoading(true);
     try {
-      const [accs, bals] = await Promise.all([
+      const [accs, bals, fx] = await Promise.all([
         listAccounts(active.id),
         listAccountBalances(active.id),
+        listLatestRates(active.id),
       ]);
       setAccounts(accs);
       setBalances(Object.fromEntries(bals.map((b) => [b.account_id, b])));
+      setRates(fx);
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -115,6 +120,36 @@ export default function HomeScreen() {
           </View>
         )}
 
+        {accounts.length > 0
+          ? (() => {
+              const items = accounts.map((a) => ({
+                balanceMinor: balances[a.id]?.balance_minor ?? a.opening_balance_minor,
+                currency: a.currency_code,
+              }));
+              const reporting = active.reporting_currency_code;
+              const { totalMinor, missing } = sumInReporting(
+                items,
+                reporting,
+                makeRateLookup(rates),
+              );
+              return (
+                <View style={styles.totalCard}>
+                  <View style={styles.cardRow}>
+                    <Text variant="heading">{t('fx.reportingTotal', { currency: reporting })}</Text>
+                    <Text variant="heading">{formatAmount(totalMinor, reporting)}</Text>
+                  </View>
+                  {missing.length > 0 ? (
+                    <Link href="/finance/rates">
+                      <Text variant="caption" style={{ color: palette.brand }}>
+                        {t('fx.missingRates', { currencies: missing.join(', ') })}
+                      </Text>
+                    </Link>
+                  ) : null}
+                </View>
+              );
+            })()
+          : null}
+
         <View style={styles.actions}>
           <Button label={t('finance.addIncome')} onPress={() => router.push('/finance/entry?type=income')} />
           <Button
@@ -131,6 +166,11 @@ export default function HomeScreen() {
             label={t('finance.manageAccounts')}
             variant="secondary"
             onPress={() => router.push('/finance/accounts')}
+          />
+          <Button
+            label={t('fx.manageRates')}
+            variant="secondary"
+            onPress={() => router.push('/finance/rates')}
           />
         </View>
       </ScrollView>
@@ -153,6 +193,13 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  totalCard: {
+    padding: spacing.md,
+    borderRadius: radius.md,
+    backgroundColor: palette.brandMuted,
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+  },
   actions: { gap: spacing.sm, marginTop: spacing.md },
   link: { marginTop: spacing.sm },
 });

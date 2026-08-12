@@ -221,6 +221,22 @@
       "payFailed": "Couldn't record the payment."
     }
   },
+  "fx": {
+    "title": "Exchange rates",
+    "manageRates": "Exchange rates",
+    "empty": "No rates yet.",
+    "addTitle": "Add rate",
+    "baseLabel": "From (base)",
+    "quoteLabel": "To (quote)",
+    "rateLabel": "Rate (1 base = ? quote)",
+    "createCta": "Save rate",
+    "reportingTotal": "Total ({{currency}})",
+    "missingRates": "Add rates to include: {{currencies}}",
+    "errors": {
+      "loadFailed": "Couldn't load exchange rates.",
+      "rateFailed": "Couldn't save the rate."
+    }
+  },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
     "network": "Network problem. Check your connection and retry.",

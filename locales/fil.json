@@ -221,6 +221,22 @@
       "payFailed": "Hindi naitala ang bayad."
     }
   },
+  "fx": {
+    "title": "Mga palitan",
+    "manageRates": "Mga palitan",
+    "empty": "Wala pang palitan.",
+    "addTitle": "Magdagdag ng palitan",
+    "baseLabel": "Mula (base)",
+    "quoteLabel": "Papunta (quote)",
+    "rateLabel": "Palitan (1 base = ? quote)",
+    "createCta": "I-save ang palitan",
+    "reportingTotal": "Kabuuan ({{currency}})",
+    "missingRates": "Magdagdag ng palitan para isama: {{currencies}}",
+    "errors": {
+      "loadFailed": "Hindi ma-load ang mga palitan.",
+      "rateFailed": "Hindi na-save ang palitan."
+    }
+  },
   "errors": {
     "unknown": "May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",

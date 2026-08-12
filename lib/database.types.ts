@@ -208,6 +208,28 @@ export interface DebtStatusRow {
   balance_minor: number;
 }
 
+// --- Phase 3 slice 3c: FX rate snapshots -----------------------------------
+export interface FxRateSnapshotRow {
+  id: string;
+  household_id: string;
+  base_currency: string;
+  quote_currency: string;
+  rate: number;
+  as_of: string;
+  source: string;
+  created_by: string;
+  created_at: string;
+}
+
+export interface LatestFxRateRow {
+  household_id: string;
+  base_currency: string;
+  quote_currency: string;
+  rate: number;
+  as_of: string;
+  source: string;
+}
+
 export interface Database {
   public: {
     Tables: {

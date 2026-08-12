@@ -199,6 +199,23 @@ async function main() {
     .single();
   ok('debt status reflects payment (balance 400000)', ds?.balance_minor === 400000);
 
+  // A records an FX rate snapshot; latest_fx_rates surfaces it.
+  await a.from('fx_rate_snapshots').insert({
+    household_id: hid,
+    base_currency: 'USD',
+    quote_currency: 'PHP',
+    rate: 56.5,
+    created_by: idA,
+  });
+  const { data: lr } = await a
+    .from('latest_fx_rates')
+    .select('rate')
+    .eq('household_id', hid)
+    .eq('base_currency', 'USD')
+    .eq('quote_currency', 'PHP')
+    .single();
+  ok('latest_fx_rates returns the rate (56.5)', Number(lr?.rate) === 56.5);
+
   // B CANNOT read A's household.
   const { data: bSeesHousehold } = await b.from('households').select('id').eq('id', hid);
   ok('B cannot read A\'s household (RLS)', (bSeesHousehold ?? []).length === 0);
@@ -252,6 +269,8 @@ async function main() {
   ok('B cannot read A\'s savings goals (RLS)', (bGoals ?? []).length === 0);
   const { data: bDebts } = await b.from('debts').select('id').eq('household_id', hid);
   ok('B cannot read A\'s debts (RLS)', (bDebts ?? []).length === 0);
+  const { data: bFx } = await b.from('fx_rate_snapshots').select('id').eq('household_id', hid);
+  ok('B cannot read A\'s FX rates (RLS)', (bFx ?? []).length === 0);
 
   // Positive path: A invites B, B accepts, B becomes a member.
   const { error: inviteErr } = await a.from('household_invitations').insert({
