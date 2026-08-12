@@ -20,6 +20,7 @@ export default function RetailLayout() {
       <Stack.Screen name="products" options={{ title: t('retail.products') }} />
       <Stack.Screen name="product/[id]" options={{ title: t('retail.prices') }} />
       <Stack.Screen name="locations" options={{ title: t('retail.savedLocations') }} />
+      <Stack.Screen name="coupons" options={{ title: t('coupons.title') }} />
     </Stack>
   );
 }

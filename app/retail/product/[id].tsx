@@ -21,6 +21,9 @@ import {
 } from '@/features/retail/api';
 import type { PriceWithRefs, RetailerProductWithRetailer } from '@/features/retail/api';
 import { createPriceSchema, createRetailerProductSchema } from '@/features/retail/schemas';
+import { applyCoupon } from '@/features/retail/coupon';
+import { listCouponsForProduct } from '@/features/retail/couponApi';
+import type { CouponWithRefs } from '@/features/retail/couponApi';
 import { freshnessOf } from '@/features/retail/freshness';
 import { unitPriceMinor } from '@/features/retail/unitPrice';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -41,6 +44,7 @@ export default function ProductPricesScreen() {
   const [retailers, setRetailers] = useState<RetailerRow[]>([]);
   const [links, setLinks] = useState<RetailerProductWithRetailer[]>([]);
   const [stores, setStores] = useState<RetailerStoreRow[]>([]);
+  const [coupons, setCoupons] = useState<CouponWithRefs[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -59,16 +63,18 @@ export default function ProductPricesScreen() {
     }
     setErrorKey(null);
     try {
-      const [p, pr, ls, rs] = await Promise.all([
+      const [p, pr, ls, rs, cs] = await Promise.all([
         getProduct(productId),
         listPricesForProduct(productId),
         listRetailerProducts(productId),
         listRetailers(active.id),
+        listCouponsForProduct(productId),
       ]);
       setProduct(p);
       setPrices(pr);
       setLinks(ls);
       setRetailers(rs);
+      setCoupons(cs);
       const retailerIds = Array.from(new Set(ls.map((l) => l.retailer_id)));
       const allStores: RetailerStoreRow[] = [];
       for (const retId of retailerIds) allStores.push(...(await listStores(retId)));
@@ -207,6 +213,35 @@ export default function ProductPricesScreen() {
             })}
           </View>
         )}
+
+        {coupons.length > 0 && sorted[0] && (() => {
+          const cheapest = sorted[0];
+          const base = cheapest.sale_price_minor ?? cheapest.regular_price_minor;
+          const nowMs = Date.now();
+          return (
+            <View style={styles.list}>
+              <Text variant="heading">{t('coupons.applicableTitle')}</Text>
+              {coupons.map((c) => {
+                const r = applyCoupon(c, base, cheapest.currency_code, nowMs);
+                return (
+                  <View key={c.id} style={styles.card}>
+                    <Text variant="heading">{c.title}</Text>
+                    <Text variant="caption" muted>{c.retailer?.name ?? '—'}</Text>
+                    {r.applicable ? (
+                      <Text variant="caption" style={{ color: palette.brand }}>
+                        {t('coupons.expectedFinal', { price: formatAmount(r.finalMinor, cheapest.currency_code) })}
+                        {' · '}
+                        {t('coupons.expectedSavings', { amount: formatAmount(r.savingsMinor, cheapest.currency_code) })}
+                      </Text>
+                    ) : (
+                      <Text variant="caption" muted>{t('coupons.notApplicable')}</Text>
+                    )}
+                  </View>
+                );
+              })}
+            </View>
+          );
+        })()}
 
         <View style={styles.divider} />
         <Text variant="heading">{t('retail.linkRetailer')}</Text>

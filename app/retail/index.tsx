@@ -105,6 +105,7 @@ export default function RetailHubScreen() {
 
         <View style={styles.rowLinks}>
           <Link href="/retail/products"><Text style={{ color: palette.brand }}>{t('retail.products')}</Text></Link>
+          <Link href="/retail/coupons"><Text style={{ color: palette.brand }}>{t('coupons.title')}</Text></Link>
         </View>
 
         <Text variant="heading">{t('retail.retailers')}</Text>
