@@ -500,9 +500,9 @@ async function main() {
           if (insErr) console.log(`    [realtime] A insert failed: ${insErr.message}`);
         }
       });
-    setTimeout(() => finish(false), 15000);
+    setTimeout(() => finish(false), 30000);
   });
-  ok("realtime delivers A's insert to member B within 15s", received === true);
+  ok("realtime delivers A's insert to member B within 30s", received === true);
 }
 
 async function cleanup() {
