@@ -41,13 +41,17 @@ is buildable without external accounts except where noted:
    rounding (was toward +∞, now half-away-from-zero per its contract), added
    deterministic property round-trips across exponents 0/2/3, float-trap cases,
    and `sumInReporting` edges (deduped missing, empty, case, negatives, KWD).
-3. **Account deletion / data export** — ✅ BUILT (2026-08-13; see
+3. **Account deletion / data export** — ✅ DONE & VERIFIED LIVE (2026-08-13; see
    `2026-08-13-account-deletion-export-design.md` + plan): `delete_my_account()`
    RPC with owner-handoff block, attribution FKs → set-null, full-household JSON
    export (client-side over RLS readers), `/account` screen behind More.
-   ⏳ PENDING HUMAN: apply migration `20260813000010_account_deletion.sql` in
-   the SQL editor, then run the `test:rls` key drill (now includes the deletion
-   scenarios).
+   Migrations `20260813000010_account_deletion.sql` AND
+   `20260813000011_fix_last_owner_guard.sql` applied; `test:rls` **72/72**.
+   The drill surfaced a Phase-2 latent bug: `protect_last_owner()` fired on the
+   member-row FK cascade and made ALL household deletion impossible — fixed by
+   early-returning when the household row is already gone. Bonus: 19 orphaned
+   test users from every prior `test:rls` run (cleanup had been silently
+   blocked by that same bug) were purged via the new RPC.
 4. **Network-failure UX** — ✅ DONE (2026-08-13): `ErrorNotice` primitive
    (message + Retry) wired into home / transactions / grocery / budgets error
    states; `common.retry` in en/fil/ar. Remaining screens (retail/household/
