@@ -1,12 +1,11 @@
 /**
  * Delivery of the export JSON to the user.
- *   - web: Blob + anchor download (Alert-style share sheets don't exist there)
- *   - native: the built-in Share sheet with the JSON as text. Deliberately
- *     dependency-free; swap for expo-file-system + expo-sharing if exports
- *     outgrow text sharing.
+ *   - web: Blob + anchor download (share sheets don't exist there)
+ *   - native: write a real .json file to the cache and open the share sheet
+ *     (dynamic imports keep the native modules out of the web bundle path).
  */
 
-import { Platform, Share } from 'react-native';
+import { Platform } from 'react-native';
 
 export async function saveExport(json: string, filename: string): Promise<void> {
   if (Platform.OS === 'web') {
@@ -21,5 +20,12 @@ export async function saveExport(json: string, filename: string): Promise<void> 
     URL.revokeObjectURL(url);
     return;
   }
-  await Share.share({ title: filename, message: json });
+
+  const [FileSystem, Sharing] = await Promise.all([
+    import('expo-file-system/legacy'),
+    import('expo-sharing'),
+  ]);
+  const uri = `${FileSystem.cacheDirectory}${filename}`;
+  await FileSystem.writeAsStringAsync(uri, json);
+  await Sharing.shareAsync(uri, { mimeType: 'application/json', dialogTitle: filename });
 }

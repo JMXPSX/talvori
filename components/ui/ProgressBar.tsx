@@ -23,6 +23,7 @@ export function ProgressBar({ fraction, state = 'normal', height = 8 }: Progress
   const fill = state === 'over' ? palette.danger : state === 'full' ? palette.accent : palette.brand;
   return (
     <View
+      accessible
       accessibilityRole="progressbar"
       accessibilityValue={{ min: 0, max: 1, now: f }}
       style={[styles.track, { height, backgroundColor: track }]}
