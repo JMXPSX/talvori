@@ -440,8 +440,26 @@
     },
     "comingSoon": "Darating na ang upgrade kasama ng in-app purchases."
   },
+  "account": {
+    "title": "Account",
+    "open": "Account at data",
+    "exportTitle": "I-export ang iyong data",
+    "exportBody": "I-download ang lahat ng nakikita ng iyong mga sambahayan — mga account, transaksyon, badyet, listahan at iba pa — bilang isang JSON file.",
+    "exportCta": "I-export ang aking data",
+    "deleteTitle": "Burahin ang account",
+    "deleteWarning": "Permanenteng mabubura ang iyong account. Ang mga sambahayang ikaw lang ang miyembro ay mabubura kasama ang lahat ng data. Kung may pagmamay-ari kang sambahayang ginagamit pa ng iba, ilipat muna ang pagmamay-ari.",
+    "typeEmailLabel": "I-type ang iyong email para kumpirmahin",
+    "deleteCta": "Burahin ang aking account",
+    "confirmTitle": "Burahin ang iyong account?",
+    "confirmBody": "Hindi na ito maibabalik.",
+    "errors": {
+      "ownerHandoff": "May pagmamay-ari ka pang sambahayan na may ibang miyembro. Ilipat muna ang pagmamay-ari o alisin sila.",
+      "deleteFailed": "Hindi mabura ang iyong account. Subukan muli.",
+      "exportFailed": "Hindi mabuo ang export. Subukan muli."
+    }
+  },
   "errors": {
-    "unknown": "May naganap na mali. Pakisubukang muli.",
+    "unknown":"May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",
     "unauthorized": "Mangyaring mag-sign in upang magpatuloy.",
     "forbidden": "Wala kang access dito.",

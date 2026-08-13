@@ -440,6 +440,24 @@
     },
     "comingSoon": "Upgrades arrive with in-app purchases soon."
   },
+  "account": {
+    "title": "Account",
+    "open": "Account & data",
+    "exportTitle": "Export your data",
+    "exportBody": "Download everything your households can see — accounts, transactions, budgets, lists and more — as a single JSON file.",
+    "exportCta": "Export my data",
+    "deleteTitle": "Delete account",
+    "deleteWarning": "This permanently deletes your account. Households where you are the only member are deleted with all their data. If you own a household that others still use, transfer ownership first.",
+    "typeEmailLabel": "Type your email to confirm",
+    "deleteCta": "Delete my account",
+    "confirmTitle": "Delete your account?",
+    "confirmBody": "This cannot be undone.",
+    "errors": {
+      "ownerHandoff": "You still own a household with other members. Transfer ownership or remove them first.",
+      "deleteFailed": "Couldn't delete your account. Please try again.",
+      "exportFailed": "Couldn't build the export. Please try again."
+    }
+  },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
     "network": "Network problem. Check your connection and retry.",
