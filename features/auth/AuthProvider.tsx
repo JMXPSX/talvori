@@ -55,14 +55,12 @@ function mapAuthError(message: string | undefined): AppError {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [initializing, setInitializing] = useState(true);
+  // Unconfigured client (null supabase) never initializes, so start settled.
+  const [initializing, setInitializing] = useState(() => Boolean(supabase));
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    if (!supabase) {
-      setInitializing(false);
-      return;
-    }
+    if (!supabase) return;
 
     supabase.auth
       .getSession()

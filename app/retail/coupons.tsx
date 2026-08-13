@@ -28,6 +28,8 @@ export default function CouponsScreen() {
   const router = useRouter();
 
   const [coupons, setCoupons] = useState<CouponWithRefs[]>([]);
+  // Expiry reference time, captured when coupons load (render must stay pure).
+  const [now, setNow] = useState(0);
   const [retailers, setRetailers] = useState<RetailerRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
@@ -54,6 +56,7 @@ export default function CouponsScreen() {
     setErrorKey(null);
     try {
       const [cs, rs] = await Promise.all([listCoupons(active.id), listRetailers(active.id)]);
+      setNow(Date.now());
       setCoupons(cs);
       setRetailers(rs);
     } catch (err) {
@@ -146,7 +149,6 @@ export default function CouponsScreen() {
     );
   }
 
-  const now = Date.now();
   const activeCoupons = coupons.filter((c) => couponStatus(c, now) !== 'expired');
   const expiredCoupons = coupons.filter((c) => couponStatus(c, now) === 'expired');
 

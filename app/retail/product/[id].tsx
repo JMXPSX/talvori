@@ -45,6 +45,8 @@ export default function ProductPricesScreen() {
   const [links, setLinks] = useState<RetailerProductWithRetailer[]>([]);
   const [stores, setStores] = useState<RetailerStoreRow[]>([]);
   const [coupons, setCoupons] = useState<CouponWithRefs[]>([]);
+  // Freshness reference time, captured when prices load (render must stay pure).
+  const [now, setNow] = useState(0);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -70,6 +72,7 @@ export default function ProductPricesScreen() {
         listRetailers(active.id),
         listCouponsForProduct(productId),
       ]);
+      setNow(Date.now());
       setProduct(p);
       setPrices(pr);
       setLinks(ls);
@@ -161,7 +164,6 @@ export default function ProductPricesScreen() {
     );
   }
 
-  const now = Date.now();
   const freshLabel = (f: 'fresh' | 'recent' | 'stale'): string =>
     f === 'fresh' ? t('retail.fresh') : f === 'recent' ? t('retail.recent') : t('retail.stale');
 
@@ -217,12 +219,11 @@ export default function ProductPricesScreen() {
         {coupons.length > 0 && sorted[0] && (() => {
           const cheapest = sorted[0];
           const base = cheapest.sale_price_minor ?? cheapest.regular_price_minor;
-          const nowMs = Date.now();
           return (
             <View style={styles.list}>
               <Text variant="heading">{t('coupons.applicableTitle')}</Text>
               {coupons.map((c) => {
-                const r = applyCoupon(c, base, cheapest.currency_code, nowMs);
+                const r = applyCoupon(c, base, cheapest.currency_code, now);
                 return (
                   <View key={c.id} style={styles.card}>
                     <Text variant="heading">{c.title}</Text>

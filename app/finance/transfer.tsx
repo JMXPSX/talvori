@@ -109,7 +109,8 @@ export default function TransferScreen() {
     );
   }
 
-  function AccountPicker({
+  // Render helper (not a nested component — those remount on every render).
+  function renderAccountPicker({
     selected,
     onSelect,
     exclude,
@@ -146,12 +147,12 @@ export default function TransferScreen() {
         <Text variant="caption" muted>
           {t('finance.transfer.fromLabel')}
         </Text>
-        <AccountPicker selected={fromId} onSelect={setFromId} exclude={toId} />
+        {renderAccountPicker({ selected: fromId, onSelect: setFromId, exclude: toId })}
 
         <Text variant="caption" muted>
           {t('finance.transfer.toLabel')}
         </Text>
-        <AccountPicker selected={toId} onSelect={setToId} exclude={fromId} />
+        {renderAccountPicker({ selected: toId, onSelect: setToId, exclude: fromId })}
 
         <TextField
           label={`${t('finance.transfer.fromAmountLabel')}${from ? ` (${from.currency_code})` : ''}`}
