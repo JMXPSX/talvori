@@ -8,7 +8,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text } from '@/components/ui';
+import { Button, Card, EmptyState, Text } from '@/components/ui';
 import { deleteTransaction, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
@@ -94,17 +94,22 @@ export default function TransactionsScreen() {
         {errorKey ? <Text style={{ color: palette.danger }}>{t(errorKey)}</Text> : null}
 
         {items.length === 0 ? (
-          <Text muted>{t('finance.noTransactions')}</Text>
+          <EmptyState
+            icon="list"
+            message={t('finance.noTransactions')}
+            ctaLabel={t('finance.addExpense')}
+            onCta={() => router.push('/finance/entry?type=expense')}
+          />
         ) : (
           <View style={styles.list}>
             {items.map((tx) => {
               const positive = tx.direction === 'in';
               const sign = positive ? '+' : '−';
               return (
-                <View key={tx.id} style={styles.card}>
+                <Card key={tx.id}>
                   <View style={styles.cardRow}>
                     <Text>{tx.account?.name ?? ''}</Text>
-                    <Text style={{ color: positive ? palette.success : palette.danger }}>
+                    <Text variant="heading" style={{ color: positive ? palette.success : palette.danger }}>
                       {sign}
                       {formatAmount(tx.amount_minor, tx.currency_code)}
                     </Text>
@@ -119,7 +124,7 @@ export default function TransactionsScreen() {
                       {t('finance.delete')}
                     </Text>
                   </Pressable>
-                </View>
+                </Card>
               );
             })}
           </View>
