@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
 import { Button, Text } from '@/components/ui';
+import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { listAccountBalances, listAccounts } from '@/features/finance/api';
 import { sumInReporting } from '@/features/finance/fx';
@@ -24,6 +25,7 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active, loading: hLoading } = useActiveHousehold();
+  const { has } = usePlan();
 
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [balances, setBalances] = useState<Record<string, AccountBalanceRow>>({});
@@ -127,6 +129,16 @@ export default function HomeScreen() {
                 currency: a.currency_code,
               }));
               const reporting = active.reporting_currency_code;
+              if (!has('multi_currency_dashboard')) {
+                return (
+                  <Link href="/subscription" style={styles.totalCard}>
+                    <Text variant="heading">{t('billing.lockedTitle')}</Text>
+                    <Text variant="caption" muted>
+                      {t('billing.capMultiCurrency')} · {t('billing.manageCta')}
+                    </Text>
+                  </Link>
+                );
+              }
               const { totalMinor, missing } = sumInReporting(
                 items,
                 reporting,

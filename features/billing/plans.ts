@@ -6,19 +6,16 @@
 
 export type PlanCode = 'free' | 'premium';
 
-export type Capability =
-  | 'multi_currency_dashboard'
-  | 'retail_comparison'
-  | 'coupons'
-  | 'multiple_households'
-  | 'unlimited_goals';
+// Boolean feature capabilities that are actually enforced by gates. Metering-style
+// perks (multiple households, unlimited savings goals) need numeric limits and are
+// deferred to a future metering slice — not listed here so Premium never advertises
+// what it can't yet deliver.
+export type Capability = 'multi_currency_dashboard' | 'retail_comparison' | 'coupons';
 
 const ALL_CAPABILITIES: Capability[] = [
   'multi_currency_dashboard',
   'retail_comparison',
   'coupons',
-  'multiple_households',
-  'unlimited_goals',
 ];
 
 export const PLAN_CAPABILITIES: Record<PlanCode, Capability[]> = {

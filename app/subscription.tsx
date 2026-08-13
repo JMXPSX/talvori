@@ -20,8 +20,6 @@ const CAP_LABEL: Record<Capability, string> = {
   multi_currency_dashboard: 'billing.capMultiCurrency',
   retail_comparison: 'billing.capRetailComparison',
   coupons: 'billing.capCoupons',
-  multiple_households: 'billing.capMultipleHouseholds',
-  unlimited_goals: 'billing.capUnlimitedGoals',
 };
 
 export default function SubscriptionScreen() {
