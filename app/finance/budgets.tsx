@@ -7,10 +7,18 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Feather } from '@expo/vector-icons';
+
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Card, ErrorNotice, ProgressBar, Text, TextField } from '@/components/ui';
+import { Button, Card, ErrorNotice, ProgressBar, Text, TextField, useActionSheet } from '@/components/ui';
 import { listCategories } from '@/features/finance/api';
-import { addAllocation, listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
+import {
+  addAllocation,
+  deleteAllocation,
+  deleteBudget,
+  listBudgetStatus,
+  listBudgets,
+} from '@/features/finance/planningApi';
 import { addAllocationSchema } from '@/features/finance/planningSchemas';
 import { budgetRemainingMinor } from '@/features/finance/progress';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -24,6 +32,7 @@ export default function BudgetsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active } = useActiveHousehold();
+  const sheet = useActionSheet();
 
   const [budgets, setBudgets] = useState<BudgetRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
@@ -70,6 +79,59 @@ export default function BudgetsScreen() {
       setErrorKey(toAppError(err).messageKey);
     }
   }, []);
+
+  function onDeleteBudget(budget: BudgetRow) {
+    sheet.show({
+      title: t('planning.budgets.confirmDeleteTitle'),
+      message: t('planning.budgets.confirmDeleteBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteBudget(budget.id);
+                if (selected?.id === budget.id) {
+                  setSelected(null);
+                  setStatusRows([]);
+                }
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
+  }
+
+  function onDeleteAllocation(row: BudgetStatusRow) {
+    if (!selected) return;
+    sheet.show({
+      title: t('planning.budgets.confirmDeleteAllocationTitle'),
+      message: t('planning.budgets.confirmDeleteAllocationBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteAllocation(row.allocation_id);
+                setStatusRows(await listBudgetStatus(selected.id));
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
+  }
 
   async function onAddAllocation() {
     if (!active || !selected) return;
@@ -120,7 +182,17 @@ export default function BudgetsScreen() {
                   style={[styles.card, isSel ? styles.cardSelected : null]}
                   onPress={() => selectBudget(b)}
                 >
-                  <Text variant="heading">{b.name}</Text>
+                  <View style={styles.cardHeader}>
+                    <Text variant="heading">{b.name}</Text>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={t('finance.delete')}
+                      hitSlop={12}
+                      onPress={() => onDeleteBudget(b)}
+                    >
+                      <Feather name="trash-2" size={18} color={palette.textMuted} />
+                    </Pressable>
+                  </View>
                   <Text variant="caption" muted>
                     {b.currency_code} · {b.period_start} → {b.period_end}
                   </Text>
@@ -150,10 +222,20 @@ export default function BudgetsScreen() {
                       <Text numberOfLines={1} style={styles.allocName}>
                         {categoryName(row.category_id)}
                       </Text>
-                      <Text variant="caption" muted>
-                        {formatAmount(row.spent_minor, row.currency_code)} /{' '}
-                        {formatAmount(row.limit_minor, row.currency_code)}
-                      </Text>
+                      <View style={styles.allocTrailing}>
+                        <Text variant="caption" muted>
+                          {formatAmount(row.spent_minor, row.currency_code)} /{' '}
+                          {formatAmount(row.limit_minor, row.currency_code)}
+                        </Text>
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={t('finance.delete')}
+                          hitSlop={12}
+                          onPress={() => onDeleteAllocation(row)}
+                        >
+                          <Feather name="trash-2" size={16} color={palette.textMuted} />
+                        </Pressable>
+                      </View>
                     </View>
                     <ProgressBar fraction={fraction} state={state} />
                     {over ? (
@@ -224,6 +306,7 @@ export default function BudgetsScreen() {
           onPress={() => router.push('/finance/budget-new')}
         />
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }
@@ -241,9 +324,11 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   cardSelected: { borderColor: palette.brand },
+  cardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   section: { gap: spacing.sm },
   allocCard: { gap: spacing.sm },
   allocHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  allocTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   allocName: { flexShrink: 1 },
   leftCaption: { color: palette.success },
   overCaption: { color: palette.danger, fontWeight: '600' },

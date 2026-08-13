@@ -171,6 +171,12 @@ export async function createTransfer(input: {
   return data as string;
 }
 
+/** Delete an account and (via FK cascade) every transaction on it. RLS: owner/admin. */
+export async function deleteAccount(id: string): Promise<void> {
+  const { error } = await getSupabase().from('accounts').delete().eq('id', id);
+  if (error) fail('finance.errors.deleteFailed', error);
+}
+
 export async function deleteTransaction(id: string): Promise<void> {
   const { error } = await getSupabase().from('transactions').delete().eq('id', id);
   if (error) fail('finance.errors.deleteFailed', error);

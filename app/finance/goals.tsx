@@ -4,14 +4,17 @@ import { getLocales } from 'expo-localization';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Feather } from '@expo/vector-icons';
+
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
+import { Button, Text, TextField, useActionSheet } from '@/components/ui';
 import {
   addContribution,
   createGoal,
+  deleteGoal,
   listGoalStatus,
   listGoals,
 } from '@/features/finance/planningApi';
@@ -35,6 +38,7 @@ function deviceCurrency(): string {
 export default function GoalsScreen() {
   const { t } = useTranslation();
   const { active } = useActiveHousehold();
+  const sheet = useActionSheet();
 
   const [goals, setGoals] = useState<SavingsGoalRow[]>([]);
   const [status, setStatus] = useState<Record<string, SavingsGoalStatusRow>>({});
@@ -90,6 +94,30 @@ export default function GoalsScreen() {
     }
   }
 
+  function onDeleteGoal(goal: SavingsGoalRow) {
+    sheet.show({
+      title: t('planning.goals.confirmDeleteTitle'),
+      message: t('planning.goals.confirmDeleteBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteGoal(goal.id);
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
+  }
+
   async function onCreate() {
     if (!active) return;
     setFormError(null);
@@ -137,9 +165,19 @@ export default function GoalsScreen() {
                 <View key={g.id} style={styles.card}>
                   <View style={styles.cardRow}>
                     <Text variant="heading">{g.name}</Text>
-                    <Text variant="caption" muted>
-                      {formatAmount(saved, g.currency_code)} / {formatAmount(g.target_minor, g.currency_code)}
-                    </Text>
+                    <View style={styles.cardTrailing}>
+                      <Text variant="caption" muted>
+                        {formatAmount(saved, g.currency_code)} / {formatAmount(g.target_minor, g.currency_code)}
+                      </Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={t('finance.delete')}
+                        hitSlop={12}
+                        onPress={() => onDeleteGoal(g)}
+                      >
+                        <Feather name="trash-2" size={18} color={palette.textMuted} />
+                      </Pressable>
+                    </View>
                   </View>
                   <View style={styles.bar}>
                     <View style={[styles.barFill, { width: `${Math.round(ratio * 100)}%` }]} />
@@ -202,6 +240,7 @@ export default function GoalsScreen() {
           />
         </View>
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }
@@ -219,6 +258,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   bar: { height: 8, borderRadius: radius.pill, backgroundColor: palette.brandMuted, overflow: 'hidden' },
   barFill: { height: 8, backgroundColor: palette.brand },
   inlineRow: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm, marginTop: spacing.xs },

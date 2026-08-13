@@ -27,6 +27,29 @@ async function currentUserId(): Promise<string> {
   return data.user.id;
 }
 
+// Deletes ride the FK cascades (allocations/contributions/payments go with
+// their parent); RLS narrows who may delete.
+async function deleteRow(table: string, id: string): Promise<void> {
+  const { error } = await getSupabase().from(table).delete().eq('id', id);
+  if (error) fail('finance.errors.deleteFailed', error);
+}
+
+export async function deleteBudget(id: string): Promise<void> {
+  return deleteRow('budgets', id);
+}
+
+export async function deleteAllocation(id: string): Promise<void> {
+  return deleteRow('budget_allocations', id);
+}
+
+export async function deleteGoal(id: string): Promise<void> {
+  return deleteRow('savings_goals', id);
+}
+
+export async function deleteDebt(id: string): Promise<void> {
+  return deleteRow('debts', id);
+}
+
 // --- budgets ---------------------------------------------------------------
 export async function listBudgets(householdId: string): Promise<BudgetRow[]> {
   const { data, error } = await getSupabase()

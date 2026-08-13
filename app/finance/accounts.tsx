@@ -8,9 +8,11 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Feather } from '@expo/vector-icons';
+
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
-import { createAccount, listAccountBalances, listAccounts } from '@/features/finance/api';
+import { Button, Text, TextField, useActionSheet } from '@/components/ui';
+import { createAccount, deleteAccount, listAccountBalances, listAccounts } from '@/features/finance/api';
 import { accountTypeSchema, createAccountSchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { AccountBalanceRow, AccountRow, AccountType } from '@/lib/database.types';
@@ -33,6 +35,7 @@ export default function AccountsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active } = useActiveHousehold();
+  const sheet = useActionSheet();
 
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [balances, setBalances] = useState<Record<string, AccountBalanceRow>>({});
@@ -72,6 +75,30 @@ export default function AccountsScreen() {
       void load();
     }, [load]),
   );
+
+  function onDeleteAccount(account: AccountRow) {
+    sheet.show({
+      title: t('finance.accounts.confirmDeleteTitle'),
+      message: t('finance.accounts.confirmDeleteBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteAccount(account.id);
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
+  }
 
   async function onCreate() {
     if (!active) return;
@@ -122,9 +149,19 @@ export default function AccountsScreen() {
                 <View key={a.id} style={styles.card}>
                   <View style={styles.cardRow}>
                     <Text>{a.name}</Text>
-                    <Text>
-                      {formatAmount(bal ? bal.balance_minor : a.opening_balance_minor, a.currency_code)}
-                    </Text>
+                    <View style={styles.cardTrailing}>
+                      <Text>
+                        {formatAmount(bal ? bal.balance_minor : a.opening_balance_minor, a.currency_code)}
+                      </Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={t('finance.delete')}
+                        hitSlop={12}
+                        onPress={() => onDeleteAccount(a)}
+                      >
+                        <Feather name="trash-2" size={18} color={palette.textMuted} />
+                      </Pressable>
+                    </View>
                   </View>
                   <Text variant="caption" muted>
                     {t(`finance.accounts.types.${a.type}`)} · {a.currency_code}
@@ -202,6 +239,7 @@ export default function AccountsScreen() {
           </Text>
         </Pressable>
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }
@@ -219,6 +257,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },

@@ -124,6 +124,8 @@
       "currencyLabel": "Currency",
       "openingBalanceLabel": "Panimulang balanse",
       "createCta": "Magdagdag ng account",
+      "confirmDeleteTitle": "Burahin ang account na ito?",
+      "confirmDeleteBody": "Permanente ring mabubura ang bawat transaksyong naitala rito.",
       "types": {
         "cash": "Cash",
         "bank": "Bangko",
@@ -196,7 +198,11 @@
       "remaining": "Natitira",
       "newCta": "Bagong badyet",
       "left": "{{amount}} na natitira",
-      "overBy": "{{amount}} lampas sa limitasyon"
+      "overBy": "{{amount}} lampas sa limitasyon",
+      "confirmDeleteTitle": "Burahin ang badyet na ito?",
+      "confirmDeleteBody": "Aalisin din ang mga limitasyon nito sa kategorya. Hindi maaapektuhan ang mga transaksyon.",
+      "confirmDeleteAllocationTitle": "Alisin ang limitasyong ito?",
+      "confirmDeleteAllocationBody": "Hindi maaapektuhan ang kasaysayan ng paggastos."
     },
     "goals": {
       "title": "Mga Layunin sa Ipon",
@@ -212,7 +218,9 @@
       "remaining": "Natitira",
       "contributeCta": "Magdagdag ng kontribusyon",
       "amountLabel": "Halaga",
-      "noteLabel": "Tala (opsyonal)"
+      "noteLabel": "Tala (opsyonal)",
+      "confirmDeleteTitle": "Burahin ang layuning ito?",
+      "confirmDeleteBody": "Aalisin din ang kasaysayan ng mga kontribusyon nito."
     },
     "debts": {
       "title": "Mga Utang",
@@ -228,7 +236,9 @@
       "balance": "Balanse",
       "payCta": "Magtala ng bayad",
       "amountLabel": "Halaga",
-      "noteLabel": "Tala (opsyonal)"
+      "noteLabel": "Tala (opsyonal)",
+      "confirmDeleteTitle": "Burahin ang utang na ito?",
+      "confirmDeleteBody": "Aalisin din ang kasaysayan ng mga bayad nito."
     },
     "errors": {
       "loadFailed": "Hindi ma-load ang datos ng pagpaplano.",

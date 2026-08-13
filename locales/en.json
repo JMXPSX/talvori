@@ -124,6 +124,8 @@
       "currencyLabel": "Currency",
       "openingBalanceLabel": "Opening balance",
       "createCta": "Add account",
+      "confirmDeleteTitle": "Delete this account?",
+      "confirmDeleteBody": "This also permanently deletes every transaction recorded on it.",
       "types": {
         "cash": "Cash",
         "bank": "Bank",
@@ -196,7 +198,11 @@
       "remaining": "Remaining",
       "newCta": "New budget",
       "left": "{{amount}} left",
-      "overBy": "{{amount}} over limit"
+      "overBy": "{{amount}} over limit",
+      "confirmDeleteTitle": "Delete this budget?",
+      "confirmDeleteBody": "Its category limits are removed too. Transactions are not affected.",
+      "confirmDeleteAllocationTitle": "Remove this limit?",
+      "confirmDeleteAllocationBody": "Spending history is not affected."
     },
     "goals": {
       "title": "Savings goals",
@@ -212,7 +218,9 @@
       "remaining": "Remaining",
       "contributeCta": "Add contribution",
       "amountLabel": "Amount",
-      "noteLabel": "Note (optional)"
+      "noteLabel": "Note (optional)",
+      "confirmDeleteTitle": "Delete this goal?",
+      "confirmDeleteBody": "Its contribution history is removed too."
     },
     "debts": {
       "title": "Debts",
@@ -228,7 +236,9 @@
       "balance": "Balance",
       "payCta": "Record payment",
       "amountLabel": "Amount",
-      "noteLabel": "Note (optional)"
+      "noteLabel": "Note (optional)",
+      "confirmDeleteTitle": "Delete this debt?",
+      "confirmDeleteBody": "Its payment history is removed too."
     },
     "errors": {
       "loadFailed": "Couldn't load planning data.",

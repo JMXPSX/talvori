@@ -4,12 +4,20 @@ import { getLocales } from 'expo-localization';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Feather } from '@expo/vector-icons';
+
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
-import { addPayment, createDebt, listDebtStatus, listDebts } from '@/features/finance/planningApi';
+import { Button, Text, TextField, useActionSheet } from '@/components/ui';
+import {
+  addPayment,
+  createDebt,
+  deleteDebt,
+  listDebtStatus,
+  listDebts,
+} from '@/features/finance/planningApi';
 import { createDebtSchema } from '@/features/finance/planningSchemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { DebtRow, DebtStatusRow } from '@/lib/database.types';
@@ -29,6 +37,7 @@ function deviceCurrency(): string {
 export default function DebtsScreen() {
   const { t } = useTranslation();
   const { active } = useActiveHousehold();
+  const sheet = useActionSheet();
 
   const [debts, setDebts] = useState<DebtRow[]>([]);
   const [status, setStatus] = useState<Record<string, DebtStatusRow>>({});
@@ -84,6 +93,30 @@ export default function DebtsScreen() {
     }
   }
 
+  function onDeleteDebt(debt: DebtRow) {
+    sheet.show({
+      title: t('planning.debts.confirmDeleteTitle'),
+      message: t('planning.debts.confirmDeleteBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteDebt(debt.id);
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
+  }
+
   async function onCreate() {
     if (!active) return;
     setFormError(null);
@@ -134,9 +167,19 @@ export default function DebtsScreen() {
                 <View key={d.id} style={styles.card}>
                   <View style={styles.cardRow}>
                     <Text variant="heading">{d.name}</Text>
-                    <Text variant="heading" style={{ color: balance > 0 ? palette.danger : palette.success }}>
-                      {formatAmount(balance, d.currency_code)}
-                    </Text>
+                    <View style={styles.cardTrailing}>
+                      <Text variant="heading" style={{ color: balance > 0 ? palette.danger : palette.success }}>
+                        {formatAmount(balance, d.currency_code)}
+                      </Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={t('finance.delete')}
+                        hitSlop={12}
+                        onPress={() => onDeleteDebt(d)}
+                      >
+                        <Feather name="trash-2" size={18} color={palette.textMuted} />
+                      </Pressable>
+                    </View>
                   </View>
                   <Text variant="caption" muted>
                     {t('planning.debts.balance')}
@@ -197,6 +240,7 @@ export default function DebtsScreen() {
           />
         </View>
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }
@@ -214,6 +258,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   inlineRow: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm, marginTop: spacing.xs },
   inlineField: { flex: 1 },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },

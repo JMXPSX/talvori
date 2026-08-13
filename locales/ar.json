@@ -124,6 +124,8 @@
       "currencyLabel": "العملة",
       "openingBalanceLabel": "الرصيد الافتتاحي",
       "createCta": "إضافة حساب",
+      "confirmDeleteTitle": "حذف هذا الحساب؟",
+      "confirmDeleteBody": "سيؤدي هذا أيضًا إلى حذف كل معاملة مسجلة عليه نهائيًا.",
       "types": {
         "cash": "نقد",
         "bank": "بنك",
@@ -196,7 +198,11 @@
       "remaining": "المتبقي",
       "newCta": "ميزانية جديدة",
       "left": "المتبقي {{amount}}",
-      "overBy": "{{amount}} فوق الحد"
+      "overBy": "{{amount}} فوق الحد",
+      "confirmDeleteTitle": "حذف هذه الميزانية؟",
+      "confirmDeleteBody": "ستُزال حدود الفئات الخاصة بها أيضًا. لن تتأثر المعاملات.",
+      "confirmDeleteAllocationTitle": "إزالة هذا الحد؟",
+      "confirmDeleteAllocationBody": "لن يتأثر سجل الإنفاق."
     },
     "goals": {
       "title": "أهداف الادخار",
@@ -212,7 +218,9 @@
       "remaining": "المتبقي",
       "contributeCta": "إضافة مساهمة",
       "amountLabel": "المبلغ",
-      "noteLabel": "ملاحظة (اختياري)"
+      "noteLabel": "ملاحظة (اختياري)",
+      "confirmDeleteTitle": "حذف هذا الهدف؟",
+      "confirmDeleteBody": "سيُزال سجل مساهماته أيضًا."
     },
     "debts": {
       "title": "الديون",
@@ -228,7 +236,9 @@
       "balance": "الرصيد",
       "payCta": "تسجيل دفعة",
       "amountLabel": "المبلغ",
-      "noteLabel": "ملاحظة (اختياري)"
+      "noteLabel": "ملاحظة (اختياري)",
+      "confirmDeleteTitle": "حذف هذا الدين؟",
+      "confirmDeleteBody": "سيُزال سجل مدفوعاته أيضًا."
     },
     "errors": {
       "loadFailed": "تعذّر تحميل بيانات التخطيط.",
