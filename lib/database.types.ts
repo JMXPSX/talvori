@@ -29,7 +29,7 @@ export interface HouseholdRow {
   name: string;
   reporting_currency_code: string;
   is_cross_border: boolean;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -69,7 +69,7 @@ export interface AccountRow {
   currency_code: string;
   opening_balance_minor: number;
   is_archived: boolean;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -97,7 +97,7 @@ export interface TransactionRow {
   occurred_at: string;
   transfer_group_id: string | null;
   fx_rate: number | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -118,7 +118,7 @@ export interface BudgetRow {
   period_start: string;
   period_end: string;
   is_archived: boolean;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -150,7 +150,7 @@ export interface SavingsGoalRow {
   target_minor: number;
   target_date: string | null;
   is_archived: boolean;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -162,7 +162,7 @@ export interface GoalContributionRow {
   amount_minor: number;
   occurred_at: string;
   note: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
 }
 
@@ -183,7 +183,7 @@ export interface DebtRow {
   apr: number | null;
   due_day: number | null;
   is_archived: boolean;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -195,7 +195,7 @@ export interface DebtPaymentRow {
   amount_minor: number;
   occurred_at: string;
   note: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
 }
 
@@ -217,7 +217,7 @@ export interface FxRateSnapshotRow {
   rate: number;
   as_of: string;
   source: string;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
 }
 
@@ -316,7 +316,7 @@ export interface GroceryListRow {
   status: GroceryListStatus;
   completed_at: string | null;
   completed_transaction_id: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -332,7 +332,7 @@ export interface GroceryItemRow {
   estimated_price_minor: number | null;
   actual_price_minor: number | null;
   is_purchased: boolean;
-  added_by: string;
+  added_by: string | null;
   purchased_by: string | null;
   purchased_at: string | null;
   sort_order: number;
@@ -348,7 +348,7 @@ export interface RetailerRow {
   country_code: string | null;
   website: string | null;
   notes: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -368,7 +368,7 @@ export interface RetailerStoreRow {
   currency_code: string;
   is_online: boolean;
   timezone: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -385,7 +385,7 @@ export interface ProductRow {
   size_unit: string | null;
   pack_count: number;
   category: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -397,7 +397,7 @@ export interface RetailerProductRow {
   retailer_id: string;
   retailer_sku: string | null;
   display_name: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -414,7 +414,7 @@ export interface PriceSnapshotRow {
   observed_at: string;
   valid_until: string | null;
   source: string;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
 }
 
@@ -424,7 +424,7 @@ export interface SavedLocationRow {
   label: string;
   store_id: string;
   is_active: boolean;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -449,7 +449,7 @@ export interface CouponRow {
   max_discount_minor: number | null;
   starts_at: string | null;
   expires_at: string | null;
-  created_by: string;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
