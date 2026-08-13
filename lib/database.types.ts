@@ -453,3 +453,16 @@ export interface CouponRow {
   created_at: string;
   updated_at: string;
 }
+
+// --- Phase 6 (6a): entitlements --------------------------------------------
+export interface HouseholdSubscriptionRow {
+  id: string;
+  household_id: string;
+  plan_code: 'free' | 'premium';
+  status: 'active' | 'canceled' | 'expired';
+  source: 'manual' | 'apple' | 'google' | 'stripe';
+  current_period_end: string | null;
+  updated_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
