@@ -23,8 +23,8 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: palette.background },
-        headerTintColor: palette.text,
+        // Tabs render their own in-screen titles; the native header would double them.
+        headerShown: false,
         tabBarActiveTintColor: palette.brand,
         tabBarInactiveTintColor: palette.textMuted,
         tabBarStyle: { backgroundColor: palette.background, borderTopColor: palette.border },

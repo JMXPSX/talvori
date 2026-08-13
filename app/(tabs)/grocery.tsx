@@ -94,7 +94,7 @@ export default function GroceryScreen() {
   const completed = lists.filter((l) => l.status === 'completed');
 
   return (
-    <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
+    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={styles.content}>
         {loading ? (
           <ActivityIndicator color={palette.brand} />
