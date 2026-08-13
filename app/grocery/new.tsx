@@ -30,9 +30,10 @@ export default function GroceryNewScreen() {
   const { active } = useActiveHousehold();
 
   const [name, setName] = useState('');
-  const [currency, setCurrency] = useState(() =>
-    active ? deviceCurrency(active.reporting_currency_code) : '',
-  );
+  // Derived default: the household currency appears whenever the provider
+  // resolves (even after mount, e.g. deep links) until the user edits.
+  const [currencyInput, setCurrencyInput] = useState<string | null>(null);
+  const currency = currencyInput ?? (active ? deviceCurrency(active.reporting_currency_code) : '');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -75,7 +76,7 @@ export default function GroceryNewScreen() {
             <TextField
               label={t('grocery.currencyLabel')}
               value={currency}
-              onChangeText={setCurrency}
+              onChangeText={setCurrencyInput}
               hint={t('household.currencyHint')}
               autoCapitalize="characters"
               error={fieldErrors.currencyCode ? t('errors.validation') : undefined}
