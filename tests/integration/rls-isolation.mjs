@@ -77,8 +77,12 @@ function userClient() {
 const stamp = Date.now();
 const userA = { email: `rls-a-${stamp}@example.com`, password: 'Password123!' };
 const userB = { email: `rls-b-${stamp}@example.com`, password: 'Password123!' };
+const userD1 = { email: `rls-d1-${stamp}@example.com`, password: 'Password123!' };
+const userD2 = { email: `rls-d2-${stamp}@example.com`, password: 'Password123!' };
 let idA;
 let idB;
+let idD1;
+let idD2;
 
 async function createConfirmedUser(u) {
   const { data, error } = await admin.auth.admin.createUser({
@@ -549,11 +553,83 @@ async function main() {
   let received = await realtimeDelivers(1);
   if (!received) received = await realtimeDelivers(2);
   ok("realtime delivers A's insert to member B (<=2 tries)", received === true);
+
+  // --- account deletion: delete_my_account() RPC ----------------------------
+  // Needs migration 20260813000010_account_deletion.sql applied.
+  console.log('\nAccount deletion');
+  idD1 = await createConfirmedUser(userD1);
+  idD2 = await createConfirmedUser(userD2);
+  const d1 = await signedInClient(userD1);
+  const d2 = await signedInClient(userD2);
+
+  // D1 owns a household; D2 joins as a member.
+  const { data: dh, error: dhErr } = await d1.rpc('create_household', {
+    _name: 'D Household',
+    _reporting_currency_code: 'USD',
+  });
+  ok('D1 can create a household', !dhErr && dh?.id);
+  const dHid = dh?.id;
+  await d1.from('household_invitations').insert({
+    household_id: dHid,
+    email: userD2.email,
+    invited_by: idD1,
+    role: 'member',
+  });
+  const { data: dInv } = await d1
+    .from('household_invitations')
+    .select('token')
+    .eq('household_id', dHid)
+    .eq('email', userD2.email)
+    .single();
+  const { error: dAcceptErr } = await d2.rpc('accept_invitation', { _token: dInv?.token });
+  ok('D2 can join the household', !dAcceptErr);
+
+  // Owner with another member: deletion must be refused.
+  const { error: blockedErr } = await d1.rpc('delete_my_account');
+  ok(
+    'owner with members is blocked (owner_handoff_required)',
+    Boolean(blockedErr) && String(blockedErr?.message ?? '').includes('owner_handoff_required'),
+  );
+
+  // D2 leaves content behind, then deletes their own account (plain member: allowed).
+  const { data: dList, error: dListErr } = await d2
+    .from('grocery_lists')
+    .insert({ household_id: dHid, name: 'D2 list', currency_code: 'USD', created_by: idD2 })
+    .select('id')
+    .single();
+  ok('member D2 can create a shared list', !dListErr && dList?.id);
+  const d2OriginalId = idD2;
+  const { error: d2DelErr } = await d2.rpc('delete_my_account');
+  ok('plain member can delete their account', !d2DelErr);
+  if (!d2DelErr) idD2 = null; // self-deleted; skip admin cleanup
+
+  const { data: d2Gone } = await admin.auth.admin.getUserById(d2OriginalId);
+  ok("D2's auth user is gone", !d2Gone?.user);
+  const { data: survivedList } = await d1
+    .from('grocery_lists')
+    .select('id, created_by')
+    .eq('household_id', dHid)
+    .eq('name', 'D2 list')
+    .single();
+  ok("D2's shared list survives with created_by null", Boolean(survivedList) && survivedList.created_by === null);
+
+  // Now sole member: the owner can delete; household data goes with them.
+  const { error: d1DelErr } = await d1.rpc('delete_my_account');
+  ok('sole-member owner can delete their account', !d1DelErr);
+  if (!d1DelErr) idD1 = null;
+  const { data: dhGone } = await admin.from('households').select('id').eq('id', dHid);
+  ok('the household and its data are gone (service-role check)', (dhGone ?? []).length === 0);
+
+  // Unauthenticated callers cannot execute the RPC.
+  const { error: anonErr } = await userClient().rpc('delete_my_account');
+  ok('anon cannot call delete_my_account', Boolean(anonErr));
 }
 
 async function cleanup() {
   if (idA) await admin.auth.admin.deleteUser(idA);
   if (idB) await admin.auth.admin.deleteUser(idB);
+  if (idD1) await admin.auth.admin.deleteUser(idD1);
+  if (idD2) await admin.auth.admin.deleteUser(idD2);
 }
 
 main()
