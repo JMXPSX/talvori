@@ -5,7 +5,9 @@
     "save": "Save",
     "cancel": "Cancel",
     "continue": "Continue",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "today": "Today",
+    "yesterday": "Yesterday"
   },
   "nav": {
     "home": "Home",
@@ -101,6 +103,9 @@
     "recentTitle": "Recent transactions",
     "noTransactions": "No transactions yet.",
     "delete": "Delete",
+    "newTransaction": "New transaction",
+    "confirmDeleteTitle": "Delete transaction?",
+    "confirmDeleteBody": "This removes it from your household's history and balances.",
     "accounts": {
       "title": "Accounts",
       "addTitle": "Add account",
@@ -178,7 +183,10 @@
       "uncategorized": "Uncategorized",
       "limit": "Limit",
       "spent": "Spent",
-      "remaining": "Remaining"
+      "remaining": "Remaining",
+      "newCta": "New budget",
+      "left": "{{amount}} left",
+      "overBy": "{{amount}} over limit"
     },
     "goals": {
       "title": "Savings goals",
@@ -240,13 +248,14 @@
   },
   "grocery": {
     "title": "Grocery",
-    "empty": "No lists yet. Create one below.",
+    "empty": "No lists yet. Tap + to create one.",
     "activeSection": "Active",
     "completedSection": "Completed",
     "newListTitle": "New list",
     "nameLabel": "List name",
     "currencyLabel": "Currency",
     "createCta": "Create list",
+    "newCta": "New list",
     "openCta": "Open",
     "itemsCount": "{{count}} item",
     "itemsCount_other": "{{count}} items",

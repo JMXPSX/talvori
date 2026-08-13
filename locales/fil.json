@@ -5,7 +5,9 @@
     "save": "I-save",
     "cancel": "Kanselahin",
     "continue": "Magpatuloy",
-    "comingSoon": "Malapit nang dumating"
+    "comingSoon": "Malapit nang dumating",
+    "today": "Ngayon",
+    "yesterday": "Kahapon"
   },
   "nav": {
     "home": "Home",
@@ -101,6 +103,9 @@
     "recentTitle": "Mga kamakailang transaksyon",
     "noTransactions": "Wala pang transaksyon.",
     "delete": "Burahin",
+    "newTransaction": "Bagong transaksyon",
+    "confirmDeleteTitle": "Burahin ang transaksyon?",
+    "confirmDeleteBody": "Aalisin nito ito sa kasaysayan at mga balanse ng inyong sambahayan.",
     "accounts": {
       "title": "Mga Account",
       "addTitle": "Magdagdag ng account",
@@ -178,7 +183,10 @@
       "uncategorized": "Walang kategorya",
       "limit": "Limitasyon",
       "spent": "Nagastos",
-      "remaining": "Natitira"
+      "remaining": "Natitira",
+      "newCta": "Bagong badyet",
+      "left": "{{amount}} na natitira",
+      "overBy": "{{amount}} lampas sa limitasyon"
     },
     "goals": {
       "title": "Mga Layunin sa Ipon",
@@ -240,13 +248,14 @@
   },
   "grocery": {
     "title": "Groseri",
-    "empty": "Wala pang listahan. Gumawa ng isa sa ibaba.",
+    "empty": "Wala pang listahan. I-tap ang + para gumawa ng isa.",
     "activeSection": "Aktibo",
     "completedSection": "Tapos na",
     "newListTitle": "Bagong listahan",
     "nameLabel": "Pangalan ng listahan",
     "currencyLabel": "Pera",
     "createCta": "Gumawa ng listahan",
+    "newCta": "Bagong listahan",
     "openCta": "Buksan",
     "itemsCount": "{{count}} item",
     "itemsCount_other": "{{count}} na item",

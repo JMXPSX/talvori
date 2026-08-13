@@ -5,7 +5,9 @@
     "save": "حفظ",
     "cancel": "إلغاء",
     "continue": "متابعة",
-    "comingSoon": "قريبًا"
+    "comingSoon": "قريبًا",
+    "today": "اليوم",
+    "yesterday": "أمس"
   },
   "nav": {
     "home": "الرئيسية",
@@ -101,6 +103,9 @@
     "recentTitle": "أحدث المعاملات",
     "noTransactions": "لا توجد معاملات بعد.",
     "delete": "حذف",
+    "newTransaction": "معاملة جديدة",
+    "confirmDeleteTitle": "حذف المعاملة؟",
+    "confirmDeleteBody": "سيؤدي هذا إلى إزالتها من سجل أسرتك وأرصدتها.",
     "accounts": {
       "title": "الحسابات",
       "addTitle": "إضافة حساب",
@@ -178,7 +183,10 @@
       "uncategorized": "بدون فئة",
       "limit": "الحد",
       "spent": "المصروف",
-      "remaining": "المتبقي"
+      "remaining": "المتبقي",
+      "newCta": "ميزانية جديدة",
+      "left": "المتبقي {{amount}}",
+      "overBy": "{{amount}} فوق الحد"
     },
     "goals": {
       "title": "أهداف الادخار",
@@ -240,13 +248,14 @@
   },
   "grocery": {
     "title": "البقالة",
-    "empty": "لا توجد قوائم بعد. أنشئ واحدة أدناه.",
+    "empty": "لا توجد قوائم بعد. اضغط + لإنشاء واحدة.",
     "activeSection": "نشطة",
     "completedSection": "مكتملة",
     "newListTitle": "قائمة جديدة",
     "nameLabel": "اسم القائمة",
     "currencyLabel": "العملة",
     "createCta": "إنشاء قائمة",
+    "newCta": "قائمة جديدة",
     "openCta": "فتح",
     "itemsCount": "عنصر {{count}}",
     "itemsCount_other": "{{count}} عناصر",
