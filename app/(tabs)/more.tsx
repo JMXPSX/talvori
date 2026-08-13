@@ -1,18 +1,32 @@
-/** More tab. Hosts sign-out now; household, goals, security, settings land later. */
+/** More tab: profile card, navigation rows, and sign-out. */
 
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { palette, spacing } from '@/components/theme';
-import { Button, Screen, Text } from '@/components/ui';
+import { palette, radius, spacing } from '@/components/theme';
+import { Button, Card, ListRow, Screen, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
+
+/** "maria.santos" → "MS", "jmxpsx4" → "JM". */
+function initialsFromEmail(email: string): string {
+  const local = email.split('@')[0] ?? '';
+  const parts = local.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+  const letters =
+    parts.length >= 2 ? `${parts[0]?.charAt(0) ?? ''}${parts[1]?.charAt(0) ?? ''}` : local.slice(0, 2);
+  return letters.toUpperCase();
+}
 
 export default function MoreScreen() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { user, signOut } = useAuth();
   const [busy, setBusy] = useState(false);
+
+  const email = user?.email ?? '';
+  const displayName =
+    typeof user?.user_metadata?.display_name === 'string' ? user.user_metadata.display_name : null;
 
   async function onSignOut() {
     setBusy(true);
@@ -26,39 +40,49 @@ export default function MoreScreen() {
 
   return (
     <Screen title={t('screens.moreTitle')}>
-      <Text muted>{t('screens.moreBody')}</Text>
-      {user?.email ? (
-        <Text variant="caption" muted>
-          {user.email}
-        </Text>
+      {email ? (
+        <Card>
+          <View style={styles.profileRow}>
+            <View style={styles.avatar}>
+              <Text variant="heading" style={styles.avatarText}>
+                {initialsFromEmail(email)}
+              </Text>
+            </View>
+            <View style={styles.profileMid}>
+              {displayName ? <Text variant="heading">{displayName}</Text> : null}
+              <Text variant={displayName ? 'caption' : 'body'} muted numberOfLines={1}>
+                {email}
+              </Text>
+            </View>
+          </View>
+        </Card>
       ) : null}
-      <Link href="/household" style={styles.link}>
-        <Text style={{ color: palette.brand }}>{t('household.open')}</Text>
-      </Link>
-      <Link href="/retail" style={styles.link}>
-        <Text style={{ color: palette.brand }}>{t('retail.open')}</Text>
-      </Link>
-      <Link href="/subscription" style={styles.link}>
-        <Text style={{ color: palette.brand }}>{t('billing.open')}</Text>
-      </Link>
+
+      <View style={styles.rows}>
+        <ListRow icon="users" label={t('household.open')} onPress={() => router.push('/household')} />
+        <ListRow icon="shopping-bag" label={t('retail.open')} onPress={() => router.push('/retail')} />
+        <ListRow icon="star" label={t('billing.open')} onPress={() => router.push('/subscription')} />
+      </View>
 
       <View style={styles.actions}>
-        <Button
-          label={t('auth.signOut')}
-          variant="secondary"
-          onPress={onSignOut}
-          loading={busy}
-        />
+        <Button label={t('auth.signOut')} variant="secondary" onPress={onSignOut} loading={busy} />
       </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  link: {
-    marginTop: spacing.md,
+  profileRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  avatar: {
+    width: 52,
+    height: 52,
+    borderRadius: radius.pill,
+    backgroundColor: palette.brand,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  actions: {
-    marginTop: spacing.lg,
-  },
+  avatarText: { color: palette.white },
+  profileMid: { flex: 1, gap: 2 },
+  rows: { gap: spacing.sm, marginTop: spacing.sm },
+  actions: { marginTop: spacing.lg },
 });
