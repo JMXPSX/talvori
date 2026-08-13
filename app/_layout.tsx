@@ -66,6 +66,8 @@ function RootNavigator() {
       <Stack.Screen name="finance" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ title: t('auth.loginTitle') }} />
       <Stack.Screen name="signup" options={{ title: t('auth.signupTitle') }} />
+      <Stack.Screen name="forgot-password" options={{ title: t('auth.forgotTitle') }} />
+      <Stack.Screen name="reset-password" options={{ title: t('auth.resetTitle') }} />
       <Stack.Screen name="subscription" options={{ title: t('billing.title') }} />
       <Stack.Screen name="account" options={{ title: t('account.title') }} />
     </Stack>

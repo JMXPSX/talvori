@@ -10,7 +10,9 @@
  */
 
 import type { Session, User } from '@supabase/supabase-js';
+import { router } from 'expo-router';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Platform } from 'react-native';
 
 import { mapAuthError } from '@/features/auth/errors';
 import { AppError } from '@/lib/errors';
@@ -30,6 +32,10 @@ interface AuthContextValue {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, displayName?: string) => Promise<SignUpResult>;
   signOut: () => Promise<void>;
+  /** Email a recovery link. Succeeds silently for unknown emails (no leaking). */
+  requestPasswordReset: (email: string) => Promise<void>;
+  /** Set a new password for the signed-in (or recovery) session. */
+  updatePassword: (newPassword: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -48,8 +54,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch((err) => logger.error('Failed to restore session', { error: String(err) }))
       .finally(() => setInitializing(false));
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, nextSession) => {
       setSession(nextSession);
+      // Recovery links land wherever the project's Site URL points; the event
+      // fires regardless, so routing here catches every landing page.
+      if (event === 'PASSWORD_RECOVERY') {
+        router.push('/reset-password');
+      }
     });
 
     return () => sub.subscription.unsubscribe();
@@ -84,6 +95,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) logger.warn('Sign out returned an error', { error: error.message });
     }
 
+    async function requestPasswordReset(email: string): Promise<void> {
+      if (!supabase) throw new AppError('config', { messageKey: 'errors.config' });
+      // Web can name its landing page (must be in the project's redirect
+      // allow-list; otherwise Supabase falls back to the Site URL and the
+      // PASSWORD_RECOVERY handler above routes to /reset-password anyway).
+      // Native waits on deep-link config (later slice) and uses the same fallback.
+      const redirectTo =
+        Platform.OS === 'web' ? `${window.location.origin}/reset-password` : undefined;
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+      if (error) throw mapAuthError(error.message);
+    }
+
+    async function updatePassword(newPassword: string): Promise<void> {
+      if (!supabase) throw new AppError('config', { messageKey: 'errors.config' });
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw mapAuthError(error.message);
+    }
+
     return {
       initializing,
       configured: isSupabaseConfigured,
@@ -92,6 +121,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signIn,
       signUp,
       signOut,
+      requestPasswordReset,
+      updatePassword,
     };
   }, [initializing, session]);
 

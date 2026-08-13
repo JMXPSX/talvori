@@ -81,6 +81,11 @@ export default function LoginScreen() {
         />
       </View>
 
+      <Link href="/forgot-password" style={styles.link}>
+        <Text variant="caption" style={{ color: palette.brand }}>
+          {t('auth.forgotLink')}
+        </Text>
+      </Link>
       <Link href="/signup" style={styles.link}>
         <Text variant="caption" style={{ color: palette.brand }}>
           {t('auth.toSignup')}
