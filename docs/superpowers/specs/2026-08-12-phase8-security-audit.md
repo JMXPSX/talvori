@@ -41,9 +41,13 @@ is buildable without external accounts except where noted:
    rounding (was toward +∞, now half-away-from-zero per its contract), added
    deterministic property round-trips across exponents 0/2/3, float-trap cases,
    and `sumInReporting` edges (deduped missing, empty, case, negatives, KWD).
-3. **Account deletion / data export** — GDPR-style: an RPC/Edge Function to export
-   a household's data and to delete an account + cascade. (New feature work;
-   needs a hand-applied migration.)
+3. **Account deletion / data export** — ✅ BUILT (2026-08-13; see
+   `2026-08-13-account-deletion-export-design.md` + plan): `delete_my_account()`
+   RPC with owner-handoff block, attribution FKs → set-null, full-household JSON
+   export (client-side over RLS readers), `/account` screen behind More.
+   ⏳ PENDING HUMAN: apply migration `20260813000010_account_deletion.sql` in
+   the SQL editor, then run the `test:rls` key drill (now includes the deletion
+   scenarios).
 4. **Network-failure UX** — ✅ DONE (2026-08-13): `ErrorNotice` primitive
    (message + Retry) wired into home / transactions / grocery / budgets error
    states; `common.retry` in en/fil/ar. Remaining screens (retail/household/
