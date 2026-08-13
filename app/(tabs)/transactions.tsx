@@ -5,11 +5,11 @@ import { Feather } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Card, EmptyState, Text } from '@/components/ui';
+import { Card, EmptyState, Text, useActionSheet } from '@/components/ui';
 import { deleteTransaction, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
@@ -68,6 +68,7 @@ export default function TransactionsScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const { active, loading: hLoading } = useActiveHousehold();
+  const sheet = useActionSheet();
 
   const [items, setItems] = useState<TransactionWithRefs[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,32 +96,39 @@ export default function TransactionsScreen() {
   );
 
   function onAdd() {
-    Alert.alert(t('finance.newTransaction'), undefined, [
-      { text: t('finance.addIncome'), onPress: () => router.push('/finance/entry?type=income') },
-      { text: t('finance.addExpense'), onPress: () => router.push('/finance/entry?type=expense') },
-      { text: t('finance.addTransfer'), onPress: () => router.push('/finance/transfer') },
-      { text: t('common.cancel'), style: 'cancel' },
-    ]);
+    sheet.show({
+      title: t('finance.newTransaction'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        { label: t('finance.addIncome'), onPress: () => router.push('/finance/entry?type=income') },
+        { label: t('finance.addExpense'), onPress: () => router.push('/finance/entry?type=expense') },
+        { label: t('finance.addTransfer'), onPress: () => router.push('/finance/transfer') },
+      ],
+    });
   }
 
   function onDelete(id: string) {
-    Alert.alert(t('finance.confirmDeleteTitle'), t('finance.confirmDeleteBody'), [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('finance.delete'),
-        style: 'destructive',
-        onPress: () => {
-          void (async () => {
-            try {
-              await deleteTransaction(id);
-              await load();
-            } catch (err) {
-              setErrorKey(toAppError(err).messageKey);
-            }
-          })();
+    sheet.show({
+      title: t('finance.confirmDeleteTitle'),
+      message: t('finance.confirmDeleteBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteTransaction(id);
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
         },
-      },
-    ]);
+      ],
+    });
   }
 
   function typeLabel(type: TransactionWithRefs['type']): string {
@@ -224,6 +232,7 @@ export default function TransactionsScreen() {
           </View>
         )}
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }

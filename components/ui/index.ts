@@ -8,3 +8,9 @@ export { EmptyState, type EmptyStateProps } from '@/components/ui/EmptyState';
 export { Donut, type DonutProps, type DonutSegment } from '@/components/ui/Donut';
 export { ProgressBar, type ProgressBarProps, type ProgressState } from '@/components/ui/ProgressBar';
 export { ListRow, type ListRowProps } from '@/components/ui/ListRow';
+export {
+  ActionSheetDialog,
+  useActionSheet,
+  type ActionSheetAction,
+  type ActionSheetOptions,
+} from '@/components/ui/ActionSheet';
