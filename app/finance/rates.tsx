@@ -14,6 +14,7 @@ import { createRateSchema } from '@/features/finance/planningSchemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { LatestFxRateRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
+import { formatDate } from '@/lib/format';
 import { validate } from '@/lib/validation';
 
 export default function RatesScreen() {
@@ -98,7 +99,7 @@ export default function RatesScreen() {
                   1 {r.base_currency} = {r.rate} {r.quote_currency}
                 </Text>
                 <Text variant="caption" muted>
-                  {new Date(r.as_of).toLocaleDateString()} · {r.source}
+                  {formatDate(r.as_of)} · {r.source}
                 </Text>
               </View>
             ))}
