@@ -46,6 +46,8 @@ code-side is ready (Phases 1–8 complete, suite at 135 tests + live RLS drill).
 
 ## Known cosmetic backlog (fine for beta, listed for honesty)
 
-- Auth screens show the title twice on web (native header + in-screen title).
-- More-tab avatar initials derive from the email local-part, not display name.
+- ~~Auth screens show the title twice on web~~ FIXED 2026-08-13 (native headers off).
+- ~~Avatar initials derive from the email local-part~~ FIXED 2026-08-13 (display name first).
+- ~~Categories had no delete~~ FIXED 2026-08-13 (guarded; history becomes uncategorized).
 - Native data-export shares JSON as text (upgrade to expo-sharing when needed).
+- App icon/splash are Expo defaults — design pass before store builds.
