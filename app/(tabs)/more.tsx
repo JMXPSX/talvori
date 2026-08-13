@@ -9,12 +9,14 @@ import { palette, radius, spacing } from '@/components/theme';
 import { Button, Card, ListRow, Screen, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 
-/** "maria.santos" → "MS", "jmxpsx4" → "JM". */
-function initialsFromEmail(email: string): string {
-  const local = email.split('@')[0] ?? '';
-  const parts = local.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+/** "Maria Santos" → "MS", "Joseph" → "JO", "maria.santos@x" → "MS". */
+function initialsFor(displayName: string | null, email: string): string {
+  const source = displayName?.trim() || email.split('@')[0] || '';
+  const parts = source.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
   const letters =
-    parts.length >= 2 ? `${parts[0]?.charAt(0) ?? ''}${parts[1]?.charAt(0) ?? ''}` : local.slice(0, 2);
+    parts.length >= 2
+      ? `${parts[0]?.charAt(0) ?? ''}${parts[1]?.charAt(0) ?? ''}`
+      : source.slice(0, 2);
   return letters.toUpperCase();
 }
 
@@ -45,7 +47,7 @@ export default function MoreScreen() {
           <View style={styles.profileRow}>
             <View style={styles.avatar}>
               <Text variant="heading" style={styles.avatarText}>
-                {initialsFromEmail(email)}
+                {initialsFor(displayName, email)}
               </Text>
             </View>
             <View style={styles.profileMid}>
