@@ -78,6 +78,41 @@ describe('arithmetic', () => {
   });
 });
 
+describe('rounding hardening (Phase 8)', () => {
+  it('rounds halves away from zero for negative amounts (refunds)', () => {
+    // JPY halves are exactly representable (factor 1), so this pins the rule.
+    expect(toMinorUnits(2.5, 'JPY')).toBe(3);
+    expect(toMinorUnits(-2.5, 'JPY')).toBe(-3);
+    expect(toMinorUnits(-0.5, 'JPY')).toBe(-1);
+  });
+
+  it('survives classic float-precision traps', () => {
+    // 4.35 * 100 === 434.99999… and 25.99 * 100 === 2598.99999… as doubles.
+    expect(toMinorUnits(4.35, 'USD')).toBe(435);
+    expect(toMinorUnits(25.99, 'USD')).toBe(2599);
+    expect(toMinorUnits(0.07, 'USD')).toBe(7);
+    expect(toMinorUnits(-19.99, 'USD')).toBe(-1999);
+    expect(toMinorUnits(1.005, 'BHD')).toBe(1005);
+  });
+
+  it('round-trips minor -> major -> minor across exponents (property-style)', () => {
+    // Deterministic LCG so the sample set is stable across runs.
+    let seed = 42;
+    const next = () => {
+      seed = (seed * 1664525 + 1013904223) % 2 ** 32;
+      return seed;
+    };
+    const currencies = ['USD', 'JPY', 'KWD'];
+    for (const currency of currencies) {
+      for (let i = 0; i < 250; i += 1) {
+        const amountMinor = (next() % 1_000_000_000) - 500_000_000;
+        const roundTripped = toMinorUnits(toMajorUnits(money(amountMinor, currency)), currency);
+        expect(roundTripped).toBe(amountMinor);
+      }
+    }
+  });
+});
+
 describe('formatMoney', () => {
   it('formats per locale + currency without hard-coding $ or decimals', () => {
     const usd = formatMoney(money(2599, 'USD'), 'en-US');

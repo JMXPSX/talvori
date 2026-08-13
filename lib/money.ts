@@ -83,7 +83,9 @@ export function toMajorUnits(value: Money): number {
  */
 export function toMinorUnits(major: number, currencyCode: string): number {
   const factor = 10 ** minorExponent(currencyCode);
-  return Math.round(major * factor);
+  // Math.round alone rounds negative halves toward +∞ (-2599.5 → -2599);
+  // mirroring via the absolute value keeps halves away from zero for refunds.
+  return Math.sign(major) * Math.round(Math.abs(major) * factor);
 }
 
 /**

@@ -52,4 +52,51 @@ describe('sumInReporting', () => {
     expect(totalMinor).toBe(100000);
     expect(missing).toEqual(['SAR']);
   });
+
+  it('reports each missing currency once', () => {
+    const items = [
+      { balanceMinor: 5000, currency: 'SAR' },
+      { balanceMinor: 7000, currency: 'SAR' },
+      { balanceMinor: 100, currency: 'AED' },
+    ];
+    const { totalMinor, missing } = sumInReporting(items, 'PHP', rateFor);
+    expect(totalMinor).toBe(0);
+    expect(missing.sort()).toEqual(['AED', 'SAR']);
+  });
+
+  it('returns zero and no missing for an empty portfolio', () => {
+    expect(sumInReporting([], 'PHP', rateFor)).toEqual({ totalMinor: 0, missing: [] });
+  });
+
+  it('treats currency codes case-insensitively', () => {
+    expect(convertMinor(2599, 'usd', 'USD', 999)).toBe(2599);
+    const { totalMinor, missing } = sumInReporting(
+      [{ balanceMinor: 100000, currency: 'php' }],
+      'PHP',
+      rateFor,
+    );
+    expect(totalMinor).toBe(100000);
+    expect(missing).toEqual([]);
+  });
+
+  it('sums negative balances (debt accounts) through conversion', () => {
+    const items = [
+      { balanceMinor: 100000, currency: 'PHP' },
+      { balanceMinor: -10000, currency: 'USD' }, // -100.00 USD -> -5650.00 PHP
+    ];
+    const { totalMinor } = sumInReporting(items, 'PHP', rateFor);
+    expect(totalMinor).toBe(100000 - 565000);
+  });
+
+  it('rolls up into a 3-decimal reporting currency (KWD)', () => {
+    // 100.00 USD at 0.307 KWD/USD => 30.700 KWD => 30700 minor units.
+    const kwdRateFor = (from: string, to: string): number | null =>
+      from === 'USD' && to === 'KWD' ? 0.307 : null;
+    const { totalMinor } = sumInReporting(
+      [{ balanceMinor: 10000, currency: 'USD' }],
+      'KWD',
+      kwdRateFor,
+    );
+    expect(totalMinor).toBe(30700);
+  });
 });
