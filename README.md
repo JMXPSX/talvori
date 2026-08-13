@@ -5,13 +5,21 @@ Internal codename: **Global Household App** (no public branding yet — see
 
 A global household finance, budgeting, shared-shopping, retail-pricing and
 multi-currency platform. One universal codebase (Expo) targets **iOS, Android,
-and Web/PWA**.
+and Web/PWA**, on a Supabase backend where **Postgres RLS is the security
+boundary**.
 
-> **Status: Phase 1 — Technical Foundation.** This repo currently contains the
-> app skeleton only: universal navigation, localization + RTL, a safe Supabase
-> client, the money primitive, error/logging/validation seams, and a testing
-> foundation. **No authentication, database schema, finance, shopping, or retail
-> functionality yet** — those arrive in later phases (`08_DEVELOPMENT_PHASES.md`).
+> **Status: Phases 1–8 complete; entering Phase 9 (Beta).** Built and verified
+> against the live backend: email auth with password reset, households with
+> roles/invitations/realtime, the full financial core (accounts, transactions,
+> transfers, categories, budgets, goals, debts, multi-currency FX rollups),
+> shared grocery lists, retail price intelligence (catalog, price snapshots,
+> unit prices, coupons, comparison), free/premium entitlements, i18n
+> (en/fil/ar) with first-class RTL, the "Ledger & Remittance" design system,
+> GDPR-style data export and account deletion, and a hardening pass (security
+> audit, live RLS drill, money property tests). Deferred until external
+> accounts exist: store billing (6b), live retailer connectors (5d), crash
+> monitoring. Roadmap: `08_DEVELOPMENT_PHASES.md`; beta steps:
+> `docs/superpowers/specs/2026-08-13-phase9-beta-runbook.md`.
 
 ## Prerequisites
 
@@ -19,6 +27,7 @@ and Web/PWA**.
 - **npm** (comes with Node)
 - **Expo Go** app on a physical device, or an iOS Simulator (macOS) / Android
   emulator, to run natively. Web needs only a browser.
+- A **Supabase project** with the migrations applied (below).
 
 ## Installation
 
@@ -32,8 +41,7 @@ npm install
 cp .env.example .env      # Windows: copy .env.example .env
 ```
 
-Then edit `.env`. For Phase 1 the app runs **without** real values (backend
-calls are simply disabled). To connect a Supabase project, set:
+Then edit `.env`:
 
 - `EXPO_PUBLIC_APP_ENV` — `development` | `staging` | `production`
 - `EXPO_PUBLIC_SUPABASE_URL`
@@ -41,7 +49,15 @@ calls are simply disabled). To connect a Supabase project, set:
 
 Only client-safe (`EXPO_PUBLIC_*`) values ever belong here. **Never** put
 service-role or any partner secret in this file or in the client — those live in
-Supabase Edge Function secrets (see `02`/`03`).
+Supabase Edge Function secrets (see `02`/`03`). The service-role key is used
+only transiently for `npm run test:rls` (added to `.env`, run, removed).
+
+## Backend setup
+
+Migrations in `supabase/migrations/` are hand-applied, in timestamp order, via
+the Supabase SQL editor (each should end with "Success. No rows returned").
+They create the full schema, RLS policies, `security definer` RPCs, and
+triggers. Keep `lib/database.types.ts` in sync when changing them.
 
 ## Running
 
@@ -55,26 +71,33 @@ npm start          # Expo dev server; press w / a / i to choose a target
 ## Testing & type checking
 
 ```bash
-npm test           # jest-expo unit + component tests
+npm test           # jest-expo unit + component tests (money, FX, i18n parity, …)
 npm run test:watch # watch mode
 npm run typecheck  # tsc --noEmit (strict)
+npm run lint       # expo lint (eslint 9, expo flat config)
+npm run test:rls   # LIVE household-isolation + deletion drill (see .env note)
 ```
 
 ## Project structure
 
 ```
 app/            Expo Router routes (file-based navigation)
-  (tabs)/       Home, Budget, Transactions, Grocery, More
-  login.tsx     auth placeholders (no real auth yet — Phase 2)
-  signup.tsx
-components/     design-system skeleton (theme tokens + ui/ primitives)
-features/       per-domain logic (auth, finance, … — added per phase)
-lib/            env, supabase client, i18n, rtl, money, errors, logger, validation
-locales/        en / fil / ar placeholder catalogs
-services/       cross-cutting service interfaces (retail connector, …)
-supabase/       migrations/ + functions/ (backend, Phase 2+)
-tests/          jest setup + unit/component tests
-docs/adr/       Architecture Decision Records
+  (tabs)/       Home dashboard, Budget hub, Transactions, Grocery, More
+  finance/      accounts, entry, transfer, categories, budgets, goals, debts, rates
+  grocery/      list detail, product linking, price comparison, create modal
+  household/    manage households, members, invitations
+  retail/       retailers, branches, products, prices, coupons, locations
+  account.tsx   data export + guarded account deletion
+components/     design system: theme tokens + ui/ primitives
+                (Text, Screen, Button, TextField, Card, EmptyState, Donut,
+                 ProgressBar, ListRow, ActionSheet, ErrorNotice)
+features/       per-domain logic: api.ts (data access) + schemas + pure helpers
+lib/            env, supabase client, i18n, rtl, fonts, money, format,
+                errors, logger, validation, database.types
+locales/        en / fil / ar catalogs (key parity enforced by tests)
+supabase/       hand-applied SQL migrations (schema + RLS + RPCs + triggers)
+tests/          jest unit/component tests + live RLS integration drill
+docs/           ADRs + superpowers specs/plans (per-slice design docs)
 ```
 
 Path alias: `@/*` maps to the repo root (e.g. `import { money } from '@/lib/money'`).
@@ -82,10 +105,15 @@ Path alias: `@/*` maps to the repo root (e.g. `import { money } from '@/lib/mone
 ## Non-negotiable rules (enforced across the codebase)
 
 - Money is **integer minor units + currency code** — never floating point, never
-  hard-coded `$`/`USD`/2 decimals (`lib/money.ts`).
-- All UI copy goes through `t('...')` keys — no hard-coded strings.
+  hard-coded `$`/`USD`/2 decimals (`lib/money.ts`; JPY=0, USD=2, KWD=3).
+- **RLS is the security boundary** — screens never call `getSupabase()`
+  directly; only `features/*/api.ts` does. Every new table gets policies AND an
+  assertion in `tests/integration/rls-isolation.mjs`.
+- All UI copy goes through `t('...')` keys, present in **all three** locales.
 - Arabic/RTL is a first-class concern — use `lib/rtl.ts` helpers, not raw
   left/right.
+- Dialogs/confirms go through `useActionSheet` (native Alert / web modal) —
+  never raw `Alert.alert`, which is a no-op on web.
 - No server secrets in client code or `EXPO_PUBLIC_*`.
 
 ## Contributing

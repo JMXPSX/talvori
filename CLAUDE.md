@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Global Household App** (internal codename) — a universal Expo app (iOS / Android / Web-PWA) for global household finance: budgeting, shared shopping, retail price intelligence, and multi-currency money, on a Supabase backend. One codebase; RLS is the security boundary; first-class multi-currency, i18n (English / Filipino / Arabic), and RTL.
 
-Note: `README.md` is Phase-1-era and out of date (it says "no auth/db/finance yet"). Reality: Phases 1–7 are built. For accurate status, read `docs/superpowers/specs/` + `docs/superpowers/plans/` (per-slice design + plans) and the numbered product specs `00_`–`11_*.md` at the repo root (product intent, money/security/globalization/retail rules). `08_DEVELOPMENT_PHASES.md` is the roadmap.
+Status: **Phases 1–8 are built and verified; Phase 9 (Beta) is entry-gated on external accounts** (web host, Apple/Google dev, Sentry) — see `docs/superpowers/specs/2026-08-13-phase9-beta-runbook.md`. For per-slice design history read `docs/superpowers/specs/` + `docs/superpowers/plans/`; the numbered product specs `00_`–`11_*.md` at the repo root carry product intent (money/security/globalization/retail rules). `08_DEVELOPMENT_PHASES.md` is the roadmap.
 
 ## Commands
 
@@ -41,6 +41,8 @@ Path alias: `@/*` → repo root (e.g. `import { money } from '@/lib/money'`).
 - **RTL / Arabic is first-class.** Use `lib/rtl.ts` (`direction`, `isRTLLanguage`) not raw left/right. Fonts are script-aware: RN selects weight by *family name*, so `lib/fonts.ts` maps each (variant, isArabic) to a concrete family (Space Grotesk / Inter for Latin, Readex Pro for Arabic).
 - **Realtime tests are timing-sensitive.** The realtime assertion in `rls-isolation.mjs` warms the socket early (`b.realtime.connect()`) and retries once — don't "fix" flakes by bumping timeouts.
 - **No server secrets client-side.** Only `EXPO_PUBLIC_*` values belong in `.env`/the client; service-role and partner secrets go in Supabase Edge Function secrets.
+- **Never call `Alert.alert` directly — it is a NO-OP on react-native-web.** Use `useActionSheet` from `components/ui` (native Alert on iOS/Android, token-styled modal on web) and render `sheet.element` in the screen. Every destructive action gets a confirm through it.
+- **Every entity has a guarded delete** (trash icon → ActionSheet confirm naming what cascades). New entities must follow: RLS delete policy + api `deleteX` + confirmed UI + `rls-isolation.mjs` assertion.
 
 ## Testing approach
 
