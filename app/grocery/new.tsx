@@ -3,7 +3,7 @@
 
 import { getLocales } from 'expo-localization';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -30,14 +30,12 @@ export default function GroceryNewScreen() {
   const { active } = useActiveHousehold();
 
   const [name, setName] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState(() =>
+    active ? deviceCurrency(active.reporting_currency_code) : '',
+  );
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (active && !currency) setCurrency(deviceCurrency(active.reporting_currency_code));
-  }, [active, currency]);
 
   async function onCreate() {
     if (!active) return;
