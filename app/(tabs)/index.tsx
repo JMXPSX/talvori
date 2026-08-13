@@ -1,9 +1,11 @@
 /**
- * Home dashboard: the active household's accounts with live balances (from the
- * account_balances view) plus quick actions. Balances are formatted per the
- * device locale and each account's own currency — never hard-coded.
+ * Home dashboard. Hero shows the household's total balance consolidated into the
+ * reporting currency (premium; free sees an upgrade hero). Below: an icon
+ * quick-action grid and the accounts list with live balances. All money is
+ * formatted per the device locale and each account's own currency.
  */
 
+import { Feather } from '@expo/vector-icons';
 import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +13,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text } from '@/components/ui';
+import { Card, EmptyState, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { listAccountBalances, listAccounts } from '@/features/finance/api';
@@ -20,6 +22,8 @@ import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
 import type { AccountBalanceRow, AccountRow, LatestFxRateRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
+
+type FeatherName = keyof typeof Feather.glyphMap;
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -75,116 +79,113 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
         <View style={styles.padded}>
           <Text variant="title">{t('screens.homeTitle')}</Text>
-          <Text muted>{t('finance.noHousehold')}</Text>
-          <Link href="/household" style={styles.link}>
-            <Text style={{ color: palette.brand }}>{t('finance.goToHouseholds')}</Text>
-          </Link>
+          <EmptyState
+            icon="home"
+            message={t('finance.noHousehold')}
+            ctaLabel={t('finance.goToHouseholds')}
+            onCta={() => router.push('/household')}
+          />
         </View>
       </SafeAreaView>
     );
   }
 
+  const reporting = active.reporting_currency_code;
+  const items = accounts.map((a) => ({
+    balanceMinor: balances[a.id]?.balance_minor ?? a.opening_balance_minor,
+    currency: a.currency_code,
+  }));
+  const consolidated = has('multi_currency_dashboard')
+    ? sumInReporting(items, reporting, makeRateLookup(rates))
+    : null;
+
+  const actions: { icon: FeatherName; label: string; href: string }[] = [
+    { icon: 'arrow-down-left', label: t('finance.addIncome'), href: '/finance/entry?type=income' },
+    { icon: 'arrow-up-right', label: t('finance.addExpense'), href: '/finance/entry?type=expense' },
+    { icon: 'repeat', label: t('finance.addTransfer'), href: '/finance/transfer' },
+    { icon: 'credit-card', label: t('finance.manageAccounts'), href: '/finance/accounts' },
+    { icon: 'trending-up', label: t('fx.manageRates'), href: '/finance/rates' },
+  ];
+
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text variant="title">{active.name}</Text>
+        <Text variant="eyebrow" muted>{active.name}</Text>
 
+        {/* Hero: consolidated total (premium) or an upgrade prompt (free). */}
+        {has('multi_currency_dashboard') ? (
+          <View style={styles.hero}>
+            <Text variant="eyebrow" style={styles.heroLabel}>
+              {t('fx.reportingTotal', { currency: reporting })}
+            </Text>
+            <Text variant="title" style={styles.heroAmount}>
+              {formatAmount(consolidated?.totalMinor ?? 0, reporting)}
+            </Text>
+            {consolidated && consolidated.missing.length > 0 ? (
+              <Link href="/finance/rates">
+                <Text variant="caption" style={styles.heroHint}>
+                  {t('fx.missingRates', { currencies: consolidated.missing.join(', ') })}
+                </Text>
+              </Link>
+            ) : null}
+          </View>
+        ) : (
+          <Pressable style={styles.hero} onPress={() => router.push('/subscription')}>
+            <Text variant="eyebrow" style={styles.heroLabel}>{t('billing.capMultiCurrency')}</Text>
+            <Text variant="heading" style={styles.heroAmount}>{t('billing.lockedTitle')}</Text>
+            <Text variant="caption" style={styles.heroHint}>{t('billing.manageCta')}</Text>
+          </Pressable>
+        )}
+
+        {/* Quick actions grid */}
+        <View style={styles.tiles}>
+          {actions.map((a) => (
+            <Pressable key={a.href} style={styles.tile} onPress={() => router.push(a.href as never)}>
+              <View style={styles.tileIcon}>
+                <Feather name={a.icon} size={20} color={palette.brand} />
+              </View>
+              <Text variant="caption" style={styles.tileLabel}>{a.label}</Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {/* Accounts */}
+        <Text variant="eyebrow" muted>{t('finance.accounts.title')}</Text>
         {loading ? (
           <ActivityIndicator color={palette.brand} />
         ) : errorKey ? (
           <Text style={{ color: palette.danger }}>{t(errorKey)}</Text>
         ) : accounts.length === 0 ? (
-          <Text muted>{t('finance.noAccounts')}</Text>
+          <EmptyState
+            icon="credit-card"
+            message={t('finance.noAccounts')}
+            ctaLabel={t('finance.manageAccounts')}
+            onCta={() => router.push('/finance/accounts')}
+          />
         ) : (
           <View style={styles.list}>
             {accounts.map((a) => {
               const bal = balances[a.id];
               return (
-                <Pressable
-                  key={a.id}
-                  style={styles.card}
-                  onPress={() => router.push('/finance/accounts')}
-                >
-                  <View style={styles.cardRow}>
-                    <Text variant="heading">{a.name}</Text>
-                    <Text variant="heading">
-                      {bal
-                        ? formatAmount(bal.balance_minor, bal.currency_code)
-                        : formatAmount(a.opening_balance_minor, a.currency_code)}
+                <Pressable key={a.id} onPress={() => router.push('/finance/accounts')}>
+                  <Card>
+                    <View style={styles.cardRow}>
+                      <Text variant="heading">{a.name}</Text>
+                      <Text variant="heading">
+                        {bal
+                          ? formatAmount(bal.balance_minor, bal.currency_code)
+                          : formatAmount(a.opening_balance_minor, a.currency_code)}
+                      </Text>
+                    </View>
+                    <Text variant="caption" muted>
+                      {t(`finance.accounts.types.${a.type}`)} · {a.currency_code}
                     </Text>
-                  </View>
-                  <Text variant="caption" muted>
-                    {t(`finance.accounts.types.${a.type}`)} · {a.currency_code}
-                  </Text>
+                  </Card>
                 </Pressable>
               );
             })}
           </View>
         )}
-
-        {accounts.length > 0
-          ? (() => {
-              const items = accounts.map((a) => ({
-                balanceMinor: balances[a.id]?.balance_minor ?? a.opening_balance_minor,
-                currency: a.currency_code,
-              }));
-              const reporting = active.reporting_currency_code;
-              if (!has('multi_currency_dashboard')) {
-                return (
-                  <Link href="/subscription" style={styles.totalCard}>
-                    <Text variant="heading">{t('billing.lockedTitle')}</Text>
-                    <Text variant="caption" muted>
-                      {t('billing.capMultiCurrency')} · {t('billing.manageCta')}
-                    </Text>
-                  </Link>
-                );
-              }
-              const { totalMinor, missing } = sumInReporting(
-                items,
-                reporting,
-                makeRateLookup(rates),
-              );
-              return (
-                <View style={styles.totalCard}>
-                  <View style={styles.cardRow}>
-                    <Text variant="heading">{t('fx.reportingTotal', { currency: reporting })}</Text>
-                    <Text variant="heading">{formatAmount(totalMinor, reporting)}</Text>
-                  </View>
-                  {missing.length > 0 ? (
-                    <Link href="/finance/rates">
-                      <Text variant="caption" style={{ color: palette.brand }}>
-                        {t('fx.missingRates', { currencies: missing.join(', ') })}
-                      </Text>
-                    </Link>
-                  ) : null}
-                </View>
-              );
-            })()
-          : null}
-
-        <View style={styles.actions}>
-          <Button label={t('finance.addIncome')} onPress={() => router.push('/finance/entry?type=income')} />
-          <Button
-            label={t('finance.addExpense')}
-            variant="secondary"
-            onPress={() => router.push('/finance/entry?type=expense')}
-          />
-          <Button
-            label={t('finance.addTransfer')}
-            variant="secondary"
-            onPress={() => router.push('/finance/transfer')}
-          />
-          <Button
-            label={t('finance.manageAccounts')}
-            variant="secondary"
-            onPress={() => router.push('/finance/accounts')}
-          />
-          <Button
-            label={t('fx.manageRates')}
-            variant="secondary"
-            onPress={() => router.push('/finance/rates')}
-          />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -195,23 +196,41 @@ const styles = StyleSheet.create({
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background },
   padded: { padding: spacing.lg, gap: spacing.md },
   content: { padding: spacing.lg, gap: spacing.md },
-  list: { gap: spacing.sm },
-  card: {
-    padding: spacing.md,
+  hero: {
+    backgroundColor: palette.brand,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    gap: spacing.xs,
+    shadowColor: palette.brandDeep,
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
+  },
+  heroLabel: { color: palette.white, opacity: 0.85 },
+  heroAmount: { color: palette.white, fontSize: 36 },
+  heroHint: { color: palette.white, opacity: 0.9 },
+  tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  tile: {
+    flexGrow: 1,
+    flexBasis: '30%',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingVertical: spacing.md,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: palette.border,
-    borderRadius: radius.md,
     backgroundColor: palette.surface,
-    gap: spacing.xs,
   },
-  cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  totalCard: {
-    padding: spacing.md,
-    borderRadius: radius.md,
+  tileIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: radius.pill,
     backgroundColor: palette.brandMuted,
-    gap: spacing.xs,
-    marginTop: spacing.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  actions: { gap: spacing.sm, marginTop: spacing.md },
-  link: { marginTop: spacing.sm },
+  tileLabel: { textAlign: 'center' },
+  list: { gap: spacing.sm },
+  cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
 });
