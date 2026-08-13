@@ -52,7 +52,8 @@ export default function GroceryNewScreen() {
         name: result.data.name,
         currencyCode: result.data.currencyCode,
       });
-      router.back();
+      if (router.canGoBack()) router.back();
+      else router.replace('/(tabs)/grocery');
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
       setSubmitting(false);

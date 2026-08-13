@@ -64,7 +64,8 @@ export default function BudgetNewScreen() {
     setSubmitting(true);
     try {
       await createBudget(active.id, result.data);
-      router.back();
+      if (router.canGoBack()) router.back();
+      else router.replace('/finance/budgets');
     } catch (err) {
       setFormError(toAppError(err).messageKey);
       setSubmitting(false);
