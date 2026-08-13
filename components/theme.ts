@@ -17,7 +17,7 @@ export const palette = {
   accent: '#E0A72E', // remittance gold — the signature, used with restraint
   accentMuted: '#F6E7C4',
   text: '#12211C', // green-tinted ink
-  textMuted: '#5E6B63', // green-gray
+  textMuted: '#4F5C54', // green-gray (darkened for 4.5:1 caption contrast on white)
   background: '#F3F5F2', // warm paper canvas
   surface: '#FFFFFF', // cards sit brighter than the canvas
   border: '#E1E7E2', // soft hairline
