@@ -9,7 +9,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Card, EmptyState, Text, useActionSheet } from '@/components/ui';
+import { Card, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
 import { deleteTransaction, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
@@ -173,7 +173,9 @@ export default function TransactionsScreen() {
           </Pressable>
         </View>
 
-        {errorKey ? <Text style={{ color: palette.danger }}>{t(errorKey)}</Text> : null}
+        {errorKey ? (
+          <ErrorNotice message={t(errorKey)} retryLabel={t('common.retry')} onRetry={() => void load()} />
+        ) : null}
 
         {items.length === 0 ? (
           <EmptyState

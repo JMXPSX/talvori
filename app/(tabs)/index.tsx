@@ -13,7 +13,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Card, Donut, EmptyState, Text } from '@/components/ui';
+import { Card, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
@@ -184,7 +184,7 @@ export default function HomeScreen() {
         {loading ? (
           <ActivityIndicator color={palette.brand} />
         ) : errorKey ? (
-          <Text style={{ color: palette.danger }}>{t(errorKey)}</Text>
+          <ErrorNotice message={t(errorKey)} retryLabel={t('common.retry')} onRetry={() => void load()} />
         ) : accounts.length === 0 ? (
           <EmptyState
             icon="credit-card"

@@ -14,3 +14,4 @@ export {
   type ActionSheetAction,
   type ActionSheetOptions,
 } from '@/components/ui/ActionSheet';
+export { ErrorNotice, type ErrorNoticeProps } from '@/components/ui/ErrorNotice';

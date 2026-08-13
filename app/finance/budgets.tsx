@@ -8,7 +8,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Card, ProgressBar, Text, TextField } from '@/components/ui';
+import { Button, Card, ErrorNotice, ProgressBar, Text, TextField } from '@/components/ui';
 import { listCategories } from '@/features/finance/api';
 import { addAllocation, listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
 import { addAllocationSchema } from '@/features/finance/planningSchemas';
@@ -107,7 +107,7 @@ export default function BudgetsScreen() {
         {loading ? (
           <ActivityIndicator color={palette.brand} />
         ) : errorKey ? (
-          <Text style={{ color: palette.danger }}>{t(errorKey)}</Text>
+          <ErrorNotice message={t(errorKey)} retryLabel={t('common.retry')} onRetry={() => void load()} />
         ) : budgets.length === 0 ? (
           <Text muted>{t('planning.budgets.empty')}</Text>
         ) : (

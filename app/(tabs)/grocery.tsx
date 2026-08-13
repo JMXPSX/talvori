@@ -9,7 +9,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Text } from '@/components/ui';
+import { ErrorNotice, Text } from '@/components/ui';
 import { listLists, subscribeToLists } from '@/features/grocery/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { GroceryListRow } from '@/lib/database.types';
@@ -75,7 +75,7 @@ export default function GroceryScreen() {
         {loading ? (
           <ActivityIndicator color={palette.brand} />
         ) : errorKey ? (
-          <Text style={{ color: palette.danger }}>{t(errorKey)}</Text>
+          <ErrorNotice message={t(errorKey)} retryLabel={t('common.retry')} onRetry={() => void load()} />
         ) : lists.length === 0 ? (
           <Text muted>{t('grocery.empty')}</Text>
         ) : (
