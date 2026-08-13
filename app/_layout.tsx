@@ -64,10 +64,11 @@ function RootNavigator() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="household" options={{ headerShown: false }} />
       <Stack.Screen name="finance" options={{ headerShown: false }} />
-      <Stack.Screen name="login" options={{ title: t('auth.loginTitle') }} />
-      <Stack.Screen name="signup" options={{ title: t('auth.signupTitle') }} />
-      <Stack.Screen name="forgot-password" options={{ title: t('auth.forgotTitle') }} />
-      <Stack.Screen name="reset-password" options={{ title: t('auth.resetTitle') }} />
+      {/* Auth screens draw their own in-screen titles; a native header doubles them. */}
+      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="signup" options={{ headerShown: false }} />
+      <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
+      <Stack.Screen name="reset-password" options={{ headerShown: false }} />
       <Stack.Screen name="subscription" options={{ title: t('billing.title') }} />
       <Stack.Screen name="account" options={{ title: t('account.title') }} />
     </Stack>
