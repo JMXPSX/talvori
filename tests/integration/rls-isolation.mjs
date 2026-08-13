@@ -363,6 +363,13 @@ async function main() {
       discount_type: 'percent', discount_percent: 10, discount_amount_minor: 500, created_by: idA });
   ok('coupon CHECK rejects a mixed fixed/percent shape', Boolean(badErr));
 
+  // --- entitlements: owner A sets the household plan; non-owners cannot -------
+  const { error: planErr } = await a.rpc('set_household_plan', { _household_id: hid, _plan_code: 'premium' });
+  ok('owner A can set the household to premium', !planErr);
+  const { data: subRow } = await a
+    .from('household_subscriptions').select('plan_code, source').eq('household_id', hid).single();
+  ok('subscription reads back as premium/manual', subRow?.plan_code === 'premium' && subRow?.source === 'manual');
+
   // B CANNOT read A's household.
   const { data: bSeesHousehold } = await b.from('households').select('id').eq('id', hid);
   ok('B cannot read A\'s household (RLS)', (bSeesHousehold ?? []).length === 0);
@@ -456,6 +463,12 @@ async function main() {
       discount_type: 'percent', discount_percent: 5, created_by: idB });
   ok("B cannot create a coupon in A's household", Boolean(bCoupErr));
 
+  // B CANNOT read or change A's subscription (not a member yet).
+  const { data: bSub } = await b.from('household_subscriptions').select('id').eq('household_id', hid);
+  ok("B cannot read A's subscription (RLS)", (bSub ?? []).length === 0);
+  const { error: bPlanErr } = await b.rpc('set_household_plan', { _household_id: hid, _plan_code: 'premium' });
+  ok("B cannot set A's plan via RPC", Boolean(bPlanErr));
+
   // Positive path: A invites B, B accepts, B becomes a member.
   const { error: inviteErr } = await a.from('household_invitations').insert({
     household_id: hid,
@@ -490,6 +503,12 @@ async function main() {
 
   const { data: bCouponsAfter } = await b.from('coupons').select('id').eq('household_id', hid);
   ok('B can read coupons after joining', (bCouponsAfter ?? []).length >= 1);
+
+  const { data: bSubAfter } = await b.from('household_subscriptions').select('plan_code').eq('household_id', hid);
+  ok('B can read the plan after joining', (bSubAfter ?? []).length === 1);
+  // B is a 'member', not owner -> still cannot change the plan.
+  const { error: bMemberPlanErr } = await b.rpc('set_household_plan', { _household_id: hid, _plan_code: 'free' });
+  ok('member B still cannot change the plan', Boolean(bMemberPlanErr));
 
   // --- realtime: B (now a member) receives A's item insert live -------------
   // One attempt = subscribe, insert on SUBSCRIBED, resolve the instant the change
