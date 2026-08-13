@@ -1,7 +1,17 @@
-# Phase 8 — Security / QA / Hardening — Audit (in progress)
+# Phase 8 — Security / QA / Hardening — Audit
 
-Date: 2026-08-12
-Status: Secret + client-surface + RLS audit PASSED. Remaining QA items scoped below.
+Date: 2026-08-12 (closed 2026-08-13)
+Status: **COMPLETE** for everything buildable without external accounts.
+Deferred with reasons: payment tests (blocked on 6b billing accounts), crash
+monitoring (needs a Sentry-class account), backup/PITR review (Supabase
+dashboard ops, human), list virtualization (feeds are query-capped at 50 —
+revisit with pagination). Session assertions were added to `rls-isolation.mjs`
+and run on the next service-key drill.
+
+Next phase: **Phase 9 — Beta** (founder + spouse + trusted users, then
+TestFlight / Play testing track / web beta). Entry needs human decisions:
+web hosting target for the PWA, Apple/Google developer accounts, and a real
+Site URL + redirect allow-list in Supabase auth settings.
 
 ## Secret & client-surface audit — PASS
 
