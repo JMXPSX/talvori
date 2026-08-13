@@ -5,3 +5,4 @@ export { Button, type ButtonProps, type ButtonVariant } from '@/components/ui/Bu
 export { TextField, type TextFieldProps } from '@/components/ui/TextField';
 export { Card, type CardProps } from '@/components/ui/Card';
 export { EmptyState, type EmptyStateProps } from '@/components/ui/EmptyState';
+export { Donut, type DonutProps, type DonutSegment } from '@/components/ui/Donut';
