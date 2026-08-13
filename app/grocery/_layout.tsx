@@ -16,6 +16,10 @@ export default function GroceryLayout() {
       }}
     >
       <Stack.Screen name="[id]" options={{ title: t('grocery.title') }} />
+      <Stack.Screen
+        name="new"
+        options={{ title: t('grocery.newListTitle'), presentation: 'modal' }}
+      />
       <Stack.Screen name="link/[itemId]" options={{ title: t('grocery.selectProduct') }} />
       <Stack.Screen name="compare/[id]" options={{ title: t('grocery.compare.title') }} />
     </Stack>

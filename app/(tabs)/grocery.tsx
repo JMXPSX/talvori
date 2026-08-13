@@ -1,6 +1,7 @@
-/** Grocery tab: household shopping lists (live) + create. */
+/** Grocery tab: household shopping lists (live). Creation lives behind the
+ *  header "+" which opens the /grocery/new modal. */
 
-import { getLocales } from 'expo-localization';
+import { Feather } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,21 +9,13 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
-import { createList, listLists, subscribeToLists } from '@/features/grocery/api';
-import { createListSchema } from '@/features/grocery/schemas';
+import { Text } from '@/components/ui';
+import { listLists, subscribeToLists } from '@/features/grocery/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { GroceryListRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
-import { validate } from '@/lib/validation';
 
-function deviceCurrency(fallback: string): string {
-  try {
-    return getLocales()[0]?.currencyCode ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
+const DONE_TILE = '#D9E8D2';
 
 export default function GroceryScreen() {
   const { t } = useTranslation();
@@ -32,11 +25,6 @@ export default function GroceryScreen() {
   const [lists, setLists] = useState<GroceryListRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
-
-  const [name, setName] = useState('');
-  const [currency, setCurrency] = useState('');
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-  const [submitting, setSubmitting] = useState(false);
 
   const load = useCallback(async () => {
     if (!active) {
@@ -62,33 +50,9 @@ export default function GroceryScreen() {
   // Live updates while the tab is mounted.
   useEffect(() => {
     if (!active) return;
-    if (!currency) setCurrency(deviceCurrency(active.reporting_currency_code));
     const unsub = subscribeToLists(active.id, () => void load());
     return unsub;
-  }, [active, currency, load]);
-
-  async function onCreate() {
-    if (!active) return;
-    const result = validate(createListSchema, { name, currencyCode: currency });
-    if (!result.success) {
-      setFieldErrors(result.fieldErrors);
-      return;
-    }
-    setFieldErrors({});
-    setSubmitting(true);
-    try {
-      await createList(active.id, {
-        name: result.data.name,
-        currencyCode: result.data.currencyCode,
-      });
-      setName('');
-      await load();
-    } catch (err) {
-      setErrorKey(toAppError(err).messageKey);
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  }, [active, load]);
 
   const activeLists = lists.filter((l) => l.status === 'active');
   const completed = lists.filter((l) => l.status === 'completed');
@@ -96,6 +60,18 @@ export default function GroceryScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.headerRow}>
+          <Text variant="title">{t('screens.groceryTitle')}</Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('grocery.newCta')}
+            onPress={() => router.push('/grocery/new')}
+            style={({ pressed }) => [styles.addButton, pressed ? styles.pressed : null]}
+          >
+            <Feather name="plus" size={22} color={palette.white} />
+          </Pressable>
+        </View>
+
         {loading ? (
           <ActivityIndicator color={palette.brand} />
         ) : errorKey ? (
@@ -106,54 +82,45 @@ export default function GroceryScreen() {
           <View style={styles.groups}>
             {activeLists.length > 0 && (
               <View style={styles.group}>
-                <Text variant="caption" muted>{t('grocery.activeSection')}</Text>
+                <Text variant="eyebrow" muted>
+                  {t('grocery.activeSection')}
+                </Text>
                 {activeLists.map((l) => (
                   <Pressable key={l.id} style={styles.card} onPress={() => router.push(`/grocery/${l.id}`)}>
                     <Text variant="heading">{l.name}</Text>
-                    <Text variant="caption" muted>{l.currency_code}</Text>
+                    <Text variant="caption" muted>
+                      {l.currency_code}
+                    </Text>
                   </Pressable>
                 ))}
               </View>
             )}
             {completed.length > 0 && (
               <View style={styles.group}>
-                <Text variant="caption" muted>{t('grocery.completedSection')}</Text>
+                <Text variant="eyebrow" muted>
+                  {t('grocery.completedSection')}
+                </Text>
                 {completed.map((l) => (
-                  <Pressable key={l.id} style={styles.card} onPress={() => router.push(`/grocery/${l.id}`)}>
-                    <Text variant="heading">{l.name}</Text>
-                    <Text variant="caption" muted>{t('grocery.completedNote')}</Text>
+                  <Pressable
+                    key={l.id}
+                    style={[styles.card, styles.cardDone]}
+                    onPress={() => router.push(`/grocery/${l.id}`)}
+                  >
+                    <View style={styles.doneTile}>
+                      <Feather name="check" size={18} color={palette.success} />
+                    </View>
+                    <View style={styles.doneMid}>
+                      <Text variant="heading">{l.name}</Text>
+                      <Text variant="caption" muted>
+                        {t('grocery.completedNote')}
+                      </Text>
+                    </View>
                   </Pressable>
                 ))}
               </View>
             )}
           </View>
         )}
-
-        <View style={styles.divider} />
-
-        <Text variant="heading">{t('grocery.newListTitle')}</Text>
-        <View style={styles.form}>
-          <TextField
-            label={t('grocery.nameLabel')}
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="sentences"
-            error={fieldErrors.name ? t('errors.validation') : undefined}
-          />
-          <TextField
-            label={t('grocery.currencyLabel')}
-            value={currency}
-            onChangeText={setCurrency}
-            hint={t('household.currencyHint')}
-            autoCapitalize="characters"
-            error={fieldErrors.currencyCode ? t('errors.validation') : undefined}
-          />
-          <Button
-            label={submitting ? t('auth.processing') : t('grocery.createCta')}
-            onPress={onCreate}
-            loading={submitting}
-          />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -162,6 +129,16 @@ export default function GroceryScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
   content: { padding: spacing.lg, gap: spacing.md },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  addButton: {
+    width: 44,
+    height: 44,
+    borderRadius: radius.pill,
+    backgroundColor: palette.brand,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pressed: { opacity: 0.9 },
   groups: { gap: spacing.md },
   group: { gap: spacing.sm },
   card: {
@@ -172,6 +149,19 @@ const styles = StyleSheet.create({
     backgroundColor: palette.surface,
     gap: spacing.xs,
   },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
-  form: { gap: spacing.sm },
+  cardDone: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    opacity: 0.75,
+  },
+  doneTile: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.pill,
+    backgroundColor: DONE_TILE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  doneMid: { flex: 1, gap: 2 },
 });
