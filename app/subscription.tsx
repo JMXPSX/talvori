@@ -75,7 +75,7 @@ export default function SubscriptionScreen() {
             {plan === 'premium' ? (
               <Button label={t('billing.switchToFree')} variant="secondary" onPress={() => switchTo('free')} loading={busy} />
             ) : (
-              <Button label={t('billing.switchToPremium')} onPress={() => switchTo('premium')} loading={busy} />
+              <Button label={t('billing.switchToPremium')} variant="accent" onPress={() => switchTo('premium')} loading={busy} />
             )}
           </View>
         ) : (

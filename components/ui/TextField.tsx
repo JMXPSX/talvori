@@ -92,11 +92,13 @@ const styles = StyleSheet.create({
     borderColor: palette.border,
     borderRadius: radius.md,
     paddingHorizontal: spacing.md,
-    backgroundColor: palette.surface,
+    backgroundColor: palette.background,
     color: palette.text,
   },
   inputFocused: {
     borderColor: palette.brand,
+    borderWidth: 2,
+    paddingHorizontal: spacing.md - 1,
   },
   inputError: {
     borderColor: palette.danger,
