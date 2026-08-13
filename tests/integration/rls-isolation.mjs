@@ -554,6 +554,23 @@ async function main() {
   if (!received) received = await realtimeDelivers(2);
   ok("realtime delivers A's insert to member B (<=2 tries)", received === true);
 
+  // --- sessions: wrong credentials, sign-out revocation ---------------------
+  console.log('\nSessions');
+  const { error: wrongPwErr } = await userClient().auth.signInWithPassword({
+    email: userA.email,
+    password: 'WrongPassword1!',
+  });
+  ok('wrong password is rejected', Boolean(wrongPwErr));
+
+  const { data: bSess } = await b.auth.getSession();
+  ok('B has a session while signed in', Boolean(bSess?.session));
+
+  await b.auth.signOut();
+  const { data: bSessAfter } = await b.auth.getSession();
+  ok('B has no session after sign-out', !bSessAfter?.session);
+  const { data: bAfterOut } = await b.from('households').select('id').eq('id', hid);
+  ok('signed-out B can no longer read the household', (bAfterOut ?? []).length === 0);
+
   // --- account deletion: delete_my_account() RPC ----------------------------
   // Needs migration 20260813000010_account_deletion.sql applied.
   console.log('\nAccount deletion');
