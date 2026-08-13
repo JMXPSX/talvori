@@ -290,6 +290,9 @@
     "completeCta": "إنهاء",
     "completedNote": "اكتمل — سُجّل كمصروف.",
     "someone": "شخص ما",
+    "deleteListCta": "حذف القائمة",
+    "confirmDeleteListTitle": "حذف هذه القائمة؟",
+    "confirmDeleteListBody": "سيؤدي هذا إلى إزالة القائمة وجميع عناصرها لكل أفراد الأسرة.",
     "errors": {
       "loadFailed": "تعذّر تحميل القوائم.",
       "listFailed": "تعذّر إنشاء القائمة.",

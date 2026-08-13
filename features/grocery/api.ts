@@ -158,6 +158,12 @@ export async function deleteItem(id: string): Promise<void> {
   if (error) fail('grocery.errors.deleteFailed', error);
 }
 
+/** Delete a list and (via FK cascade) its items. RLS narrows to owner/admin. */
+export async function deleteList(id: string): Promise<void> {
+  const { error } = await getSupabase().from('grocery_lists').delete().eq('id', id);
+  if (error) fail('grocery.errors.deleteFailed', error);
+}
+
 /** Complete a trip: sums purchased items into one expense; returns its tx id. */
 export async function completeList(
   listId: string,

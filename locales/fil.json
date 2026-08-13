@@ -290,6 +290,9 @@
     "completeCta": "Tapusin",
     "completedNote": "Tapos na — naitala bilang gastos.",
     "someone": "isang tao",
+    "deleteListCta": "Burahin ang listahan",
+    "confirmDeleteListTitle": "Burahin ang listahang ito?",
+    "confirmDeleteListBody": "Aalisin nito ang listahan at lahat ng item nito para sa buong sambahayan.",
     "errors": {
       "loadFailed": "Hindi ma-load ang mga listahan.",
       "listFailed": "Hindi magawa ang listahan.",

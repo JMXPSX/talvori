@@ -290,6 +290,9 @@
     "completeCta": "Complete trip",
     "completedNote": "Completed — logged as an expense.",
     "someone": "someone",
+    "deleteListCta": "Delete list",
+    "confirmDeleteListTitle": "Delete this list?",
+    "confirmDeleteListBody": "This removes the list and all its items for everyone in the household.",
     "errors": {
       "loadFailed": "Couldn't load grocery lists.",
       "listFailed": "Couldn't create the list.",

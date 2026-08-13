@@ -7,12 +7,13 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
+import { Button, Text, TextField, useActionSheet } from '@/components/ui';
 import { listAccounts, listCategories } from '@/features/finance/api';
 import {
   addItem,
   completeList,
   deleteItem,
+  deleteList,
   getList,
   listItems,
   setPurchased,
@@ -33,6 +34,7 @@ export default function GroceryListScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const listId = String(id);
+  const sheet = useActionSheet();
 
   const [list, setList] = useState<GroceryListRow | null>(null);
   const [items, setItems] = useState<GroceryItemRow[]>([]);
@@ -132,6 +134,31 @@ export default function GroceryListScreen() {
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     }
+  }
+
+  function onDeleteList() {
+    sheet.show({
+      title: t('grocery.confirmDeleteListTitle'),
+      message: t('grocery.confirmDeleteListBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('grocery.deleteListCta'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteList(listId);
+                if (router.canGoBack()) router.back();
+                else router.replace('/(tabs)/grocery');
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
   }
 
   async function onDelete(item: GroceryItemRow) {
@@ -328,7 +355,12 @@ export default function GroceryListScreen() {
         )}
 
         {isCompleted && <Text muted>{t('grocery.completedNote')}</Text>}
+
+        {list ? (
+          <Button label={t('grocery.deleteListCta')} onPress={onDeleteList} style={styles.deleteButton} />
+        ) : null}
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }
@@ -361,4 +393,5 @@ const styles = StyleSheet.create({
     borderColor: palette.brand,
   },
   chipActive: { backgroundColor: palette.brand },
+  deleteButton: { backgroundColor: palette.danger, marginTop: spacing.md },
 });
