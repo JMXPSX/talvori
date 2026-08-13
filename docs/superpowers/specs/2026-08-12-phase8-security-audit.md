@@ -32,18 +32,30 @@ Status: Secret + client-surface + RLS audit PASSED. Remaining QA items scoped be
 These are the roadmap's remaining hardening items (08_DEVELOPMENT_PHASES.md); each
 is buildable without external accounts except where noted:
 
-1. **Auth / session tests** — sign-in/out, session persistence/expiry, the auth
-   gate redirect; extend the integration harness.
-2. **Money / FX tests** — property-style rounding tests across exponents; FX
-   consolidation edge cases (already partly covered by unit + globalization tests).
+1. **Auth / session tests** — ✅ pure slice DONE (2026-08-13): `mapAuthError`
+   extracted to `features/auth/errors.ts` + mapping/locale-resolution tests
+   (`tests/auth/errors.test.ts`). REMAINING: live sign-in/out + session
+   persistence assertions in the integration harness (needs the temporary
+   service-role key drill, human-run like `test:rls`).
+2. **Money / FX tests** — ✅ DONE (2026-08-13): fixed `toMinorUnits` negative-half
+   rounding (was toward +∞, now half-away-from-zero per its contract), added
+   deterministic property round-trips across exponents 0/2/3, float-trap cases,
+   and `sumInReporting` edges (deduped missing, empty, case, negatives, KWD).
 3. **Account deletion / data export** — GDPR-style: an RPC/Edge Function to export
-   a household's data and to delete an account + cascade. (New feature work.)
-4. **Network-failure UX** — offline/timeout handling and retry affordances on the
-   data screens (currently errors surface as a localized message; add retry).
-5. **Performance** — list virtualization (FlatList) on the long feeds
-   (transactions, products, prices) instead of `.map` in ScrollView.
+   a household's data and to delete an account + cascade. (New feature work;
+   needs a hand-applied migration.)
+4. **Network-failure UX** — ✅ DONE (2026-08-13): `ErrorNotice` primitive
+   (message + Retry) wired into home / transactions / grocery / budgets error
+   states; `common.retry` in en/fil/ar. Remaining screens (retail/household/
+   goals/debts) can adopt it opportunistically when next touched.
+5. **Performance** — list virtualization DEPRIORITIZED for now: every feed is
+   query-capped (`listTransactions` limit 50; other lists similarly bounded), so
+   ScrollView+map is fine at current scale. Revisit if caps are raised or
+   pagination lands.
 6. **Crash monitoring** — wire an error reporter (e.g. Sentry) — needs an account.
 7. **Backup/recovery review** — Supabase PITR / backup policy (ops, not code).
 
-Recommendation: tackle 1–2 and 4–5 next (pure hardening, no accounts); 3 is a
-real feature slice; 6 needs an account.
+Also DONE (2026-08-13, adjacent hardening): `useActionSheet`/`ActionSheetDialog`
+— Alert.alert is a no-op on react-native-web, so the transactions "+" chooser
+and delete confirm now fall back to a token-styled modal on web (native keeps
+the platform Alert).
