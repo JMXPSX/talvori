@@ -426,7 +426,8 @@
     "errors": {
       "loadFailed": "Hindi ma-load ang subscription.",
       "saveFailed": "Hindi mapalitan ang plano."
-    }
+    },
+    "comingSoon": "Darating na ang upgrade kasama ng in-app purchases."
   },
   "errors": {
     "unknown": "May naganap na mali. Pakisubukang muli.",

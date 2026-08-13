@@ -52,7 +52,7 @@ Two areas need external accounts/credentials and are intentionally **not** imple
 - **6b billing** (Apple IAP / Google Play / Stripe-web + webhooks) — needs store/processor accounts. 6a ships the `household_subscriptions` model + a manual owner plan toggle; billing writes the same row via its `source` field.
 - **5d live retail** (real connectors, the Edge Function around `ingestFromConnector`, loyalty OAuth, global catalog) — needs an authorized data source. The connector *interface* + a mock connector + the ingest pipeline already exist.
 
-**Pre-launch:** remove or hard-guard the 6a manual plan toggle in `app/subscription.tsx` (it's a free-premium hole in production).
+The 6a manual plan toggle in `app/subscription.tsx` is now **dev-gated** (`__DEV__`) so it can't be a free-premium hole in production; 6b replaces it with real purchase flows.
 
 ## Workflow (how changes are made here)
 

@@ -69,7 +69,10 @@ export default function SubscriptionScreen() {
 
         <View style={styles.divider} />
 
-        {isOwner ? (
+        {/* The manual toggle is a DEV-ONLY testing affordance. In production
+            builds (__DEV__ === false) it disappears so it can't be a free-premium
+            hole — real upgrades arrive with billing (6b). */}
+        {isOwner && __DEV__ ? (
           <View style={styles.list}>
             <Text variant="caption" muted>{t('billing.placeholderNote')}</Text>
             {plan === 'premium' ? (
@@ -78,6 +81,8 @@ export default function SubscriptionScreen() {
               <Button label={t('billing.switchToPremium')} variant="accent" onPress={() => switchTo('premium')} loading={busy} />
             )}
           </View>
+        ) : isOwner ? (
+          <Text muted>{t('billing.comingSoon')}</Text>
         ) : (
           <Text muted>{t('billing.manageOwnerOnly')}</Text>
         )}

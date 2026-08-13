@@ -426,7 +426,8 @@
     "errors": {
       "loadFailed": "Couldn't load the subscription.",
       "saveFailed": "Couldn't change the plan."
-    }
+    },
+    "comingSoon": "Upgrades arrive with in-app purchases soon."
   },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
