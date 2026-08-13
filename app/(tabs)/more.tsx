@@ -62,6 +62,7 @@ export default function MoreScreen() {
         <ListRow icon="users" label={t('household.open')} onPress={() => router.push('/household')} />
         <ListRow icon="shopping-bag" label={t('retail.open')} onPress={() => router.push('/retail')} />
         <ListRow icon="star" label={t('billing.open')} onPress={() => router.push('/subscription')} />
+        <ListRow icon="user" label={t('account.open')} onPress={() => router.push('/account')} />
       </View>
 
       <View style={styles.actions}>
