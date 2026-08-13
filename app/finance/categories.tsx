@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Feather } from '@expo/vector-icons';
+
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
-import { createCategory, listCategories } from '@/features/finance/api';
+import { Button, Text, TextField, useActionSheet } from '@/components/ui';
+import { createCategory, deleteCategory, listCategories } from '@/features/finance/api';
 import { createCategorySchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { CategoryKind, CategoryRow } from '@/lib/database.types';
@@ -18,6 +20,7 @@ import { validate } from '@/lib/validation';
 export default function CategoriesScreen() {
   const { t } = useTranslation();
   const { active } = useActiveHousehold();
+  const sheet = useActionSheet();
 
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,6 +52,30 @@ export default function CategoriesScreen() {
       void load();
     }, [load]),
   );
+
+  function onDeleteCategory(category: CategoryRow) {
+    sheet.show({
+      title: t('finance.categories.confirmDeleteTitle'),
+      message: t('finance.categories.confirmDeleteBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteCategory(category.id);
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
+  }
 
   async function onCreate() {
     if (!active) return;
@@ -84,7 +111,17 @@ export default function CategoriesScreen() {
           <View style={styles.list}>
             {categories.map((c) => (
               <View key={c.id} style={styles.card}>
-                <Text>{c.name}</Text>
+                <View style={styles.cardRow}>
+                  <Text>{c.name}</Text>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={t('finance.delete')}
+                    hitSlop={12}
+                    onPress={() => onDeleteCategory(c)}
+                  >
+                    <Feather name="trash-2" size={18} color={palette.textMuted} />
+                  </Pressable>
+                </View>
                 <Text variant="caption" muted>
                   {c.kind === 'income' ? t('finance.categories.income') : t('finance.categories.expense')}
                 </Text>
@@ -137,6 +174,7 @@ export default function CategoriesScreen() {
           />
         </View>
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }
@@ -145,6 +183,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
   content: { padding: spacing.lg, gap: spacing.md },
   list: { gap: spacing.sm },
+  cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   card: {
     padding: spacing.md,
     borderWidth: 1,

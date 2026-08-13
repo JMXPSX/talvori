@@ -164,7 +164,9 @@
       "expense": "Expense",
       "none": "None",
       "manage": "Manage categories",
-      "empty": "No categories yet."
+      "empty": "No categories yet.",
+      "confirmDeleteTitle": "Delete this category?",
+      "confirmDeleteBody": "Transactions and budgets keep their history — they just become uncategorized."
     },
     "errors": {
       "loadFailed": "Couldn't load your finances.",

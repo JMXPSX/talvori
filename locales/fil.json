@@ -164,7 +164,9 @@
       "expense": "Gastos",
       "none": "Wala",
       "manage": "Pamahalaan ang mga kategorya",
-      "empty": "Wala pang kategorya."
+      "empty": "Wala pang kategorya.",
+      "confirmDeleteTitle": "Burahin ang kategoryang ito?",
+      "confirmDeleteBody": "Mananatili ang kasaysayan ng mga transaksyon at badyet — magiging walang kategorya lang ang mga ito."
     },
     "errors": {
       "loadFailed": "Hindi ma-load ang iyong pananalapi.",

@@ -171,6 +171,12 @@ export async function createTransfer(input: {
   return data as string;
 }
 
+/** Delete a category; transactions/allocations keep their rows (category nulls out). */
+export async function deleteCategory(id: string): Promise<void> {
+  const { error } = await getSupabase().from('categories').delete().eq('id', id);
+  if (error) fail('finance.errors.deleteFailed', error);
+}
+
 /** Delete an account and (via FK cascade) every transaction on it. RLS: owner/admin. */
 export async function deleteAccount(id: string): Promise<void> {
   const { error } = await getSupabase().from('accounts').delete().eq('id', id);
