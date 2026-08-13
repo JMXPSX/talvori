@@ -156,7 +156,8 @@
       "entryFailed": "Hindi na-save ang transaksyon.",
       "transferFailed": "Hindi nakumpleto ang paglipat.",
       "deleteFailed": "Hindi nabura iyon."
-    }
+    },
+    "spendingByCategory": "Gastos ayon sa kategorya"
   },
   "planning": {
     "hubTitle": "Pagpaplano",

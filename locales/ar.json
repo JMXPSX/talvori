@@ -156,7 +156,8 @@
       "entryFailed": "تعذّر حفظ المعاملة.",
       "transferFailed": "تعذّر إكمال التحويل.",
       "deleteFailed": "تعذّر حذف ذلك."
-    }
+    },
+    "spendingByCategory": "الإنفاق حسب الفئة"
   },
   "planning": {
     "hubTitle": "التخطيط",

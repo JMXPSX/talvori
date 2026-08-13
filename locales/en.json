@@ -156,7 +156,8 @@
       "entryFailed": "Couldn't save the transaction.",
       "transferFailed": "Couldn't complete the transfer.",
       "deleteFailed": "Couldn't delete that."
-    }
+    },
+    "spendingByCategory": "Spending by category"
   },
   "planning": {
     "hubTitle": "Planning",

@@ -13,10 +13,11 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Card, EmptyState, Text } from '@/components/ui';
+import { Card, Donut, EmptyState, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
-import { listAccountBalances, listAccounts } from '@/features/finance/api';
+import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
+import { categoryBreakdown, donutArcs } from '@/features/finance/donut';
 import { sumInReporting } from '@/features/finance/fx';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
 import type { AccountBalanceRow, AccountRow, LatestFxRateRow } from '@/lib/database.types';
@@ -34,6 +35,7 @@ export default function HomeScreen() {
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [balances, setBalances] = useState<Record<string, AccountBalanceRow>>({});
   const [rates, setRates] = useState<LatestFxRateRow[]>([]);
+  const [txns, setTxns] = useState<TransactionWithRefs[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -45,14 +47,16 @@ export default function HomeScreen() {
     setErrorKey(null);
     setLoading(true);
     try {
-      const [accs, bals, fx] = await Promise.all([
+      const [accs, bals, fx, tx] = await Promise.all([
         listAccounts(active.id),
         listAccountBalances(active.id),
         listLatestRates(active.id),
+        listTransactions(active.id),
       ]);
       setAccounts(accs);
       setBalances(Object.fromEntries(bals.map((b) => [b.account_id, b])));
       setRates(fx);
+      setTxns(tx);
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -98,6 +102,11 @@ export default function HomeScreen() {
   const consolidated = has('multi_currency_dashboard')
     ? sumInReporting(items, reporting, makeRateLookup(rates))
     : null;
+  const breakdown = categoryBreakdown(txns, reporting, makeRateLookup(rates), t('finance.categories.none'));
+  const segments = donutArcs(breakdown.slices.map((s) => s.amountMinor)).map((a, i) => ({
+    ...a,
+    color: breakdown.slices[i]?.color ?? palette.border,
+  }));
 
   const actions: { icon: FeatherName; label: string; href: string }[] = [
     { icon: 'arrow-down-left', label: t('finance.addIncome'), href: '/finance/entry?type=income' },
@@ -148,6 +157,27 @@ export default function HomeScreen() {
             </Pressable>
           ))}
         </View>
+
+        {/* Spending by category */}
+        {breakdown.slices.length > 0 ? (
+          <Card>
+            <Text variant="eyebrow" muted>{t('finance.spendingByCategory')}</Text>
+            <View style={styles.donutRow}>
+              <Donut segments={segments} size={140} stroke={20} />
+              <View style={styles.legend}>
+                {breakdown.slices.slice(0, 6).map((s) => (
+                  <View key={s.label} style={styles.legendRow}>
+                    <View style={[styles.dot, { backgroundColor: s.color }]} />
+                    <Text variant="caption" style={styles.legendLabel} numberOfLines={1}>
+                      {s.label}
+                    </Text>
+                    <Text variant="caption" muted>{formatAmount(s.amountMinor, reporting)}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          </Card>
+        ) : null}
 
         {/* Accounts */}
         <Text variant="eyebrow" muted>{t('finance.accounts.title')}</Text>
@@ -233,4 +263,9 @@ const styles = StyleSheet.create({
   tileLabel: { textAlign: 'center' },
   list: { gap: spacing.sm },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  donutRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  legend: { flex: 1, gap: spacing.xs },
+  legendRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  legendLabel: { flex: 1 },
+  dot: { width: 10, height: 10, borderRadius: radius.pill },
 });
