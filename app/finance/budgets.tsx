@@ -1,18 +1,17 @@
-/** Budgets: create a budget for a period, then set per-category limits and see
- *  limit / spent / remaining (from the budget_status view). */
+/** Budgets: pick a budget, see per-category limits as progress meters, and add
+ *  allocations. Budget creation lives in the /finance/budget-new modal. */
 
-import { getLocales } from 'expo-localization';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
+import { Button, Card, ProgressBar, Text, TextField } from '@/components/ui';
 import { listCategories } from '@/features/finance/api';
-import { addAllocation, createBudget, listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
-import { addAllocationSchema, createBudgetSchema } from '@/features/finance/planningSchemas';
+import { addAllocation, listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
+import { addAllocationSchema } from '@/features/finance/planningSchemas';
 import { budgetRemainingMinor } from '@/features/finance/progress';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { BudgetRow, BudgetStatusRow, CategoryRow } from '@/lib/database.types';
@@ -21,27 +20,10 @@ import { formatAmount } from '@/lib/format';
 import { toMinorUnits } from '@/lib/money';
 import { validate } from '@/lib/validation';
 
-function deviceCurrency(): string {
-  try {
-    return getLocales()[0]?.currencyCode ?? '';
-  } catch {
-    return '';
-  }
-}
-
-function monthBounds(): { start: string; end: string } {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = now.getMonth();
-  const lastDay = new Date(y, m + 1, 0).getDate();
-  const mm = String(m + 1).padStart(2, '0');
-  return { start: `${y}-${mm}-01`, end: `${y}-${mm}-${String(lastDay).padStart(2, '0')}` };
-}
-
 export default function BudgetsScreen() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { active } = useActiveHousehold();
-  const bounds = monthBounds();
 
   const [budgets, setBudgets] = useState<BudgetRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
@@ -50,16 +32,7 @@ export default function BudgetsScreen() {
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
-  // create-budget form
-  const [name, setName] = useState('');
-  const [currency, setCurrency] = useState(deviceCurrency());
-  const [start, setStart] = useState(bounds.start);
-  const [end, setEnd] = useState(bounds.end);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-  const [formError, setFormError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  // allocation form
+  // allocation form (contextual to the selected budget)
   const [allocCategory, setAllocCategory] = useState<string | null>(null);
   const [allocLimit, setAllocLimit] = useState('');
   const [allocError, setAllocError] = useState<string | null>(null);
@@ -97,33 +70,6 @@ export default function BudgetsScreen() {
       setErrorKey(toAppError(err).messageKey);
     }
   }, []);
-
-  async function onCreateBudget() {
-    if (!active) return;
-    setFormError(null);
-    const result = validate(createBudgetSchema, {
-      name,
-      currencyCode: currency,
-      periodStart: start,
-      periodEnd: end,
-    });
-    if (!result.success) {
-      setFieldErrors(result.fieldErrors);
-      return;
-    }
-    setFieldErrors({});
-    setSubmitting(true);
-    try {
-      const created = await createBudget(active.id, result.data);
-      setName('');
-      await load();
-      await selectBudget(created);
-    } catch (err) {
-      setFormError(toAppError(err).messageKey);
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
   async function onAddAllocation() {
     if (!active || !selected) return;
@@ -194,20 +140,36 @@ export default function BudgetsScreen() {
             ) : (
               statusRows.map((row) => {
                 const remaining = budgetRemainingMinor(row.limit_minor, row.spent_minor);
+                const over = remaining < 0;
+                const state = over ? 'over' : remaining === 0 ? 'full' : 'normal';
+                const fraction =
+                  row.limit_minor > 0 ? row.spent_minor / row.limit_minor : row.spent_minor > 0 ? 1 : 0;
                 return (
-                  <View key={row.allocation_id} style={styles.allocRow}>
-                    <Text>{categoryName(row.category_id)}</Text>
-                    <Text variant="caption" muted>
-                      {t('planning.budgets.spent')} {formatAmount(row.spent_minor, row.currency_code)} /{' '}
-                      {formatAmount(row.limit_minor, row.currency_code)} ·{' '}
-                      <Text
-                        variant="caption"
-                        style={{ color: remaining < 0 ? palette.danger : palette.success }}
-                      >
-                        {formatAmount(remaining, row.currency_code)}
+                  <Card key={row.allocation_id} style={styles.allocCard}>
+                    <View style={styles.allocHeader}>
+                      <Text numberOfLines={1} style={styles.allocName}>
+                        {categoryName(row.category_id)}
                       </Text>
-                    </Text>
-                  </View>
+                      <Text variant="caption" muted>
+                        {formatAmount(row.spent_minor, row.currency_code)} /{' '}
+                        {formatAmount(row.limit_minor, row.currency_code)}
+                      </Text>
+                    </View>
+                    <ProgressBar fraction={fraction} state={state} />
+                    {over ? (
+                      <Text variant="caption" style={styles.overCaption}>
+                        {t('planning.budgets.overBy', {
+                          amount: formatAmount(-remaining, row.currency_code),
+                        })}
+                      </Text>
+                    ) : (
+                      <Text variant="caption" style={styles.leftCaption}>
+                        {t('planning.budgets.left', {
+                          amount: formatAmount(remaining, row.currency_code),
+                        })}
+                      </Text>
+                    )}
+                  </Card>
                 );
               })
             )}
@@ -256,48 +218,11 @@ export default function BudgetsScreen() {
           </View>
         ) : null}
 
-        <View style={styles.divider} />
-
-        <Text variant="heading">{t('planning.budgets.addTitle')}</Text>
-        <View style={styles.form}>
-          <TextField
-            label={t('planning.budgets.nameLabel')}
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="sentences"
-            error={fieldErrors.name ? t('errors.validation') : undefined}
-          />
-          <TextField
-            label={t('planning.budgets.currencyLabel')}
-            value={currency}
-            onChangeText={setCurrency}
-            hint={t('household.currencyHint')}
-            autoCapitalize="characters"
-            error={fieldErrors.currencyCode ? t('errors.validation') : undefined}
-          />
-          <TextField
-            label={t('planning.budgets.startLabel')}
-            value={start}
-            onChangeText={setStart}
-            error={fieldErrors.periodStart ? t('errors.validation') : undefined}
-          />
-          <TextField
-            label={t('planning.budgets.endLabel')}
-            value={end}
-            onChangeText={setEnd}
-            error={fieldErrors.periodEnd ? t('errors.validation') : undefined}
-          />
-          {formError ? (
-            <Text variant="caption" style={{ color: palette.danger }}>
-              {t(formError)}
-            </Text>
-          ) : null}
-          <Button
-            label={submitting ? t('auth.processing') : t('planning.budgets.createCta')}
-            onPress={onCreateBudget}
-            loading={submitting}
-          />
-        </View>
+        <Button
+          label={t('planning.budgets.newCta')}
+          variant="secondary"
+          onPress={() => router.push('/finance/budget-new')}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -317,11 +242,16 @@ const styles = StyleSheet.create({
   },
   cardSelected: { borderColor: palette.brand },
   section: { gap: spacing.sm },
-  allocRow: { gap: spacing.xs, paddingVertical: spacing.xs },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  allocCard: { gap: spacing.sm },
+  allocHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  allocName: { flexShrink: 1 },
+  leftCaption: { color: palette.success },
+  overCaption: { color: palette.danger, fontWeight: '600' },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   chip: {
+    minHeight: 44,
+    justifyContent: 'center',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
