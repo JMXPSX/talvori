@@ -15,10 +15,14 @@
     "test:rls": "node tests/integration/rls-isolation.mjs"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.4.2",
+    "@expo-google-fonts/readex-pro": "^0.4.1",
+    "@expo-google-fonts/space-grotesk": "^0.4.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@supabase/supabase-js": "^2.45.4",
     "expo": "~57.0.12",
     "expo-constants": "~57.0.10",
+    "expo-font": "~57.0.1",
     "expo-linking": "~57.0.5",
     "expo-localization": "~57.0.1",
     "expo-location": "~57.0.9",

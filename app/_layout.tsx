@@ -6,6 +6,7 @@
 
 import '@/lib/i18n';
 
+import { useFonts } from 'expo-font';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -17,6 +18,7 @@ import { palette } from '@/components/theme';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 import { EntitlementsProvider } from '@/features/billing/EntitlementsProvider';
 import { ActiveHouseholdProvider } from '@/features/household/ActiveHouseholdProvider';
+import { fontMap } from '@/lib/fonts';
 
 const AUTH_ROUTES = ['login', 'signup'];
 
@@ -70,6 +72,18 @@ function RootNavigator() {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts(fontMap);
+
+  if (!fontsLoaded) {
+    return (
+      <SafeAreaProvider>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background }}>
+          <ActivityIndicator color={palette.brand} />
+        </View>
+      </SafeAreaProvider>
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <StatusBar style="auto" />

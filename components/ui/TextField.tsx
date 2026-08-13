@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   StyleSheet,
   TextInput,
@@ -14,6 +15,7 @@ import {
 
 import { palette, radius, spacing } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
+import { fontFamilyFor, isArabicLanguage } from '@/lib/fonts';
 import { direction } from '@/lib/rtl';
 
 export interface TextFieldProps {
@@ -44,6 +46,8 @@ export function TextField({
   editable = true,
 }: TextFieldProps) {
   const [focused, setFocused] = useState(false);
+  const { i18n } = useTranslation();
+  const fontFamily = fontFamilyFor('body', isArabicLanguage(i18n.language));
 
   return (
     <View style={styles.wrapper}>
@@ -53,7 +57,7 @@ export function TextField({
       <TextInput
         style={[
           styles.input,
-          { textAlign: direction.textAlign },
+          { textAlign: direction.textAlign, fontFamily },
           focused ? styles.inputFocused : null,
           error ? styles.inputError : null,
         ]}
