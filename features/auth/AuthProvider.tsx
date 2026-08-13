@@ -12,6 +12,7 @@
 import type { Session, User } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { mapAuthError } from '@/features/auth/errors';
 import { AppError } from '@/lib/errors';
 import { logger } from '@/lib/logger';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
@@ -32,27 +33,6 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
-
-/** Translate a Supabase auth error into a typed, localizable AppError. */
-function mapAuthError(message: string | undefined): AppError {
-  const m = (message ?? '').toLowerCase();
-  if (m.includes('invalid login credentials')) {
-    return new AppError('unauthorized', { messageKey: 'auth.errors.invalidCredentials' });
-  }
-  if (m.includes('email not confirmed')) {
-    return new AppError('unauthorized', { messageKey: 'auth.errors.emailNotConfirmed' });
-  }
-  if (m.includes('already registered') || m.includes('already been registered')) {
-    return new AppError('validation', { messageKey: 'auth.errors.emailInUse' });
-  }
-  if (m.includes('password')) {
-    return new AppError('validation', { messageKey: 'auth.errors.weakPassword' });
-  }
-  if (m.includes('rate') || m.includes('too many')) {
-    return new AppError('rate_limited', { messageKey: 'errors.rate_limited' });
-  }
-  return new AppError('unknown', { messageKey: 'auth.errors.generic' });
-}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   // Unconfigured client (null supabase) never initializes, so start settled.
