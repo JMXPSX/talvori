@@ -2,22 +2,19 @@
 
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Screen, Text } from '@/components/ui';
+import { palette, spacing } from '@/components/theme';
+import { ListRow, Screen, Text } from '@/components/ui';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
+
+const GOAL_ICON = '#8A6414';
+const DEBT_TILE = '#F3DBD8';
 
 export default function BudgetHubScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active } = useActiveHousehold();
-
-  const links: { label: string; href: string }[] = [
-    { label: t('planning.budgets.hub'), href: '/finance/budgets' },
-    { label: t('planning.goals.hub'), href: '/finance/goals' },
-    { label: t('planning.debts.hub'), href: '/finance/debts' },
-  ];
 
   return (
     <Screen title={t('planning.hubTitle')}>
@@ -25,11 +22,25 @@ export default function BudgetHubScreen() {
         <Text muted>{t('finance.noHousehold')}</Text>
       ) : (
         <View style={styles.list}>
-          {links.map((l) => (
-            <Pressable key={l.href} style={styles.card} onPress={() => router.push(l.href)}>
-              <Text variant="heading">{l.label}</Text>
-            </Pressable>
-          ))}
+          <ListRow
+            icon="pie-chart"
+            label={t('planning.budgets.hub')}
+            onPress={() => router.push('/finance/budgets')}
+          />
+          <ListRow
+            icon="target"
+            label={t('planning.goals.hub')}
+            iconColor={GOAL_ICON}
+            iconBg={palette.accentMuted}
+            onPress={() => router.push('/finance/goals')}
+          />
+          <ListRow
+            icon="trending-down"
+            label={t('planning.debts.hub')}
+            iconColor={palette.danger}
+            iconBg={DEBT_TILE}
+            onPress={() => router.push('/finance/debts')}
+          />
         </View>
       )}
     </Screen>
@@ -38,11 +49,4 @@ export default function BudgetHubScreen() {
 
 const styles = StyleSheet.create({
   list: { gap: spacing.sm, marginTop: spacing.md },
-  card: {
-    padding: spacing.lg,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
-    backgroundColor: palette.surface,
-  },
 });
