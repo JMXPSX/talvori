@@ -28,6 +28,12 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     backgroundColor: palette.surface,
     gap: spacing.xs,
+    // Quiet elevation so white cards lift off the warm-paper canvas.
+    shadowColor: '#0A4E42',
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
   },
   accented: {
     borderLeftWidth: 3,

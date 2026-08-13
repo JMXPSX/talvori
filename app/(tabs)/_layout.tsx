@@ -4,10 +4,18 @@
  * and the bar is direction-aware. No business functionality yet.
  */
 
+import { Feather } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import type { ColorValue } from 'react-native';
 
 import { palette } from '@/components/theme';
+
+type FeatherName = keyof typeof Feather.glyphMap;
+const tabIcon = (name: FeatherName) =>
+  function TabIcon({ color, size }: { color: ColorValue; size: number }) {
+    return <Feather name={name} color={color as string} size={size} />;
+  };
 
 export default function TabsLayout() {
   const { t } = useTranslation();
@@ -22,11 +30,11 @@ export default function TabsLayout() {
         tabBarStyle: { backgroundColor: palette.background, borderTopColor: palette.border },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: t('nav.home') }} />
-      <Tabs.Screen name="budget" options={{ title: t('nav.budget') }} />
-      <Tabs.Screen name="transactions" options={{ title: t('nav.transactions') }} />
-      <Tabs.Screen name="grocery" options={{ title: t('nav.grocery') }} />
-      <Tabs.Screen name="more" options={{ title: t('nav.more') }} />
+      <Tabs.Screen name="index" options={{ title: t('nav.home'), tabBarIcon: tabIcon('home') }} />
+      <Tabs.Screen name="budget" options={{ title: t('nav.budget'), tabBarIcon: tabIcon('pie-chart') }} />
+      <Tabs.Screen name="transactions" options={{ title: t('nav.transactions'), tabBarIcon: tabIcon('list') }} />
+      <Tabs.Screen name="grocery" options={{ title: t('nav.grocery'), tabBarIcon: tabIcon('shopping-cart') }} />
+      <Tabs.Screen name="more" options={{ title: t('nav.more'), tabBarIcon: tabIcon('more-horizontal') }} />
     </Tabs>
   );
 }
