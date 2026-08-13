@@ -1,6 +1,6 @@
 /** Coupons discovery: active/expired sections + add coupon (fixed or percent). */
 
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -13,6 +13,7 @@ import { couponStatus } from '@/features/retail/coupon';
 import { createCoupon, deleteCoupon, listCoupons } from '@/features/retail/couponApi';
 import type { CouponWithRefs } from '@/features/retail/couponApi';
 import { createCouponSchema } from '@/features/retail/schemas';
+import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { RetailerRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
@@ -23,6 +24,8 @@ import { validate } from '@/lib/validation';
 export default function CouponsScreen() {
   const { t } = useTranslation();
   const { active } = useActiveHousehold();
+  const { has } = usePlan();
+  const router = useRouter();
 
   const [coupons, setCoupons] = useState<CouponWithRefs[]>([]);
   const [retailers, setRetailers] = useState<RetailerRow[]>([]);
@@ -127,6 +130,20 @@ export default function CouponsScreen() {
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     }
+  }
+
+  if (!has('coupons')) {
+    return (
+      <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
+        <View style={styles.content}>
+          <View style={styles.card}>
+            <Text variant="heading">{t('billing.lockedTitle')}</Text>
+            <Text muted>{t('billing.lockedBody')}</Text>
+            <Button label={t('billing.manageCta')} onPress={() => router.push('/subscription')} />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
   }
 
   const now = Date.now();

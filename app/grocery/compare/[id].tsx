@@ -1,14 +1,15 @@
 /** Compare a grocery list's linked items across branches (reporting currency):
  *  ranked column totals + coverage, best-price floor, and potential coupon savings. */
 
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Text } from '@/components/ui';
+import { Button, Text } from '@/components/ui';
+import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { listItems } from '@/features/grocery/api';
 import { bestFloorMinor, compareColumns } from '@/features/retail/basket';
 import type { ColumnTotal } from '@/features/retail/basket';
@@ -24,6 +25,8 @@ export default function CompareScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listId = String(id);
   const { active } = useActiveHousehold();
+  const { has } = usePlan();
+  const router = useRouter();
 
   const [columns, setColumns] = useState<ColumnTotal[]>([]);
   const [labels, setLabels] = useState<Record<string, string>>({});
@@ -91,6 +94,20 @@ export default function CompareScreen() {
       void load();
     }, [load]),
   );
+
+  if (!has('retail_comparison')) {
+    return (
+      <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
+        <View style={styles.content}>
+          <View style={styles.card}>
+            <Text variant="heading">{t('billing.lockedTitle')}</Text>
+            <Text muted>{t('billing.lockedBody')}</Text>
+            <Button label={t('billing.manageCta')} onPress={() => router.push('/subscription')} />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (loading) {
     return (

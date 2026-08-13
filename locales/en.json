@@ -404,6 +404,30 @@
       "deleteFailed": "Couldn't delete the coupon."
     }
   },
+  "billing": {
+    "title": "Subscription",
+    "open": "Subscription",
+    "currentPlan": "Current plan",
+    "planFree": "Free",
+    "planPremium": "Premium",
+    "capabilities": "Premium includes",
+    "capMultiCurrency": "Multi-currency dashboard",
+    "capRetailComparison": "Price comparison",
+    "capCoupons": "Coupons",
+    "capMultipleHouseholds": "Multiple households",
+    "capUnlimitedGoals": "Unlimited savings goals",
+    "manageOwnerOnly": "Only the household owner can change the plan.",
+    "placeholderNote": "Manual switch for testing — real billing arrives with in-app purchases.",
+    "switchToFree": "Switch to Free",
+    "switchToPremium": "Switch to Premium",
+    "lockedTitle": "Premium feature",
+    "lockedBody": "This is included with Premium.",
+    "manageCta": "Manage subscription",
+    "errors": {
+      "loadFailed": "Couldn't load the subscription.",
+      "saveFailed": "Couldn't change the plan."
+    }
+  },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
     "network": "Network problem. Check your connection and retry.",

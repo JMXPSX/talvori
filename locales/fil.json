@@ -404,6 +404,30 @@
       "deleteFailed": "Hindi mabura ang kupon."
     }
   },
+  "billing": {
+    "title": "Subscription",
+    "open": "Subscription",
+    "currentPlan": "Kasalukuyang plano",
+    "planFree": "Libre",
+    "planPremium": "Premium",
+    "capabilities": "Kasama sa Premium",
+    "capMultiCurrency": "Multi-currency na dashboard",
+    "capRetailComparison": "Paghahambing ng presyo",
+    "capCoupons": "Mga kupon",
+    "capMultipleHouseholds": "Maraming sambahayan",
+    "capUnlimitedGoals": "Walang limitasyong savings goals",
+    "manageOwnerOnly": "Ang may-ari lang ng sambahayan ang makakapagpalit ng plano.",
+    "placeholderNote": "Manual na pagpalit para sa pagsubok — darating ang tunay na billing kasama ng in-app purchases.",
+    "switchToFree": "Lumipat sa Libre",
+    "switchToPremium": "Lumipat sa Premium",
+    "lockedTitle": "Premium na feature",
+    "lockedBody": "Kasama ito sa Premium.",
+    "manageCta": "Pamahalaan ang subscription",
+    "errors": {
+      "loadFailed": "Hindi ma-load ang subscription.",
+      "saveFailed": "Hindi mapalitan ang plano."
+    }
+  },
   "errors": {
     "unknown": "May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",

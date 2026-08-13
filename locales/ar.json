@@ -404,6 +404,30 @@
       "deleteFailed": "تعذّر حذف الكوبون."
     }
   },
+  "billing": {
+    "title": "الاشتراك",
+    "open": "الاشتراك",
+    "currentPlan": "الخطة الحالية",
+    "planFree": "مجاني",
+    "planPremium": "مميّز",
+    "capabilities": "يشمل المميّز",
+    "capMultiCurrency": "لوحة متعددة العملات",
+    "capRetailComparison": "مقارنة الأسعار",
+    "capCoupons": "الكوبونات",
+    "capMultipleHouseholds": "أسر متعددة",
+    "capUnlimitedGoals": "أهداف ادخار غير محدودة",
+    "manageOwnerOnly": "يمكن لمالك الأسرة فقط تغيير الخطة.",
+    "placeholderNote": "تبديل يدوي للاختبار — تصل الفوترة الحقيقية مع الشراء داخل التطبيق.",
+    "switchToFree": "التبديل إلى المجاني",
+    "switchToPremium": "التبديل إلى المميّز",
+    "lockedTitle": "ميزة مميّزة",
+    "lockedBody": "هذه الميزة مضمّنة في المميّز.",
+    "manageCta": "إدارة الاشتراك",
+    "errors": {
+      "loadFailed": "تعذّر تحميل الاشتراك.",
+      "saveFailed": "تعذّر تغيير الخطة."
+    }
+  },
   "errors": {
     "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "network": "مشكلة في الشبكة. تحقق من اتصالك وأعد المحاولة.",
