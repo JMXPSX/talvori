@@ -62,12 +62,21 @@ incrementally rather than from its own spec:
 - **C2 tab screens (done)** — budget, transactions, grocery, account conformed;
   `Screen` now caps content width on wide viewports, which propagates the
   desktop treatment to every route that uses it.
-- **C3 remaining (not started)** — the budgets/goals/debts detail screens under
-  `finance/`, which is where the mock's per-category progress rings belong.
+- **C3 finance detail screens (done)** — budgets/goals/debts/categories, plus the
+  two primitives they were each hand-rolling: `ProgressRing` (the mock's
+  per-category ring) and `Chip`. Slice B deliberately deferred these until real
+  screens defined their requirements, which is how it played out — `ProgressRing`
+  took ProgressBar's `(fraction, state)` contract, and `Chip` gained a `tint`
+  prop that a mockup-first design would have missed.
 
 Slice D (the ~33 long-tail screens) still has no spec. Much of it is now
 absorbed by the `Screen` width cap and the reworked primitives; what remains is
 per-screen layout judgement.
+
+**Known debt:** `goals.tsx`, `debts.tsx` and `categories.tsx` still declare their
+own `card` style rather than using the `Card` primitive. The style matches, so
+they render correctly, but the duplication should collapse into `Card` when
+those screens are next opened.
 
 ## Guiding principle: keep the names, change the values
 
