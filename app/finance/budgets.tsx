@@ -9,8 +9,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Feather } from '@expo/vector-icons';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Button, Card, ErrorNotice, ProgressBar, Text, TextField, useActionSheet } from '@/components/ui';
+import { palette, spacing } from '@/components/theme';
+import {
+  BentoPage,
+  Button,
+  Card,
+  Chip,
+  ErrorNotice,
+  ProgressRing,
+  Text,
+  TextField,
+  useActionSheet,
+} from '@/components/ui';
 import { listCategories } from '@/features/finance/api';
 import {
   addAllocation,
@@ -165,7 +175,8 @@ export default function BudgetsScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView>
+        <BentoPage>
         {loading ? (
           <ActivityIndicator color={palette.brand} />
         ) : errorKey ? (
@@ -177,11 +188,8 @@ export default function BudgetsScreen() {
             {budgets.map((b) => {
               const isSel = selected?.id === b.id;
               return (
-                <Pressable
-                  key={b.id}
-                  style={[styles.card, isSel ? styles.cardSelected : null]}
-                  onPress={() => selectBudget(b)}
-                >
+                <Pressable key={b.id} onPress={() => selectBudget(b)}>
+                  <Card style={isSel ? styles.cardSelected : undefined}>
                   <View style={styles.cardHeader}>
                     <Text variant="heading">{b.name}</Text>
                     <Pressable
@@ -196,6 +204,7 @@ export default function BudgetsScreen() {
                   <Text variant="caption" muted>
                     {b.currency_code} · {b.period_start} → {b.period_end}
                   </Text>
+                  </Card>
                 </Pressable>
               );
             })}
@@ -217,40 +226,47 @@ export default function BudgetsScreen() {
                 const fraction =
                   row.limit_minor > 0 ? row.spent_minor / row.limit_minor : row.spent_minor > 0 ? 1 : 0;
                 return (
-                  <Card key={row.allocation_id} style={styles.allocCard}>
-                    <View style={styles.allocHeader}>
-                      <Text numberOfLines={1} style={styles.allocName}>
-                        {categoryName(row.category_id)}
-                      </Text>
-                      <View style={styles.allocTrailing}>
+                  <Card key={row.allocation_id}>
+                    {/* Ring + label + spend, per the ibilly budget mock. */}
+                    <View style={styles.allocRow}>
+                      <ProgressRing fraction={fraction} state={state}>
+                        <Text variant="caption" style={over ? styles.overCaption : undefined}>
+                          {Math.round(fraction * 100)}%
+                        </Text>
+                      </ProgressRing>
+
+                      <View style={styles.allocMain}>
+                        <Text variant="button" numberOfLines={1}>
+                          {categoryName(row.category_id)}
+                        </Text>
+                        {over ? (
+                          <Text variant="caption" style={styles.overCaption}>
+                            {t('planning.budgets.overBy', {
+                              amount: formatAmount(-remaining, row.currency_code),
+                            })}
+                          </Text>
+                        ) : (
+                          <Text variant="caption" style={styles.leftCaption}>
+                            {t('planning.budgets.left', {
+                              amount: formatAmount(remaining, row.currency_code),
+                            })}
+                          </Text>
+                        )}
                         <Text variant="caption" muted>
                           {formatAmount(row.spent_minor, row.currency_code)} /{' '}
                           {formatAmount(row.limit_minor, row.currency_code)}
                         </Text>
-                        <Pressable
-                          accessibilityRole="button"
-                          accessibilityLabel={t('finance.delete')}
-                          hitSlop={12}
-                          onPress={() => onDeleteAllocation(row)}
-                        >
-                          <Feather name="trash-2" size={16} color={palette.textMuted} />
-                        </Pressable>
                       </View>
+
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={t('finance.delete')}
+                        hitSlop={12}
+                        onPress={() => onDeleteAllocation(row)}
+                      >
+                        <Feather name="trash-2" size={16} color={palette.textMuted} />
+                      </Pressable>
                     </View>
-                    <ProgressBar fraction={fraction} state={state} />
-                    {over ? (
-                      <Text variant="caption" style={styles.overCaption}>
-                        {t('planning.budgets.overBy', {
-                          amount: formatAmount(-remaining, row.currency_code),
-                        })}
-                      </Text>
-                    ) : (
-                      <Text variant="caption" style={styles.leftCaption}>
-                        {t('planning.budgets.left', {
-                          amount: formatAmount(remaining, row.currency_code),
-                        })}
-                      </Text>
-                    )}
                   </Card>
                 );
               })
@@ -261,28 +277,19 @@ export default function BudgetsScreen() {
                 {t('planning.budgets.categoryLabel')}
               </Text>
               <View style={styles.chips}>
-                <Pressable
+                <Chip
+                  label={t('planning.budgets.uncategorized')}
+                  selected={allocCategory === null}
                   onPress={() => setAllocCategory(null)}
-                  style={[styles.chip, allocCategory === null ? styles.chipActive : null]}
-                >
-                  <Text variant="caption" style={{ color: allocCategory === null ? palette.white : palette.text }}>
-                    {t('planning.budgets.uncategorized')}
-                  </Text>
-                </Pressable>
-                {categories.map((c) => {
-                  const on = c.id === allocCategory;
-                  return (
-                    <Pressable
-                      key={c.id}
-                      onPress={() => setAllocCategory(c.id)}
-                      style={[styles.chip, on ? styles.chipActive : null]}
-                    >
-                      <Text variant="caption" style={{ color: on ? palette.white : palette.text }}>
-                        {c.name}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
+                />
+                {categories.map((c) => (
+                  <Chip
+                    key={c.id}
+                    label={c.name}
+                    selected={c.id === allocCategory}
+                    onPress={() => setAllocCategory(c.id)}
+                  />
+                ))}
               </View>
               <TextField
                 label={`${t('planning.budgets.limitLabel')} (${selected.currency_code})`}
@@ -305,6 +312,7 @@ export default function BudgetsScreen() {
           variant="secondary"
           onPress={() => router.push('/finance/budget-new')}
         />
+        </BentoPage>
       </ScrollView>
       {sheet.element}
     </SafeAreaView>
@@ -315,33 +323,14 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
   content: { padding: spacing.lg, gap: spacing.md },
   list: { gap: spacing.sm },
-  card: {
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
-    backgroundColor: palette.surface,
-    gap: spacing.xs,
-  },
-  cardSelected: { borderColor: palette.brand },
+  // Selection reads as a tinted tile — cards no longer draw borders.
+  cardSelected: { backgroundColor: palette.brandMuted },
   cardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   section: { gap: spacing.sm },
-  allocCard: { gap: spacing.sm },
-  allocHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  allocTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  allocName: { flexShrink: 1 },
+  allocRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  allocMain: { flex: 1, gap: 2 },
   leftCaption: { color: palette.success },
-  overCaption: { color: palette.danger, fontWeight: '600' },
+  overCaption: { color: palette.danger },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  chip: {
-    minHeight: 44,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: palette.brand,
-  },
-  chipActive: { backgroundColor: palette.brand },
 });

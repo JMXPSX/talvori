@@ -18,11 +18,13 @@ import {
   BentoRow,
   Button,
   Card,
+  Chip,
   Donut,
   EmptyState,
   ErrorNotice,
   ListRow,
   ProgressBar,
+  ProgressRing,
   SideNav,
   Text,
   TextField,
@@ -195,6 +197,32 @@ export default function ThemeGalleryScreen() {
             <Text variant="caption" muted>over 120%</Text>
             <ProgressBar fraction={1} state="over" />
           </Card>
+          <Card>
+            <Text variant="caption" muted>rings — normal / full / over</Text>
+            <View style={styles.ringRow}>
+              <ProgressRing fraction={0.45}>
+                <Text variant="caption">45%</Text>
+              </ProgressRing>
+              <ProgressRing fraction={1} state="full">
+                <Text variant="caption">100%</Text>
+              </ProgressRing>
+              <ProgressRing fraction={1} state="over">
+                <Text variant="caption">120%</Text>
+              </ProgressRing>
+              <ProgressRing fraction={0} />
+            </View>
+          </Card>
+        </Section>
+
+        <Section title="Chips">
+          <Card>
+            <View style={styles.chipRow}>
+              <Chip label="Selected" selected onPress={() => undefined} />
+              <Chip label="Unselected" onPress={() => undefined} />
+              <Chip label="Tinted" tint={palette.accentMuted} onPress={() => undefined} />
+              <Chip label="Groceries" tint={palette.successMuted} onPress={() => undefined} />
+            </View>
+          </Card>
         </Section>
 
         <Section title="Chart series">
@@ -253,6 +281,8 @@ const styles = StyleSheet.create({
   swatches: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   swatch: { width: 72, gap: spacing.xs },
   chip: { height: 40, borderRadius: radius.control, borderWidth: 1, borderColor: palette.border },
+  ringRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg, flexWrap: 'wrap' },
+  chipRow: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   navPreview: { height: 380, borderRadius: radius.lg, overflow: 'hidden', alignSelf: 'flex-start' },
   donutRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg },
   legend: { flex: 1, gap: spacing.xs },

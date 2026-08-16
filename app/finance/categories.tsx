@@ -8,8 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Feather } from '@expo/vector-icons';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField, useActionSheet } from '@/components/ui';
+import { elevation, palette, radius, spacing } from '@/components/theme';
+import { Button, Chip, Text, TextField, useActionSheet } from '@/components/ui';
 import { createCategory, deleteCategory, listCategories } from '@/features/finance/api';
 import { createCategorySchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -145,20 +145,14 @@ export default function CategoriesScreen() {
             {t('finance.categories.kindLabel')}
           </Text>
           <View style={styles.chips}>
-            {(['expense', 'income'] as CategoryKind[]).map((k) => {
-              const activeChip = k === kind;
-              return (
-                <Pressable
-                  key={k}
-                  onPress={() => setKind(k)}
-                  style={[styles.chip, activeChip ? styles.chipActive : null]}
-                >
-                  <Text variant="caption" style={{ color: activeChip ? palette.white : palette.text }}>
-                    {k === 'income' ? t('finance.categories.income') : t('finance.categories.expense')}
-                  </Text>
-                </Pressable>
-              );
-            })}
+            {(['expense', 'income'] as CategoryKind[]).map((k) => (
+              <Chip
+                key={k}
+                label={k === 'income' ? t('finance.categories.income') : t('finance.categories.expense')}
+                selected={k === kind}
+                onPress={() => setKind(k)}
+              />
+            ))}
           </View>
 
           {formError ? (
@@ -184,23 +178,15 @@ const styles = StyleSheet.create({
   content: { padding: spacing.lg, gap: spacing.md },
   list: { gap: spacing.sm },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  // Matches the Card primitive's bento treatment: borderless, ambient shadow.
   card: {
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
     backgroundColor: palette.surface,
+    boxShadow: elevation.tile,
     gap: spacing.xs,
   },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  chip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: palette.brand,
-  },
-  chipActive: { backgroundColor: palette.brand },
 });

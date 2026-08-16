@@ -7,6 +7,8 @@ export { Card, type CardProps } from '@/components/ui/Card';
 export { EmptyState, type EmptyStateProps } from '@/components/ui/EmptyState';
 export { Donut, type DonutProps, type DonutSegment } from '@/components/ui/Donut';
 export { ProgressBar, type ProgressBarProps, type ProgressState } from '@/components/ui/ProgressBar';
+export { ProgressRing, type ProgressRingProps } from '@/components/ui/ProgressRing';
+export { Chip, type ChipProps } from '@/components/ui/Chip';
 export { ListRow, type ListRowProps } from '@/components/ui/ListRow';
 export {
   ActionSheetDialog,
