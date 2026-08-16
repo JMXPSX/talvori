@@ -69,14 +69,24 @@ incrementally rather than from its own spec:
   took ProgressBar's `(fraction, state)` contract, and `Chip` gained a `tint`
   prop that a mockup-first design would have missed.
 
-Slice D (the ~33 long-tail screens) still has no spec. Much of it is now
-absorbed by the `Screen` width cap and the reworked primitives; what remains is
-per-screen layout judgement.
+- **D long tail (done)** — applied by codemod rather than hand edits, because the
+  screens repeated three declarations verbatim: the bordered card style (15
+  files), the uncapped scroll content container (26 files), and the outlined chip
+  (8 files). No JSX was restructured; the chips' existing label-colour logic
+  already matched the `Chip` primitive, so only fills changed.
 
-**Known debt:** `goals.tsx`, `debts.tsx` and `categories.tsx` still declare their
-own `card` style rather than using the `Card` primitive. The style matches, so
-they render correctly, but the duplication should collapse into `Card` when
-those screens are next opened.
+**Known debt.** Several screens still declare their own `card` and `chip` styles
+rather than using the `Card` / `Chip` primitives. The styles now match, so they
+render correctly and the palette flows from the theme, but the duplication should
+collapse into the primitives when those screens are next opened for other
+reasons. Doing it now would mean restructuring JSX in ~20 files that cannot be
+visually verified from here.
+
+**Verification ceiling.** Everything past the login screen sits behind the auth
+gate, so the primitives are verified exhaustively at `/dev/theme` while the real
+screens are verified only by typecheck, lint, tests, and the fact that they
+consume verified primitives. A human pass while signed in is the outstanding
+step for slices C and D.
 
 ## Guiding principle: keep the names, change the values
 
