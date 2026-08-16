@@ -6,19 +6,15 @@
  * an SVG stroke donut.
  */
 
+import { chartSeries } from '@/components/theme';
 import type { TransactionWithRefs } from '@/features/finance/api';
 import { sumInReporting } from '@/features/finance/fx';
 
-export const CATEGORY_COLORS = [
-  '#0E6E5C', // teal (brand)
-  '#E0A72E', // gold (accent)
-  '#3B82C4', // blue
-  '#B23A2E', // red
-  '#7C5CBF', // violet
-  '#2E8B57', // green
-  '#D9773B', // orange
-  '#5E6B63', // gray-green
-] as const;
+/**
+ * Series colours live in the theme so the palette has a single home. Re-exported
+ * here because this module is where chart consumers already look for them.
+ */
+export const CATEGORY_COLORS = chartSeries;
 
 export interface DonutArc {
   fraction: number; // share of the whole, [0,1]

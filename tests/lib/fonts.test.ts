@@ -14,15 +14,17 @@ describe('isArabicLanguage', () => {
 });
 
 describe('fontFamilyFor (Latin)', () => {
-  it('uses Space Grotesk for display roles', () => {
-    expect(fontFamilyFor('title', false)).toBe('SpaceGrotesk_700Bold');
-    expect(fontFamilyFor('heading', false)).toBe('SpaceGrotesk_600SemiBold');
-    expect(fontFamilyFor('button', false)).toBe('SpaceGrotesk_600SemiBold');
+  it('uses Plus Jakarta Sans bold for the display role', () => {
+    expect(fontFamilyFor('title', false)).toBe('PlusJakartaSans_700Bold');
   });
-  it('uses Inter for body and eyebrow', () => {
-    expect(fontFamilyFor('body', false)).toBe('Inter_400Regular');
-    expect(fontFamilyFor('caption', false)).toBe('Inter_400Regular');
-    expect(fontFamilyFor('eyebrow', false)).toBe('Inter_600SemiBold');
+  it('uses semibold for heading, button and eyebrow', () => {
+    expect(fontFamilyFor('heading', false)).toBe('PlusJakartaSans_600SemiBold');
+    expect(fontFamilyFor('button', false)).toBe('PlusJakartaSans_600SemiBold');
+    expect(fontFamilyFor('eyebrow', false)).toBe('PlusJakartaSans_600SemiBold');
+  });
+  it('uses regular for body and medium for caption', () => {
+    expect(fontFamilyFor('body', false)).toBe('PlusJakartaSans_400Regular');
+    expect(fontFamilyFor('caption', false)).toBe('PlusJakartaSans_500Medium');
   });
 });
 
