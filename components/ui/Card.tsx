@@ -1,17 +1,18 @@
 /**
- * Surface card: the repeated "bordered white panel on warm paper" used across
- * finance / grocery / retail / billing screens. Cards sit brighter than the
- * canvas for quiet depth. Pass `accented` to add the gold ledger-margin rule.
+ * Bento tile: the repeated white panel used across finance / grocery / retail /
+ * billing screens. Borderless by design — depth comes from the contrast of white
+ * against the tinted canvas plus a soft ambient shadow, never from a rule.
+ * Pass `accented` to tint the surface for the highlighted item (e.g. cheapest).
  */
 
 import type { ReactNode } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { elevation, palette, radius, spacing } from '@/components/theme';
 
 export interface CardProps {
   children: ReactNode;
-  /** Adds a gold left rule — reserve for the highlighted item (e.g. cheapest). */
+  /** Tints the tile — reserve for the highlighted item (e.g. cheapest). */
   accented?: boolean;
   style?: ViewStyle;
 }
@@ -22,21 +23,13 @@ export function Card({ children, accented = false, style }: CardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
     backgroundColor: palette.surface,
-    gap: spacing.xs,
-    // Quiet elevation so white cards lift off the warm-paper canvas.
-    shadowColor: '#0A4E42',
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2,
+    gap: spacing.sm,
+    boxShadow: elevation.tile,
   },
   accented: {
-    borderLeftWidth: 3,
-    borderLeftColor: palette.accent,
+    backgroundColor: palette.accentMuted,
   },
 });

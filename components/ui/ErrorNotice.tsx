@@ -16,8 +16,6 @@ export interface ErrorNoticeProps {
   onRetry?: () => void;
 }
 
-const TILE = '#F3DBD8';
-
 export function ErrorNotice({ message, retryLabel, onRetry }: ErrorNoticeProps) {
   return (
     <View style={styles.card}>
@@ -33,12 +31,12 @@ export function ErrorNotice({ message, retryLabel, onRetry }: ErrorNoticeProps) 
 }
 
 const styles = StyleSheet.create({
+  // Tonal container rather than a bordered card: the error reads as a tinted
+  // surface, consistent with the system's "no harsh borders" rule.
   card: {
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
-    backgroundColor: palette.surface,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    backgroundColor: palette.dangerMuted,
     gap: spacing.md,
   },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
@@ -46,7 +44,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: radius.pill,
-    backgroundColor: TILE,
+    backgroundColor: palette.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },

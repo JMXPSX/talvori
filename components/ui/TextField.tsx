@@ -90,19 +90,20 @@ const styles = StyleSheet.create({
   wrapper: {
     gap: spacing.xs,
   },
+  // Filled, not outlined: fields must stay visible inside a white bento tile.
+  // The border is always 2px and merely changes colour, so focusing never
+  // reflows the layout.
   input: {
     minHeight: 48,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    borderRadius: radius.control,
     paddingHorizontal: spacing.md,
-    backgroundColor: palette.background,
+    backgroundColor: palette.field,
     color: palette.text,
   },
   inputFocused: {
     borderColor: palette.brand,
-    borderWidth: 2,
-    paddingHorizontal: spacing.md - 1,
   },
   inputError: {
     borderColor: palette.danger,

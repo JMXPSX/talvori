@@ -31,8 +31,12 @@ function useAuthGate() {
   useEffect(() => {
     if (initializing) return;
     const inAuthRoute = AUTH_ROUTES.includes(segments[0] ?? '');
+    // The design-system gallery under /dev is reachable without a session so the
+    // primitives can be reviewed without signing in. __DEV__ only, and the route
+    // itself renders null in production builds.
+    const inDevRoute = __DEV__ && segments[0] === 'dev';
 
-    if (!session && !inAuthRoute) {
+    if (!session && !inAuthRoute && !inDevRoute) {
       router.replace('/login');
     } else if (session && inAuthRoute) {
       router.replace('/');

@@ -26,7 +26,7 @@ export function Donut({ segments, size = 160, stroke = 22 }: DonutProps) {
   const center = size / 2;
   return (
     <Svg width={size} height={size}>
-      <Circle cx={center} cy={center} r={r} stroke={palette.border} strokeWidth={stroke} fill="none" />
+      <Circle cx={center} cy={center} r={r} stroke={palette.surfaceMuted} strokeWidth={stroke} fill="none" />
       {segments.map((s, i) => (
         <Circle
           key={i}
@@ -38,7 +38,8 @@ export function Donut({ segments, size = 160, stroke = 22 }: DonutProps) {
           fill="none"
           strokeDasharray={`${s.fraction * c} ${c - s.fraction * c}`}
           strokeDashoffset={-s.offset * c}
-          strokeLinecap="butt"
+          // "Soft stroke": rounded caps per the ibilly data-viz rule.
+          strokeLinecap="round"
           transform={`rotate(-90 ${center} ${center})`}
         />
       ))}

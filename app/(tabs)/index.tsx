@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { elevation, palette, radius, spacing } from '@/components/theme';
 import { Card, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -228,14 +228,10 @@ const styles = StyleSheet.create({
   content: { padding: spacing.lg, gap: spacing.md },
   hero: {
     backgroundColor: palette.brand,
-    borderRadius: radius.lg,
+    borderRadius: radius.xl,
     padding: spacing.lg,
     gap: spacing.xs,
-    shadowColor: palette.brandDeep,
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
+    boxShadow: elevation.raised,
   },
   heroLabel: { color: palette.white, opacity: 0.85 },
   heroAmount: { color: palette.white, fontSize: 36 },

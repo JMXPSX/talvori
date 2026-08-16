@@ -10,7 +10,7 @@
 import { useCallback, useState, type ReactElement } from 'react';
 import { Alert, Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { elevation, palette, radius, spacing } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
 
 export interface ActionSheetAction {
@@ -30,7 +30,7 @@ export interface ActionSheetDialogProps extends ActionSheetOptions {
   onClose: () => void;
 }
 
-const BACKDROP = 'rgba(18, 33, 28, 0.45)'; // ink-tinted scrim
+const BACKDROP = 'rgba(22, 29, 31, 0.45)'; // ink-tinted scrim
 
 export function ActionSheetDialog({
   title,
@@ -128,16 +128,10 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     maxWidth: 360,
-    borderRadius: radius.lg,
+    borderRadius: radius.xl,
     backgroundColor: palette.surface,
-    borderWidth: 1,
-    borderColor: palette.border,
     paddingVertical: spacing.sm,
-    shadowColor: '#0A4E42',
-    shadowOpacity: 0.2,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 8,
+    boxShadow: elevation.raised,
   },
   header: {
     gap: spacing.xs,
@@ -145,6 +139,8 @@ const styles = StyleSheet.create({
     paddingTop: spacing.md,
     paddingBottom: spacing.sm,
   },
+  // Hairline separators are the one place a rule still earns its keep: the rows
+  // are tap targets stacked edge to edge, and spacing alone would not divide them.
   row: {
     minHeight: 48,
     alignItems: 'center',
@@ -153,5 +149,5 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: palette.border,
   },
-  pressed: { opacity: 0.9, backgroundColor: palette.background },
+  pressed: { opacity: 0.9, backgroundColor: palette.field },
 });

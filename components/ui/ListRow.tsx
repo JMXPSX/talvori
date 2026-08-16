@@ -6,7 +6,7 @@
 import { Feather } from '@expo/vector-icons';
 import { I18nManager, Pressable, StyleSheet, View } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { elevation, palette, radius, spacing } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
 
 export interface ListRowProps {
@@ -38,7 +38,8 @@ export function ListRow({
         <Feather name={icon} size={20} color={iconColor} />
       </View>
       <View style={styles.mid}>
-        <Text variant="heading">{label}</Text>
+        {/* `button` is the 16/600 role — `heading` is 24px and overpowers a row. */}
+        <Text variant="button">{label}</Text>
         {sublabel ? (
           <Text variant="caption" muted>
             {sublabel}
@@ -66,15 +67,9 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     minHeight: 56,
     padding: spacing.md,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     backgroundColor: palette.surface,
-    shadowColor: '#0A4E42',
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2,
+    boxShadow: elevation.tile,
   },
   pressed: { opacity: 0.9 },
   iconTile: {

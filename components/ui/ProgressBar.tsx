@@ -15,11 +15,9 @@ export interface ProgressBarProps {
   height?: number;
 }
 
-const OVER_TRACK = '#F3DBD8';
-
 export function ProgressBar({ fraction, state = 'normal', height = 8 }: ProgressBarProps) {
   const f = Math.max(0, Math.min(1, fraction));
-  const track = state === 'over' ? OVER_TRACK : palette.brandMuted;
+  const track = state === 'over' ? palette.dangerMuted : palette.brandMuted;
   const fill = state === 'over' ? palette.danger : state === 'full' ? palette.accent : palette.brand;
   return (
     <View

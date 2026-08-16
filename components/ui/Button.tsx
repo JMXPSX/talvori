@@ -2,8 +2,9 @@
  * Themed pressable button. Label is passed already-localized by the caller
  * (screens resolve copy via `t('...')`). No business logic here.
  *
- * Variants: primary (teal fill), secondary (outline), accent (remittance gold —
- * reserve for the single most valuable action on a screen, e.g. upgrade).
+ * Variants: primary (indigo fill), secondary (ghost — soft hairline on the tile),
+ * accent (burnt orange — reserve for the single most valuable action on a
+ * screen, e.g. upgrade).
  */
 
 import { ActivityIndicator, Pressable, StyleSheet, type ViewStyle } from 'react-native';
@@ -25,7 +26,7 @@ export interface ButtonProps {
 const LABEL_COLOR: Record<ButtonVariant, string> = {
   primary: palette.white,
   secondary: palette.brand,
-  accent: palette.text, // dark ink on gold for legible contrast
+  accent: palette.white, // white on burnt orange clears 4.5:1
 };
 
 export function Button({
@@ -67,17 +68,19 @@ const styles = StyleSheet.create({
   base: {
     minHeight: 48,
     paddingHorizontal: spacing.lg,
-    borderRadius: radius.md,
+    borderRadius: radius.control,
     alignItems: 'center',
     justifyContent: 'center',
   },
   primary: {
     backgroundColor: palette.brand,
   },
+  // Ghost: a soft hairline rather than a brand-coloured outline, so it recedes
+  // against the white tile it usually sits on.
   secondary: {
-    backgroundColor: palette.surface,
+    backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: palette.brand,
+    borderColor: palette.border,
   },
   accent: {
     backgroundColor: palette.accent,
