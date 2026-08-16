@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField, useActionSheet } from '@/components/ui';
+import { Button, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
 import {
   addContribution,
   createGoal,
@@ -247,7 +247,14 @@ export default function GoalsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.md },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   list: { gap: spacing.sm },
   // Matches the Card primitive's bento treatment: borderless, ambient shadow.
   card: {

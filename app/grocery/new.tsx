@@ -9,7 +9,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
+import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createList } from '@/features/grocery/api';
 import { createListSchema } from '@/features/grocery/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -101,5 +101,12 @@ export default function GroceryNewScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.sm },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.sm,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
 });

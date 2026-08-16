@@ -10,8 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
+import { elevation, palette, radius, spacing } from '@/components/theme';
+import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createHousehold, listMyHouseholds } from '@/features/household/api';
 import { createHouseholdSchema } from '@/features/household/schemas';
 import type { HouseholdRow } from '@/lib/database.types';
@@ -159,14 +159,20 @@ export default function HouseholdsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.md },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   list: { gap: spacing.sm },
   card: {
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
     backgroundColor: palette.surface,
+    boxShadow: elevation.tile,
     gap: spacing.xs,
   },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },

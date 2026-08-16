@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text } from '@/components/ui';
+import { elevation, palette, radius, spacing } from '@/components/theme';
+import { Button, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { listItems } from '@/features/grocery/api';
 import { bestFloorMinor, compareColumns } from '@/features/retail/basket';
@@ -172,11 +172,20 @@ export default function CompareScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.md },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   list: { gap: spacing.sm },
   card: {
-    padding: spacing.md, borderWidth: 1, borderColor: palette.border,
-    borderRadius: radius.md, backgroundColor: palette.surface, gap: spacing.xs,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    backgroundColor: palette.surface,
+    boxShadow: elevation.tile, gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
 });

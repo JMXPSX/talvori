@@ -8,7 +8,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
+import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createTransfer, listAccounts } from '@/features/finance/api';
 import { createTransferSchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -192,14 +192,20 @@ export default function TransferScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.md },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   chip: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: palette.brand,
+    backgroundColor: palette.field,
   },
   chipActive: { backgroundColor: palette.brand },
 });

@@ -272,9 +272,8 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     paddingVertical: spacing.md,
     borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: palette.border,
-    backgroundColor: palette.surface,
+    // Inset tile inside the actions card: tone, not a rule.
+    backgroundColor: palette.field,
   },
   tileIcon: {
     width: 40,

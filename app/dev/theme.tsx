@@ -19,6 +19,7 @@ import {
   Button,
   Card,
   Chip,
+  CONTENT_MAX_WIDTH,
   Donut,
   EmptyState,
   ErrorNotice,
@@ -273,7 +274,14 @@ export default function ThemeGalleryScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.lg },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.lg,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   section: { gap: spacing.sm },
   typeRow: { gap: 2, paddingVertical: spacing.xs },
   typeName: { opacity: 0.6 },

@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField } from '@/components/ui';
+import { elevation, palette, radius, spacing } from '@/components/theme';
+import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createStore, getRetailer, listStores } from '@/features/retail/api';
 import { createStoreSchema } from '@/features/retail/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -123,11 +123,20 @@ export default function RetailerBranchesScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.md },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   list: { gap: spacing.sm },
   card: {
-    padding: spacing.md, borderWidth: 1, borderColor: palette.border,
-    borderRadius: radius.md, backgroundColor: palette.surface, gap: spacing.xs,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    backgroundColor: palette.surface,
+    boxShadow: elevation.tile, gap: spacing.xs,
   },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },

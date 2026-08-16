@@ -15,6 +15,7 @@ import {
   Button,
   Card,
   Chip,
+  CONTENT_MAX_WIDTH,
   ErrorNotice,
   ProgressRing,
   Text,
@@ -321,7 +322,14 @@ export default function BudgetsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.md },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   list: { gap: spacing.sm },
   // Selection reads as a tinted tile — cards no longer draw borders.
   cardSelected: { backgroundColor: palette.brandMuted },

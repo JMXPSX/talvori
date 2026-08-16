@@ -10,8 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Feather } from '@expo/vector-icons';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Button, Text, TextField, useActionSheet } from '@/components/ui';
+import { elevation, palette, radius, spacing } from '@/components/theme';
+import { Button, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
 import { createAccount, deleteAccount, listAccountBalances, listAccounts } from '@/features/finance/api';
 import { accountTypeSchema, createAccountSchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -246,14 +246,20 @@ export default function AccountsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.md },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   list: { gap: spacing.sm },
   card: {
-    padding: spacing.md,
-    borderWidth: 1,
-    borderColor: palette.border,
-    borderRadius: radius.md,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
     backgroundColor: palette.surface,
+    boxShadow: elevation.tile,
     gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
@@ -265,8 +271,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: palette.brand,
+    backgroundColor: palette.field,
   },
   chipActive: { backgroundColor: palette.brand },
   manage: { marginTop: spacing.lg, alignSelf: 'center' },

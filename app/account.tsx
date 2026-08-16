@@ -8,7 +8,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, spacing } from '@/components/theme';
-import { Button, Card, ErrorNotice, Text, TextField, useActionSheet } from '@/components/ui';
+import { Button, Card, CONTENT_MAX_WIDTH, ErrorNotice, Text, TextField, useActionSheet } from '@/components/ui';
 import { deleteMyAccount } from '@/features/account/api';
 import { exportFilename } from '@/features/account/export';
 import { assembleExport } from '@/features/account/exportApi';
@@ -128,7 +128,14 @@ export default function AccountScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
-  content: { padding: spacing.lg, gap: spacing.md },
+  content: {
+    padding: spacing.lg,
+    gap: spacing.md,
+    // Cap + centre so the screen does not stretch edge to edge on a monitor.
+    width: '100%',
+    maxWidth: CONTENT_MAX_WIDTH,
+    alignSelf: 'center',
+  },
   // Cards are borderless now; the danger zone reads as a tonal container.
   dangerCard: { backgroundColor: palette.dangerMuted },
   dangerTitle: { color: palette.danger },
