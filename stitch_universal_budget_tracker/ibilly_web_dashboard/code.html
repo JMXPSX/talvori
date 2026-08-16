@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ibilly - Desktop Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#f1f9ff",
+                        "on-tertiary-fixed-variant": "#004d65",
+                        "secondary-fixed-dim": "#ffb690",
+                        "error": "#ba1a1a",
+                        "background": "#f4fafd",
+                        "on-surface": "#161d1f",
+                        "on-primary-fixed-variant": "#2e2bc2",
+                        "on-secondary-fixed": "#331100",
+                        "on-secondary-fixed-variant": "#763305",
+                        "primary-container": "#5d5fef",
+                        "secondary": "#944a1c",
+                        "primary-fixed-dim": "#c1c1ff",
+                        "surface-container": "#e8eff1",
+                        "tertiary-fixed": "#bee9ff",
+                        "secondary-container": "#fe9e69",
+                        "surface-container-highest": "#dde4e6",
+                        "on-primary-fixed": "#07006c",
+                        "on-background": "#161d1f",
+                        "outline-variant": "#c7c4d7",
+                        "surface-container-low": "#eef5f7",
+                        "primary": "#4343d5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e2e9ec",
+                        "on-surface-variant": "#464555",
+                        "secondary-fixed": "#ffdbca",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ebf2f4",
+                        "outline": "#767586",
+                        "on-primary-container": "#faf7ff",
+                        "surface-dim": "#d4dbdd",
+                        "tertiary": "#00617e",
+                        "inverse-surface": "#2b3234",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#e1e0ff",
+                        "surface": "#f4fafd",
+                        "inverse-primary": "#c1c1ff",
+                        "tertiary-fixed-dim": "#8ad0f1",
+                        "surface-variant": "#dde4e6",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#f4fafd",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#4849da",
+                        "on-tertiary-fixed": "#001f2a",
+                        "tertiary-container": "#2e7a98",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#773405"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "container-max": "1440px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .bento-card {
+            @apply bg-surface-container-lowest rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] h-full flex flex-col;
+        }
+        .bento-card-gradient {
+            @apply bg-gradient-to-br from-primary-fixed to-tertiary-fixed rounded-xl p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] h-full flex flex-col;
+        }
+        .bento-grid {
+            @apply grid grid-cols-1 md:grid-cols-12 gap-gutter p-margin-mobile md:p-margin-desktop;
+        }
+        .gradient-text {
+            @apply text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary-container;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex">
+<!-- Navigation Drawer -->
+<aside class="hidden md:flex h-screen w-72 flex-col fixed left-0 top-0 bg-surface-container-low dark:bg-inverse-surface shadow-sm z-40">
+<div class="p-6">
+<h1 class="font-display-lg text-headline-md text-primary mb-8 tracking-tight">ibilly</h1>
+<div class="flex items-center space-x-4 mb-8">
+<img alt="User Profile" class="w-12 h-12 rounded-full object-cover shadow-sm" data-alt="A professional headshot of a user named Alexander in a modern office setting. Soft, highly-key lighting emphasizing a friendly approachable expression. Bright, airy aesthetic with subtle brand colors in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEUwjGXdehPyvCL683dOiRdlZ1X3Hr6PN6VdM4nqVc1XweVGaEhnmvrrRIKR-2BfAOigdZFJnTzS9ecmAn-BJY4vQ5_DjUx91AyCTHZa5k22CMQ2Mcre4NVQkxqA3K-0zN5gtGwegEXSRVc5mECQg_tNcCN95w_9Br9WPir3EAxiLic8mFKSf4evqOwf1kcXNqH1WNoT1yeyZibDFFXgUuqYc7Hglwnbitt7ljItN0CAX02BQyJu0-XA"/>
+<div>
+<h2 class="font-headline-md text-body-lg text-on-surface">Alexander</h2>
+<p class="font-body-md text-label-sm text-primary">ibilly Premium</p>
+</div>
+</div>
+<nav class="space-y-2">
+<a class="flex items-center space-x-3 px-4 py-3 bg-primary-fixed text-on-primary-fixed-variant rounded-xl font-bold transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer select-none rounded-xl" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span>Money Flow</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer select-none rounded-xl" href="#">
+<span class="material-symbols-outlined">pie_chart</span>
+<span>Budgeting</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer select-none rounded-xl" href="#">
+<span class="material-symbols-outlined">style</span>
+<span>Loyalty Cards</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer select-none rounded-xl" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span>Trophies</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high hover:bg-surface-container-highest transition-colors duration-200 cursor-pointer select-none rounded-xl" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6">
+<div class="bg-surface-container rounded-xl p-4 flex flex-col items-center text-center">
+<span class="font-headline-md text-primary mb-1">17</span>
+<span class="font-body-md text-on-surface-variant">Languages</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-72 flex flex-col">
+<!-- Mobile Top Nav -->
+<header class="md:hidden w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-between px-margin-mobile py-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
+<div class="flex items-center gap-3">
+<img alt="User" class="w-8 h-8 rounded-full" data-alt="Small circular user avatar for mobile navigation. Professional modern lighting, clean background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3RaoauiTt_iPODzHUhGyT743tfpv6OZTIz1fznjhHKzspbU9GALrUksWwnogm07Lko51SMWATmnTr_Ss6Cfp8PXZXyKOOPSchlNC1bHcJ1RCZOYGzJHdgH19pqOfZ8YvumyksF141S6tAPy7JDBmQFy2Oj01C-zUdoPS6ragwE8DzuZZmNsHUkBzysyGxhB3XxNwqAKAgDVKmuyDx-0r_WJha7ZxLaOly0m8dKyKJKznTPOsg7lxsJw"/>
+<span class="font-display-lg text-headline-lg-mobile text-primary tracking-tight">ibilly</span>
+</div>
+<span class="material-symbols-outlined text-primary text-2xl cursor-pointer">search</span>
+</header>
+<div class="flex-1 bento-grid max-w-container-max mx-auto w-full">
+<!-- Hero Title (Takes up 4 cols on desktop) -->
+<div class="col-span-1 md:col-span-4 flex items-center justify-center p-6 bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] text-center h-full">
+<h2 class="font-display-lg text-4xl leading-tight gradient-text font-extrabold tracking-tighter">
+                    Manage<br/>personal<br/>and<br/>business<br/>finances
+                </h2>
+</div>
+<!-- Spendometer (4 cols) -->
+<div class="col-span-1 md:col-span-4 bento-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6 text-center">Spendometr</h3>
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<!-- Placeholder for Spendometer Graphic -->
+<div class="w-48 h-48 rounded-full border-8 border-surface-container-high border-t-primary border-l-primary rotate-45 relative flex items-center justify-center mb-4">
+<div class="-rotate-45 text-center">
+<span class="block font-body-md text-label-sm text-on-surface-variant uppercase tracking-wider">You Spend</span>
+<span class="block font-display-lg text-headline-lg text-on-surface">€2.18</span>
+<span class="block font-body-md text-[10px] text-on-surface-variant">€2.00 less than you earn</span>
+</div>
+</div>
+<div class="flex space-x-2 w-full justify-center mb-6">
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface font-label-md text-xs hover:bg-surface-container-high transition-colors">/ Sec</button>
+<button class="px-3 py-1 rounded-full bg-primary text-on-primary font-label-md text-xs shadow-md">/ Min</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface font-label-md text-xs hover:bg-surface-container-high transition-colors">/ Hour</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface font-label-md text-xs hover:bg-surface-container-high transition-colors">/ Year</button>
+</div>
+<div class="flex justify-between w-full px-4 text-center">
+<div>
+<span class="block font-label-md text-primary">+15%</span>
+<span class="block text-xs text-on-surface-variant">Than previous period</span>
+</div>
+<div>
+<span class="block font-label-md text-primary">+24%</span>
+<span class="block text-xs text-on-surface-variant">Than average amount</span>
+</div>
+<div>
+<span class="block font-label-md text-error">-5%</span>
+<span class="block text-xs text-on-surface-variant">Than average in your area</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Money Flow Detailed Chart (4 cols) -->
+<div class="col-span-1 md:col-span-4 bento-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Money Flow</h3>
+<div class="flex-1 flex flex-col justify-end relative">
+<!-- Placeholder for Multi-line chart -->
+<div class="h-40 w-full bg-surface-container-lowest relative overflow-hidden rounded-lg border border-surface-variant">
+<div class="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-primary/10 to-transparent"></div>
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0,80 Q25,70 50,85 T100,75" fill="none" stroke="#4343d5" stroke-linecap="round" stroke-width="2"></path>
+<path d="M0,90 Q30,80 60,95 T100,85" fill="none" stroke="#944a1c" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="flex justify-between text-xs text-on-surface-variant mt-2 font-label-sm">
+<span>15.07</span>
+<div class="flex gap-4">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary-container"></span>€57</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span>€69</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-outline"></span>€51</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Loyalty Cards (3 cols) -->
+<div class="col-span-1 md:col-span-3 bento-card flex flex-col justify-center items-center text-center">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Loyalty Cards</h3>
+<div class="w-full h-20 bg-surface-container flex flex-col items-center justify-center rounded-lg relative overflow-hidden mb-2 border border-surface-variant">
+<!-- Barcode placeholder -->
+<div class="w-3/4 h-10 bg-repeat-x flex gap-1" style="background-image: linear-gradient(90deg, #161d1f 2px, transparent 2px, transparent 4px, #161d1f 4px, #161d1f 5px, transparent 5px, transparent 8px); background-size: 8px 100%;"></div>
+</div>
+<span class="font-body-md text-sm text-on-surface-variant font-mono">000124425262</span>
+</div>
+<!-- Trophies & Budgeting (Row - 5 cols total) -->
+<div class="col-span-1 md:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Trophies -->
+<div class="bento-card flex flex-col items-center justify-center text-center">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Trophies</h3>
+<div class="w-24 h-24 rounded-full border-4 border-surface-container-high border-t-primary flex items-center justify-center relative shadow-sm">
+<span class="material-symbols-outlined text-primary text-4xl">emoji_events</span>
+<div class="absolute bottom-0 right-0 w-8 h-8 bg-surface-container-lowest rounded-full flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-primary text-xl">add_circle</span>
+</div>
+</div>
+</div>
+<!-- Budgeting -->
+<div class="bento-card bg-primary-fixed border-none flex flex-col items-center justify-center text-center">
+<h3 class="font-headline-md text-headline-md text-on-primary-fixed-variant mb-4">Budgeting</h3>
+<div class="bg-surface-container-lowest rounded-full w-32 h-32 flex flex-col items-center justify-center shadow-md border-4 border-primary border-r-surface-container-highest rotate-45">
+<div class="-rotate-45 text-center flex flex-col items-center">
+<span class="font-label-sm text-[10px] text-on-surface-variant">01-31 Jul</span>
+<span class="font-headline-md text-xl text-on-surface font-bold">€9 483</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">left of €20 548</span>
+</div>
+</div>
+<div class="mt-4 flex items-center text-primary gap-1 font-label-md text-sm">
+<span class="material-symbols-outlined text-sm">thumb_up</span>
+<span>You are doing great!</span>
+</div>
+</div>
+</div>
+<!-- Quick Chart & Avatars (4 cols) -->
+<div class="col-span-1 md:col-span-4 bento-card">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Activity</h3>
+<div class="flex-1 flex flex-col justify-between">
+<!-- Simple bar chart placeholder -->
+<div class="h-24 flex items-end justify-between px-2 gap-1 mb-4">
+<div class="w-full bg-primary-fixed-dim rounded-t-sm h-1/4"></div>
+<div class="w-full bg-primary-fixed-dim rounded-t-sm h-1/2"></div>
+<div class="w-full bg-primary rounded-t-sm h-full"></div>
+<div class="w-full bg-primary-fixed-dim rounded-t-sm h-3/4"></div>
+<div class="w-full bg-primary-fixed-dim rounded-t-sm h-1/3"></div>
+<div class="w-full bg-primary-fixed-dim rounded-t-sm h-2/3"></div>
+<div class="w-full bg-primary-fixed-dim rounded-t-sm h-1/2"></div>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low rounded-lg p-3">
+<div class="flex -space-x-2">
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-surface-container-lowest" data-alt="Small round avatar of a smiling user in a bright setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIRukahLENTMH7KxLaXT8VyRVVdB5wcFX87VkL7tT7zszHmXZCgYiAgAKHWYAWLNS5FLRNAz6po5R--ywhfZCCU_DfgFzTy33YsW3kPG69DQecychGlTyqCCE0qLBO-4EJ8O_u--r5c098sSJFUJuXwWZOJqOIpvRP_C1s_QDMJShcZi_snVIYF_lcIf9f5RhVSefJi6h2sUEsMdzO4fOQGn0yVa8v75ZPvBH_GQoMLDKg9WNBOHiRqg"/>
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-surface-container-lowest" data-alt="Small round avatar of a user with glasses in a modern office." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeqCuVq-D58g0G0xRF3s6IGAlwrtqmjb52w5xMwicM77-cnjcVIQ0xN6OybuvZ-Oi4VZLQBYgZSW_LXWVTimfaGmuaYBcVXz478V8Sx6L2FNxCZVc0hXWdiq6-Y4UK_1nz3JPVwPtuQOhkfcsaFdbD9OX2Zy0pIWiBofBk3YNWRCK9GXlQh2SDUsDemO28FfZt-ycBAon2EsVbm5wi641_psLZEpY5umkgrWTZOaQ4rIXekSK1UgIUyQ"/>
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-surface-container-lowest" data-alt="Small round avatar of a user in a colorful setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc_oD9-Ng4YV5GVABJv3r6vpEWLV-GlhGGPdW57es4aT0w3iNkMhMvEUsU0m4tFq5RS9prj_DgDWziuXyw4Xd7UAfWf2484AVhbK9R2HqL0sfVbFKa2WxI_p2qFbxEoZkk1jCW7CF06yGTithtc1u-3utqkyeEjabYvjAd-URZ0Cs0nZRgrZS3xiyIhOy1vM_vEorSijrpkMCTWMWqnRwKV3paF24vIDcKIVGGz8bzTjqCkMpLxWrKnw"/>
+</div>
+<span class="font-label-md text-primary cursor-pointer hover:underline">View All</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-lowest dark:bg-inverse-surface shadow-[0px_-4px_20px_rgba(0,0,0,0.04)] dark:shadow-none shadow-lg flex justify-around items-center px-4 pb-4 pt-2">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-md text-label-md text-primary font-bold mt-1 text-xs">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">swap_calls</span>
+<span class="font-label-md text-label-md mt-1 text-xs">Flow</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md text-label-md mt-1 text-xs">Budget</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="font-label-md text-label-md mt-1 text-xs">Cards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-label-md text-label-md mt-1 text-xs">More</span>
+</a>
+</nav>
+</body></html>
