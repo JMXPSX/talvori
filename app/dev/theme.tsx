@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { chartSeries, palette, radius, spacing, typography } from '@/components/theme';
 import {
+  BentoRow,
   Button,
   Card,
   Donut,
@@ -138,6 +139,19 @@ export default function ThemeGalleryScreen() {
             <Text variant="heading">Accented tile</Text>
             <Text muted>Tinted surface — the highlighted item.</Text>
           </Card>
+        </Section>
+
+        <Section title="Bento layout">
+          <BentoRow>
+            <Card style={{ flex: 2 }}>
+              <Text variant="heading">weight 2</Text>
+              <Text muted>Two thirds on wide, full width when stacked.</Text>
+            </Card>
+            <Card style={{ flex: 1 }}>
+              <Text variant="heading">weight 1</Text>
+              <Text muted>One third.</Text>
+            </Card>
+          </BentoRow>
         </Section>
 
         <Section title="Navigation">

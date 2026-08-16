@@ -16,3 +16,10 @@ export {
 } from '@/components/ui/ActionSheet';
 export { ErrorNotice, type ErrorNoticeProps } from '@/components/ui/ErrorNotice';
 export { SideNav, SIDEBAR_WIDTH, type SideNavProps, type SideNavItem } from '@/components/ui/SideNav';
+export {
+  BentoRow,
+  BentoPage,
+  CONTENT_MAX_WIDTH,
+  type BentoRowProps,
+  type BentoPageProps,
+} from '@/components/ui/Bento';
