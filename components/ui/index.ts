@@ -18,6 +18,7 @@ export {
 } from '@/components/ui/ActionSheet';
 export { ErrorNotice, type ErrorNoticeProps } from '@/components/ui/ErrorNotice';
 export { SideNav, SIDEBAR_WIDTH, type SideNavProps, type SideNavItem } from '@/components/ui/SideNav';
+export { BottomTabBar, type BottomTabBarProps } from '@/components/ui/BottomTabBar';
 export {
   BentoRow,
   BentoPage,

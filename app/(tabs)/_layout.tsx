@@ -13,7 +13,7 @@ import { Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { I18nManager, type ColorValue } from 'react-native';
 
-import { palette } from '@/components/theme';
+import { BottomTabBar } from '@/components/ui/BottomTabBar';
 import { SideNav, type SideNavItem } from '@/components/ui/SideNav';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { useIsWideLayout } from '@/lib/breakpoints';
@@ -40,49 +40,44 @@ export default function TabsLayout() {
 
   return (
     <Tabs
-      tabBar={
-        isWide
-          ? ({ state, descriptors, navigation }) => {
-              const items: SideNavItem[] = state.routes.map((route, index) => {
-                const { options } = descriptors[route.key] ?? {};
-                const active = state.index === index;
-                return {
-                  key: route.key,
-                  label: options?.title ?? route.name,
-                  icon: TAB_ICONS[route.name] ?? 'circle',
-                  active,
-                  onPress: () => {
-                    const event = navigation.emit({
-                      type: 'tabPress',
-                      target: route.key,
-                      canPreventDefault: true,
-                    });
-                    if (!active && !event.defaultPrevented) {
-                      navigation.navigate(route.name, route.params);
-                    }
-                  },
-                };
+      tabBar={({ state, descriptors, navigation }) => {
+        const items: SideNavItem[] = state.routes.map((route, index) => {
+          const { options } = descriptors[route.key] ?? {};
+          const isActive = state.index === index;
+          return {
+            key: route.key,
+            label: options?.title ?? route.name,
+            icon: TAB_ICONS[route.name] ?? 'circle',
+            active: isActive,
+            onPress: () => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
               });
-              return (
-                <SideNav
-                  brand={t('common.appName')}
-                  title={active?.name}
-                  subtitle={active?.reporting_currency_code}
-                  items={items}
-                />
-              );
-            }
-          : undefined
-      }
+              if (!isActive && !event.defaultPrevented) {
+                navigation.navigate(route.name, route.params);
+              }
+            },
+          };
+        });
+        return isWide ? (
+          <SideNav
+            brand={t('common.appName')}
+            title={active?.name}
+            subtitle={active?.reporting_currency_code}
+            items={items}
+          />
+        ) : (
+          <BottomTabBar items={items} />
+        );
+      }}
       screenOptions={{
         // Tabs render their own in-screen titles; the native header would double them.
         headerShown: false,
         // 'left'/'right' lays the navigator out as a row, so the custom bar above
         // renders as a sidebar rather than a bar under the content.
         tabBarPosition: isWide ? (I18nManager.isRTL ? 'right' : 'left') : 'bottom',
-        tabBarActiveTintColor: palette.brand,
-        tabBarInactiveTintColor: palette.textMuted,
-        tabBarStyle: { backgroundColor: palette.background, borderTopColor: palette.border },
       }}
     >
       <Tabs.Screen name="index" options={{ title: t('nav.home'), tabBarIcon: tabIcon('home') }} />
