@@ -46,8 +46,28 @@ Full adoption is four sub-projects. Each gets its own spec → plan → execute 
 | **C** Flagship screens | dashboard, budget, transactions (the mocked ones) | B |
 | **D** Long tail | remaining ~33 screens conformed to C's patterns | C |
 
-**A+B are specced and executed together** as one foundation slice. This document
-covers A+B only; C and D get their own specs once the new tokens are running.
+**A+B are specced and executed together** as one foundation slice.
+
+### Status (updated 2026-08-15)
+
+A and B are complete. Slice C then absorbed a requirement the original
+decomposition did not anticipate — **adaptive navigation** — and was executed
+incrementally rather than from its own spec:
+
+- **C0 adaptive nav (done)** — sidebar above 1024px, bottom tabs below, split by
+  viewport width rather than `Platform.OS` because the app ships as a Web-PWA.
+  Reuses the existing Tabs navigator via `tabBarPosition: 'left' | 'right'`.
+- **C1 bento grid + dashboard (done)** — `BentoRow` / `BentoPage`; the dashboard
+  moves from a flat stack to weighted tiles in two rows.
+- **C2 tab screens (done)** — budget, transactions, grocery, account conformed;
+  `Screen` now caps content width on wide viewports, which propagates the
+  desktop treatment to every route that uses it.
+- **C3 remaining (not started)** — the budgets/goals/debts detail screens under
+  `finance/`, which is where the mock's per-category progress rings belong.
+
+Slice D (the ~33 long-tail screens) still has no spec. Much of it is now
+absorbed by the `Screen` width cap and the reworked primitives; what remains is
+per-screen layout judgement.
 
 ## Guiding principle: keep the names, change the values
 
