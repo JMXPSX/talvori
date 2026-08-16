@@ -8,9 +8,6 @@ import { palette, spacing } from '@/components/theme';
 import { ListRow, Screen, Text } from '@/components/ui';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 
-const GOAL_ICON = '#8A6414';
-const DEBT_TILE = '#F3DBD8';
-
 export default function BudgetHubScreen() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -30,7 +27,7 @@ export default function BudgetHubScreen() {
           <ListRow
             icon="target"
             label={t('planning.goals.hub')}
-            iconColor={GOAL_ICON}
+            iconColor={palette.accent}
             iconBg={palette.accentMuted}
             onPress={() => router.push('/finance/goals')}
           />
@@ -38,7 +35,7 @@ export default function BudgetHubScreen() {
             icon="trending-down"
             label={t('planning.debts.hub')}
             iconColor={palette.danger}
-            iconBg={DEBT_TILE}
+            iconBg={palette.dangerMuted}
             onPress={() => router.push('/finance/debts')}
           />
         </View>

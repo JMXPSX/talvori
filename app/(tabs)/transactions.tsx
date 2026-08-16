@@ -9,13 +9,11 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Card, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
+import { BentoPage, Card, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
 import { deleteTransaction, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
-
-const INCOME_TILE = '#D9E8D2';
 
 type DayGroup = { key: string; label: string; items: TransactionWithRefs[] };
 
@@ -59,7 +57,7 @@ function typeIcon(type: TransactionWithRefs['type']): {
   color: string;
   bg: string;
 } {
-  if (type === 'income') return { name: 'arrow-down-left', color: palette.success, bg: INCOME_TILE };
+  if (type === 'income') return { name: 'arrow-down-left', color: palette.success, bg: palette.successMuted };
   if (type === 'transfer') return { name: 'repeat', color: palette.brand, bg: palette.brandMuted };
   return { name: 'arrow-up-right', color: palette.brand, bg: palette.brandMuted };
 }
@@ -160,7 +158,8 @@ export default function TransactionsScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView>
+        <BentoPage>
         <View style={styles.headerRow}>
           <Text variant="title">{t('screens.transactionsTitle')}</Text>
           <Pressable
@@ -210,8 +209,8 @@ export default function TransactionsScreen() {
                           ) : null}
                         </View>
                         <Text
-                          variant="heading"
-                          style={[styles.amount, positive ? styles.amountIn : null]}
+                          variant="button"
+                          style={positive ? styles.amountIn : null}
                         >
                           {positive ? '+' : '−'}
                           {formatAmount(tx.amount_minor, tx.currency_code)}
@@ -233,6 +232,7 @@ export default function TransactionsScreen() {
             ))}
           </View>
         )}
+        </BentoPage>
       </ScrollView>
       {sheet.element}
     </SafeAreaView>
@@ -271,6 +271,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rowMid: { flex: 1, gap: 2 },
-  amount: { fontSize: 16 },
   amountIn: { color: palette.success },
 });

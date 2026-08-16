@@ -15,8 +15,6 @@ import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider
 import type { GroceryListRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 
-const DONE_TILE = '#D9E8D2';
-
 export default function GroceryScreen() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -159,7 +157,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: radius.pill,
-    backgroundColor: DONE_TILE,
+    backgroundColor: palette.successMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },

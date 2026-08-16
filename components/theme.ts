@@ -33,6 +33,7 @@ export const palette = {
   tertiary: '#00617E', // sky — informational + secondary data series
   surfaceMuted: '#E8EFF1', // inset panels, segmented-control tracks
   dangerMuted: '#FFDAD6', // error container fill
+  successMuted: '#D8EFE1', // success container fill (income tiles)
 } as const;
 
 /**

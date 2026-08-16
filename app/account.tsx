@@ -129,7 +129,8 @@ export default function AccountScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
   content: { padding: spacing.lg, gap: spacing.md },
-  dangerCard: { borderColor: '#E5C6C2' },
+  // Cards are borderless now; the danger zone reads as a tonal container.
+  dangerCard: { backgroundColor: palette.dangerMuted },
   dangerTitle: { color: palette.danger },
   dangerButton: { backgroundColor: palette.danger },
 });
