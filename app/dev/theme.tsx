@@ -22,10 +22,12 @@ import {
   ErrorNotice,
   ListRow,
   ProgressBar,
+  SideNav,
   Text,
   TextField,
   useActionSheet,
 } from '@/components/ui';
+import { useIsWideLayout, WIDE_LAYOUT_MIN_WIDTH } from '@/lib/breakpoints';
 import { isArabicLanguage } from '@/lib/fonts';
 
 const SWATCHES: { name: string; value: string }[] = Object.entries(palette).map(([name, value]) => ({
@@ -53,7 +55,9 @@ export default function ThemeGalleryScreen() {
   const { i18n } = useTranslation();
   const isArabic = isArabicLanguage(i18n.language);
   const [field, setField] = useState('');
+  const [navIndex, setNavIndex] = useState(0);
   const sheet = useActionSheet();
+  const isWide = useIsWideLayout();
 
   if (!__DEV__) return null;
 
@@ -136,6 +140,33 @@ export default function ThemeGalleryScreen() {
           </Card>
         </Section>
 
+        <Section title="Navigation">
+          <Card>
+            <Text variant="caption" muted>
+              {`viewport is ${isWide ? 'wide' : 'narrow'} — sidebar shows at ≥ ${WIDE_LAYOUT_MIN_WIDTH}px, bottom tabs below`}
+            </Text>
+          </Card>
+          <View style={styles.navPreview}>
+            <SideNav
+              brand="Global Household App"
+              title="Test 2"
+              subtitle="USD"
+              items={[
+                { key: 'index', label: 'Home', icon: 'home' },
+                { key: 'budget', label: 'Budget', icon: 'pie-chart' },
+                { key: 'transactions', label: 'Transactions', icon: 'list' },
+                { key: 'grocery', label: 'Grocery', icon: 'shopping-cart' },
+                { key: 'more', label: 'More', icon: 'more-horizontal' },
+              ].map((item, i) => ({
+                ...item,
+                icon: item.icon as Parameters<typeof SideNav>[0]['items'][number]['icon'],
+                active: i === navIndex,
+                onPress: () => setNavIndex(i),
+              }))}
+            />
+          </View>
+        </Section>
+
         <Section title="Rows">
           <ListRow icon="credit-card" label="Accounts" sublabel="4 open" detail="USD" onPress={() => undefined} />
           <ListRow icon="globe" label="Language" detail="English" onPress={() => undefined} />
@@ -208,6 +239,7 @@ const styles = StyleSheet.create({
   swatches: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   swatch: { width: 72, gap: spacing.xs },
   chip: { height: 40, borderRadius: radius.control, borderWidth: 1, borderColor: palette.border },
+  navPreview: { height: 380, borderRadius: radius.lg, overflow: 'hidden', alignSelf: 'flex-start' },
   donutRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg },
   legend: { flex: 1, gap: spacing.xs },
   legendRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
