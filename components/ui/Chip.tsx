@@ -10,9 +10,9 @@
  * unselected.
  */
 
-import { Pressable, StyleSheet, type ViewStyle } from 'react-native';
+import { Pressable, type PressableStateCallbackType, StyleSheet, type ViewStyle } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { focus, palette, radius, spacing } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
 
 export interface ChipProps {
@@ -30,12 +30,18 @@ export function Chip({ label, selected = false, onPress, tint, style }: ChipProp
       accessibilityRole="button"
       accessibilityState={{ selected }}
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.chip,
-        { backgroundColor: selected ? palette.brand : (tint ?? palette.field) },
-        pressed ? styles.pressed : null,
-        style,
-      ]}
+      style={(state) => {
+        const { pressed, focused } = state as PressableStateCallbackType & {
+          focused?: boolean;
+        };
+        return [
+          styles.chip,
+          { backgroundColor: selected ? palette.brand : (tint ?? palette.field) },
+          pressed ? styles.pressed : null,
+          focused ? styles.focused : null,
+          style,
+        ];
+      }}
     >
       <Text variant="caption" style={selected ? styles.labelOn : styles.labelOff}>
         {label}
@@ -53,6 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
   },
   pressed: { opacity: 0.8 },
+  focused: { boxShadow: focus.ring },
   labelOn: { color: palette.white },
   labelOff: { color: palette.text },
 });

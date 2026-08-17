@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-16T07:15:00Z",
+  "title": "Design System: Global Household App",
+  "extensions": {
+    "colorMeta": {
+      "indigo-trust": {
+        "role": "primary",
+        "displayName": "Indigo Trust",
+        "canonical": "#4343D5",
+        "tonalRamp": ["#10103A", "#1E1E6E", "#2E2BC2", "#4343D5", "#6B6BE0", "#9494EB", "#C1C1F4", "#E1E0FF"]
+      },
+      "burnt-orange-growth": {
+        "role": "secondary",
+        "displayName": "Burnt-Orange Growth",
+        "canonical": "#944A1C",
+        "tonalRamp": ["#2E1607", "#4E2610", "#6E3615", "#944A1C", "#B36536", "#D18A5E", "#EDB48F", "#FFDBCA"]
+      },
+      "sky-signal": {
+        "role": "tertiary",
+        "displayName": "Sky Signal",
+        "canonical": "#00617E",
+        "tonalRamp": ["#00202B", "#003243", "#00465C", "#00617E", "#1E7E9C", "#4F9FBB", "#8AD0F1", "#C7EBFA"]
+      },
+      "cool-paper": {
+        "role": "neutral",
+        "displayName": "Cool Paper",
+        "canonical": "#F4FAFD",
+        "tonalRamp": ["#10171B", "#2A3338", "#4B565C", "#79868C", "#A7B2B7", "#CBD5D9", "#E8EFF1", "#F4FAFD"]
+      },
+      "slate-ink": {
+        "role": "neutral",
+        "displayName": "Slate Ink",
+        "canonical": "#161D1F",
+        "tonalRamp": ["#060809", "#0E1214", "#161D1F", "#2C3639", "#45525A", "#6D7B82", "#A2AEB4", "#D6DEE1"]
+      }
+    },
+    "typographyMeta": {
+      "title": { "displayName": "Title", "purpose": "Screen titles and hero figures (28/700)." },
+      "heading": { "displayName": "Heading", "purpose": "Section headers within a screen (24/600)." },
+      "body": { "displayName": "Body", "purpose": "Default reading text and input values (16/400)." },
+      "button": { "displayName": "Button", "purpose": "Button labels; reused as the primary label in list rows (16/600)." },
+      "eyebrow": { "displayName": "Eyebrow", "purpose": "Sentence-case section label above a group (14/600)." },
+      "caption": { "displayName": "Caption", "purpose": "Metadata, hints, chip and tab labels (12/500)." }
+    },
+    "shadows": [
+      { "name": "tile", "value": "0px 4px 20px rgba(0,0,0,0.04)", "purpose": "Resting elevation of every bento tile, card, and list row." },
+      { "name": "raised", "value": "0px 8px 28px rgba(0,0,0,0.08)", "purpose": "Floating-above-content elements, chiefly the mobile bottom tab bar." }
+    ],
+    "motion": [
+      { "name": "press-feedback", "value": "opacity 0.9 + scale(0.99)", "purpose": "The gentle physical dip on pressable elements (buttons, chips, rows) — no color jump." }
+    ],
+    "breakpoints": [
+      { "name": "wide", "value": "1024px" }
+    ],
+    "layout": [
+      { "name": "container-max", "value": "1440px" },
+      { "name": "margin-desktop", "value": "40px" },
+      { "name": "margin-mobile", "value": "24px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The default action — indigo fill, white label.",
+      "html": "<button class=\"ds-btn-primary\">Add transaction</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 24px; border:none; border-radius:8px; background:#4343D5; color:#FFFFFF; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:16px; font-weight:600; cursor:pointer; transition:opacity .15s ease, transform .15s ease, background .15s ease; } .ds-btn-primary:hover { background:#2E2BC2; } .ds-btn-primary:active { opacity:.9; transform:scale(.99); } .ds-btn-primary:focus-visible { outline:2px solid #4343D5; outline-offset:2px; }"
+    },
+    {
+      "name": "Secondary (Ghost) Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Recedes against the white tile — soft hairline border, indigo label.",
+      "html": "<button class=\"ds-btn-ghost\">Cancel</button>",
+      "css": ".ds-btn-ghost { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 24px; border:1px solid #C7C4D7; border-radius:8px; background:transparent; color:#4343D5; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:16px; font-weight:600; cursor:pointer; transition:opacity .15s ease, transform .15s ease; } .ds-btn-ghost:active { opacity:.9; transform:scale(.99); } .ds-btn-ghost:focus-visible { outline:2px solid #4343D5; outline-offset:2px; }"
+    },
+    {
+      "name": "Accent Button",
+      "kind": "button",
+      "refersTo": "button-accent",
+      "description": "One per screen — the single most valuable action (e.g. upgrade). Burnt-orange fill.",
+      "html": "<button class=\"ds-btn-accent\">Upgrade to Premium</button>",
+      "css": ".ds-btn-accent { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 24px; border:none; border-radius:8px; background:#944A1C; color:#FFFFFF; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:16px; font-weight:600; cursor:pointer; transition:opacity .15s ease, transform .15s ease; } .ds-btn-accent:active { opacity:.9; transform:scale(.99); } .ds-btn-accent:focus-visible { outline:2px solid #944A1C; outline-offset:2px; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip-unselected",
+      "description": "Full-pill filter/category tag. Selected = indigo fill + white; unselected = field fill + dark ink.",
+      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-chip ds-chip--selected\">All</button><button class=\"ds-chip\">Groceries</button><button class=\"ds-chip\">Bills</button></div>",
+      "css": ".ds-chip { min-height:44px; padding:8px 16px; border:none; border-radius:999px; background:#F1F3F9; color:#161D1F; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:12px; font-weight:500; cursor:pointer; transition:opacity .15s ease; } .ds-chip:active { opacity:.8; } .ds-chip--selected { background:#4343D5; color:#FFFFFF; } .ds-chip:focus-visible { outline:2px solid #4343D5; outline-offset:2px; }"
+    },
+    {
+      "name": "Bento Tile",
+      "kind": "card",
+      "refersTo": "card-tile",
+      "description": "The repeated white panel. Borderless; depth from ambient shadow, not rules.",
+      "html": "<div class=\"ds-tile\"><div class=\"ds-tile__eyebrow\">This month</div><div class=\"ds-tile__figure\">₱ 48,250</div><div class=\"ds-tile__sub\">across 3 accounts</div></div>",
+      "css": ".ds-tile { display:flex; flex-direction:column; gap:8px; padding:24px; border-radius:16px; background:#FFFFFF; box-shadow:0px 4px 20px rgba(0,0,0,0.04); font-family:'Plus Jakarta Sans',system-ui,sans-serif; max-width:320px; } .ds-tile__eyebrow { font-size:14px; font-weight:600; color:#464555; } .ds-tile__figure { font-size:28px; font-weight:700; letter-spacing:-0.5px; color:#161D1F; } .ds-tile__sub { font-size:12px; font-weight:500; color:#464555; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Filled (not outlined) so it stays visible inside a white tile. 2px border shifts color on focus without reflow.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field__label\">Amount</span><input class=\"ds-field__input\" placeholder=\"0.00\" /></label>",
+      "css": ".ds-field { display:flex; flex-direction:column; gap:4px; font-family:'Plus Jakarta Sans',system-ui,sans-serif; max-width:320px; } .ds-field__label { font-size:12px; font-weight:500; color:#464555; } .ds-field__input { min-height:48px; padding:0 16px; border:2px solid transparent; border-radius:8px; background:#F1F3F9; color:#161D1F; font-size:16px; font-weight:400; } .ds-field__input::placeholder { color:#464555; } .ds-field__input:focus { outline:none; border-color:#4343D5; }"
+    },
+    {
+      "name": "List Row",
+      "kind": "custom",
+      "refersTo": "list-row",
+      "description": "Icon tile + label + optional detail + direction-aware chevron, on a white tile.",
+      "html": "<button class=\"ds-row\"><span class=\"ds-row__icon\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#4343D5\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"5\" width=\"20\" height=\"14\" rx=\"2\"/><path d=\"M2 10h20\"/></svg></span><span class=\"ds-row__mid\"><span class=\"ds-row__label\">Household card</span><span class=\"ds-row__sub\">Visa ···· 4291</span></span><span class=\"ds-row__detail\">₱ 12,400</span><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#464555\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 6l6 6-6 6\"/></svg></button>",
+      "css": ".ds-row { display:flex; align-items:center; gap:16px; width:100%; min-height:56px; padding:16px; border:none; border-radius:16px; background:#FFFFFF; box-shadow:0px 4px 20px rgba(0,0,0,0.04); font-family:'Plus Jakarta Sans',system-ui,sans-serif; cursor:pointer; text-align:left; } .ds-row:active { opacity:.9; } .ds-row__icon { display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:12px; background:#E1E0FF; flex:none; } .ds-row__mid { display:flex; flex-direction:column; gap:2px; flex:1; } .ds-row__label { font-size:16px; font-weight:600; color:#161D1F; } .ds-row__sub { font-size:12px; font-weight:500; color:#464555; } .ds-row__detail { font-size:12px; font-weight:500; color:#464555; }"
+    },
+    {
+      "name": "Budget Progress Ring",
+      "kind": "custom",
+      "refersTo": "progress-ring",
+      "description": "Signature category meter. Rounded stroke caps; track indigo-muted, fill normal→full→over (indigo→orange→danger).",
+      "html": "<svg class=\"ds-ring\" width=\"56\" height=\"56\" viewBox=\"0 0 56 56\"><circle cx=\"28\" cy=\"28\" r=\"25.5\" fill=\"none\" stroke=\"#E1E0FF\" stroke-width=\"5\"/><circle cx=\"28\" cy=\"28\" r=\"25.5\" fill=\"none\" stroke=\"#4343D5\" stroke-width=\"5\" stroke-linecap=\"round\" stroke-dasharray=\"112 48\" transform=\"rotate(-90 28 28)\"/></svg>",
+      "css": ".ds-ring { display:block; }"
+    },
+    {
+      "name": "Bottom Tab Item",
+      "kind": "nav",
+      "refersTo": "bottom-tab",
+      "description": "Active tab is an indigo pill (icon + caption in white); inactive is muted. Bar floats on the raised shadow.",
+      "html": "<div class=\"ds-tabbar\"><button class=\"ds-tab ds-tab--active\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12l9-9 9 9\"/><path d=\"M5 10v10h14V10\"/></svg><span>Home</span></button><button class=\"ds-tab\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#464555\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 4h16v4H4z\"/><path d=\"M4 12h16v8H4z\"/></svg><span>Budget</span></button></div>",
+      "css": ".ds-tabbar { display:flex; gap:8px; padding:8px; border-radius:24px 24px 0 0; background:#FFFFFF; box-shadow:0px 8px 28px rgba(0,0,0,0.08); font-family:'Plus Jakarta Sans',system-ui,sans-serif; max-width:280px; } .ds-tab { display:flex; flex:1; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:52px; padding:4px; border:none; border-radius:16px; background:transparent; color:#464555; font-size:11px; font-weight:500; cursor:pointer; } .ds-tab span { color:#464555; } .ds-tab--active { background:#4343D5; } .ds-tab--active span { color:#FFFFFF; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Expert Concierge",
+    "overview": "The system behaves like a quietly capable concierge for a household's money: it carries real expertise — multiple currencies, multiple members, multiple countries — and returns it as something calm and handled. Competence leads; warmth follows. An indigo trust primary does the confident, reliable work of a well-run institution, while a burnt-orange growth accent, used sparingly, keeps the product human rather than clinical. Everything sits on a cool paper canvas so the interface reads as bright, unhurried, and never anxious about money. Structurally the app is a field of floating white bento tiles — borderless, separated through tone and a soft ambient shadow, never through rules or boxes. The tone is calm, precise, and reassuring; the design's confidence comes from restraint.",
+    "keyCharacteristics": [
+      "Indigo-led trust on a cool blue-white canvas; warmth from a single restrained accent.",
+      "Borderless white bento tiles floating on soft ambient shadow.",
+      "Low density, generous hierarchy, sentence-case voice — no all-caps, no hairline grids.",
+      "Global-first: every layout is direction-aware (LTR/RTL) and script-aware (Latin/Arabic).",
+      "Data has its own reserved color (sky), kept clear of interactive elements."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Burnt-Orange Growth marks at most one action per screen. If two things are orange, neither is special — demote one to indigo or ghost.", "section": "colors" },
+      { "name": "The Sky-for-Data Rule", "body": "Sky Signal belongs to information and chart series, never to buttons, chips, or links. Data and action never share a color.", "section": "colors" },
+      { "name": "The Sentence-Case Rule", "body": "No all-caps. The eyebrow is a sentence-case section label, not an uppercase kicker — the entire system is sentence case.", "section": "typography" },
+      { "name": "The Shadow-Not-Rules Rule", "body": "Separation comes from white-on-canvas contrast plus ambient shadow. Reach for a border only when tone and shadow can't carry it — and then it's the soft Hairline, never a crisp box.", "section": "elevation" },
+      { "name": "The Width-Not-OS Rule", "body": "Layout follows viewport width (1024px breakpoint), never Platform.OS. A phone browser gets the mobile layout; a tablet in landscape gets the wide one.", "section": "layout" }
+    ],
+    "dos": [
+      "Do float borderless white tiles on the cool-paper canvas; let the Tile shadow and tone do the separating.",
+      "Do keep Burnt-Orange Growth to one action per screen; make indigo the workhorse.",
+      "Do reserve Sky Signal for information and data series only.",
+      "Do write labels in sentence case, including eyebrows.",
+      "Do drive layout from viewport width (1024px breakpoint), and keep every layout direction-aware (LTR/RTL) and script-aware (Plus Jakarta Sans / Readex Pro).",
+      "Do use rounded strokes and the shared normal→full→over color semantic for every meter."
+    ],
+    "donts": [
+      "Don't build hairline-boxed, spreadsheet-dense finance UI. No ruled grids, no bordered cards — separation is tone + ambient shadow.",
+      "Don't ship a dark neon 'trading app' aesthetic. This system is light, cool, calm, and warm.",
+      "Don't use uppercase/all-caps labels anywhere.",
+      "Don't color an interactive control with Sky Signal, or let two elements wear the accent.",
+      "Don't add a third+ shadow depth or a crisp structural shadow ladder — two ambient tokens only."
+    ]
+  }
+}

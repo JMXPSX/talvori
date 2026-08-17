@@ -15,9 +15,11 @@ import { direction } from '@/lib/rtl';
 export interface TextProps extends RNTextProps {
   variant?: TypographyVariant;
   muted?: boolean;
+  /** Tabular (equal-width) figures — for money and any data that sits in columns. */
+  tabular?: boolean;
 }
 
-export function Text({ variant = 'body', muted = false, style, ...rest }: TextProps) {
+export function Text({ variant = 'body', muted = false, tabular = false, style, ...rest }: TextProps) {
   const { i18n } = useTranslation();
   const fontFamily = fontFamilyFor(variant, isArabicLanguage(i18n.language));
   return (
@@ -26,6 +28,7 @@ export function Text({ variant = 'body', muted = false, style, ...rest }: TextPr
         styles.base,
         typography[variant],
         { fontFamily, color: muted ? palette.textMuted : palette.text, textAlign: direction.textAlign },
+        tabular ? styles.tabular : null,
         style,
       ]}
       {...rest}
@@ -36,5 +39,8 @@ export function Text({ variant = 'body', muted = false, style, ...rest }: TextPr
 const styles = StyleSheet.create({
   base: {
     includeFontPadding: false,
+  },
+  tabular: {
+    fontVariant: ['tabular-nums'],
   },
 });

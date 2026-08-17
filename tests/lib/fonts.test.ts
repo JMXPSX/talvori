@@ -14,17 +14,15 @@ describe('isArabicLanguage', () => {
 });
 
 describe('fontFamilyFor (Latin)', () => {
-  it('uses Plus Jakarta Sans bold for the display role', () => {
-    expect(fontFamilyFor('title', false)).toBe('PlusJakartaSans_700Bold');
+  it('uses Archivo ExtraBold for the display, heading, button and eyebrow roles', () => {
+    expect(fontFamilyFor('title', false)).toBe('Archivo_800ExtraBold');
+    expect(fontFamilyFor('heading', false)).toBe('Archivo_800ExtraBold');
+    expect(fontFamilyFor('button', false)).toBe('Archivo_800ExtraBold');
+    expect(fontFamilyFor('eyebrow', false)).toBe('Archivo_800ExtraBold');
   });
-  it('uses semibold for heading, button and eyebrow', () => {
-    expect(fontFamilyFor('heading', false)).toBe('PlusJakartaSans_600SemiBold');
-    expect(fontFamilyFor('button', false)).toBe('PlusJakartaSans_600SemiBold');
-    expect(fontFamilyFor('eyebrow', false)).toBe('PlusJakartaSans_600SemiBold');
-  });
-  it('uses regular for body and medium for caption', () => {
-    expect(fontFamilyFor('body', false)).toBe('PlusJakartaSans_400Regular');
-    expect(fontFamilyFor('caption', false)).toBe('PlusJakartaSans_500Medium');
+  it('uses Archivo Regular for body and caption', () => {
+    expect(fontFamilyFor('body', false)).toBe('Archivo_400Regular');
+    expect(fontFamilyFor('caption', false)).toBe('Archivo_400Regular');
   });
 });
 

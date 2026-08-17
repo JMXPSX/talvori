@@ -50,3 +50,10 @@ coverage/
 # generated native folders
 /ios
 /android
+
+# agent skills (installed per-repo via `npx skills add`)
+# .agents/ holds the skill content; .claude/skills/ are symlinks into it.
+# skills-lock.json is intentionally NOT ignored so installs stay reproducible.
+.agents/
+.claude/skills/
+.codex/

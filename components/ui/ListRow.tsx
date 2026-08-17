@@ -4,9 +4,9 @@
  */
 
 import { Feather } from '@expo/vector-icons';
-import { I18nManager, Pressable, StyleSheet, View } from 'react-native';
+import { I18nManager, Pressable, type PressableStateCallbackType, StyleSheet, View } from 'react-native';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, focus, palette, radius, spacing } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
 
 export interface ListRowProps {
@@ -32,7 +32,12 @@ export function ListRow({
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
+      style={(state) => {
+        const { pressed, focused } = state as PressableStateCallbackType & {
+          focused?: boolean;
+        };
+        return [styles.row, pressed ? styles.pressed : null, focused ? styles.focused : null];
+      }}
     >
       <View style={[styles.iconTile, { backgroundColor: iconBg }]}>
         <Feather name={icon} size={20} color={iconColor} />
@@ -72,6 +77,8 @@ const styles = StyleSheet.create({
     boxShadow: elevation.tile,
   },
   pressed: { opacity: 0.9 },
+  // Compose the focus ring with the resting tile shadow so depth is kept.
+  focused: { boxShadow: `${elevation.tile}, ${focus.ring}` },
   iconTile: {
     width: 44,
     height: 44,

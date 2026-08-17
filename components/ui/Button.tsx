@@ -7,9 +7,15 @@
  * screen, e.g. upgrade).
  */
 
-import { ActivityIndicator, Pressable, StyleSheet, type ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  type PressableStateCallbackType,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native';
 
-import { palette, radius, spacing, typography } from '@/components/theme';
+import { focus, palette, radius, spacing, typography } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'accent';
@@ -24,9 +30,9 @@ export interface ButtonProps {
 }
 
 const LABEL_COLOR: Record<ButtonVariant, string> = {
-  primary: palette.white,
-  secondary: palette.brand,
-  accent: palette.white, // white on burnt orange clears 4.5:1
+  primary: palette.white, // canvas-colour label on the vermilion fill
+  secondary: palette.text, // ghost: ink label on a hairline-ruled button
+  accent: palette.white,
 };
 
 export function Button({
@@ -45,13 +51,21 @@ export function Button({
       accessibilityState={{ disabled: isDisabled, busy: loading }}
       disabled={isDisabled}
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.base,
-        styles[variant],
-        pressed && !isDisabled ? styles.pressed : null,
-        isDisabled ? styles.disabled : null,
-        style,
-      ]}
+      style={(state) => {
+        // RNW adds `focused` to the interaction state (RN's own types omit it);
+        // it drives the web keyboard-focus ring and stays undefined on native.
+        const { pressed, focused } = state as PressableStateCallbackType & {
+          focused?: boolean;
+        };
+        return [
+          styles.base,
+          styles[variant],
+          pressed && !isDisabled ? styles.pressed : null,
+          focused && !isDisabled ? styles.focused : null,
+          isDisabled ? styles.disabled : null,
+          style,
+        ];
+      }}
     >
       {loading ? (
         <ActivityIndicator color={LABEL_COLOR[variant]} />
@@ -88,6 +102,9 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.9,
     transform: [{ scale: 0.99 }],
+  },
+  focused: {
+    boxShadow: focus.ring,
   },
   disabled: {
     opacity: 0.5,

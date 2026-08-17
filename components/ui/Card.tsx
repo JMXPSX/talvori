@@ -1,18 +1,18 @@
 /**
- * Bento tile: the repeated white panel used across finance / grocery / retail /
- * billing screens. Borderless by design — depth comes from the contrast of white
- * against the tinted canvas plus a soft ambient shadow, never from a rule.
- * Pass `accented` to tint the surface for the highlighted item (e.g. cheapest).
+ * Card: the repeated panel across finance / grocery / retail / billing screens.
+ * Modernist — a square frame drawn with a 2px rule on the paper canvas; depth
+ * comes from the rule, never from shadow or a filled tile. Pass `accented` to
+ * turn the frame vermilion and tint the fill (remittance / cheapest / upgrade).
  */
 
 import type { ReactNode } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { palette, radius, spacing } from '@/components/theme';
 
 export interface CardProps {
   children: ReactNode;
-  /** Tints the tile — reserve for the highlighted item (e.g. cheapest). */
+  /** Vermilion frame + tinted fill — reserve for the highlighted item. */
   accented?: boolean;
   style?: ViewStyle;
 }
@@ -25,11 +25,13 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    borderWidth: 2,
+    borderColor: palette.border,
+    backgroundColor: palette.background,
     gap: spacing.sm,
-    boxShadow: elevation.tile,
   },
   accented: {
+    borderColor: palette.accent,
     backgroundColor: palette.accentMuted,
   },
 });
