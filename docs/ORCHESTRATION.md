@@ -1,111 +1,97 @@
-# Multi-agent orchestration
+# Working with two agents on one codebase
 
-How work is split across Claude Desktop, Claude Terminal, and worktree lanes on this
-project. **Read this before starting parallel work.** It exists because this codebase has
-several files that cannot tolerate concurrent writers, and rediscovering that list by
-hitting merge conflicts is expensive.
+Claude Terminal writes the code. Claude Desktop looks at the result and says what's wrong.
+Both work on the **same** checkout at `C:/dev/Budget App`.
 
-## Surface roles
+**Read this before starting a session in either surface.**
 
-| Surface | Owns | Should not |
+## Why one tree, not two
+
+Separate git worktrees are for running genuinely independent features in parallel. That is
+not this setup. A reviewer cannot visually check work that lives in a directory it isn't
+looking at — the whole loop depends on both agents sharing one tree, so that a file Terminal
+saves appears in the preview Desktop is watching.
+
+The rule that keeps a shared tree safe is not separation. It is: **exactly one writer.**
+
+## Roles
+
+| | Claude Terminal | Claude Desktop |
 |---|---|---|
-| **Claude Desktop** | Visual verification against the Stitch mocks, browser preview, Supabase inspection, spec and design review, reading diffs | Write implementation code |
-| **Claude Terminal** | Implementation, `typecheck` / `test` / `lint`, atomic commits, migrations authoring | Judge visual fidelity — it cannot see the render |
+| **Writes files** | Yes — the only writer | **Never** |
+| **Runs the dev server** | No | Yes, on port 8090 |
+| **Runs typecheck / test / lint** | Yes | No |
+| **Commits** | Yes | No |
+| **Judges visual fidelity** | No — it cannot see the render | Yes, against `stitch_universal_budget_tracker/` |
 
-The split follows capability, not preference. Desktop has the browser and the connectors;
-Terminal has fast file editing and git. When Desktop finds a visual defect, it reports the
-defect and the file; Terminal fixes it.
+Terminal cannot see a rendered screen; Desktop can. Desktop should not edit, because a
+second writer reintroduces exactly the clobbering that a single-writer rule prevents.
 
-## Lanes
+## The loop
 
-One worktree per lane. **Never point two agents at the same working tree** — concurrent
-edits silently clobber each other and leave git in a state neither agent can explain.
+1. **Terminal** implements one step from the active spec in `docs/superpowers/specs/`, runs
+   `npm run typecheck` and `npm test`, and commits.
+2. **Desktop** has the preview already running. Metro's HMR pushes the change in; no restart
+   needed. Desktop compares the render against the relevant mock.
+3. **Desktop reports defects as file plus problem** — "the app bar's action sits too close to
+   the edge, `components/ui/AppBar.tsx`" — not as a patch.
+4. **Terminal** fixes and commits. Back to 2.
 
-| Lane | Path | Branch | Web port |
-|---|---|---|---|
-| main | `C:/dev/Budget App` | `design/ibilly-adoption` | 8090 |
-| slice E (ibilly mock fidelity) | `C:/dev/budget-slice-e` | `design/ibilly-slice-e` | 8100 |
-| household management | `C:/dev/budget-household` | `wip/household-management` | 8110 |
+Desktop reviewing a specific commit rather than the live tree is often clearer:
+`git show <sha>` for the diff, then the preview for the result.
 
-Port `8081` stays reserved for the human's own `npm start`. Launch configs for every lane
-live in `.claude/launch.json`; start one with the lane's config name, never a bare
-`expo start`, or two lanes will fight over a port.
+## Starting each surface
 
-### Creating another lane
-
-```bash
-git worktree add C:/dev/budget-<name> -b <branch> design/ibilly-adoption
-cp ".env" "C:/dev/budget-<name>/.env"        # .env is gitignored — nothing boots without it
-cd C:/dev/budget-<name> && npm install       # node_modules cannot be shared across worktrees
-```
-
-Then add a `.claude/launch.json` entry with an unused port and record the lane in the table
-above.
-
-### Retiring a lane
+**Terminal** — already in the right place:
 
 ```bash
-git worktree remove C:/dev/budget-<name>
+cd "C:/dev/Budget App"
 ```
 
-Merge or delete the branch first — `worktree remove` refuses if the tree is dirty, which is
-the desired behaviour.
+**Desktop** — start the dev server through its launch config, never a bare `expo start`, so
+the port stays predictable:
 
-## Chokepoints — do not parallelize these
+```bash
+npx expo start --web --port 8090
+```
 
-Each of these has exactly one safe writer at a time. Assign them to a single lane and let
-the other lanes wait.
+Port `8081` is reserved for the human's own `npm start`. Two servers on one port is the most
+common way this setup breaks.
 
-| File / process | Why it serializes |
+## Handoff between sessions
+
+- **Specs** in `docs/superpowers/specs/` are the durable contract. A lane that deviates
+  updates the spec in the same commit, so the other surface never reads a stale plan.
+- **`claude-mem`** carries observations across surfaces and sessions — this is how a Desktop
+  session knows what Terminal did earlier.
+- **Git history** is the audit trail. Atomic commits with conventional prefixes mean Desktop
+  can review one change at a time instead of a pile.
+
+## Single-writer files
+
+These tolerate exactly one writer even within Terminal. If work is ever split across more
+than one implementing session, only one may touch them:
+
+| File / process | Why |
 |---|---|
-| `supabase/migrations/*.sql` | Applied by hand in the Supabase SQL editor, one at a time. Timestamp-ordered filenames collide if two agents author simultaneously. |
+| `supabase/migrations/*.sql` | Applied by hand in the Supabase SQL editor, one at a time. Timestamp-ordered filenames collide if authored simultaneously. |
 | `lib/database.types.ts` | Hand-maintained mirror of the schema. Two writers guarantee drift. |
-| `locales/{en,fil,ar}.json` | `tests/lib/i18n.test.ts` enforces identical key sets across all three. Concurrent key additions produce a three-way conflict every time. |
-| `components/theme.ts` | Every screen and primitive reads it. A token change in one lane makes every other lane's visual work stale. |
-| `components/ui/index.ts` | The barrel. Every new primitive touches it — the highest-conflict file in the repo. |
-| `npm run test:rls` | Needs `SUPABASE_SERVICE_ROLE_KEY` in `.env` temporarily. Exactly one lane may hold it, and it must be removed afterwards. |
-| The Supabase project | One project serves all lanes. Two agents seeding demo data clobber each other — see `supabase/seed/demo_data.sql`. |
+| `locales/{en,fil,ar}.json` | `tests/lib/i18n.test.ts` enforces identical key sets across all three. Concurrent additions conflict every time. |
+| `components/theme.ts` | Every screen and primitive reads it. A token change makes other in-flight visual work stale. |
+| `components/ui/index.ts` | The barrel — every new primitive touches it. |
+| `npm run test:rls` | Needs `SUPABASE_SERVICE_ROLE_KEY` in `.env` temporarily, then removed. One holder at a time. |
+| The Supabase project | One project, shared. Two agents seeding demo data clobber each other — see `supabase/seed/demo_data.sql`. |
 
-## What does parallelize
+## Demo data
 
-- Screens in different `app/<domain>/` stacks — they share no files
-- Pure modules under `features/*/` plus their tests (the `donut.ts` / `flow.ts` shape)
-- Specs and docs
-- Read-only review and audit passes
+`supabase/seed/demo_data.sql` creates a throwaway `Demo Household` with ~90 days of
+multi-currency activity, so screens have something real to render. Paste it into the Supabase
+SQL editor. It is re-runnable and its teardown is one `delete` documented in the file header.
 
-## Merge order
+## When you *would* want worktrees
 
-Derived from the chokepoint list: whichever lane touches a chokepoint merges **first**, and
-the others rebase onto it rather than merging in parallel.
-
-For the current pair: slice E touches `components/theme.ts`, `components/ui/index.ts`, and
-`locales/*`. The household lane touches `app/household/` and `features/household/`. They are
-genuinely independent, but `wip/household-management` branched from `main` and does **not**
-contain the design work — rebase it onto the design branch before merging, or its screens
-will arrive with pre-ibilly styling.
-
-## Slice E dependency shape
-
-Slice E is mostly a chain, not a fan. From
-`docs/superpowers/specs/2026-08-16-ibilly-mock-fidelity-design.md`:
-
-```
-1 refactor(ui): Screen gains appBar + scroll; migrate 3 screens   <- blocks everything
-        |-- 3 MetricRow + InsightCard          -+
-        |-- 4 flow.ts + tests                   |- independent of each other
-        |-- 5 SegmentedControl + FlowBar       -+
-                                                -> 6 adopt into the 5 screens  <- joins all
-                                                -> 7 docs
-```
-
-Steps 3 and 5 both touch `components/ui/index.ts`. Either accept one trivial conflict at the
-join, or have step 5 skip the barrel and let step 3 add both exports. Do not fan out steps 1
-or 6 — they are single-writer by nature.
-
-## Shared context
-
-`claude-mem` is the cross-surface memory: observations written from Terminal are visible to
-Desktop and vice versa, which is how a Desktop session knows what Terminal did earlier.
-Specs under `docs/superpowers/specs/` are the durable contract between lanes — when a lane
-deviates from its spec, it updates the spec in the same commit rather than leaving the other
-lanes reading a stale plan.
+If two genuinely independent features are in flight — say the ibilly design work and the
+`wip/household-management` branch, which touch disjoint files — then a worktree per feature
+is correct, each with its own branch, its own `npm install`, a copy of the gitignored `.env`,
+and its own Metro port. That is a different setup from the one described above, and it is not
+what this project is doing today.

@@ -6,18 +6,6 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["expo", "start", "--web", "--port", "8090"],
       "port": 8090
-    },
-    {
-      "name": "expo-web-slice-e",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["expo", "start", "--web", "--port", "8100"],
-      "port": 8100
-    },
-    {
-      "name": "expo-web-household",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["expo", "start", "--web", "--port", "8110"],
-      "port": 8110
     }
   ]
 }
