@@ -191,6 +191,11 @@
   },
   "planning": {
     "hubTitle": "Pagpaplano",
+    "plan": {
+      "usedPct": "{{pct}}% nagamit",
+      "safePerDay": "Ligtas gastusin {{amount}}/araw",
+      "manage": "Pamahalaan"
+    },
     "budgets": {
       "title": "Mga Badyet",
       "hub": "Mga Badyet",

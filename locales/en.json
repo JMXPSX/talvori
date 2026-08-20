@@ -191,6 +191,11 @@
   },
   "planning": {
     "hubTitle": "Planning",
+    "plan": {
+      "usedPct": "{{pct}}% used",
+      "safePerDay": "Safe to spend {{amount}}/day",
+      "manage": "Manage"
+    },
     "budgets": {
       "title": "Budgets",
       "hub": "Budgets",

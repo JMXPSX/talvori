@@ -191,6 +191,11 @@
   },
   "planning": {
     "hubTitle": "التخطيط",
+    "plan": {
+      "usedPct": "{{pct}}% مُستخدَم",
+      "safePerDay": "آمن للإنفاق {{amount}}/يوم",
+      "manage": "إدارة"
+    },
     "budgets": {
       "title": "الميزانيات",
       "hub": "الميزانيات",
