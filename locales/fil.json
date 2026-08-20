@@ -121,6 +121,7 @@
     "addExpense": "Magdagdag ng gastos",
     "addTransfer": "Ilipat",
     "recentTitle": "Mga kamakailang transaksyon",
+    "recentAll": "Lahat ng transaksyon",
     "noTransactions": "Wala pang transaksyon.",
     "delete": "Burahin",
     "newTransaction": "Bagong transaksyon",

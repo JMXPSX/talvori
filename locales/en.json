@@ -121,6 +121,7 @@
     "addExpense": "Add expense",
     "addTransfer": "Transfer",
     "recentTitle": "Recent transactions",
+    "recentAll": "All transactions",
     "noTransactions": "No transactions yet.",
     "delete": "Delete",
     "newTransaction": "New transaction",

@@ -121,6 +121,7 @@
     "addExpense": "إضافة مصروف",
     "addTransfer": "تحويل",
     "recentTitle": "أحدث المعاملات",
+    "recentAll": "كل المعاملات",
     "noTransactions": "لا توجد معاملات بعد.",
     "delete": "حذف",
     "newTransaction": "معاملة جديدة",

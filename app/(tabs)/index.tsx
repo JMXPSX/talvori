@@ -26,6 +26,13 @@ import { formatAmount } from '@/lib/format';
 
 type FeatherName = keyof typeof Feather.glyphMap;
 
+/** Icon + tint for a transaction type (recent-activity rows). */
+function txIcon(type: 'income' | 'expense' | 'transfer'): { name: FeatherName; color: string; bg: string } {
+  if (type === 'income') return { name: 'arrow-down-left', color: palette.success, bg: palette.successMuted };
+  if (type === 'transfer') return { name: 'repeat', color: palette.brand, bg: palette.brandMuted };
+  return { name: 'arrow-up-right', color: palette.brand, bg: palette.brandMuted };
+}
+
 export default function HomeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -255,6 +262,59 @@ export default function HomeScreen() {
               )}
             </Card>
           </BentoRow>
+
+          {/* Row 3 — recent activity (uses the already-fetched transactions). */}
+          {txns.length > 0 ? (
+            <BentoRow>
+              <Card style={styles.recentSlot}>
+                <View style={styles.recentHeader}>
+                  <Text variant="heading">{t('finance.recentTitle')}</Text>
+                  <Pressable accessibilityRole="button" onPress={() => router.push('/(tabs)/transactions')}>
+                    <Text variant="caption" style={styles.recentAll}>
+                      {t('finance.recentAll')}
+                    </Text>
+                  </Pressable>
+                </View>
+                {txns.slice(0, 5).map((tx) => {
+                  const positive = tx.direction === 'in';
+                  const ic = txIcon(tx.type);
+                  const caption = [tx.category?.name, tx.account?.name].filter(Boolean).join(' · ');
+                  return (
+                    <Pressable
+                      key={tx.id}
+                      accessibilityRole="button"
+                      accessibilityLabel={t('finance.edit.title')}
+                      onPress={() => router.push(`/finance/edit/${tx.id}`)}
+                      style={({ pressed }) => [styles.recentRow, pressed ? styles.rowPressed : null]}
+                    >
+                      <View style={[styles.recentIcon, { backgroundColor: ic.bg }]}>
+                        <Feather name={ic.name} size={16} color={ic.color} />
+                      </View>
+                      <View style={styles.recentMid}>
+                        <Text numberOfLines={1}>
+                          {tx.description ||
+                            (tx.type === 'income'
+                              ? t('finance.categories.income')
+                              : tx.type === 'transfer'
+                                ? t('finance.transfer.title')
+                                : t('finance.categories.expense'))}
+                        </Text>
+                        {caption ? (
+                          <Text variant="caption" muted numberOfLines={1}>
+                            {caption}
+                          </Text>
+                        ) : null}
+                      </View>
+                      <Text variant="moneyMin" style={positive ? styles.recentIn : null}>
+                        {positive ? '+' : '−'}
+                        {formatAmount(tx.amount_minor, tx.currency_code)}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </Card>
+            </BentoRow>
+          ) : null}
         </BentoPage>
       </ScrollView>
     </SafeAreaView>
@@ -340,4 +400,17 @@ const styles = StyleSheet.create({
   legendRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   legendLabel: { flex: 1 },
   dot: { width: 10, height: 10, borderRadius: radius.pill },
+  recentSlot: { flex: 1 },
+  recentHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  recentAll: { color: palette.brand },
+  recentRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 48 },
+  recentIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: radius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recentMid: { flex: 1, gap: 2 },
+  recentIn: { color: palette.success },
 });
