@@ -490,6 +490,14 @@
       "exportFailed": "Couldn't build the export. Please try again."
     }
   },
+  "currency": {
+    "title": "Choose currency",
+    "placeholder": "Select a currency",
+    "search": "Search currency",
+    "suggested": "Suggested",
+    "all": "All currencies",
+    "explainer": "Pick the currency this uses. You can change it later."
+  },
   "errors": {
     "unknown": "Something went wrong. Please try again.",
     "network": "Network problem. Check your connection and retry.",

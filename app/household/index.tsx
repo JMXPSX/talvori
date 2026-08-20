@@ -11,7 +11,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Switch, View } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, spacing } from '@/components/theme';
-import { Button, Card, CONTENT_MAX_WIDTH, EmptyState, Text, TextField } from '@/components/ui';
+import { Button, Card, CONTENT_MAX_WIDTH, CurrencyField, EmptyState, Text, TextField } from '@/components/ui';
 import { createHousehold, listMyHouseholds } from '@/features/household/api';
 import { createHouseholdSchema } from '@/features/household/schemas';
 import type { HouseholdRow } from '@/lib/database.types';
@@ -122,12 +122,11 @@ export default function HouseholdsScreen() {
             autoCapitalize="words"
             error={fieldErrors.name ? t('errors.validation') : undefined}
           />
-          <TextField
+          <CurrencyField
             label={t('household.currencyLabel')}
             value={currency}
-            onChangeText={setCurrency}
-            hint={t('household.currencyHint')}
-            autoCapitalize="characters"
+            onChange={setCurrency}
+            suggested={[deviceCurrency()].filter(Boolean)}
             error={fieldErrors.reportingCurrencyCode ? t('errors.validation') : undefined}
           />
           <View style={styles.switchRow}>

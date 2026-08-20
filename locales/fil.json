@@ -490,6 +490,14 @@
       "exportFailed": "Hindi mabuo ang export. Subukan muli."
     }
   },
+  "currency": {
+    "title": "Pumili ng pera",
+    "placeholder": "Pumili ng pera",
+    "search": "Maghanap ng pera",
+    "suggested": "Iminumungkahi",
+    "all": "Lahat ng pera",
+    "explainer": "Piliin ang perang gagamitin nito. Mababago mo ito mamaya."
+  },
   "errors": {
     "unknown":"May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",

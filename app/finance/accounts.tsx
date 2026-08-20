@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
+import { Button, CONTENT_MAX_WIDTH, CurrencyField, Text, TextField, useActionSheet } from '@/components/ui';
 import { createAccount, deleteAccount, listAccountBalances, listAccounts } from '@/features/finance/api';
 import { accountTypeSchema, createAccountSchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -204,12 +204,11 @@ export default function AccountsScreen() {
             })}
           </View>
 
-          <TextField
+          <CurrencyField
             label={t('finance.accounts.currencyLabel')}
             value={currency}
-            onChangeText={setCurrency}
-            hint={t('household.currencyHint')}
-            autoCapitalize="characters"
+            onChange={setCurrency}
+            suggested={[deviceCurrency(), active?.reporting_currency_code ?? ''].filter(Boolean)}
             error={fieldErrors.currencyCode ? t('errors.validation') : undefined}
           />
           <TextField
