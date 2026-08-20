@@ -5,12 +5,12 @@ import { Feather } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, I18nManager, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
 import { BentoPage, Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
-import { deleteTransaction, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
+import { listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
@@ -105,30 +105,6 @@ export default function TransactionsScreen() {
     });
   }
 
-  function onDelete(id: string) {
-    sheet.show({
-      title: t('finance.confirmDeleteTitle'),
-      message: t('finance.confirmDeleteBody'),
-      cancelLabel: t('common.cancel'),
-      actions: [
-        {
-          label: t('finance.delete'),
-          destructive: true,
-          onPress: () => {
-            void (async () => {
-              try {
-                await deleteTransaction(id);
-                await load();
-              } catch (err) {
-                setErrorKey(toAppError(err).messageKey);
-              }
-            })();
-          },
-        },
-      ],
-    });
-  }
-
   function typeLabel(type: TransactionWithRefs['type']): string {
     if (type === 'income') return t('finance.categories.income');
     if (type === 'transfer') return t('finance.transfer.title');
@@ -196,7 +172,17 @@ export default function TransactionsScreen() {
                     const icon = typeIcon(tx.type);
                     const caption = [tx.category?.name, tx.account?.name].filter(Boolean).join(' · ');
                     return (
-                      <View key={tx.id} style={[styles.row, index > 0 ? styles.rowDivider : null]}>
+                      <Pressable
+                        key={tx.id}
+                        accessibilityRole="button"
+                        accessibilityLabel={t('finance.edit.title')}
+                        onPress={() => router.push(`/finance/edit/${tx.id}`)}
+                        style={({ pressed }) => [
+                          styles.row,
+                          index > 0 ? styles.rowDivider : null,
+                          pressed ? styles.pressed : null,
+                        ]}
+                      >
                         <View style={[styles.iconTile, { backgroundColor: icon.bg }]}>
                           <Feather name={icon.name} size={18} color={icon.color} />
                         </View>
@@ -209,22 +195,18 @@ export default function TransactionsScreen() {
                           ) : null}
                         </View>
                         <Text
-                          variant="button"
+                          variant="moneyMin"
                           style={positive ? styles.amountIn : null}
                         >
                           {positive ? '+' : '−'}
                           {formatAmount(tx.amount_minor, tx.currency_code)}
                         </Text>
-                        <Pressable
-                          accessibilityRole="button"
-                          accessibilityLabel={t('finance.delete')}
-                          hitSlop={12}
-                          onPress={() => onDelete(tx.id)}
-                          style={({ pressed }) => (pressed ? styles.pressed : null)}
-                        >
-                          <Feather name="trash-2" size={18} color={palette.textMuted} />
-                        </Pressable>
-                      </View>
+                        <Feather
+                          name={I18nManager.isRTL ? 'chevron-left' : 'chevron-right'}
+                          size={20}
+                          color={palette.textMuted}
+                        />
+                      </Pressable>
                     );
                   })}
                 </Card>

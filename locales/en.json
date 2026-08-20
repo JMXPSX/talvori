@@ -144,6 +144,14 @@
       "saveCta": "Save",
       "noAccounts": "Add an account first."
     },
+    "edit": {
+      "title": "Edit transaction",
+      "dateLabel": "Date (YYYY-MM-DD)",
+      "saveCta": "Save changes",
+      "deleteCta": "Delete transaction",
+      "transferNote": "Transfers are edited from the transfer screen.",
+      "notFound": "This transaction no longer exists."
+    },
     "transfer": {
       "title": "Transfer",
       "fromLabel": "From",

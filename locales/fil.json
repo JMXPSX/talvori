@@ -144,6 +144,14 @@
       "saveCta": "I-save",
       "noAccounts": "Magdagdag muna ng account."
     },
+    "edit": {
+      "title": "I-edit ang transaksyon",
+      "dateLabel": "Petsa (YYYY-MM-DD)",
+      "saveCta": "I-save ang mga pagbabago",
+      "deleteCta": "Burahin ang transaksyon",
+      "transferNote": "Ang mga transfer ay ine-edit mula sa screen ng transfer.",
+      "notFound": "Wala na ang transaksyong ito."
+    },
     "transfer": {
       "title": "Ilipat",
       "fromLabel": "Mula sa",

@@ -144,6 +144,14 @@
       "saveCta": "حفظ",
       "noAccounts": "أضف حسابًا أولًا."
     },
+    "edit": {
+      "title": "تعديل المعاملة",
+      "dateLabel": "التاريخ (YYYY-MM-DD)",
+      "saveCta": "حفظ التغييرات",
+      "deleteCta": "حذف المعاملة",
+      "transferNote": "تُعدَّل التحويلات من شاشة التحويل.",
+      "notFound": "لم تعد هذه المعاملة موجودة."
+    },
     "transfer": {
       "title": "تحويل",
       "fromLabel": "من",
