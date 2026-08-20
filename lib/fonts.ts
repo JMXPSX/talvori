@@ -40,6 +40,8 @@ export function fontFamilyFor(variant: TypographyVariant, isArabic: boolean): st
       case 'title':
         return 'ReadexPro_700Bold';
       case 'heading':
+      case 'subheading':
+      case 'moneyMin':
       case 'button':
       case 'eyebrow':
         return 'ReadexPro_600SemiBold';
@@ -52,6 +54,8 @@ export function fontFamilyFor(variant: TypographyVariant, isArabic: boolean): st
     case 'title':
       return 'PlusJakartaSans_700Bold';
     case 'heading':
+    case 'subheading':
+    case 'moneyMin':
     case 'button':
     case 'eyebrow':
       return 'PlusJakartaSans_600SemiBold';

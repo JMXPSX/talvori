@@ -4,10 +4,19 @@
  */
 
 import { Feather } from '@expo/vector-icons';
-import { I18nManager, Pressable, StyleSheet, View } from 'react-native';
+import {
+  I18nManager,
+  Pressable,
+  type PressableStateCallbackType,
+  StyleSheet,
+  View,
+} from 'react-native';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, palette, radius, spacing, webFocusRing } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
+
+/** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
+type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
 
 export interface ListRowProps {
   icon: keyof typeof Feather.glyphMap;
@@ -32,7 +41,15 @@ export function ListRow({
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
+      style={(state) => {
+        const { pressed, hovered, focused } = state as WebPressableState;
+        return [
+          styles.row,
+          hovered ? styles.hovered : null,
+          pressed ? styles.pressed : null,
+          focused ? webFocusRing : null,
+        ];
+      }}
     >
       <View style={[styles.iconTile, { backgroundColor: iconBg }]}>
         <Feather name={icon} size={20} color={iconColor} />
@@ -71,6 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: palette.surface,
     boxShadow: elevation.tile,
   },
+  hovered: { backgroundColor: palette.field },
   pressed: { opacity: 0.9 },
   iconTile: {
     width: 44,

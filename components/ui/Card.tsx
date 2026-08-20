@@ -3,22 +3,61 @@
  * billing screens. Borderless by design — depth comes from the contrast of white
  * against the tinted canvas plus a soft ambient shadow, never from a rule.
  * Pass `accented` to tint the surface for the highlighted item (e.g. cheapest).
+ *
+ * Pass `onPress` to make the whole tile a pressable row — it then gains the web
+ * hover tint + keyboard focus ring (F22), so list screens stop hand-rolling
+ * `<Pressable style={styles.card}>` copies (F16).
  */
 
 import type { ReactNode } from 'react';
-import { StyleSheet, View, type ViewStyle } from 'react-native';
+import {
+  Pressable,
+  type PressableStateCallbackType,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, palette, radius, spacing, webFocusRing } from '@/components/theme';
 
 export interface CardProps {
   children: ReactNode;
   /** Tints the tile — reserve for the highlighted item (e.g. cheapest). */
   accented?: boolean;
+  /** Makes the tile a pressable row (adds hover/focus/pressed states). */
+  onPress?: () => void;
+  accessibilityLabel?: string;
   style?: ViewStyle;
 }
 
-export function Card({ children, accented = false, style }: CardProps) {
-  return <View style={[styles.card, accented ? styles.accented : null, style]}>{children}</View>;
+/** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
+type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
+
+export function Card({ children, accented = false, onPress, accessibilityLabel, style }: CardProps) {
+  const base = [styles.card, accented ? styles.accented : null, style];
+
+  if (!onPress) {
+    return <View style={base}>{children}</View>;
+  }
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      onPress={onPress}
+      style={(state) => {
+        const { pressed, hovered, focused } = state as WebPressableState;
+        return [
+          ...base,
+          hovered ? styles.hovered : null,
+          pressed ? styles.pressed : null,
+          focused ? webFocusRing : null,
+        ];
+      }}
+    >
+      {children}
+    </Pressable>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -32,4 +71,6 @@ const styles = StyleSheet.create({
   accented: {
     backgroundColor: palette.accentMuted,
   },
+  hovered: { backgroundColor: palette.field },
+  pressed: { opacity: 0.9 },
 });

@@ -14,6 +14,8 @@
  * reskins from here without touching call sites.
  */
 
+import { Platform, type ViewStyle } from 'react-native';
+
 export const palette = {
   brand: '#4343D5', // indigo — primary actions
   brandDeep: '#2E2BC2', // pressed / emphasis
@@ -76,11 +78,17 @@ export const radius = {
 export const typography = {
   title: { fontSize: 28, fontWeight: '700', lineHeight: 34, letterSpacing: -0.5 },
   heading: { fontSize: 24, fontWeight: '600', lineHeight: 31 },
+  // List-row / card titles. Sits between `heading` (24, too loud in a row) and
+  // `button` (16). Added for the UX overhaul (F20/F32) — rows misused `heading`.
+  subheading: { fontSize: 18, fontWeight: '600', lineHeight: 24 },
   body: { fontSize: 16, fontWeight: '400', lineHeight: 26 },
   caption: { fontSize: 12, fontWeight: '500', lineHeight: 14 },
   // Section label. Sentence-case: the ibilly system has no uppercase label style.
   eyebrow: { fontSize: 14, fontWeight: '600', lineHeight: 17, letterSpacing: 0.14 },
   button: { fontSize: 16, fontWeight: '600', lineHeight: 19 },
+  // The floor for any rendered amount (F32): nothing below 14px, tabular figures
+  // so digits align in columns. Consume via <Text variant="moneyMin">.
+  moneyMin: { fontSize: 14, fontWeight: '600', lineHeight: 18, fontVariant: ['tabular-nums'] },
 } as const;
 
 export type TypographyVariant = keyof typeof typography;
@@ -90,6 +98,22 @@ export const elevation = {
   tile: '0px 4px 20px rgba(0, 0, 0, 0.04)',
   raised: '0px 8px 28px rgba(0, 0, 0, 0.08)',
 } as const;
+
+/**
+ * Web-only keyboard focus ring (F22). A 2px brand outline offset from the box so
+ * it never shifts layout; `outline*` is a react-native-web style, so gate it to
+ * web (native ignores/​warns on unknown style keys). Spread into a Pressable's
+ * `focused` state style. Empty object on native, so it composes harmlessly.
+ */
+export const webFocusRing: ViewStyle =
+  Platform.OS === 'web'
+    ? ({
+        outlineWidth: 2,
+        outlineColor: palette.brand,
+        outlineStyle: 'solid',
+        outlineOffset: 2,
+      } as ViewStyle)
+    : {};
 
 export const theme = { palette, spacing, radius, typography, elevation, chartSeries } as const;
 export type Theme = typeof theme;
