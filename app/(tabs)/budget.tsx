@@ -115,7 +115,8 @@ export default function PlanScreen() {
           ) : (
             <>
               {budget ? (
-                <Card>
+                <BentoRow>
+                  <Card style={styles.ringTile}>
                   <View style={styles.ringRow}>
                     <ProgressRing fraction={agg.fraction} state={agg.state} size={92} stroke={10}>
                       <Text variant="caption" style={styles.ringCenter}>
@@ -144,6 +145,45 @@ export default function PlanScreen() {
                     </View>
                   </View>
                 </Card>
+                  {status.length > 0 ? (
+                    <Card style={styles.budgetsTile}>
+                      <View style={styles.cardHeader}>
+                        <Text variant="subheading">{t('planning.budgets.title')}</Text>
+                        <Pressable accessibilityRole="button" onPress={() => router.push('/finance/budgets')}>
+                          <Text variant="caption" style={styles.manage}>
+                            {t('planning.plan.manage')}
+                          </Text>
+                        </Pressable>
+                      </View>
+                      {status.map((row) => {
+                        const remaining = budgetRemainingMinor(row.limit_minor, row.spent_minor);
+                        return (
+                          <Pressable
+                            key={row.allocation_id}
+                            accessibilityRole="button"
+                            onPress={() => router.push('/finance/budgets')}
+                            style={({ pressed }) => [styles.allocRow, pressed ? styles.pressed : null]}
+                          >
+                            <View style={styles.allocHeader}>
+                              <Text variant="button" numberOfLines={1} style={styles.allocName}>
+                                {categoryName(row.category_id)}
+                              </Text>
+                              <Text variant="moneyMin" style={remaining < 0 ? styles.over : styles.left}>
+                                {remaining < 0
+                                  ? t('planning.budgets.overBy', { amount: formatAmount(-remaining, row.currency_code) })
+                                  : t('planning.budgets.left', { amount: formatAmount(remaining, row.currency_code) })}
+                              </Text>
+                            </View>
+                            <ProgressBar
+                              fraction={spentFraction(row.limit_minor, row.spent_minor)}
+                              state={meterState(row.limit_minor, row.spent_minor)}
+                            />
+                          </Pressable>
+                        );
+                      })}
+                    </Card>
+                  ) : null}
+                </BentoRow>
               ) : (
                 <EmptyState
                   icon="pie-chart"
@@ -152,45 +192,6 @@ export default function PlanScreen() {
                   onCta={() => router.push('/finance/budget-new')}
                 />
               )}
-
-              {budget && status.length > 0 ? (
-                <Card>
-                  <View style={styles.cardHeader}>
-                    <Text variant="subheading">{t('planning.budgets.title')}</Text>
-                    <Pressable accessibilityRole="button" onPress={() => router.push('/finance/budgets')}>
-                      <Text variant="caption" style={styles.manage}>
-                        {t('planning.plan.manage')}
-                      </Text>
-                    </Pressable>
-                  </View>
-                  {status.map((row) => {
-                    const remaining = budgetRemainingMinor(row.limit_minor, row.spent_minor);
-                    return (
-                      <Pressable
-                        key={row.allocation_id}
-                        accessibilityRole="button"
-                        onPress={() => router.push('/finance/budgets')}
-                        style={({ pressed }) => [styles.allocRow, pressed ? styles.pressed : null]}
-                      >
-                        <View style={styles.allocHeader}>
-                          <Text variant="button" numberOfLines={1} style={styles.allocName}>
-                            {categoryName(row.category_id)}
-                          </Text>
-                          <Text variant="moneyMin" style={remaining < 0 ? styles.over : styles.left}>
-                            {remaining < 0
-                              ? t('planning.budgets.overBy', { amount: formatAmount(-remaining, row.currency_code) })
-                              : t('planning.budgets.left', { amount: formatAmount(remaining, row.currency_code) })}
-                          </Text>
-                        </View>
-                        <ProgressBar
-                          fraction={spentFraction(row.limit_minor, row.spent_minor)}
-                          state={meterState(row.limit_minor, row.spent_minor)}
-                        />
-                      </Pressable>
-                    );
-                  })}
-                </Card>
-              ) : null}
 
               <BentoRow>
                 <Card style={styles.tile}>
@@ -240,4 +241,7 @@ const styles = StyleSheet.create({
   allocName: { flex: 1 },
   pressed: { opacity: 0.7 },
   tile: { flex: 1 },
+  // 2a desktop: ring beside the budget meters (weights collapse to a stack on mobile).
+  ringTile: { flex: 1 },
+  budgetsTile: { flex: 2 },
 });
