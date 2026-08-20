@@ -17,8 +17,10 @@ describe('fontFamilyFor (Latin)', () => {
   it('uses Plus Jakarta Sans bold for the display role', () => {
     expect(fontFamilyFor('title', false)).toBe('PlusJakartaSans_700Bold');
   });
-  it('uses semibold for heading, button and eyebrow', () => {
+  it('uses semibold for heading, subheading, moneyMin, button and eyebrow', () => {
     expect(fontFamilyFor('heading', false)).toBe('PlusJakartaSans_600SemiBold');
+    expect(fontFamilyFor('subheading', false)).toBe('PlusJakartaSans_600SemiBold');
+    expect(fontFamilyFor('moneyMin', false)).toBe('PlusJakartaSans_600SemiBold');
     expect(fontFamilyFor('button', false)).toBe('PlusJakartaSans_600SemiBold');
     expect(fontFamilyFor('eyebrow', false)).toBe('PlusJakartaSans_600SemiBold');
   });
@@ -32,6 +34,8 @@ describe('fontFamilyFor (Arabic)', () => {
   it('uses Readex Pro for every role', () => {
     expect(fontFamilyFor('title', true)).toBe('ReadexPro_700Bold');
     expect(fontFamilyFor('heading', true)).toBe('ReadexPro_600SemiBold');
+    expect(fontFamilyFor('subheading', true)).toBe('ReadexPro_600SemiBold');
+    expect(fontFamilyFor('moneyMin', true)).toBe('ReadexPro_600SemiBold');
     expect(fontFamilyFor('eyebrow', true)).toBe('ReadexPro_600SemiBold');
     expect(fontFamilyFor('body', true)).toBe('ReadexPro_400Regular');
     expect(fontFamilyFor('caption', true)).toBe('ReadexPro_400Regular');

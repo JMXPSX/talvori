@@ -7,6 +7,7 @@
 import {
   addMoney,
   formatMoney,
+  hasMultipleCurrencies,
   minorExponent,
   money,
   subtractMoney,
@@ -121,5 +122,32 @@ describe('formatMoney', () => {
     const jpy = formatMoney(money(500, 'JPY'), 'ja-JP');
     // Zero-decimal currency: no fractional part.
     expect(jpy).not.toContain('.00');
+  });
+
+  // F26: disambiguation replaces the bare symbol with the ISO code.
+  it('renders the ISO code (not a bare symbol) when disambiguating', () => {
+    const plain = formatMoney(money(650000, 'USD'), 'en-US');
+    expect(plain).toContain('$');
+    expect(plain).not.toContain('USD');
+
+    const coded = formatMoney(money(650000, 'USD'), 'en-US', { disambiguate: true });
+    expect(coded).toContain('USD');
+    expect(coded).toContain('6,500.00');
+  });
+});
+
+describe('hasMultipleCurrencies (F26)', () => {
+  it('is false for zero, one, or repeated single currency', () => {
+    expect(hasMultipleCurrencies([])).toBe(false);
+    expect(hasMultipleCurrencies(['PHP'])).toBe(false);
+    expect(hasMultipleCurrencies(['PHP', 'php', ' PHP '])).toBe(false);
+  });
+
+  it('is true once a second distinct currency appears', () => {
+    expect(hasMultipleCurrencies(['PHP', 'SAR'])).toBe(true);
+  });
+
+  it('ignores blanks', () => {
+    expect(hasMultipleCurrencies(['USD', '', '  '])).toBe(false);
   });
 });
