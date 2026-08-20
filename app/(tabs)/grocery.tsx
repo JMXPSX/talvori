@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
-import { CONTENT_MAX_WIDTH, ErrorNotice, Text } from '@/components/ui';
+import { palette, radius, spacing } from '@/components/theme';
+import { Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text } from '@/components/ui';
 import { listLists, subscribeToLists } from '@/features/grocery/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { GroceryListRow } from '@/lib/database.types';
@@ -75,7 +75,12 @@ export default function GroceryScreen() {
         ) : errorKey ? (
           <ErrorNotice message={t(errorKey)} retryLabel={t('common.retry')} onRetry={() => void load()} />
         ) : lists.length === 0 ? (
-          <Text muted>{t('grocery.empty')}</Text>
+          <EmptyState
+            icon="shopping-cart"
+            message={t('grocery.empty')}
+            ctaLabel={t('grocery.newCta')}
+            onCta={() => router.push('/grocery/new')}
+          />
         ) : (
           <View style={styles.groups}>
             {activeLists.length > 0 && (
@@ -84,12 +89,12 @@ export default function GroceryScreen() {
                   {t('grocery.activeSection')}
                 </Text>
                 {activeLists.map((l) => (
-                  <Pressable key={l.id} style={styles.card} onPress={() => router.push(`/grocery/${l.id}`)}>
-                    <Text variant="heading">{l.name}</Text>
+                  <Card key={l.id} onPress={() => router.push(`/grocery/${l.id}`)}>
+                    <Text variant="subheading">{l.name}</Text>
                     <Text variant="caption" muted>
                       {l.currency_code}
                     </Text>
-                  </Pressable>
+                  </Card>
                 ))}
               </View>
             )}
@@ -99,21 +104,21 @@ export default function GroceryScreen() {
                   {t('grocery.completedSection')}
                 </Text>
                 {completed.map((l) => (
-                  <Pressable
+                  <Card
                     key={l.id}
-                    style={[styles.card, styles.cardDone]}
+                    style={styles.cardDone}
                     onPress={() => router.push(`/grocery/${l.id}`)}
                   >
                     <View style={styles.doneTile}>
                       <Feather name="check" size={18} color={palette.success} />
                     </View>
                     <View style={styles.doneMid}>
-                      <Text variant="heading">{l.name}</Text>
+                      <Text variant="subheading">{l.name}</Text>
                       <Text variant="caption" muted>
                         {t('grocery.completedNote')}
                       </Text>
                     </View>
-                  </Pressable>
+                  </Card>
                 ))}
               </View>
             )}
@@ -146,13 +151,6 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.9 },
   groups: { gap: spacing.md },
   group: { gap: spacing.sm },
-  card: {
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: palette.surface,
-    boxShadow: elevation.tile,
-    gap: spacing.xs,
-  },
   cardDone: {
     flexDirection: 'row',
     alignItems: 'center',

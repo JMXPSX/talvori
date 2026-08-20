@@ -7,7 +7,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
+import { Button, Chip, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
 import { listAccounts, listCategories } from '@/features/finance/api';
 import {
   addItem,
@@ -206,10 +206,10 @@ export default function GroceryListScreen() {
         {errorKey ? <Text style={{ color: palette.danger }}>{t(errorKey)}</Text> : null}
 
         <View style={styles.summary}>
-          <Text variant="caption" muted>
+          <Text variant="moneyMin" muted>
             {t('grocery.estimatedTotal')}: {formatAmount(estimatedTotalMinor(items), ccy)}
           </Text>
-          <Text variant="caption" muted>
+          <Text variant="moneyMin" muted>
             {t('grocery.actualTotal')}: {formatAmount(actualTotalMinor(items), ccy)}
           </Text>
           <Text variant="caption" muted>
@@ -228,10 +228,10 @@ export default function GroceryListScreen() {
           {items.map((it) => (
             <View key={it.id} style={styles.card}>
               <View style={styles.cardRow}>
-                <Text variant="heading" style={it.is_purchased ? styles.struck : undefined}>
+                <Text variant="subheading" style={it.is_purchased ? styles.struck : undefined}>
                   {it.unit ? `${it.name} · ${it.quantity} ${it.unit}` : `${it.name} · ${it.quantity}`}
                 </Text>
-                <Text variant="caption" muted>
+                <Text variant="moneyMin" muted>
                   {formatAmount(it.actual_price_minor ?? it.estimated_price_minor ?? 0, ccy)}
                 </Text>
               </View>
@@ -298,48 +298,36 @@ export default function GroceryListScreen() {
               <View style={styles.form}>
                 <Text variant="caption" muted>{t('grocery.accountLabel')}</Text>
                 <View style={styles.chips}>
-                  {accounts.map((a) => {
-                    const on = a.id === accountId;
-                    return (
-                      <Pressable
-                        key={a.id}
-                        onPress={() => setAccountId(a.id)}
-                        style={[styles.chip, on ? styles.chipActive : null]}
-                      >
-                        <Text variant="caption" style={{ color: on ? palette.white : palette.text }}>
-                          {a.name} ({a.currency_code})
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
+                  {accounts.map((a) => (
+                    <Chip
+                      key={a.id}
+                      label={`${a.name} (${a.currency_code})`}
+                      selected={a.id === accountId}
+                      role="radio"
+                      onPress={() => setAccountId(a.id)}
+                    />
+                  ))}
                 </View>
 
                 {categories.length > 0 && (
                   <>
                     <Text variant="caption" muted>{t('grocery.categoryLabel')}</Text>
                     <View style={styles.chips}>
-                      <Pressable
+                      <Chip
+                        label={t('finance.categories.none')}
+                        selected={categoryId === null}
+                        role="radio"
                         onPress={() => setCategoryId(null)}
-                        style={[styles.chip, categoryId === null ? styles.chipActive : null]}
-                      >
-                        <Text variant="caption" style={{ color: categoryId === null ? palette.white : palette.text }}>
-                          {t('finance.categories.none')}
-                        </Text>
-                      </Pressable>
-                      {categories.map((c) => {
-                        const on = c.id === categoryId;
-                        return (
-                          <Pressable
-                            key={c.id}
-                            onPress={() => setCategoryId(c.id)}
-                            style={[styles.chip, on ? styles.chipActive : null]}
-                          >
-                            <Text variant="caption" style={{ color: on ? palette.white : palette.text }}>
-                              {c.name}
-                            </Text>
-                          </Pressable>
-                        );
-                      })}
+                      />
+                      {categories.map((c) => (
+                        <Chip
+                          key={c.id}
+                          label={c.name}
+                          selected={c.id === categoryId}
+                          role="radio"
+                          onPress={() => setCategoryId(c.id)}
+                        />
+                      ))}
                     </View>
                   </>
                 )}
@@ -357,7 +345,7 @@ export default function GroceryListScreen() {
         {isCompleted && <Text muted>{t('grocery.completedNote')}</Text>}
 
         {list ? (
-          <Button label={t('grocery.deleteListCta')} onPress={onDeleteList} style={styles.deleteButton} />
+          <Button label={t('grocery.deleteListCta')} variant="dangerQuiet" onPress={onDeleteList} />
         ) : null}
       </ScrollView>
       {sheet.element}
@@ -391,12 +379,4 @@ const styles = StyleSheet.create({
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  chip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    backgroundColor: palette.field,
-  },
-  chipActive: { backgroundColor: palette.brand },
-  deleteButton: { backgroundColor: palette.danger, marginTop: spacing.md },
 });

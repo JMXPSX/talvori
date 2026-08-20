@@ -3,11 +3,11 @@
 import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { palette, spacing } from '@/components/theme';
+import { Button, Card, CONTENT_MAX_WIDTH, EmptyState, Text, TextField } from '@/components/ui';
 import {
   createRetailer,
   listRetailers,
@@ -93,15 +93,15 @@ export default function RetailHubScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         {errorKey ? <Text style={{ color: palette.danger }}>{t(errorKey)}</Text> : null}
 
-        <View style={styles.card}>
+        <Card>
           <Text variant="caption" muted>{t('retail.activeLocation')}</Text>
-          <Text variant="heading">
+          <Text variant="subheading">
             {activeLoc ? `${activeLoc.label} — ${activeLoc.store?.name ?? ''}` : t('retail.noActiveLocation')}
           </Text>
           <Link href="/retail/locations" style={{ marginTop: spacing.xs }}>
             <Text style={{ color: palette.brand }}>{t('retail.savedLocations')}</Text>
           </Link>
-        </View>
+        </Card>
 
         <View style={styles.rowLinks}>
           <Link href="/retail/products"><Text style={{ color: palette.brand }}>{t('retail.products')}</Text></Link>
@@ -112,14 +112,14 @@ export default function RetailHubScreen() {
         {loading ? (
           <ActivityIndicator color={palette.brand} />
         ) : retailers.length === 0 ? (
-          <Text muted>{t('retail.noRetailers')}</Text>
+          <EmptyState icon="shopping-bag" message={t('retail.noRetailers')} />
         ) : (
           <View style={styles.list}>
             {retailers.map((r) => (
-              <Pressable key={r.id} style={styles.card} onPress={() => router.push(`/retail/${r.id}`)}>
-                <Text variant="heading">{r.name}</Text>
+              <Card key={r.id} onPress={() => router.push(`/retail/${r.id}`)}>
+                <Text variant="subheading">{r.name}</Text>
                 {r.country_code ? <Text variant="caption" muted>{r.country_code}</Text> : null}
-              </Pressable>
+              </Card>
             ))}
           </View>
         )}
@@ -173,12 +173,6 @@ const styles = StyleSheet.create({
   },
   list: { gap: spacing.sm },
   rowLinks: { flexDirection: 'row', gap: spacing.lg },
-  card: {
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: palette.surface,
-    boxShadow: elevation.tile, gap: spacing.xs,
-  },
   locRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },

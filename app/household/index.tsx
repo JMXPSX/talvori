@@ -7,11 +7,11 @@ import { getLocales } from 'expo-localization';
 import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { palette, spacing } from '@/components/theme';
+import { Button, Card, CONTENT_MAX_WIDTH, EmptyState, Text, TextField } from '@/components/ui';
 import { createHousehold, listMyHouseholds } from '@/features/household/api';
 import { createHouseholdSchema } from '@/features/household/schemas';
 import type { HouseholdRow } from '@/lib/database.types';
@@ -91,21 +91,22 @@ export default function HouseholdsScreen() {
         ) : loadError ? (
           <Text style={{ color: palette.danger }}>{t(loadError)}</Text>
         ) : households.length === 0 ? (
-          <Text muted>{t('household.empty')}</Text>
+          <EmptyState
+            icon="home"
+            message={t('household.empty')}
+            ctaLabel={t('household.joinTitle')}
+            onCta={() => router.push('/household/join')}
+          />
         ) : (
           <View style={styles.list}>
             {households.map((h) => (
-              <Pressable
-                key={h.id}
-                style={styles.card}
-                onPress={() => router.push(`/household/${h.id}`)}
-              >
-                <Text variant="heading">{h.name}</Text>
+              <Card key={h.id} onPress={() => router.push(`/household/${h.id}`)}>
+                <Text variant="subheading">{h.name}</Text>
                 <Text variant="caption" muted>
                   {h.reporting_currency_code}
                   {h.is_cross_border ? ' · 🌍' : ''}
                 </Text>
-              </Pressable>
+              </Card>
             ))}
           </View>
         )}
@@ -168,13 +169,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   list: { gap: spacing.sm },
-  card: {
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: palette.surface,
-    boxShadow: elevation.tile,
-    gap: spacing.xs,
-  },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.md },
   switchRow: {

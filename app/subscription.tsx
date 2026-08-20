@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
+import { palette, spacing } from '@/components/theme';
+import { Button, Card, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
 import { setHouseholdPlan } from '@/features/billing/api';
 import { PLAN_CAPABILITIES } from '@/features/billing/plans';
 import type { Capability } from '@/features/billing/plans';
@@ -51,12 +51,12 @@ export default function SubscriptionScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         {errorKey ? <Text style={{ color: palette.danger }}>{t(errorKey)}</Text> : null}
 
-        <View style={styles.card}>
+        <Card>
           <Text variant="caption" muted>{t('billing.currentPlan')}</Text>
-          <Text variant="heading">
+          <Text variant="subheading">
             {plan === 'premium' ? t('billing.planPremium') : t('billing.planFree')}
           </Text>
-        </View>
+        </Card>
 
         <Text variant="heading">{t('billing.capabilities')}</Text>
         <View style={styles.list}>
@@ -100,11 +100,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   list: { gap: spacing.sm },
-  card: {
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: palette.surface,
-    boxShadow: elevation.tile, gap: spacing.xs,
-  },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
 });
