@@ -18,7 +18,7 @@ import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { categoryBreakdown, donutArcs } from '@/features/finance/donut';
-import { sumInReporting } from '@/features/finance/fx';
+import { sumByCurrency, sumInReporting } from '@/features/finance/fx';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
 import type { AccountBalanceRow, AccountRow, LatestFxRateRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
@@ -102,6 +102,9 @@ export default function HomeScreen() {
   const consolidated = has('multi_currency_dashboard')
     ? sumInReporting(items, reporting, makeRateLookup(rates))
     : null;
+  // Free tier: honest per-currency subtotals (no locked hero — F05).
+  const perCurrency = sumByCurrency(items);
+  const multiCurrency = perCurrency.length > 1;
   const breakdown = categoryBreakdown(txns, reporting, makeRateLookup(rates), t('finance.categories.none'));
   const segments = donutArcs(breakdown.slices.map((s) => s.amountMinor)).map((a, i) => ({
     ...a,
@@ -142,11 +145,35 @@ export default function HomeScreen() {
                   ) : null}
                 </View>
               ) : (
-                <Pressable style={styles.hero} onPress={() => router.push('/subscription')}>
-                  <Text variant="eyebrow" style={styles.heroLabel}>{t('billing.capMultiCurrency')}</Text>
-                  <Text variant="heading" style={styles.heroAmount}>{t('billing.lockedTitle')}</Text>
-                  <Text variant="caption" style={styles.heroHint}>{t('billing.manageCta')}</Text>
-                </Pressable>
+                <View style={styles.hero}>
+                  <Text variant="eyebrow" style={styles.heroLabel}>{t('finance.balancesTitle')}</Text>
+                  {perCurrency.map((row) => (
+                    <View key={row.currency} style={styles.heroRow}>
+                      <Text style={styles.heroRowLabel} numberOfLines={1}>
+                        {t('finance.accountsInCurrency', { currency: row.currency })}
+                      </Text>
+                      <Text variant="moneyMin" style={styles.heroRowValue}>
+                        {formatAmount(row.totalMinor, row.currency, { disambiguate: multiCurrency })}
+                      </Text>
+                    </View>
+                  ))}
+                  <View style={styles.heroRule} />
+                  {/* One quiet upsell — never a locked hero (F05). */}
+                  <Pressable
+                    accessibilityRole="button"
+                    style={styles.upsell}
+                    onPress={() => router.push('/subscription')}
+                  >
+                    <Text style={styles.upsellText} numberOfLines={1}>
+                      {t('finance.seeOneTotal', { currency: reporting })}
+                    </Text>
+                    <View style={styles.premiumPill}>
+                      <Text variant="caption" style={styles.premiumText}>
+                        {t('billing.planPremium')}
+                      </Text>
+                    </View>
+                  </Pressable>
+                </View>
               )}
             </View>
 
@@ -264,6 +291,28 @@ const styles = StyleSheet.create({
   heroLabel: { color: palette.white, opacity: 0.85 },
   heroAmount: { color: palette.white, fontSize: 36 },
   heroHint: { color: palette.white, opacity: 0.9 },
+  heroRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  heroRowLabel: { color: palette.white, opacity: 0.9, flex: 1 },
+  heroRowValue: { color: palette.white },
+  heroRule: { height: 1, backgroundColor: palette.white, opacity: 0.2, marginVertical: spacing.xs },
+  upsell: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
+  upsellText: { color: palette.white, opacity: 0.95, flex: 1 },
+  premiumPill: {
+    backgroundColor: palette.accentMuted,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+  },
+  premiumText: { color: palette.accent },
   tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   tile: {
     flexGrow: 1,
