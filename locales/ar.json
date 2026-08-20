@@ -106,6 +106,13 @@
     "balancesTitle": "الأرصدة",
     "accountsInCurrency": "حسابات {{currency}}",
     "seeOneTotal": "شاهدها كإجمالي واحد بعملة {{currency}}",
+    "cols": {
+      "date": "التاريخ",
+      "description": "الوصف",
+      "category": "الفئة",
+      "account": "الحساب",
+      "amount": "المبلغ"
+    },
     "noHousehold": "أنشئ أسرة أولًا لبدء تتبّع أموالك.",
     "goToHouseholds": "الذهاب إلى الأسر",
     "noAccounts": "لا توجد حسابات بعد. أضف واحدًا للبدء.",

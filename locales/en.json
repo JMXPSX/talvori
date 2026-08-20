@@ -106,6 +106,13 @@
     "balancesTitle": "Balances",
     "accountsInCurrency": "{{currency}} accounts",
     "seeOneTotal": "See it as one total in {{currency}}",
+    "cols": {
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "account": "Account",
+      "amount": "Amount"
+    },
     "noHousehold": "Create a household first to start tracking money.",
     "goToHouseholds": "Go to households",
     "noAccounts": "No accounts yet. Add one to get started.",

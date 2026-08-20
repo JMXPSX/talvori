@@ -106,6 +106,13 @@
     "balancesTitle": "Mga balanse",
     "accountsInCurrency": "Mga account sa {{currency}}",
     "seeOneTotal": "Tingnan bilang isang kabuuan sa {{currency}}",
+    "cols": {
+      "date": "Petsa",
+      "description": "Paglalarawan",
+      "category": "Kategorya",
+      "account": "Account",
+      "amount": "Halaga"
+    },
     "noHousehold": "Gumawa muna ng sambahayan para magsimulang mag-track ng pera.",
     "goToHouseholds": "Pumunta sa mga sambahayan",
     "noAccounts": "Wala pang account. Magdagdag para magsimula.",
