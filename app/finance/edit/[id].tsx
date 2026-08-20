@@ -10,7 +10,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, spacing } from '@/components/theme';
-import { Button, Chip, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
+import { Button, Chip, FORM_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
 import {
   deleteTransaction,
   getTransaction,
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     gap: spacing.md,
     width: '100%',
-    maxWidth: CONTENT_MAX_WIDTH,
+    maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
   form: { gap: spacing.sm },

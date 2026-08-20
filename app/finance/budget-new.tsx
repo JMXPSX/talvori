@@ -9,7 +9,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createBudget } from '@/features/finance/planningApi';
 import { createBudgetSchema } from '@/features/finance/planningSchemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     // Cap + centre so the screen does not stretch edge to edge on a monitor.
     width: '100%',
-    maxWidth: CONTENT_MAX_WIDTH,
+    maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
 });

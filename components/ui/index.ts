@@ -24,6 +24,7 @@ export {
   BentoRow,
   BentoPage,
   CONTENT_MAX_WIDTH,
+  FORM_MAX_WIDTH,
   type BentoRowProps,
   type BentoPageProps,
 } from '@/components/ui/Bento';
