@@ -35,6 +35,8 @@
     "verifyEmailTitle": "Tingnan ang iyong email",
     "verifyEmailBody": "Nagpadala kami ng verification link sa {{email}}. Kumpirmahin ito, pagkatapos ay mag-sign in.",
     "forgotLink": "Nakalimutan ang password?",
+    "showPassword": "Ipakita ang password",
+    "hidePassword": "Itago ang password",
     "forgotTitle": "I-reset ang iyong password",
     "forgotBody": "Ilagay ang iyong email at magpapadala kami ng reset link.",
     "sendResetCta": "Ipadala ang reset link",

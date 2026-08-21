@@ -1,11 +1,17 @@
 /**
  * Labeled text input with optional hint + error text. Direction-aware so it
  * works in RTL. Copy (label/hint/error) is passed already-localized.
+ *
+ * Pass `secureToggle` on a password field to render a trailing show/hide eye
+ * (F: password visibility). The field chrome (fill + focus/error border) lives
+ * on the wrapper so the eye button can sit inside the box.
  */
 
+import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Pressable,
   StyleSheet,
   TextInput,
   View,
@@ -30,6 +36,11 @@ export interface TextFieldProps {
   autoCapitalize?: TextInputProps['autoCapitalize'];
   autoComplete?: TextInputProps['autoComplete'];
   editable?: boolean;
+  /** Render a trailing show/hide eye for password fields. */
+  secureToggle?: boolean;
+  /** a11y labels for the eye toggle (pass localized). */
+  toggleShowLabel?: string;
+  toggleHideLabel?: string;
 }
 
 export function TextField({
@@ -44,8 +55,12 @@ export function TextField({
   autoCapitalize = 'none',
   autoComplete,
   editable = true,
+  secureToggle = false,
+  toggleShowLabel,
+  toggleHideLabel,
 }: TextFieldProps) {
   const [focused, setFocused] = useState(false);
+  const [hidden, setHidden] = useState(true);
   const { i18n } = useTranslation();
   const fontFamily = fontFamilyFor('body', isArabicLanguage(i18n.language));
 
@@ -54,25 +69,39 @@ export function TextField({
       <Text variant="caption" muted>
         {label}
       </Text>
-      <TextInput
+      <View
         style={[
-          styles.input,
-          { textAlign: direction.textAlign, fontFamily },
+          styles.fieldBox,
           focused ? styles.inputFocused : null,
           error ? styles.inputError : null,
         ]}
-        value={value}
-        onChangeText={onChangeText}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        placeholder={placeholder}
-        placeholderTextColor={palette.textMuted}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        autoCapitalize={autoCapitalize}
-        autoComplete={autoComplete}
-        editable={editable}
-      />
+      >
+        <TextInput
+          style={[styles.input, { textAlign: direction.textAlign, fontFamily }]}
+          value={value}
+          onChangeText={onChangeText}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          placeholder={placeholder}
+          placeholderTextColor={palette.textMuted}
+          secureTextEntry={secureToggle ? hidden : secureTextEntry}
+          keyboardType={keyboardType}
+          autoCapitalize={autoCapitalize}
+          autoComplete={autoComplete}
+          editable={editable}
+        />
+        {secureToggle ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={hidden ? toggleShowLabel : toggleHideLabel}
+            hitSlop={10}
+            onPress={() => setHidden((h) => !h)}
+            style={styles.eye}
+          >
+            <Feather name={hidden ? 'eye' : 'eye-off'} size={18} color={palette.textMuted} />
+          </Pressable>
+        ) : null}
+      </View>
       {error ? (
         <Text variant="caption" style={styles.errorText}>
           {error}
@@ -92,14 +121,20 @@ const styles = StyleSheet.create({
   },
   // Filled, not outlined: fields must stay visible inside a white bento tile.
   // The border is always 2px and merely changes colour, so focusing never
-  // reflows the layout.
-  input: {
+  // reflows the layout. Chrome lives here so a trailing eye can sit inside.
+  fieldBox: {
+    flexDirection: direction.flexRow,
+    alignItems: 'center',
     minHeight: 48,
     borderWidth: 2,
     borderColor: 'transparent',
     borderRadius: radius.control,
     paddingHorizontal: spacing.md,
     backgroundColor: palette.field,
+  },
+  input: {
+    flex: 1,
+    paddingVertical: 0,
     color: palette.text,
   },
   inputFocused: {
@@ -107,6 +142,9 @@ const styles = StyleSheet.create({
   },
   inputError: {
     borderColor: palette.danger,
+  },
+  eye: {
+    paddingStart: spacing.sm,
   },
   errorText: {
     color: palette.danger,

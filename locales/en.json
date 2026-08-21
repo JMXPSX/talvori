@@ -35,6 +35,8 @@
     "verifyEmailTitle": "Check your email",
     "verifyEmailBody": "We sent a verification link to {{email}}. Confirm it, then sign in.",
     "forgotLink": "Forgot password?",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "forgotTitle": "Reset your password",
     "forgotBody": "Enter your email and we'll send you a reset link.",
     "sendResetCta": "Send reset link",
