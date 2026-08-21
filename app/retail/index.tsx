@@ -7,19 +7,12 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, spacing } from '@/components/theme';
-import { Button, Card, CONTENT_MAX_WIDTH, EmptyState, Text, TextField } from '@/components/ui';
-import {
-  createRetailer,
-  listRetailers,
-  listSavedLocations,
-  setActiveLocation,
-} from '@/features/retail/api';
+import { Button, Card, CONTENT_MAX_WIDTH, EmptyState, Text } from '@/components/ui';
+import { listRetailers, listSavedLocations, setActiveLocation } from '@/features/retail/api';
 import type { SavedLocationWithStore } from '@/features/retail/api';
-import { createRetailerSchema } from '@/features/retail/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { RetailerRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
-import { validate } from '@/lib/validation';
 
 export default function RetailHubScreen() {
   const { t } = useTranslation();
@@ -30,9 +23,6 @@ export default function RetailHubScreen() {
   const [locations, setLocations] = useState<SavedLocationWithStore[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
-  const [name, setName] = useState('');
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-  const [submitting, setSubmitting] = useState(false);
 
   const load = useCallback(async () => {
     if (!active) {
@@ -66,26 +56,6 @@ export default function RetailHubScreen() {
     }
   }
 
-  async function onAddRetailer() {
-    if (!active) return;
-    const result = validate(createRetailerSchema, { name });
-    if (!result.success) {
-      setFieldErrors(result.fieldErrors);
-      return;
-    }
-    setFieldErrors({});
-    setSubmitting(true);
-    try {
-      await createRetailer(active.id, result.data);
-      setName('');
-      await load();
-    } catch (err) {
-      setErrorKey(toAppError(err).messageKey);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
   const activeLoc = locations.find((l) => l.is_active) ?? null;
 
   return (
@@ -112,7 +82,12 @@ export default function RetailHubScreen() {
         {loading ? (
           <ActivityIndicator color={palette.brand} />
         ) : retailers.length === 0 ? (
-          <EmptyState icon="shopping-bag" message={t('retail.noRetailers')} />
+          <EmptyState
+            icon="shopping-bag"
+            message={t('retail.noRetailers')}
+            ctaLabel={t('retail.addRetailer')}
+            onCta={() => router.push('/retail/new')}
+          />
         ) : (
           <View style={styles.list}>
             {retailers.map((r) => (
@@ -139,23 +114,6 @@ export default function RetailHubScreen() {
             ))}
           </View>
         )}
-
-        <View style={styles.divider} />
-        <Text variant="heading">{t('retail.addRetailer')}</Text>
-        <View style={styles.form}>
-          <TextField
-            label={t('retail.retailerName')}
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="sentences"
-            error={fieldErrors.name ? t('errors.validation') : undefined}
-          />
-          <Button
-            label={submitting ? t('auth.processing') : t('retail.addRetailer')}
-            onPress={onAddRetailer}
-            loading={submitting}
-          />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -174,6 +132,4 @@ const styles = StyleSheet.create({
   list: { gap: spacing.sm },
   rowLinks: { flexDirection: 'row', gap: spacing.lg },
   locRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
-  form: { gap: spacing.sm },
 });
