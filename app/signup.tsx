@@ -97,7 +97,9 @@ export default function SignupScreen() {
           label={t('auth.passwordLabel')}
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
+          secureToggle
+          toggleShowLabel={t('auth.showPassword')}
+          toggleHideLabel={t('auth.hidePassword')}
           autoComplete="new-password"
           hint={t('auth.passwordHint')}
           error={

@@ -35,6 +35,8 @@
     "verifyEmailTitle": "Tingnan ang iyong email",
     "verifyEmailBody": "Nagpadala kami ng verification link sa {{email}}. Kumpirmahin ito, pagkatapos ay mag-sign in.",
     "forgotLink": "Nakalimutan ang password?",
+    "showPassword": "Ipakita ang password",
+    "hidePassword": "Itago ang password",
     "forgotTitle": "I-reset ang iyong password",
     "forgotBody": "Ilagay ang iyong email at magpapadala kami ng reset link.",
     "sendResetCta": "Ipadala ang reset link",
@@ -72,6 +74,8 @@
     "currencyLabel": "Reporting currency",
     "currencyHint": "ISO code, hal. USD, PHP, SAR",
     "crossBorderLabel": "Nakatira sa magkakaibang bansa ang mga miyembro",
+    "crossBorderExplainer": "Bubuksan ang pagsubaybay ng remittance at mga view ng FX.",
+    "joinInstead": "May invite code? Sumali na lang",
     "createCta": "Gumawa ng sambahayan",
     "membersTitle": "Mga Miyembro",
     "invitationsTitle": "Mga nakabinbing imbitasyon",
@@ -103,6 +107,16 @@
   },
   "finance": {
     "overviewTitle": "Mga Account",
+    "balancesTitle": "Mga balanse",
+    "accountsInCurrency": "Mga account sa {{currency}}",
+    "seeOneTotal": "Tingnan bilang isang kabuuan sa {{currency}}",
+    "cols": {
+      "date": "Petsa",
+      "description": "Paglalarawan",
+      "category": "Kategorya",
+      "account": "Account",
+      "amount": "Halaga"
+    },
     "noHousehold": "Gumawa muna ng sambahayan para magsimulang mag-track ng pera.",
     "goToHouseholds": "Pumunta sa mga sambahayan",
     "noAccounts": "Wala pang account. Magdagdag para magsimula.",
@@ -111,6 +125,7 @@
     "addExpense": "Magdagdag ng gastos",
     "addTransfer": "Ilipat",
     "recentTitle": "Mga kamakailang transaksyon",
+    "recentAll": "Lahat ng transaksyon",
     "noTransactions": "Wala pang transaksyon.",
     "delete": "Burahin",
     "newTransaction": "Bagong transaksyon",
@@ -143,6 +158,14 @@
       "descriptionLabel": "Tala (opsyonal)",
       "saveCta": "I-save",
       "noAccounts": "Magdagdag muna ng account."
+    },
+    "edit": {
+      "title": "I-edit ang transaksyon",
+      "dateLabel": "Petsa (YYYY-MM-DD)",
+      "saveCta": "I-save ang mga pagbabago",
+      "deleteCta": "Burahin ang transaksyon",
+      "transferNote": "Ang mga transfer ay ine-edit mula sa screen ng transfer.",
+      "notFound": "Wala na ang transaksyong ito."
     },
     "transfer": {
       "title": "Ilipat",
@@ -180,6 +203,11 @@
   },
   "planning": {
     "hubTitle": "Pagpaplano",
+    "plan": {
+      "usedPct": "{{pct}}% nagamit",
+      "safePerDay": "Ligtas gastusin {{amount}}/araw",
+      "manage": "Pamahalaan"
+    },
     "budgets": {
       "title": "Mga Badyet",
       "hub": "Mga Badyet",
@@ -305,6 +333,9 @@
     "deleteListCta": "Burahin ang listahan",
     "confirmDeleteListTitle": "Burahin ang listahang ito?",
     "confirmDeleteListBody": "Aalisin nito ang listahan at lahat ng item nito para sa buong sambahayan.",
+    "confirmDeleteItemTitle": "Alisin ang item na ito?",
+    "confirmDeleteItemBody": "Aalisin ito sa listahan para sa buong sambahayan.",
+    "actualPromptTitle": "Magkano ang nagastos?",
     "errors": {
       "loadFailed": "Hindi ma-load ang mga listahan.",
       "listFailed": "Hindi magawa ang listahan.",
@@ -338,6 +369,11 @@
     "noActiveLocation": "Walang aktibong lokasyon",
     "retailers": "Mga tindahan",
     "addRetailer": "Magdagdag ng tindahan",
+    "manage": "Pamahalaan",
+    "directoryTitle": "Mga sikat na tindahan",
+    "directorySearch": "Maghanap ng tindahan",
+    "add": "Idagdag",
+    "customTitle": "Hindi mahanap ang tindahan? Idagdag nang manu-mano",
     "retailerName": "Pangalan ng tindahan",
     "country": "Country code",
     "website": "Website",
@@ -445,6 +481,15 @@
     "currentPlan": "Kasalukuyang plano",
     "planFree": "Libre",
     "planPremium": "Premium",
+    "currentPill": "Kasalukuyan",
+    "freeSentence": "Nananatiling kapaki-pakinabang ang Free — subaybayan ang badyet, mga listahan, at pera sa mga account.",
+    "premiumTagline": "Nakapresyo para sa iyong rehiyon, sinisingil sa iyong lokal na pera.",
+    "tryPremium": "Subukan ang Premium — 14 na araw na libre",
+    "billingFooter": "Sinisingil sa App Store o Google Play sa iyong lokal na pera. Ang may-ari lang ng sambahayan ang makakapagbago ng plano.",
+    "jobOneTotal": "Tingnan ang isang kabuuan sa lahat ng iyong pera",
+    "jobCompare": "Ihambing ang buong basket sa mga tindahan",
+    "jobCoupons": "Maghanap ng mga kupon na akma sa iyong listahan",
+    "jobInsights": "Mga insight kung saan napupunta ang pera mo",
     "capabilities": "Kasama sa Premium",
     "capMultiCurrency": "Multi-currency na dashboard",
     "capRetailComparison": "Paghahambing ng presyo",
@@ -481,6 +526,22 @@
       "deleteFailed": "Hindi mabura ang iyong account. Subukan muli.",
       "exportFailed": "Hindi mabuo ang export. Subukan muli."
     }
+  },
+  "insights": {
+    "title": "Mga insight",
+    "whereItWent": "Saan napunta ngayong {{month}}",
+    "totalSpent": "Kabuuang nagastos",
+    "avgPerDay": "Karaniwan / araw",
+    "transactions": "Mga transaksyon",
+    "empty": "Wala pang gastos ngayong buwan."
+  },
+  "currency": {
+    "title": "Pumili ng pera",
+    "placeholder": "Pumili ng pera",
+    "search": "Maghanap ng pera",
+    "suggested": "Iminumungkahi",
+    "all": "Lahat ng pera",
+    "explainer": "Piliin ang perang gagamitin nito. Mababago mo ito mamaya."
   },
   "errors": {
     "unknown":"May naganap na mali. Pakisubukang muli.",

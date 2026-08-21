@@ -33,9 +33,8 @@ export function ProgressRing({
   children,
 }: ProgressRingProps) {
   const f = Math.max(0, Math.min(1, fraction));
-  // Modernist: ink arc on a neutral track by default; vermilion only when full/over.
-  const track = state === 'over' ? palette.brandMuted : palette.surfaceMuted;
-  const fill = state === 'normal' ? palette.text : palette.brand;
+  const track = state === 'over' ? palette.dangerMuted : palette.brandMuted;
+  const fill = state === 'over' ? palette.danger : state === 'full' ? palette.accent : palette.brand;
 
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;

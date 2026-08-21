@@ -35,7 +35,7 @@ import { budgetRemainingMinor } from '@/features/finance/progress';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { BudgetRow, BudgetStatusRow, CategoryRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
-import { formatAmount } from '@/lib/format';
+import { formatAmount, formatDateRange, localeTag } from '@/lib/format';
 import { toMinorUnits } from '@/lib/money';
 import { validate } from '@/lib/validation';
 
@@ -192,7 +192,7 @@ export default function BudgetsScreen() {
                 <Pressable key={b.id} onPress={() => selectBudget(b)}>
                   <Card style={isSel ? styles.cardSelected : undefined}>
                   <View style={styles.cardHeader}>
-                    <Text variant="heading">{b.name}</Text>
+                    <Text variant="subheading">{b.name}</Text>
                     <Pressable
                       accessibilityRole="button"
                       accessibilityLabel={t('finance.delete')}
@@ -203,7 +203,7 @@ export default function BudgetsScreen() {
                     </Pressable>
                   </View>
                   <Text variant="caption" muted>
-                    {b.currency_code} · {b.period_start} → {b.period_end}
+                    {b.currency_code} · {formatDateRange(b.period_start, b.period_end, localeTag())}
                   </Text>
                   </Card>
                 </Pressable>
@@ -241,19 +241,19 @@ export default function BudgetsScreen() {
                           {categoryName(row.category_id)}
                         </Text>
                         {over ? (
-                          <Text variant="caption" style={styles.overCaption}>
+                          <Text variant="moneyMin" style={styles.overCaption}>
                             {t('planning.budgets.overBy', {
                               amount: formatAmount(-remaining, row.currency_code),
                             })}
                           </Text>
                         ) : (
-                          <Text variant="caption" style={styles.leftCaption}>
+                          <Text variant="moneyMin" style={styles.leftCaption}>
                             {t('planning.budgets.left', {
                               amount: formatAmount(remaining, row.currency_code),
                             })}
                           </Text>
                         )}
-                        <Text variant="caption" muted>
+                        <Text variant="moneyMin" muted>
                           {formatAmount(row.spent_minor, row.currency_code)} /{' '}
                           {formatAmount(row.limit_minor, row.currency_code)}
                         </Text>
@@ -281,6 +281,7 @@ export default function BudgetsScreen() {
                 <Chip
                   label={t('planning.budgets.uncategorized')}
                   selected={allocCategory === null}
+                  role="radio"
                   onPress={() => setAllocCategory(null)}
                 />
                 {categories.map((c) => (
@@ -288,6 +289,7 @@ export default function BudgetsScreen() {
                     key={c.id}
                     label={c.name}
                     selected={c.id === allocCategory}
+                    role="radio"
                     onPress={() => setAllocCategory(c.id)}
                   />
                 ))}

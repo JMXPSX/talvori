@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
+import { palette, spacing } from '@/components/theme';
+import { Button, Card, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { listItems } from '@/features/grocery/api';
 import { bestFloorMinor, compareColumns } from '@/features/retail/basket';
@@ -99,11 +99,11 @@ export default function CompareScreen() {
     return (
       <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
         <View style={styles.content}>
-          <View style={styles.card}>
+          <Card>
             <Text variant="heading">{t('billing.lockedTitle')}</Text>
             <Text muted>{t('billing.lockedBody')}</Text>
             <Button label={t('billing.manageCta')} onPress={() => router.push('/subscription')} />
-          </View>
+          </Card>
         </View>
       </SafeAreaView>
     );
@@ -130,9 +130,9 @@ export default function CompareScreen() {
           <>
             <View style={styles.list}>
               {columns.map((col, idx) => (
-                <View key={col.columnKey} style={styles.card}>
+                <Card key={col.columnKey}>
                   <View style={styles.cardRow}>
-                    <Text variant="heading">{labels[col.columnKey] ?? col.columnKey}</Text>
+                    <Text variant="subheading">{labels[col.columnKey] ?? col.columnKey}</Text>
                     <Text variant="heading">{formatAmount(col.totalMinor, ccy)}</Text>
                   </View>
                   <View style={styles.cardRow}>
@@ -145,12 +145,12 @@ export default function CompareScreen() {
                       <Text variant="caption" muted>{t('grocery.compare.missing', { count: col.missingCount })}</Text>
                     ) : null}
                   </View>
-                </View>
+                </Card>
               ))}
             </View>
 
-            <View style={styles.card}>
-              <Text variant="caption" muted>
+            <Card>
+              <Text variant="moneyMin" muted>
                 {t('grocery.compare.floor', {
                   total: formatAmount(floor.totalMinor, ccy),
                   priced: floor.pricedCount,
@@ -158,11 +158,11 @@ export default function CompareScreen() {
                 })}
               </Text>
               {potentialSavings > 0 ? (
-                <Text variant="caption" style={{ color: palette.brand }}>
+                <Text variant="moneyMin" style={{ color: palette.brand }}>
                   {t('grocery.compare.potentialSavings', { amount: formatAmount(potentialSavings, ccy) })}
                 </Text>
               ) : null}
-            </View>
+            </Card>
           </>
         )}
       </ScrollView>
@@ -181,11 +181,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   list: { gap: spacing.sm },
-  card: {
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: palette.surface,
-    boxShadow: elevation.tile, gap: spacing.xs,
-  },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
 });

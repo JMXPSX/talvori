@@ -9,7 +9,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { Button, CurrencyField, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createList } from '@/features/grocery/api';
 import { createListSchema } from '@/features/grocery/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -74,12 +74,11 @@ export default function GroceryNewScreen() {
               autoCapitalize="sentences"
               error={fieldErrors.name ? t('errors.validation') : undefined}
             />
-            <TextField
+            <CurrencyField
               label={t('grocery.currencyLabel')}
               value={currency}
-              onChangeText={setCurrencyInput}
-              hint={t('household.currencyHint')}
-              autoCapitalize="characters"
+              onChange={setCurrencyInput}
+              suggested={active ? [active.reporting_currency_code] : []}
               error={fieldErrors.currencyCode ? t('errors.validation') : undefined}
             />
             {errorKey ? (
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     // Cap + centre so the screen does not stretch edge to edge on a monitor.
     width: '100%',
-    maxWidth: CONTENT_MAX_WIDTH,
+    maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
 });

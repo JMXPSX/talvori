@@ -1,16 +1,20 @@
 /**
- * Typography faces for the "Modernist" system.
- *   - All Latin roles: Archivo (geometric grotesque; 400 body, 800 for every
- *     heading/label/button — the system leans hard on the ExtraBold weight).
- *   - Arabic (all roles): Readex Pro (harmonizes with the grotesque Latin, full
- *     Arabic coverage — Archivo has none) — RN selects weight by FAMILY name,
- *     not fontWeight, so each weight is its own family.
+ * Typography faces for the "ibilly" system.
+ *   - All Latin roles: Plus Jakarta Sans (geometric, friendly, strong figures)
+ *   - Arabic (all roles): Readex Pro (harmonizes with the geometric Latin, full
+ *     Arabic coverage — Plus Jakarta Sans has none) — RN selects weight by FAMILY
+ *     name, not fontWeight, so each weight is its own family.
  *
  * `fontMap` is passed to expo-font's useFonts(); `fontFamilyFor` picks the family
  * for a typography variant, switching to the Arabic face when the UI is in Arabic.
  */
 
-import { Archivo_400Regular, Archivo_800ExtraBold } from '@expo-google-fonts/archivo';
+import {
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+} from '@expo-google-fonts/plus-jakarta-sans';
 import {
   ReadexPro_400Regular,
   ReadexPro_600SemiBold,
@@ -20,8 +24,10 @@ import {
 import type { TypographyVariant } from '@/components/theme';
 
 export const fontMap = {
-  Archivo_400Regular,
-  Archivo_800ExtraBold,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
   ReadexPro_400Regular,
   ReadexPro_600SemiBold,
   ReadexPro_700Bold,
@@ -34,23 +40,29 @@ export function fontFamilyFor(variant: TypographyVariant, isArabic: boolean): st
       case 'title':
         return 'ReadexPro_700Bold';
       case 'heading':
+      case 'subheading':
+      case 'moneyMin':
       case 'button':
       case 'eyebrow':
         return 'ReadexPro_600SemiBold';
-      // Readex Pro has no ExtraBold; headings cap at 700, body/caption at regular.
+      // Readex Pro has no medium; caption falls back to regular.
       default:
         return 'ReadexPro_400Regular';
     }
   }
   switch (variant) {
     case 'title':
+      return 'PlusJakartaSans_700Bold';
     case 'heading':
+    case 'subheading':
+    case 'moneyMin':
     case 'button':
     case 'eyebrow':
-      return 'Archivo_800ExtraBold';
-    // Modernist body and captions are the single regular weight.
+      return 'PlusJakartaSans_600SemiBold';
+    case 'caption':
+      return 'PlusJakartaSans_500Medium';
     default:
-      return 'Archivo_400Regular';
+      return 'PlusJakartaSans_400Regular';
   }
 }
 

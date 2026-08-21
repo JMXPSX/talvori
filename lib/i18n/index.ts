@@ -7,11 +7,6 @@
  * hard-coded copy anywhere in the app.
  */
 
-// Polyfill Intl.PluralRules for JS engines that lack it (e.g. Hermes on Android),
-// so i18next resolves plurals natively (incl. Arabic's forms) instead of falling
-// back to legacy compatibility handling. Must run before i18next initializes.
-import 'intl-pluralrules';
-
 import { getLocales } from 'expo-localization';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';

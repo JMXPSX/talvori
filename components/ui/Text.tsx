@@ -6,7 +6,12 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { Text as RNText, type TextProps as RNTextProps, StyleSheet } from 'react-native';
+import {
+  Text as RNText,
+  type TextProps as RNTextProps,
+  type TextStyle,
+  StyleSheet,
+} from 'react-native';
 
 import { palette, typography, type TypographyVariant } from '@/components/theme';
 import { fontFamilyFor, isArabicLanguage } from '@/lib/fonts';
@@ -15,20 +20,19 @@ import { direction } from '@/lib/rtl';
 export interface TextProps extends RNTextProps {
   variant?: TypographyVariant;
   muted?: boolean;
-  /** Tabular (equal-width) figures — for money and any data that sits in columns. */
-  tabular?: boolean;
 }
 
-export function Text({ variant = 'body', muted = false, tabular = false, style, ...rest }: TextProps) {
+export function Text({ variant = 'body', muted = false, style, ...rest }: TextProps) {
   const { i18n } = useTranslation();
   const fontFamily = fontFamilyFor(variant, isArabicLanguage(i18n.language));
   return (
     <RNText
       style={[
         styles.base,
-        typography[variant],
+        // Cast: `moneyMin`'s `fontVariant` is a readonly tuple under `as const`,
+        // which RN's mutable TextStyle['fontVariant'] doesn't accept structurally.
+        typography[variant] as TextStyle,
         { fontFamily, color: muted ? palette.textMuted : palette.text, textAlign: direction.textAlign },
-        tabular ? styles.tabular : null,
         style,
       ]}
       {...rest}
@@ -39,8 +43,5 @@ export function Text({ variant = 'body', muted = false, tabular = false, style, 
 const styles = StyleSheet.create({
   base: {
     includeFontPadding: false,
-  },
-  tabular: {
-    fontVariant: ['tabular-nums'],
   },
 });

@@ -5,15 +5,23 @@ import { Feather } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, I18nManager, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
 import { BentoPage, Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
-import { deleteTransaction, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
+import { listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
+import { useIsWideLayout } from '@/lib/breakpoints';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
+
+/** Category pill tint by transaction type (2b table). */
+function catTint(type: TransactionWithRefs['type']): { bg: string; fg: string } {
+  if (type === 'income') return { bg: palette.successMuted, fg: palette.success };
+  if (type === 'transfer') return { bg: palette.accentMuted, fg: palette.accent };
+  return { bg: palette.brandMuted, fg: palette.brand };
+}
 
 type DayGroup = { key: string; label: string; items: TransactionWithRefs[] };
 
@@ -66,7 +74,11 @@ export default function TransactionsScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const { active, loading: hLoading } = useActiveHousehold();
+  const isWide = useIsWideLayout();
   const sheet = useActionSheet();
+
+  const shortDate = (iso: string): string =>
+    new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric' }).format(new Date(iso));
 
   const [items, setItems] = useState<TransactionWithRefs[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,30 +113,6 @@ export default function TransactionsScreen() {
         { label: t('finance.addIncome'), onPress: () => router.push('/finance/entry?type=income') },
         { label: t('finance.addExpense'), onPress: () => router.push('/finance/entry?type=expense') },
         { label: t('finance.addTransfer'), onPress: () => router.push('/finance/transfer') },
-      ],
-    });
-  }
-
-  function onDelete(id: string) {
-    sheet.show({
-      title: t('finance.confirmDeleteTitle'),
-      message: t('finance.confirmDeleteBody'),
-      cancelLabel: t('common.cancel'),
-      actions: [
-        {
-          label: t('finance.delete'),
-          destructive: true,
-          onPress: () => {
-            void (async () => {
-              try {
-                await deleteTransaction(id);
-                await load();
-              } catch (err) {
-                setErrorKey(toAppError(err).messageKey);
-              }
-            })();
-          },
-        },
       ],
     });
   }
@@ -183,6 +171,60 @@ export default function TransactionsScreen() {
             ctaLabel={t('finance.addExpense')}
             onCta={() => router.push('/finance/entry?type=expense')}
           />
+        ) : isWide ? (
+          <Card style={styles.table}>
+            <View style={[styles.trow, styles.thead]}>
+              <Text variant="caption" muted style={[styles.th, styles.cDate]}>{t('finance.cols.date')}</Text>
+              <Text variant="caption" muted style={[styles.th, styles.cDesc]}>{t('finance.cols.description')}</Text>
+              <Text variant="caption" muted style={[styles.th, styles.cCat]}>{t('finance.cols.category')}</Text>
+              <Text variant="caption" muted style={[styles.th, styles.cAcct]}>{t('finance.cols.account')}</Text>
+              <Text variant="caption" muted style={[styles.th, styles.cAmt]}>{t('finance.cols.amount')}</Text>
+              <View style={styles.cEdit} />
+            </View>
+            {items.map((tx, index) => {
+              const positive = tx.direction === 'in';
+              const tint = catTint(tx.type);
+              return (
+                <Pressable
+                  key={tx.id}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('finance.edit.title')}
+                  onPress={() => router.push(`/finance/edit/${tx.id}`)}
+                  style={(s) => {
+                    const st = s as { pressed?: boolean; hovered?: boolean };
+                    return [
+                      styles.trow,
+                      index > 0 ? styles.rowDivider : null,
+                      st.hovered ? styles.trowHover : null,
+                      st.pressed ? styles.pressed : null,
+                    ];
+                  }}
+                >
+                  <Text variant="caption" muted style={styles.cDate}>{shortDate(tx.occurred_at)}</Text>
+                  <Text style={styles.cDesc} numberOfLines={1}>
+                    {tx.description || typeLabel(tx.type)}
+                  </Text>
+                  <View style={styles.cCat}>
+                    <View style={[styles.pill, { backgroundColor: tint.bg }]}>
+                      <Text variant="caption" style={{ color: tint.fg }} numberOfLines={1}>
+                        {tx.category?.name ?? typeLabel(tx.type)}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text variant="caption" muted style={styles.cAcct} numberOfLines={1}>
+                    {tx.account?.name ?? ''}
+                  </Text>
+                  <Text variant="moneyMin" style={[styles.cAmt, positive ? styles.amountIn : null]}>
+                    {positive ? '+' : '−'}
+                    {formatAmount(tx.amount_minor, tx.currency_code)}
+                  </Text>
+                  <View style={styles.cEdit}>
+                    <Feather name="edit-2" size={16} color={palette.textMuted} />
+                  </View>
+                </Pressable>
+              );
+            })}
+          </Card>
         ) : (
           <View style={styles.groups}>
             {groups.map((group) => (
@@ -196,7 +238,17 @@ export default function TransactionsScreen() {
                     const icon = typeIcon(tx.type);
                     const caption = [tx.category?.name, tx.account?.name].filter(Boolean).join(' · ');
                     return (
-                      <View key={tx.id} style={[styles.row, index > 0 ? styles.rowDivider : null]}>
+                      <Pressable
+                        key={tx.id}
+                        accessibilityRole="button"
+                        accessibilityLabel={t('finance.edit.title')}
+                        onPress={() => router.push(`/finance/edit/${tx.id}`)}
+                        style={({ pressed }) => [
+                          styles.row,
+                          index > 0 ? styles.rowDivider : null,
+                          pressed ? styles.pressed : null,
+                        ]}
+                      >
                         <View style={[styles.iconTile, { backgroundColor: icon.bg }]}>
                           <Feather name={icon.name} size={18} color={icon.color} />
                         </View>
@@ -209,22 +261,18 @@ export default function TransactionsScreen() {
                           ) : null}
                         </View>
                         <Text
-                          variant="button"
+                          variant="moneyMin"
                           style={positive ? styles.amountIn : null}
                         >
                           {positive ? '+' : '−'}
                           {formatAmount(tx.amount_minor, tx.currency_code)}
                         </Text>
-                        <Pressable
-                          accessibilityRole="button"
-                          accessibilityLabel={t('finance.delete')}
-                          hitSlop={12}
-                          onPress={() => onDelete(tx.id)}
-                          style={({ pressed }) => (pressed ? styles.pressed : null)}
-                        >
-                          <Feather name="trash-2" size={18} color={palette.textMuted} />
-                        </Pressable>
-                      </View>
+                        <Feather
+                          name={I18nManager.isRTL ? 'chevron-left' : 'chevron-right'}
+                          size={20}
+                          color={palette.textMuted}
+                        />
+                      </Pressable>
                     );
                   })}
                 </Card>
@@ -279,4 +327,29 @@ const styles = StyleSheet.create({
   },
   rowMid: { flex: 1, gap: 2 },
   amountIn: { color: palette.success },
+  // 2b desktop table
+  table: { padding: 0, gap: 0 },
+  trow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+  },
+  thead: { paddingVertical: spacing.sm },
+  th: { letterSpacing: 0.5 },
+  trowHover: { backgroundColor: palette.field },
+  cDate: { width: 84 },
+  cDesc: { flex: 1, minWidth: 0 },
+  cCat: { width: 150 },
+  cAcct: { width: 150 },
+  cAmt: { width: 130, textAlign: 'right' },
+  cEdit: { width: 24, alignItems: 'center' },
+  pill: {
+    alignSelf: 'flex-start',
+    maxWidth: '100%',
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+  },
 });

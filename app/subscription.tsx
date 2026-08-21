@@ -1,26 +1,23 @@
-/** Subscription: current plan + premium capabilities. Owner sees a manual
- *  plan toggle (pre-billing placeholder; 6b replaces it with real purchases). */
+/** Subscription (3e redesign): an honest free card + a branded premium card with
+ *  job-framed benefits and regional-billing footer. The owner's manual toggle is
+ *  a DEV-ONLY affordance (6b replaces it with real in-app purchases). */
 
+import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
+import { Button, Card, FORM_MAX_WIDTH, Text } from '@/components/ui';
 import { setHouseholdPlan } from '@/features/billing/api';
-import { PLAN_CAPABILITIES } from '@/features/billing/plans';
-import type { Capability } from '@/features/billing/plans';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
 
-const CAP_LABEL: Record<Capability, string> = {
-  multi_currency_dashboard: 'billing.capMultiCurrency',
-  retail_comparison: 'billing.capRetailComparison',
-  coupons: 'billing.capCoupons',
-};
+/** Premium value, framed as jobs the household gets done (not feature names). */
+const JOBS = ['billing.jobOneTotal', 'billing.jobCompare', 'billing.jobCoupons', 'billing.jobInsights'];
 
 export default function SubscriptionScreen() {
   const { t } = useTranslation();
@@ -49,34 +46,54 @@ export default function SubscriptionScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
+        <Text variant="title">{t('billing.title')}</Text>
         {errorKey ? <Text style={{ color: palette.danger }}>{t(errorKey)}</Text> : null}
 
-        <View style={styles.card}>
-          <Text variant="caption" muted>{t('billing.currentPlan')}</Text>
-          <Text variant="heading">
-            {plan === 'premium' ? t('billing.planPremium') : t('billing.planFree')}
-          </Text>
-        </View>
+        <Card>
+          <View style={styles.cardHead}>
+            <Text variant="subheading">{t('billing.planFree')}</Text>
+            {plan === 'free' ? (
+              <View style={styles.pill}>
+                <Text variant="caption" muted>{t('billing.currentPill')}</Text>
+              </View>
+            ) : null}
+          </View>
+          <Text muted>{t('billing.freeSentence')}</Text>
+        </Card>
 
-        <Text variant="heading">{t('billing.capabilities')}</Text>
-        <View style={styles.list}>
-          {PLAN_CAPABILITIES.premium.map((c) => (
-            <Text key={c} muted>• {t(CAP_LABEL[c])}</Text>
-          ))}
-        </View>
+        <Card style={styles.premiumCard}>
+          <View style={styles.cardHead}>
+            <Text variant="subheading" style={styles.white}>{t('billing.planPremium')}</Text>
+            {plan === 'premium' ? (
+              <View style={styles.pillAccent}>
+                <Text variant="caption" style={styles.pillAccentText}>{t('billing.currentPill')}</Text>
+              </View>
+            ) : null}
+          </View>
+          <Text style={styles.whiteMuted}>{t('billing.premiumTagline')}</Text>
+          <View style={styles.jobs}>
+            {JOBS.map((j) => (
+              <View key={j} style={styles.jobRow}>
+                <View style={styles.jobCheck}>
+                  <Feather name="check" size={14} color={palette.accent} />
+                </View>
+                <Text style={styles.white}>{t(j)}</Text>
+              </View>
+            ))}
+          </View>
+        </Card>
 
-        <View style={styles.divider} />
+        <Text variant="caption" muted>{t('billing.billingFooter')}</Text>
 
-        {/* The manual toggle is a DEV-ONLY testing affordance. In production
-            builds (__DEV__ === false) it disappears so it can't be a free-premium
-            hole — real upgrades arrive with billing (6b). */}
+        {/* DEV-ONLY manual toggle — hidden in production so it can't be a
+            free-premium hole. Real upgrades arrive with billing (6b). */}
         {isOwner && __DEV__ ? (
           <View style={styles.list}>
             <Text variant="caption" muted>{t('billing.placeholderNote')}</Text>
             {plan === 'premium' ? (
               <Button label={t('billing.switchToFree')} variant="secondary" onPress={() => switchTo('free')} loading={busy} />
             ) : (
-              <Button label={t('billing.switchToPremium')} variant="accent" onPress={() => switchTo('premium')} loading={busy} />
+              <Button label={t('billing.tryPremium')} onPress={() => switchTo('premium')} loading={busy} />
             )}
           </View>
         ) : isOwner ? (
@@ -94,17 +111,36 @@ const styles = StyleSheet.create({
   content: {
     padding: spacing.lg,
     gap: spacing.md,
-    // Cap + centre so the screen does not stretch edge to edge on a monitor.
     width: '100%',
-    maxWidth: CONTENT_MAX_WIDTH,
+    maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
   list: { gap: spacing.sm },
-  card: {
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: palette.surface,
-    boxShadow: elevation.tile, gap: spacing.xs,
+  cardHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  pill: {
+    backgroundColor: palette.field,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
   },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  pillAccent: {
+    backgroundColor: palette.accentMuted,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+  },
+  pillAccentText: { color: palette.accent },
+  premiumCard: { backgroundColor: palette.brand, boxShadow: elevation.raised },
+  white: { color: palette.white },
+  whiteMuted: { color: palette.white, opacity: 0.85 },
+  jobs: { gap: spacing.sm, marginTop: spacing.xs },
+  jobRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  jobCheck: {
+    width: 22,
+    height: 22,
+    borderRadius: radius.pill,
+    backgroundColor: palette.accentMuted,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

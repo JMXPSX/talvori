@@ -118,6 +118,46 @@ export async function listTransactions(
   return (data ?? []) as unknown as TransactionWithRefs[];
 }
 
+/** Fetch one transaction with its account + category, for the edit sheet (3a). */
+export async function getTransaction(id: string): Promise<TransactionWithRefs | null> {
+  const { data, error } = await getSupabase()
+    .from('transactions')
+    .select('*, account:accounts(id,name,currency_code), category:categories(id,name)')
+    .eq('id', id)
+    .maybeSingle();
+  if (error) fail('finance.errors.loadFailed', error);
+  return (data as unknown as TransactionWithRefs) ?? null;
+}
+
+/**
+ * Patch an existing transaction (3a edit sheet). Only the provided fields are
+ * written. `categoryId`/`description` accept `null` to clear. Amount stays in
+ * integer minor units; RLS re-checks writer permission. Transfers are edited via
+ * their own flow, not here.
+ */
+export async function updateTransaction(
+  id: string,
+  patch: {
+    accountId?: string;
+    amountMinor?: number;
+    currencyCode?: string;
+    categoryId?: string | null;
+    description?: string | null;
+    occurredAt?: string;
+  },
+): Promise<void> {
+  const update: Record<string, unknown> = {};
+  if (patch.accountId !== undefined) update.account_id = patch.accountId;
+  if (patch.amountMinor !== undefined) update.amount_minor = patch.amountMinor;
+  if (patch.currencyCode !== undefined) update.currency_code = patch.currencyCode;
+  if (patch.categoryId !== undefined) update.category_id = patch.categoryId;
+  if (patch.description !== undefined) update.description = patch.description;
+  if (patch.occurredAt !== undefined) update.occurred_at = patch.occurredAt;
+  if (Object.keys(update).length === 0) return;
+  const { error } = await getSupabase().from('transactions').update(update).eq('id', id);
+  if (error) fail('finance.errors.entryFailed', error);
+}
+
 /** Record a single income or expense (transfers use createTransfer). */
 export async function createEntry(input: {
   householdId: string;

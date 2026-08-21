@@ -26,6 +26,12 @@ import { useIsWideLayout } from '@/lib/breakpoints';
 
 /** DESIGN.md container-max. */
 export const CONTENT_MAX_WIDTH = 1440;
+/**
+ * Max width for single-column FORM content (F23). A form field stretched across a
+ * 1440px monitor is unreadable and hard to scan; cap the input column so entry
+ * screens/modals stay a comfortable measure while still centring.
+ */
+export const FORM_MAX_WIDTH = 480;
 /** DESIGN.md margin-desktop; the narrow layout uses spacing.lg. */
 const DESKTOP_MARGIN = 40;
 

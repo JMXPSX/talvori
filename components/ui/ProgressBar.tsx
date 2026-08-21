@@ -17,10 +17,8 @@ export interface ProgressBarProps {
 
 export function ProgressBar({ fraction, state = 'normal', height = 8 }: ProgressBarProps) {
   const f = Math.max(0, Math.min(1, fraction));
-  // Modernist: ink fill on a neutral track by default; the vermilion accent only
-  // enters when a meter is full or over.
-  const track = state === 'over' ? palette.brandMuted : palette.surfaceMuted;
-  const fill = state === 'normal' ? palette.text : palette.brand;
+  const track = state === 'over' ? palette.dangerMuted : palette.brandMuted;
+  const fill = state === 'over' ? palette.danger : state === 'full' ? palette.accent : palette.brand;
   return (
     <View
       accessible

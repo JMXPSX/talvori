@@ -1,6 +1,24 @@
 /** FX conversion tests — exponent-aware, integer minor units, missing-rate flagging. */
 
-import { convertMinor, sumInReporting } from '@/features/finance/fx';
+import { convertMinor, sumByCurrency, sumInReporting } from '@/features/finance/fx';
+
+describe('sumByCurrency (1a free-tier hero)', () => {
+  it('subtotals per currency and sorts by code', () => {
+    const rows = sumByCurrency([
+      { balanceMinor: 10000, currency: 'PHP' },
+      { balanceMinor: 5000, currency: 'SAR' },
+      { balanceMinor: 2500, currency: 'php' },
+    ]);
+    expect(rows).toEqual([
+      { currency: 'PHP', totalMinor: 12500 },
+      { currency: 'SAR', totalMinor: 5000 },
+    ]);
+  });
+
+  it('is empty for no accounts', () => {
+    expect(sumByCurrency([])).toEqual([]);
+  });
+});
 
 describe('convertMinor', () => {
   it('is identity for the same currency', () => {

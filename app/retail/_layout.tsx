@@ -1,9 +1,28 @@
 /** Retail section stack (hub, retailer branches, products, prices, locations). */
 
-import { Stack } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
+import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Pressable } from 'react-native';
 
-import { palette } from '@/components/theme';
+import { palette, spacing } from '@/components/theme';
+
+/** Header "+" that opens the create-retailer modal (3c). */
+function HeaderAddRetailer() {
+  const router = useRouter();
+  const { t } = useTranslation();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={t('retail.addRetailer')}
+      hitSlop={12}
+      onPress={() => router.push('/retail/new')}
+      style={{ paddingHorizontal: spacing.md }}
+    >
+      <Feather name="plus" size={22} color={palette.brand} />
+    </Pressable>
+  );
+}
 
 export default function RetailLayout() {
   const { t } = useTranslation();
@@ -15,7 +34,14 @@ export default function RetailLayout() {
         contentStyle: { backgroundColor: palette.background },
       }}
     >
-      <Stack.Screen name="index" options={{ title: t('retail.title') }} />
+      <Stack.Screen
+        name="index"
+        options={{ title: t('retail.title'), headerRight: () => <HeaderAddRetailer /> }}
+      />
+      <Stack.Screen
+        name="new"
+        options={{ title: t('retail.addRetailer'), presentation: 'modal' }}
+      />
       <Stack.Screen name="[retailerId]" options={{ title: t('retail.branches') }} />
       <Stack.Screen name="products" options={{ title: t('retail.products') }} />
       <Stack.Screen name="product/[id]" options={{ title: t('retail.prices') }} />

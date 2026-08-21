@@ -26,4 +26,23 @@ describe('<Button />', () => {
     fireEvent.press(screen.getByText('Blocked'));
     expect(onPress).not.toHaveBeenCalled();
   });
+
+  // F17: destructive variants replace ad-hoc red style overrides.
+  it('renders and fires the filled danger variant (used inside confirms)', () => {
+    const onPress = jest.fn();
+    render(<Button label="Delete" variant="danger" onPress={onPress} />);
+    const el = screen.getByText('Delete');
+    expect(el).toBeOnTheScreen();
+    fireEvent.press(el);
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders and fires the text-only dangerQuiet variant', () => {
+    const onPress = jest.fn();
+    render(<Button label="Delete list" variant="dangerQuiet" onPress={onPress} />);
+    const el = screen.getByText('Delete list');
+    expect(el).toBeOnTheScreen();
+    fireEvent.press(el);
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
 });

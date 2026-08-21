@@ -1,30 +1,20 @@
 /**
- * Households home: list the households you belong to (RLS returns only yours),
- * create a new one, or jump to the Join screen to accept an invitation.
+ * Households home: list the households you belong to (RLS returns only yours).
+ * Creating one now lives in the /household/new modal (opened from the header "+"
+ * or the empty-state CTA); joining is the secondary link below (3c).
  */
 
-import { getLocales } from 'expo-localization';
 import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
-import { createHousehold, listMyHouseholds } from '@/features/household/api';
-import { createHouseholdSchema } from '@/features/household/schemas';
+import { palette, spacing } from '@/components/theme';
+import { Card, CONTENT_MAX_WIDTH, EmptyState, Text } from '@/components/ui';
+import { listMyHouseholds } from '@/features/household/api';
 import type { HouseholdRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
-import { validate } from '@/lib/validation';
-
-function deviceCurrency(): string {
-  try {
-    return getLocales()[0]?.currencyCode ?? '';
-  } catch {
-    return '';
-  }
-}
 
 export default function HouseholdsScreen() {
   const { t } = useTranslation();
@@ -33,13 +23,6 @@ export default function HouseholdsScreen() {
   const [households, setHouseholds] = useState<HouseholdRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-
-  const [name, setName] = useState('');
-  const [currency, setCurrency] = useState(deviceCurrency());
-  const [crossBorder, setCrossBorder] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-  const [formError, setFormError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
 
   const load = useCallback(async () => {
     setLoadError(null);
@@ -58,31 +41,6 @@ export default function HouseholdsScreen() {
     }, [load]),
   );
 
-  async function onCreate() {
-    setFormError(null);
-    const result = validate(createHouseholdSchema, {
-      name,
-      reportingCurrencyCode: currency,
-      isCrossBorder: crossBorder,
-    });
-    if (!result.success) {
-      setFieldErrors(result.fieldErrors);
-      return;
-    }
-    setFieldErrors({});
-    setSubmitting(true);
-    try {
-      const created = await createHousehold(result.data);
-      setName('');
-      await load();
-      router.push(`/household/${created.id}`);
-    } catch (err) {
-      setFormError(toAppError(err).messageKey);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -91,61 +49,25 @@ export default function HouseholdsScreen() {
         ) : loadError ? (
           <Text style={{ color: palette.danger }}>{t(loadError)}</Text>
         ) : households.length === 0 ? (
-          <Text muted>{t('household.empty')}</Text>
+          <EmptyState
+            icon="home"
+            message={t('household.empty')}
+            ctaLabel={t('household.createCta')}
+            onCta={() => router.push('/household/new')}
+          />
         ) : (
           <View style={styles.list}>
             {households.map((h) => (
-              <Pressable
-                key={h.id}
-                style={styles.card}
-                onPress={() => router.push(`/household/${h.id}`)}
-              >
-                <Text variant="heading">{h.name}</Text>
+              <Card key={h.id} onPress={() => router.push(`/household/${h.id}`)}>
+                <Text variant="subheading">{h.name}</Text>
                 <Text variant="caption" muted>
                   {h.reporting_currency_code}
                   {h.is_cross_border ? ' · 🌍' : ''}
                 </Text>
-              </Pressable>
+              </Card>
             ))}
           </View>
         )}
-
-        <View style={styles.divider} />
-
-        <Text variant="heading">{t('household.createTitle')}</Text>
-        <View style={styles.form}>
-          <TextField
-            label={t('household.nameLabel')}
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="words"
-            error={fieldErrors.name ? t('errors.validation') : undefined}
-          />
-          <TextField
-            label={t('household.currencyLabel')}
-            value={currency}
-            onChangeText={setCurrency}
-            hint={t('household.currencyHint')}
-            autoCapitalize="characters"
-            error={fieldErrors.reportingCurrencyCode ? t('errors.validation') : undefined}
-          />
-          <View style={styles.switchRow}>
-            <Text style={styles.switchLabel}>{t('household.crossBorderLabel')}</Text>
-            <Switch value={crossBorder} onValueChange={setCrossBorder} />
-          </View>
-
-          {formError ? (
-            <Text variant="caption" style={{ color: palette.danger }}>
-              {t(formError)}
-            </Text>
-          ) : null}
-
-          <Button
-            label={submitting ? t('auth.processing') : t('household.createCta')}
-            onPress={onCreate}
-            loading={submitting}
-          />
-        </View>
 
         <Link href="/household/join" style={styles.joinLink}>
           <Text variant="caption" style={{ color: palette.brand }}>
@@ -168,21 +90,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   list: { gap: spacing.sm },
-  card: {
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: palette.surface,
-    boxShadow: elevation.tile,
-    gap: spacing.xs,
-  },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
-  form: { gap: spacing.md },
-  switchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.md,
-  },
-  switchLabel: { flex: 1 },
   joinLink: { marginTop: spacing.lg, alignSelf: 'center' },
 });

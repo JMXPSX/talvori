@@ -4,7 +4,8 @@
  *
  * Variants: primary (indigo fill), secondary (ghost — soft hairline on the tile),
  * accent (burnt orange — reserve for the single most valuable action on a
- * screen, e.g. upgrade).
+ * screen, e.g. upgrade), danger (filled red — LEGAL ONLY inside a confirm flow),
+ * dangerQuiet (text-only red — the entry point to a destructive confirm).
  */
 
 import {
@@ -15,10 +16,10 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { focus, palette, radius, spacing, typography } from '@/components/theme';
+import { palette, radius, spacing, typography, webFocusRing } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'accent';
+export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'danger' | 'dangerQuiet';
 
 export interface ButtonProps {
   label: string;
@@ -29,10 +30,15 @@ export interface ButtonProps {
   style?: ViewStyle;
 }
 
+/** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
+type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
+
 const LABEL_COLOR: Record<ButtonVariant, string> = {
-  primary: palette.white, // canvas-colour label on the vermilion fill
-  secondary: palette.text, // ghost: ink label on a hairline-ruled button
-  accent: palette.white,
+  primary: palette.white,
+  secondary: palette.brand,
+  accent: palette.white, // white on burnt orange clears 4.5:1
+  danger: palette.white, // white on red clears 4.5:1
+  dangerQuiet: palette.danger,
 };
 
 export function Button({
@@ -52,16 +58,13 @@ export function Button({
       disabled={isDisabled}
       onPress={onPress}
       style={(state) => {
-        // RNW adds `focused` to the interaction state (RN's own types omit it);
-        // it drives the web keyboard-focus ring and stays undefined on native.
-        const { pressed, focused } = state as PressableStateCallbackType & {
-          focused?: boolean;
-        };
+        const { pressed, hovered, focused } = state as WebPressableState;
         return [
           styles.base,
           styles[variant],
+          hovered && !isDisabled ? styles.hovered : null,
           pressed && !isDisabled ? styles.pressed : null,
-          focused && !isDisabled ? styles.focused : null,
+          focused ? webFocusRing : null,
           isDisabled ? styles.disabled : null,
           style,
         ];
@@ -99,12 +102,19 @@ const styles = StyleSheet.create({
   accent: {
     backgroundColor: palette.accent,
   },
+  danger: {
+    backgroundColor: palette.danger,
+  },
+  // Text-only: no fill, so it reads as a link-weight destructive affordance.
+  dangerQuiet: {
+    backgroundColor: 'transparent',
+  },
+  hovered: {
+    opacity: 0.92,
+  },
   pressed: {
     opacity: 0.9,
     transform: [{ scale: 0.99 }],
-  },
-  focused: {
-    boxShadow: focus.ring,
   },
   disabled: {
     opacity: 0.5,

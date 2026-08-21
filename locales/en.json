@@ -35,6 +35,8 @@
     "verifyEmailTitle": "Check your email",
     "verifyEmailBody": "We sent a verification link to {{email}}. Confirm it, then sign in.",
     "forgotLink": "Forgot password?",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "forgotTitle": "Reset your password",
     "forgotBody": "Enter your email and we'll send you a reset link.",
     "sendResetCta": "Send reset link",
@@ -72,6 +74,8 @@
     "currencyLabel": "Reporting currency",
     "currencyHint": "ISO code, e.g. USD, PHP, SAR",
     "crossBorderLabel": "Members live in different countries",
+    "crossBorderExplainer": "Turns on remittance tracking and FX views.",
+    "joinInstead": "Have an invite code? Join instead",
     "createCta": "Create household",
     "membersTitle": "Members",
     "invitationsTitle": "Pending invitations",
@@ -103,6 +107,16 @@
   },
   "finance": {
     "overviewTitle": "Accounts",
+    "balancesTitle": "Balances",
+    "accountsInCurrency": "{{currency}} accounts",
+    "seeOneTotal": "See it as one total in {{currency}}",
+    "cols": {
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "account": "Account",
+      "amount": "Amount"
+    },
     "noHousehold": "Create a household first to start tracking money.",
     "goToHouseholds": "Go to households",
     "noAccounts": "No accounts yet. Add one to get started.",
@@ -111,6 +125,7 @@
     "addExpense": "Add expense",
     "addTransfer": "Transfer",
     "recentTitle": "Recent transactions",
+    "recentAll": "All transactions",
     "noTransactions": "No transactions yet.",
     "delete": "Delete",
     "newTransaction": "New transaction",
@@ -143,6 +158,14 @@
       "descriptionLabel": "Note (optional)",
       "saveCta": "Save",
       "noAccounts": "Add an account first."
+    },
+    "edit": {
+      "title": "Edit transaction",
+      "dateLabel": "Date (YYYY-MM-DD)",
+      "saveCta": "Save changes",
+      "deleteCta": "Delete transaction",
+      "transferNote": "Transfers are edited from the transfer screen.",
+      "notFound": "This transaction no longer exists."
     },
     "transfer": {
       "title": "Transfer",
@@ -180,6 +203,11 @@
   },
   "planning": {
     "hubTitle": "Planning",
+    "plan": {
+      "usedPct": "{{pct}}% used",
+      "safePerDay": "Safe to spend {{amount}}/day",
+      "manage": "Manage"
+    },
     "budgets": {
       "title": "Budgets",
       "hub": "Budgets",
@@ -305,6 +333,9 @@
     "deleteListCta": "Delete list",
     "confirmDeleteListTitle": "Delete this list?",
     "confirmDeleteListBody": "This removes the list and all its items for everyone in the household.",
+    "confirmDeleteItemTitle": "Remove this item?",
+    "confirmDeleteItemBody": "It's removed from the list for everyone in the household.",
+    "actualPromptTitle": "What did it cost?",
     "errors": {
       "loadFailed": "Couldn't load grocery lists.",
       "listFailed": "Couldn't create the list.",
@@ -338,6 +369,11 @@
     "noActiveLocation": "No active location",
     "retailers": "Retailers",
     "addRetailer": "Add retailer",
+    "manage": "Manage",
+    "directoryTitle": "Popular retailers",
+    "directorySearch": "Search retailers",
+    "add": "Add",
+    "customTitle": "Can't find your store? Add it manually",
     "retailerName": "Retailer name",
     "country": "Country code",
     "website": "Website",
@@ -445,6 +481,15 @@
     "currentPlan": "Current plan",
     "planFree": "Free",
     "planPremium": "Premium",
+    "currentPill": "Current",
+    "freeSentence": "Free stays genuinely useful — track budgets, shared lists, and money across accounts.",
+    "premiumTagline": "Priced for your region, billed in your local currency.",
+    "tryPremium": "Try Premium — 14 days free",
+    "billingFooter": "Billed via the App Store or Google Play in your local currency. Only the household owner can change the plan.",
+    "jobOneTotal": "See one total across all your currencies",
+    "jobCompare": "Compare a whole basket across stores",
+    "jobCoupons": "Find coupons that apply to your list",
+    "jobInsights": "Insights into where your money goes",
     "capabilities": "Premium includes",
     "capMultiCurrency": "Multi-currency dashboard",
     "capRetailComparison": "Price comparison",
@@ -481,6 +526,22 @@
       "deleteFailed": "Couldn't delete your account. Please try again.",
       "exportFailed": "Couldn't build the export. Please try again."
     }
+  },
+  "insights": {
+    "title": "Insights",
+    "whereItWent": "Where {{month}} went",
+    "totalSpent": "Total spent",
+    "avgPerDay": "Avg / day",
+    "transactions": "Transactions",
+    "empty": "No spending this month yet."
+  },
+  "currency": {
+    "title": "Choose currency",
+    "placeholder": "Select a currency",
+    "search": "Search currency",
+    "suggested": "Suggested",
+    "all": "All currencies",
+    "explainer": "Pick the currency this uses. You can change it later."
   },
   "errors": {
     "unknown": "Something went wrong. Please try again.",

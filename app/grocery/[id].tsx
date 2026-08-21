@@ -1,13 +1,14 @@
 /** Grocery list detail: live items, purchase toggle, totals, and checkout. */
 
+import { Feather } from '@expo/vector-icons';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
+import { Button, Chip, CONTENT_MAX_WIDTH, ProgressBar, Text, TextField, useActionSheet } from '@/components/ui';
 import { listAccounts, listCategories } from '@/features/finance/api';
 import {
   addItem,
@@ -24,9 +25,10 @@ import { actualTotalMinor, estimatedTotalMinor, purchasedCount } from '@/feature
 import { listMembers } from '@/features/household/api';
 import { listProducts } from '@/features/retail/api';
 import type { AccountRow, CategoryRow, GroceryItemRow, GroceryListRow } from '@/lib/database.types';
+import { parseAmount } from '@/lib/amountInput';
 import { toAppError } from '@/lib/errors';
-import { formatAmount } from '@/lib/format';
-import { toMinorUnits } from '@/lib/money';
+import { formatAmount, localeTag } from '@/lib/format';
+import { money, toMajorUnits, toMinorUnits } from '@/lib/money';
 import { validate } from '@/lib/validation';
 
 export default function GroceryListScreen() {
@@ -48,7 +50,9 @@ export default function GroceryListScreen() {
   const [name, setName] = useState('');
   const [qty, setQty] = useState('');
   const [est, setEst] = useState('');
-  const [actualInputs, setActualInputs] = useState<Record<string, string>>({});
+  // The item awaiting an optional actual-price entry after being ticked (F12).
+  const [promptItem, setPromptItem] = useState<GroceryItemRow | null>(null);
+  const [promptValue, setPromptValue] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [accountId, setAccountId] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState<string | null>(null);
@@ -123,13 +127,38 @@ export default function GroceryListScreen() {
     }
   }
 
-  async function onToggle(item: GroceryItemRow) {
+  // Ticking the circle: un-tick applies immediately; ticking opens the optional
+  // actual-price prompt (F12 — no always-visible per-row field or button).
+  async function onTick(item: GroceryItemRow) {
+    if (item.is_purchased) {
+      try {
+        await setPurchased(item.id, false);
+        await load();
+      } catch (err) {
+        setErrorKey(toAppError(err).messageKey);
+      }
+      return;
+    }
+    const ccy = list?.currency_code ?? 'USD';
+    const estMajor =
+      item.estimated_price_minor != null
+        ? String(toMajorUnits(money(item.estimated_price_minor, ccy)))
+        : '';
+    setPromptItem(item);
+    setPromptValue(estMajor);
+  }
+
+  async function confirmPurchase() {
+    if (!promptItem) return;
+    const ccy = list?.currency_code ?? 'USD';
+    const raw = promptValue.trim();
+    const major = raw ? parseAmount(raw, localeTag()) : null;
+    const actualMinor = major != null && major >= 0 ? toMinorUnits(major, ccy) : undefined;
+    const item = promptItem;
+    setPromptItem(null);
+    setPromptValue('');
     try {
-      const ccy = list?.currency_code ?? 'USD';
-      const raw = actualInputs[item.id];
-      const actualMinor =
-        !item.is_purchased && raw ? toMinorUnits(Number(raw), ccy) : undefined;
-      await setPurchased(item.id, !item.is_purchased, actualMinor);
+      await setPurchased(item.id, true, actualMinor);
       await load();
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
@@ -161,13 +190,28 @@ export default function GroceryListScreen() {
     });
   }
 
-  async function onDelete(item: GroceryItemRow) {
-    try {
-      await deleteItem(item.id);
-      await load();
-    } catch (err) {
-      setErrorKey(toAppError(err).messageKey);
-    }
+  function onDeleteItem(item: GroceryItemRow) {
+    sheet.show({
+      title: t('grocery.confirmDeleteItemTitle'),
+      message: t('grocery.confirmDeleteItemBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('grocery.deleteItem'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteItem(item.id);
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
   }
 
   async function onComplete() {
@@ -206,15 +250,22 @@ export default function GroceryListScreen() {
         {errorKey ? <Text style={{ color: palette.danger }}>{t(errorKey)}</Text> : null}
 
         <View style={styles.summary}>
-          <Text variant="caption" muted>
+          <Text variant="moneyMin" muted>
             {t('grocery.estimatedTotal')}: {formatAmount(estimatedTotalMinor(items), ccy)}
           </Text>
-          <Text variant="caption" muted>
+          <Text variant="moneyMin" muted>
             {t('grocery.actualTotal')}: {formatAmount(actualTotalMinor(items), ccy)}
           </Text>
           <Text variant="caption" muted>
             {t('grocery.purchasedOf', { done: purchasedCount(items), total: items.length })}
           </Text>
+          {items.length > 0 ? (
+            <ProgressBar
+              fraction={purchasedCount(items) / items.length}
+              state={purchasedCount(items) === items.length ? 'full' : 'normal'}
+              height={7}
+            />
+          ) : null}
           {items.some((it) => it.product_id) && (
             <Button
               label={t('grocery.compareCta')}
@@ -226,49 +277,56 @@ export default function GroceryListScreen() {
 
         <View style={styles.list}>
           {items.map((it) => (
-            <View key={it.id} style={styles.card}>
-              <View style={styles.cardRow}>
-                <Text variant="heading" style={it.is_purchased ? styles.struck : undefined}>
-                  {it.unit ? `${it.name} · ${it.quantity} ${it.unit}` : `${it.name} · ${it.quantity}`}
-                </Text>
-                <Text variant="caption" muted>
-                  {formatAmount(it.actual_price_minor ?? it.estimated_price_minor ?? 0, ccy)}
-                </Text>
-              </View>
-              <Text variant="caption" muted>
-                {t('grocery.addedBy', { name: nameFor(it.added_by) })}
-                {it.is_purchased ? ` · ${t('grocery.purchasedBy', { name: nameFor(it.purchased_by) })}` : ''}
-              </Text>
-              <Pressable onPress={() => router.push(`/grocery/link/${it.id}`)}>
-                <Text variant="caption" style={{ color: palette.brand }}>
-                  {it.product_id
-                    ? t('grocery.linkedTo', { name: productNames[it.product_id] ?? '…' })
-                    : t('grocery.linkProduct')}
-                </Text>
-              </Pressable>
-              {!isCompleted && (
-                <View style={styles.inlineRow}>
-                  {!it.is_purchased && (
-                    <View style={styles.inlineField}>
-                      <TextField
-                        label={t('grocery.actualLabel')}
-                        value={actualInputs[it.id] ?? ''}
-                        onChangeText={(v) => setActualInputs((p) => ({ ...p, [it.id]: v }))}
-                        keyboardType="numeric"
-                      />
-                    </View>
-                  )}
-                  <Button
-                    label={it.is_purchased ? t('grocery.markUnpurchased') : t('grocery.markPurchased')}
-                    onPress={() => onToggle(it)}
-                  />
-                  <Pressable onPress={() => onDelete(it)}>
-                    <Text variant="caption" style={{ color: palette.danger }}>
-                      {t('grocery.deleteItem')}
+            <View key={it.id} style={[styles.card, it.is_purchased ? styles.doneCard : null]}>
+              <View style={styles.itemRow}>
+                <Pressable
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: it.is_purchased }}
+                  accessibilityLabel={it.name}
+                  disabled={isCompleted}
+                  hitSlop={10}
+                  onPress={() => onTick(it)}
+                  style={styles.tickHit}
+                >
+                  <View style={[styles.tick, it.is_purchased ? styles.tickDone : null]}>
+                    {it.is_purchased ? <Feather name="check" size={16} color={palette.white} /> : null}
+                  </View>
+                </Pressable>
+
+                <View style={styles.itemMid}>
+                  <Text variant="subheading" style={it.is_purchased ? styles.struck : undefined}>
+                    {it.unit ? `${it.name} · ${it.quantity} ${it.unit}` : `${it.name} · ${it.quantity}`}
+                  </Text>
+                  <Text variant="caption" muted>
+                    {it.is_purchased
+                      ? t('grocery.purchasedBy', { name: nameFor(it.purchased_by) })
+                      : t('grocery.addedBy', { name: nameFor(it.added_by) })}
+                  </Text>
+                  <Pressable onPress={() => router.push(`/grocery/link/${it.id}`)}>
+                    <Text variant="caption" style={{ color: palette.brand }}>
+                      {it.product_id
+                        ? t('grocery.linkedTo', { name: productNames[it.product_id] ?? '…' })
+                        : t('grocery.linkProduct')}
                     </Text>
                   </Pressable>
                 </View>
-              )}
+
+                <View style={styles.itemTrail}>
+                  <Text variant="moneyMin" muted>
+                    {formatAmount(it.actual_price_minor ?? it.estimated_price_minor ?? 0, ccy)}
+                  </Text>
+                  {!isCompleted && !it.is_purchased ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={t('grocery.deleteItem')}
+                      hitSlop={10}
+                      onPress={() => onDeleteItem(it)}
+                    >
+                      <Feather name="trash-2" size={16} color={palette.textMuted} />
+                    </Pressable>
+                  ) : null}
+                </View>
+              </View>
             </View>
           ))}
         </View>
@@ -298,48 +356,36 @@ export default function GroceryListScreen() {
               <View style={styles.form}>
                 <Text variant="caption" muted>{t('grocery.accountLabel')}</Text>
                 <View style={styles.chips}>
-                  {accounts.map((a) => {
-                    const on = a.id === accountId;
-                    return (
-                      <Pressable
-                        key={a.id}
-                        onPress={() => setAccountId(a.id)}
-                        style={[styles.chip, on ? styles.chipActive : null]}
-                      >
-                        <Text variant="caption" style={{ color: on ? palette.white : palette.text }}>
-                          {a.name} ({a.currency_code})
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
+                  {accounts.map((a) => (
+                    <Chip
+                      key={a.id}
+                      label={`${a.name} (${a.currency_code})`}
+                      selected={a.id === accountId}
+                      role="radio"
+                      onPress={() => setAccountId(a.id)}
+                    />
+                  ))}
                 </View>
 
                 {categories.length > 0 && (
                   <>
                     <Text variant="caption" muted>{t('grocery.categoryLabel')}</Text>
                     <View style={styles.chips}>
-                      <Pressable
+                      <Chip
+                        label={t('finance.categories.none')}
+                        selected={categoryId === null}
+                        role="radio"
                         onPress={() => setCategoryId(null)}
-                        style={[styles.chip, categoryId === null ? styles.chipActive : null]}
-                      >
-                        <Text variant="caption" style={{ color: categoryId === null ? palette.white : palette.text }}>
-                          {t('finance.categories.none')}
-                        </Text>
-                      </Pressable>
-                      {categories.map((c) => {
-                        const on = c.id === categoryId;
-                        return (
-                          <Pressable
-                            key={c.id}
-                            onPress={() => setCategoryId(c.id)}
-                            style={[styles.chip, on ? styles.chipActive : null]}
-                          >
-                            <Text variant="caption" style={{ color: on ? palette.white : palette.text }}>
-                              {c.name}
-                            </Text>
-                          </Pressable>
-                        );
-                      })}
+                      />
+                      {categories.map((c) => (
+                        <Chip
+                          key={c.id}
+                          label={c.name}
+                          selected={c.id === categoryId}
+                          role="radio"
+                          onPress={() => setCategoryId(c.id)}
+                        />
+                      ))}
                     </View>
                   </>
                 )}
@@ -357,9 +403,50 @@ export default function GroceryListScreen() {
         {isCompleted && <Text muted>{t('grocery.completedNote')}</Text>}
 
         {list ? (
-          <Button label={t('grocery.deleteListCta')} onPress={onDeleteList} style={styles.deleteButton} />
+          <Button label={t('grocery.deleteListCta')} variant="dangerQuiet" onPress={onDeleteList} />
         ) : null}
       </ScrollView>
+
+      {/* Optional actual-price prompt shown once when an item is ticked (F12). */}
+      <Modal
+        visible={promptItem != null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {
+          setPromptItem(null);
+          setPromptValue('');
+        }}
+      >
+        <View style={styles.modalScrim}>
+          <View style={styles.modalCard}>
+            <Text variant="subheading">{t('grocery.actualPromptTitle')}</Text>
+            {promptItem ? (
+              <Text variant="caption" muted>
+                {promptItem.name}
+              </Text>
+            ) : null}
+            <TextField
+              label={`${t('grocery.actualLabel')} (${ccy})`}
+              value={promptValue}
+              onChangeText={setPromptValue}
+              keyboardType="numeric"
+            />
+            <View style={styles.modalActions}>
+              <Button
+                label={t('common.cancel')}
+                variant="secondary"
+                onPress={() => {
+                  setPromptItem(null);
+                  setPromptValue('');
+                }}
+                style={styles.modalBtn}
+              />
+              <Button label={t('grocery.markPurchased')} onPress={confirmPurchase} style={styles.modalBtn} />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {sheet.element}
     </SafeAreaView>
   );
@@ -384,19 +471,41 @@ const styles = StyleSheet.create({
     boxShadow: elevation.tile,
     gap: spacing.xs,
   },
-  cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  doneCard: { backgroundColor: palette.surfaceMuted },
   struck: { textDecorationLine: 'line-through' },
-  inlineRow: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm, marginTop: spacing.xs },
-  inlineField: { flex: 1 },
+  itemRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  // ≥44px hit target around a 26px tick circle.
+  tickHit: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  tick: {
+    width: 26,
+    height: 26,
+    borderRadius: radius.pill,
+    borderWidth: 2.5,
+    borderColor: palette.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tickDone: { backgroundColor: palette.success, borderColor: palette.success },
+  itemMid: { flex: 1, gap: 2 },
+  itemTrail: { alignItems: 'flex-end', gap: spacing.xs },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  chip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    backgroundColor: palette.field,
+  modalScrim: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.lg,
   },
-  chipActive: { backgroundColor: palette.brand },
-  deleteButton: { backgroundColor: palette.danger, marginTop: spacing.md },
+  modalCard: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: palette.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    gap: spacing.sm,
+  },
+  modalActions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.xs },
+  modalBtn: { flex: 1 },
 });

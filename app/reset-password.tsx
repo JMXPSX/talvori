@@ -58,7 +58,9 @@ export default function ResetPasswordScreen() {
           label={t('auth.newPasswordLabel')}
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
+          secureToggle
+          toggleShowLabel={t('auth.showPassword')}
+          toggleHideLabel={t('auth.hidePassword')}
           autoComplete="new-password"
           hint={t('auth.passwordHint')}
           error={fieldErrors.password ? t('errors.validation') : undefined}

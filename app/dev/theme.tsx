@@ -166,8 +166,8 @@ export default function ThemeGalleryScreen() {
           <View style={styles.navPreview}>
             <SideNav
               brand="Global Household App"
-              household={{ name: 'Test 2', meta: 'USD', mark: 'T2' }}
-              user={{ name: 'Rafael Santos', meta: 'rafael@email.com', mark: 'RS' }}
+              title="Test 2"
+              subtitle="USD"
               items={[
                 { key: 'index', label: 'Home', icon: 'home' },
                 { key: 'budget', label: 'Budget', icon: 'pie-chart' },

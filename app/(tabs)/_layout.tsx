@@ -9,29 +9,16 @@
  */
 
 import { Feather } from '@expo/vector-icons';
-import { Tabs, usePathname, useRouter } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { I18nManager, type ColorValue } from 'react-native';
 
 import { BottomTabBar } from '@/components/ui/BottomTabBar';
 import { SideNav, type SideNavItem } from '@/components/ui/SideNav';
-import { useAuth } from '@/features/auth/AuthProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { useIsWideLayout } from '@/lib/breakpoints';
 
 type FeatherName = keyof typeof Feather.glyphMap;
-
-/** Up-to-two-letter mark from a name or email, for the sidebar tiles. */
-function initials(source: string | null | undefined): string {
-  const s = (source ?? '').trim();
-  if (!s) return '—';
-  const parts = s.split(/[\s@._-]+/).filter(Boolean);
-  const letters = parts
-    .slice(0, 2)
-    .map((p) => p[0])
-    .join('');
-  return (letters || s.slice(0, 2)).toUpperCase();
-}
 
 const TAB_ICONS: Record<string, FeatherName> = {
   index: 'home',
@@ -48,23 +35,16 @@ const tabIcon = (name: FeatherName) =>
 
 export default function TabsLayout() {
   const { t } = useTranslation();
-  const router = useRouter();
-  const pathname = usePathname();
   const isWide = useIsWideLayout();
   const { active } = useActiveHousehold();
-  const { user } = useAuth();
-  const email = user?.email ?? undefined;
-  const displayName =
-    (user?.user_metadata?.display_name as string | undefined) ?? email?.split('@')[0] ?? '';
 
   return (
     <Tabs
       tabBar={({ state, descriptors, navigation }) => {
-        const tabByName: Record<string, SideNavItem> = {};
-        state.routes.forEach((route, index) => {
+        const items: SideNavItem[] = state.routes.map((route, index) => {
           const { options } = descriptors[route.key] ?? {};
           const isActive = state.index === index;
-          tabByName[route.name] = {
+          return {
             key: route.key,
             label: options?.title ?? route.name,
             icon: TAB_ICONS[route.name] ?? 'circle',
@@ -81,60 +61,15 @@ export default function TabsLayout() {
             },
           };
         });
-
-        // Mobile bottom tabs: the tab routes in navigator order (stays ≤5).
-        const tabItems = state.routes
-          .map((route) => tabByName[route.name])
-          .filter((it): it is SideNavItem => Boolean(it));
-
-        if (!isWide) return <BottomTabBar items={tabItems} />;
-
-        // Wide sidebar mirrors the Modernist redesign's 7 rows: the four primary
-        // tabs (Transactions ahead of Budget), then links into the retail and
-        // household stacks, then More. Those two stacks live outside the tab
-        // group, so the sidebar does not persist once you enter them.
-        const sidebarItems = [
-          tabByName.index,
-          tabByName.transactions,
-          tabByName.budget,
-          tabByName.grocery,
-          {
-            key: 'retail',
-            label: t('retail.title'),
-            icon: 'tag' as FeatherName,
-            active: pathname.startsWith('/retail'),
-            onPress: () => router.push('/retail'),
-          },
-          {
-            key: 'household',
-            label: t('household.title'),
-            icon: 'users' as FeatherName,
-            active: pathname.startsWith('/household'),
-            onPress: () => router.push('/household'),
-          },
-          tabByName.more,
-        ].filter((it): it is SideNavItem => Boolean(it));
-
-        return (
+        return isWide ? (
           <SideNav
             brand={t('common.appName')}
-            household={
-              active
-                ? {
-                    name: active.name,
-                    meta: active.reporting_currency_code,
-                    mark: initials(active.name),
-                    onPress: () => router.push('/household'),
-                  }
-                : undefined
-            }
-            user={
-              user
-                ? { name: displayName || '—', meta: email, mark: initials(displayName || email) }
-                : undefined
-            }
-            items={sidebarItems}
+            title={active?.name}
+            subtitle={active?.reporting_currency_code}
+            items={items}
           />
+        ) : (
+          <BottomTabBar items={items} />
         );
       }}
       screenOptions={{

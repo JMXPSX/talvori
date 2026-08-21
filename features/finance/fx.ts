@@ -35,6 +35,27 @@ export interface RollupResult {
   missing: string[];
 }
 
+export interface CurrencySubtotal {
+  currency: string;
+  totalMinor: number;
+}
+
+/**
+ * Subtotal balances per currency (no FX) — the free-tier hero's honest view
+ * (1a / F05): a household holding PHP + SAR sees each currency's own total
+ * instead of a locked "upgrade to see one total" wall. Sorted by currency code.
+ */
+export function sumByCurrency(items: ReadonlyArray<Convertible>): CurrencySubtotal[] {
+  const totals = new Map<string, number>();
+  for (const item of items) {
+    const ccy = item.currency.toUpperCase();
+    totals.set(ccy, (totals.get(ccy) ?? 0) + item.balanceMinor);
+  }
+  return [...totals.entries()]
+    .map(([currency, totalMinor]) => ({ currency, totalMinor }))
+    .sort((a, b) => a.currency.localeCompare(b.currency));
+}
+
 /**
  * Sum items into the reporting currency. Items already in the reporting currency
  * pass through; others use `rateFor(from, to)`. Items with no rate are excluded

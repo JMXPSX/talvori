@@ -5,11 +5,11 @@
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { palette, spacing } from '@/components/theme';
+import { Button, Chip, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createEntry, listAccounts, listCategories } from '@/features/finance/api';
 import { createEntrySchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -125,20 +125,15 @@ export default function EntryScreen() {
               {t('finance.entry.accountLabel')}
             </Text>
             <View style={styles.chips}>
-              {accounts.map((a) => {
-                const activeChip = a.id === accountId;
-                return (
-                  <Pressable
-                    key={a.id}
-                    onPress={() => setAccountId(a.id)}
-                    style={[styles.chip, activeChip ? styles.chipActive : null]}
-                  >
-                    <Text variant="caption" style={{ color: activeChip ? palette.white : palette.text }}>
-                      {a.name} ({a.currency_code})
-                    </Text>
-                  </Pressable>
-                );
-              })}
+              {accounts.map((a) => (
+                <Chip
+                  key={a.id}
+                  label={`${a.name} (${a.currency_code})`}
+                  selected={a.id === accountId}
+                  role="radio"
+                  onPress={() => setAccountId(a.id)}
+                />
+              ))}
             </View>
 
             <TextField
@@ -157,28 +152,21 @@ export default function EntryScreen() {
                   {t('finance.entry.categoryLabel')}
                 </Text>
                 <View style={styles.chips}>
-                  <Pressable
+                  <Chip
+                    label={t('finance.categories.none')}
+                    selected={categoryId === null}
+                    role="radio"
                     onPress={() => setCategoryId(null)}
-                    style={[styles.chip, categoryId === null ? styles.chipActive : null]}
-                  >
-                    <Text variant="caption" style={{ color: categoryId === null ? palette.white : palette.text }}>
-                      {t('finance.categories.none')}
-                    </Text>
-                  </Pressable>
-                  {categories.map((c) => {
-                    const activeChip = c.id === categoryId;
-                    return (
-                      <Pressable
-                        key={c.id}
-                        onPress={() => setCategoryId(c.id)}
-                        style={[styles.chip, activeChip ? styles.chipActive : null]}
-                      >
-                        <Text variant="caption" style={{ color: activeChip ? palette.white : palette.text }}>
-                          {c.name}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
+                  />
+                  {categories.map((c) => (
+                    <Chip
+                      key={c.id}
+                      label={c.name}
+                      selected={c.id === categoryId}
+                      role="radio"
+                      onPress={() => setCategoryId(c.id)}
+                    />
+                  ))}
                 </View>
               </>
             ) : null}
@@ -216,16 +204,9 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     // Cap + centre so the screen does not stretch edge to edge on a monitor.
     width: '100%',
-    maxWidth: CONTENT_MAX_WIDTH,
+    maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  chip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    backgroundColor: palette.field,
-  },
-  chipActive: { backgroundColor: palette.brand },
 });

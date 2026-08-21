@@ -88,16 +88,40 @@ export function toMinorUnits(major: number, currencyCode: string): number {
   return Math.sign(major) * Math.round(Math.abs(major) * factor);
 }
 
+export interface FormatMoneyOptions {
+  /**
+   * Disambiguate the currency with its ISO code instead of a bare symbol (F26).
+   * A household holding one currency reads fine with the plain symbol; the moment
+   * it holds two (e.g. PHP + SAR, where "₱"/"﷼" or "$"-style symbols collide or
+   * are unfamiliar) amounts must say which currency — e.g. "SAR 6,500.00".
+   */
+  disambiguate?: boolean;
+}
+
 /**
  * Locale- and currency-aware formatting. NEVER hard-code the symbol or decimals.
  * @param locale BCP-47 tag, e.g. 'en-US', 'fil-PH', 'ar-SA'.
  */
-export function formatMoney(value: Money, locale: string): string {
+export function formatMoney(value: Money, locale: string, opts: FormatMoneyOptions = {}): string {
   const exponent = minorExponent(value.currencyCode);
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: value.currencyCode,
+    currencyDisplay: opts.disambiguate ? 'code' : 'symbol',
     minimumFractionDigits: exponent,
     maximumFractionDigits: exponent,
   }).format(toMajorUnits(value));
+}
+
+/**
+ * True when a set of currency codes spans more than one currency — the signal
+ * for whether amounts need code disambiguation (F26). Case-insensitive; ignores
+ * blanks. Screens compute this once from their accounts/balances and pass a flag
+ * down, so no per-screen formatting logic is needed.
+ */
+export function hasMultipleCurrencies(codes: readonly string[]): boolean {
+  const distinct = new Set(
+    codes.map((c) => c.trim().toUpperCase()).filter((c) => c.length > 0),
+  );
+  return distinct.size > 1;
 }

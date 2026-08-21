@@ -35,6 +35,8 @@
     "verifyEmailTitle": "تحقق من بريدك الإلكتروني",
     "verifyEmailBody": "أرسلنا رابط تحقق إلى {{email}}. أكّده ثم سجّل الدخول.",
     "forgotLink": "نسيت كلمة المرور؟",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
     "forgotTitle": "إعادة تعيين كلمة المرور",
     "forgotBody": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.",
     "sendResetCta": "إرسال رابط إعادة التعيين",
@@ -72,6 +74,8 @@
     "currencyLabel": "عملة التقارير",
     "currencyHint": "رمز ISO، مثل USD أو PHP أو SAR",
     "crossBorderLabel": "يعيش أفراد الأسرة في بلدان مختلفة",
+    "crossBorderExplainer": "يُفعّل تتبّع التحويلات وعروض أسعار الصرف.",
+    "joinInstead": "لديك رمز دعوة؟ انضم بدلًا من ذلك",
     "createCta": "إنشاء أسرة",
     "membersTitle": "الأعضاء",
     "invitationsTitle": "الدعوات المعلّقة",
@@ -103,6 +107,16 @@
   },
   "finance": {
     "overviewTitle": "الحسابات",
+    "balancesTitle": "الأرصدة",
+    "accountsInCurrency": "حسابات {{currency}}",
+    "seeOneTotal": "شاهدها كإجمالي واحد بعملة {{currency}}",
+    "cols": {
+      "date": "التاريخ",
+      "description": "الوصف",
+      "category": "الفئة",
+      "account": "الحساب",
+      "amount": "المبلغ"
+    },
     "noHousehold": "أنشئ أسرة أولًا لبدء تتبّع أموالك.",
     "goToHouseholds": "الذهاب إلى الأسر",
     "noAccounts": "لا توجد حسابات بعد. أضف واحدًا للبدء.",
@@ -111,6 +125,7 @@
     "addExpense": "إضافة مصروف",
     "addTransfer": "تحويل",
     "recentTitle": "أحدث المعاملات",
+    "recentAll": "كل المعاملات",
     "noTransactions": "لا توجد معاملات بعد.",
     "delete": "حذف",
     "newTransaction": "معاملة جديدة",
@@ -143,6 +158,14 @@
       "descriptionLabel": "ملاحظة (اختياري)",
       "saveCta": "حفظ",
       "noAccounts": "أضف حسابًا أولًا."
+    },
+    "edit": {
+      "title": "تعديل المعاملة",
+      "dateLabel": "التاريخ (YYYY-MM-DD)",
+      "saveCta": "حفظ التغييرات",
+      "deleteCta": "حذف المعاملة",
+      "transferNote": "تُعدَّل التحويلات من شاشة التحويل.",
+      "notFound": "لم تعد هذه المعاملة موجودة."
     },
     "transfer": {
       "title": "تحويل",
@@ -180,6 +203,11 @@
   },
   "planning": {
     "hubTitle": "التخطيط",
+    "plan": {
+      "usedPct": "{{pct}}% مُستخدَم",
+      "safePerDay": "آمن للإنفاق {{amount}}/يوم",
+      "manage": "إدارة"
+    },
     "budgets": {
       "title": "الميزانيات",
       "hub": "الميزانيات",
@@ -305,6 +333,9 @@
     "deleteListCta": "حذف القائمة",
     "confirmDeleteListTitle": "حذف هذه القائمة؟",
     "confirmDeleteListBody": "سيؤدي هذا إلى إزالة القائمة وجميع عناصرها لكل أفراد الأسرة.",
+    "confirmDeleteItemTitle": "إزالة هذا العنصر؟",
+    "confirmDeleteItemBody": "ستتم إزالته من القائمة لكل أفراد الأسرة.",
+    "actualPromptTitle": "كم كانت التكلفة؟",
     "errors": {
       "loadFailed": "تعذّر تحميل القوائم.",
       "listFailed": "تعذّر إنشاء القائمة.",
@@ -338,6 +369,11 @@
     "noActiveLocation": "لا يوجد موقع نشط",
     "retailers": "المتاجر",
     "addRetailer": "إضافة متجر",
+    "manage": "إدارة",
+    "directoryTitle": "متاجر شائعة",
+    "directorySearch": "ابحث عن متجر",
+    "add": "إضافة",
+    "customTitle": "لا تجد متجرك؟ أضفه يدويًا",
     "retailerName": "اسم المتجر",
     "country": "رمز الدولة",
     "website": "الموقع الإلكتروني",
@@ -445,6 +481,15 @@
     "currentPlan": "الخطة الحالية",
     "planFree": "مجاني",
     "planPremium": "مميّز",
+    "currentPill": "الحالية",
+    "freeSentence": "تبقى الخطة المجانية مفيدة فعلًا — تتبّع الميزانيات والقوائم المشتركة والأموال عبر الحسابات.",
+    "premiumTagline": "بسعر يناسب منطقتك، وتُحصَّل بعملتك المحلية.",
+    "tryPremium": "جرّب المميّز — 14 يومًا مجانًا",
+    "billingFooter": "تُحصَّل عبر App Store أو Google Play بعملتك المحلية. يمكن لمالك الأسرة وحده تغيير الخطة.",
+    "jobOneTotal": "شاهد إجماليًا واحدًا عبر كل عملاتك",
+    "jobCompare": "قارن سلة كاملة عبر المتاجر",
+    "jobCoupons": "اعثر على قسائم تنطبق على قائمتك",
+    "jobInsights": "رؤى حول أين تذهب أموالك",
     "capabilities": "يشمل المميّز",
     "capMultiCurrency": "لوحة متعددة العملات",
     "capRetailComparison": "مقارنة الأسعار",
@@ -481,6 +526,22 @@
       "deleteFailed": "تعذّر حذف حسابك. حاول مرة أخرى.",
       "exportFailed": "تعذّر إنشاء التصدير. حاول مرة أخرى."
     }
+  },
+  "insights": {
+    "title": "رؤى",
+    "whereItWent": "أين ذهب إنفاق {{month}}",
+    "totalSpent": "إجمالي الإنفاق",
+    "avgPerDay": "المتوسط / اليوم",
+    "transactions": "المعاملات",
+    "empty": "لا إنفاق هذا الشهر بعد."
+  },
+  "currency": {
+    "title": "اختر العملة",
+    "placeholder": "اختر عملة",
+    "search": "ابحث عن عملة",
+    "suggested": "مقترحة",
+    "all": "كل العملات",
+    "explainer": "اختر العملة المستخدمة هنا. يمكنك تغييرها لاحقًا."
   },
   "errors": {
     "unknown":"حدث خطأ ما. يرجى المحاولة مرة أخرى.",

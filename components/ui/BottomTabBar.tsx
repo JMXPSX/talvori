@@ -11,7 +11,7 @@ import { Feather } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { elevation, palette, radius, spacing } from '@/components/theme';
 import type { SideNavItem } from '@/components/ui/SideNav';
 import { Text } from '@/components/ui/Text';
 
@@ -54,12 +54,12 @@ export function BottomTabBar({ items }: BottomTabBarProps) {
 const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
-    backgroundColor: palette.background,
-    // Modernist: a 2px top rule holds the bar to the canvas — no float, no shadow.
-    borderTopWidth: 2,
-    borderTopColor: palette.borderStrong,
+    backgroundColor: palette.surface,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
     paddingTop: spacing.sm,
     paddingHorizontal: spacing.sm,
+    boxShadow: elevation.raised,
   },
   item: {
     flex: 1,
@@ -76,18 +76,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
   },
   slotActive: {
-    backgroundColor: palette.text,
+    backgroundColor: palette.brand,
   },
   label: {
-    fontSize: 10,
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
+    fontSize: 11,
     color: palette.textMuted,
   },
   labelActive: {
-    fontSize: 10,
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
+    fontSize: 11,
     color: palette.white,
   },
 });

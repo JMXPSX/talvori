@@ -8,7 +8,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createTransfer, listAccounts } from '@/features/finance/api';
 import { createTransferSchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     // Cap + centre so the screen does not stretch edge to edge on a monitor.
     width: '100%',
-    maxWidth: CONTENT_MAX_WIDTH,
+    maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
