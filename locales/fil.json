@@ -72,6 +72,8 @@
     "currencyLabel": "Reporting currency",
     "currencyHint": "ISO code, hal. USD, PHP, SAR",
     "crossBorderLabel": "Nakatira sa magkakaibang bansa ang mga miyembro",
+    "crossBorderExplainer": "Bubuksan ang pagsubaybay ng remittance at mga view ng FX.",
+    "joinInstead": "May invite code? Sumali na lang",
     "createCta": "Gumawa ng sambahayan",
     "membersTitle": "Mga Miyembro",
     "invitationsTitle": "Mga nakabinbing imbitasyon",

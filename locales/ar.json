@@ -72,6 +72,8 @@
     "currencyLabel": "عملة التقارير",
     "currencyHint": "رمز ISO، مثل USD أو PHP أو SAR",
     "crossBorderLabel": "يعيش أفراد الأسرة في بلدان مختلفة",
+    "crossBorderExplainer": "يُفعّل تتبّع التحويلات وعروض أسعار الصرف.",
+    "joinInstead": "لديك رمز دعوة؟ انضم بدلًا من ذلك",
     "createCta": "إنشاء أسرة",
     "membersTitle": "الأعضاء",
     "invitationsTitle": "الدعوات المعلّقة",

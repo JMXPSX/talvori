@@ -72,6 +72,8 @@
     "currencyLabel": "Reporting currency",
     "currencyHint": "ISO code, e.g. USD, PHP, SAR",
     "crossBorderLabel": "Members live in different countries",
+    "crossBorderExplainer": "Turns on remittance tracking and FX views.",
+    "joinInstead": "Have an invite code? Join instead",
     "createCta": "Create household",
     "membersTitle": "Members",
     "invitationsTitle": "Pending invitations",
