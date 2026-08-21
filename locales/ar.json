@@ -331,6 +331,9 @@
     "deleteListCta": "حذف القائمة",
     "confirmDeleteListTitle": "حذف هذه القائمة؟",
     "confirmDeleteListBody": "سيؤدي هذا إلى إزالة القائمة وجميع عناصرها لكل أفراد الأسرة.",
+    "confirmDeleteItemTitle": "إزالة هذا العنصر؟",
+    "confirmDeleteItemBody": "ستتم إزالته من القائمة لكل أفراد الأسرة.",
+    "actualPromptTitle": "كم كانت التكلفة؟",
     "errors": {
       "loadFailed": "تعذّر تحميل القوائم.",
       "listFailed": "تعذّر إنشاء القائمة.",

@@ -331,6 +331,9 @@
     "deleteListCta": "Delete list",
     "confirmDeleteListTitle": "Delete this list?",
     "confirmDeleteListBody": "This removes the list and all its items for everyone in the household.",
+    "confirmDeleteItemTitle": "Remove this item?",
+    "confirmDeleteItemBody": "It's removed from the list for everyone in the household.",
+    "actualPromptTitle": "What did it cost?",
     "errors": {
       "loadFailed": "Couldn't load grocery lists.",
       "listFailed": "Couldn't create the list.",

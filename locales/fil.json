@@ -331,6 +331,9 @@
     "deleteListCta": "Burahin ang listahan",
     "confirmDeleteListTitle": "Burahin ang listahang ito?",
     "confirmDeleteListBody": "Aalisin nito ang listahan at lahat ng item nito para sa buong sambahayan.",
+    "confirmDeleteItemTitle": "Alisin ang item na ito?",
+    "confirmDeleteItemBody": "Aalisin ito sa listahan para sa buong sambahayan.",
+    "actualPromptTitle": "Magkano ang nagastos?",
     "errors": {
       "loadFailed": "Hindi ma-load ang mga listahan.",
       "listFailed": "Hindi magawa ang listahan.",
