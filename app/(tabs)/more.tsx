@@ -8,6 +8,7 @@ import { StyleSheet, View } from 'react-native';
 import { palette, radius, spacing } from '@/components/theme';
 import { Button, Card, ListRow, Screen, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { usePlan } from '@/features/billing/EntitlementsProvider';
 
 /** "Maria Santos" → "MS", "Joseph" → "JO", "maria.santos@x" → "MS". */
 function initialsFor(displayName: string | null, email: string): string {
@@ -24,6 +25,7 @@ export default function MoreScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { user, signOut } = useAuth();
+  const { has } = usePlan();
   const [busy, setBusy] = useState(false);
 
   const email = user?.email ?? '';
@@ -63,6 +65,15 @@ export default function MoreScreen() {
       <View style={styles.rows}>
         <ListRow icon="users" label={t('household.open')} onPress={() => router.push('/household')} />
         <ListRow icon="shopping-bag" label={t('retail.open')} onPress={() => router.push('/retail')} />
+        {has('multi_currency_dashboard') ? (
+          <ListRow
+            icon="bar-chart-2"
+            label={t('insights.title')}
+            iconColor={palette.accent}
+            iconBg={palette.accentMuted}
+            onPress={() => router.push('/finance/insights')}
+          />
+        ) : null}
         <ListRow icon="star" label={t('billing.open')} onPress={() => router.push('/subscription')} />
         <ListRow icon="user" label={t('account.open')} onPress={() => router.push('/account')} />
       </View>

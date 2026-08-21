@@ -522,6 +522,14 @@
       "exportFailed": "Hindi mabuo ang export. Subukan muli."
     }
   },
+  "insights": {
+    "title": "Mga insight",
+    "whereItWent": "Saan napunta ngayong {{month}}",
+    "totalSpent": "Kabuuang nagastos",
+    "avgPerDay": "Karaniwan / araw",
+    "transactions": "Mga transaksyon",
+    "empty": "Wala pang gastos ngayong buwan."
+  },
   "currency": {
     "title": "Pumili ng pera",
     "placeholder": "Pumili ng pera",

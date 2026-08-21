@@ -522,6 +522,14 @@
       "exportFailed": "تعذّر إنشاء التصدير. حاول مرة أخرى."
     }
   },
+  "insights": {
+    "title": "رؤى",
+    "whereItWent": "أين ذهب إنفاق {{month}}",
+    "totalSpent": "إجمالي الإنفاق",
+    "avgPerDay": "المتوسط / اليوم",
+    "transactions": "المعاملات",
+    "empty": "لا إنفاق هذا الشهر بعد."
+  },
   "currency": {
     "title": "اختر العملة",
     "placeholder": "اختر عملة",

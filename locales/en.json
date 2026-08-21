@@ -522,6 +522,14 @@
       "exportFailed": "Couldn't build the export. Please try again."
     }
   },
+  "insights": {
+    "title": "Insights",
+    "whereItWent": "Where {{month}} went",
+    "totalSpent": "Total spent",
+    "avgPerDay": "Avg / day",
+    "transactions": "Transactions",
+    "empty": "No spending this month yet."
+  },
   "currency": {
     "title": "Choose currency",
     "placeholder": "Select a currency",
