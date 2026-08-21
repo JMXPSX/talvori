@@ -9,7 +9,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { palette, spacing } from '@/components/theme';
-import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { Button, CurrencyField, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createBudget } from '@/features/finance/planningApi';
 import { createBudgetSchema } from '@/features/finance/planningSchemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -86,12 +86,11 @@ export default function BudgetNewScreen() {
               autoCapitalize="sentences"
               error={fieldErrors.name ? t('errors.validation') : undefined}
             />
-            <TextField
+            <CurrencyField
               label={t('planning.budgets.currencyLabel')}
               value={currency}
-              onChangeText={setCurrency}
-              hint={t('household.currencyHint')}
-              autoCapitalize="characters"
+              onChange={setCurrency}
+              suggested={[deviceCurrency(), active.reporting_currency_code].filter(Boolean)}
               error={fieldErrors.currencyCode ? t('errors.validation') : undefined}
             />
             <TextField
