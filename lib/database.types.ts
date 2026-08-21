@@ -353,6 +353,16 @@ export interface RetailerRow {
   updated_at: string;
 }
 
+/** Global, read-only seeded directory backing "Add retailer" (5a). */
+export interface RetailerDirectoryRow {
+  id: string;
+  country_code: string;
+  name: string;
+  kind: string | null;
+  brand_key: string;
+  created_at: string;
+}
+
 export interface RetailerStoreRow {
   id: string;
   household_id: string;

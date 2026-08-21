@@ -6,6 +6,7 @@
 import type {
   PriceSnapshotRow,
   ProductRow,
+  RetailerDirectoryRow,
   RetailerProductRow,
   RetailerRow,
   RetailerStoreRow,
@@ -58,6 +59,22 @@ async function currentUserId(): Promise<string> {
   const { data } = await getSupabase().auth.getUser();
   if (!data.user) throw new AppError('unauthorized', { messageKey: 'errors.unauthorized' });
   return data.user.id;
+}
+
+// --- retailer directory (5a) -----------------------------------------------
+/**
+ * Seeded, global retailer directory for a country. Read-only reference data.
+ * Returns [] (not an error) when the table isn't present yet — so the add-retailer
+ * screen degrades gracefully to manual entry until the 5a migration is applied.
+ */
+export async function listRetailerDirectory(countryCode: string): Promise<RetailerDirectoryRow[]> {
+  const { data, error } = await getSupabase()
+    .from('retailer_directory')
+    .select('*')
+    .eq('country_code', countryCode.toUpperCase())
+    .order('name');
+  if (error) return [];
+  return (data ?? []) as RetailerDirectoryRow[];
 }
 
 // --- retailers -------------------------------------------------------------
