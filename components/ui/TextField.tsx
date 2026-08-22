@@ -11,18 +11,25 @@ import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Platform,
   Pressable,
   StyleSheet,
   TextInput,
   View,
   type KeyboardTypeOptions,
   type TextInputProps,
+  type TextStyle,
 } from 'react-native';
 
 import { palette, radius, spacing } from '@/components/theme';
 import { Text } from '@/components/ui/Text';
 import { fontFamilyFor, isArabicLanguage } from '@/lib/fonts';
 import { direction } from '@/lib/rtl';
+
+// The wrapper draws its own brand focus border, so suppress the browser's default
+// focus outline on the underlying web <input> (native ignores `outline*`).
+const webNoOutline: TextStyle | null =
+  Platform.OS === 'web' ? ({ outlineWidth: 0 } as TextStyle) : null;
 
 export interface TextFieldProps {
   label: string;
@@ -59,7 +66,6 @@ export function TextField({
   toggleShowLabel,
   toggleHideLabel,
 }: TextFieldProps) {
-  const [focused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(true);
   const { i18n } = useTranslation();
   const fontFamily = fontFamilyFor('body', isArabicLanguage(i18n.language));
@@ -69,19 +75,11 @@ export function TextField({
       <Text variant="caption" muted>
         {label}
       </Text>
-      <View
-        style={[
-          styles.fieldBox,
-          focused ? styles.inputFocused : null,
-          error ? styles.inputError : null,
-        ]}
-      >
+      <View style={[styles.fieldBox, error ? styles.inputError : null]}>
         <TextInput
-          style={[styles.input, { textAlign: direction.textAlign, fontFamily }]}
+          style={[styles.input, webNoOutline, { textAlign: direction.textAlign, fontFamily }]}
           value={value}
           onChangeText={onChangeText}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
           placeholder={placeholder}
           placeholderTextColor={palette.textMuted}
           secureTextEntry={secureToggle ? hidden : secureTextEntry}
@@ -120,8 +118,9 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   // Filled, not outlined: fields must stay visible inside a white bento tile.
-  // The border is always 2px and merely changes colour, so focusing never
-  // reflows the layout. Chrome lives here so a trailing eye can sit inside.
+  // The border is always 2px transparent (turning red only on error), so it never
+  // reflows the layout and focus draws no ring. Chrome lives here so a trailing eye
+  // can sit inside.
   fieldBox: {
     flexDirection: direction.flexRow,
     alignItems: 'center',
@@ -136,9 +135,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 0,
     color: palette.text,
-  },
-  inputFocused: {
-    borderColor: palette.brand,
   },
   inputError: {
     borderColor: palette.danger,
