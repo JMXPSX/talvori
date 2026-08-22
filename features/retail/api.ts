@@ -14,6 +14,7 @@ import type {
 } from '@/lib/database.types';
 import { AppError } from '@/lib/errors';
 import { getSupabase } from '@/lib/supabase';
+import { computeRetailerStats, type RetailerStat } from '@/features/retail/retailerStats';
 import type {
   CreateProductInput,
   CreateRetailerInput,
@@ -102,6 +103,27 @@ export async function createRetailer(hid: string, input: CreateRetailerInput): P
 export async function deleteRetailer(id: string): Promise<void> {
   const { error } = await getSupabase().from('retailers').delete().eq('id', id);
   if (error) fail('retail.errors.deleteFailed', error);
+}
+/**
+ * Per-retailer reach + freshness for the Stores hub (4d). Three minimal
+ * household-scoped selects, aggregated client-side (no aggregate RPC/migration).
+ * Retailers with neither stores nor prices simply won't appear in the map — the
+ * caller defaults them to zeros.
+ */
+export async function listRetailerStats(hid: string): Promise<Map<string, RetailerStat>> {
+  const supabase = getSupabase();
+  const [stores, rps, prices] = await Promise.all([
+    supabase.from('retailer_stores').select('retailer_id').eq('household_id', hid),
+    supabase.from('retailer_products').select('id, retailer_id').eq('household_id', hid),
+    supabase.from('price_snapshots').select('retailer_product_id, observed_at').eq('household_id', hid),
+  ]);
+  const error = stores.error ?? rps.error ?? prices.error;
+  if (error) fail('retail.errors.loadFailed', error);
+  return computeRetailerStats(
+    (stores.data ?? []) as { retailer_id: string }[],
+    (rps.data ?? []) as { id: string; retailer_id: string }[],
+    (prices.data ?? []) as { retailer_product_id: string; observed_at: string }[],
+  );
 }
 
 // --- stores ----------------------------------------------------------------
