@@ -1,20 +1,32 @@
-/** Create-household modal (3c — fixes F13/F19/F25). Moves the create form out of
- *  the list screen: name, reporting currency (via the 3b picker), and the
- *  cross-border toggle with its explainer. Closes to the new household. */
+/** Create-household modal (3c — fixes F13/F19/F25; folds in 4b). Moves the create
+ *  form out of the list screen: name, reporting currency (via the 3b picker), and
+ *  the 4b cross-border question rendered as a two-card radio choice with its
+ *  "what it activates" explainer. Closes to the new household. */
 
+import { Feather } from '@expo/vector-icons';
 import { getLocales } from 'expo-localization';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, Switch, View } from 'react-native';
+import {
+  Pressable,
+  type PressableStateCallbackType,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { palette, radius, spacing, webFocusRing } from '@/components/theme';
 import { Button, CurrencyField, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createHousehold } from '@/features/household/api';
 import { createHouseholdSchema } from '@/features/household/schemas';
 import { toAppError } from '@/lib/errors';
+import { direction } from '@/lib/rtl';
 import { validate } from '@/lib/validation';
+
+/** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
+type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
 
 function deviceCurrency(): string {
   try {
@@ -75,14 +87,28 @@ export default function HouseholdNewScreen() {
           error={fieldErrors.reportingCurrencyCode ? t('errors.validation') : undefined}
         />
 
-        <View style={styles.switchRow}>
-          <View style={styles.switchText}>
-            <Text>{t('household.crossBorderLabel')}</Text>
-            <Text variant="caption" muted>
-              {t('household.crossBorderExplainer')}
-            </Text>
+        <View style={styles.crossBorder}>
+          <Text variant="subheading">{t('household.crossBorderQuestion')}</Text>
+          <View accessibilityRole="radiogroup" style={styles.options}>
+            <OptionCard
+              title={t('household.crossBorderOneCountryTitle')}
+              caption={t('household.crossBorderOneCountryCaption')}
+              selected={!crossBorder}
+              onPress={() => setCrossBorder(false)}
+              selectedA11y={t('household.crossBorderSelected')}
+            />
+            <OptionCard
+              title={t('household.crossBorderMultiTitle')}
+              caption={t('household.crossBorderMultiCaption')}
+              detail={t('household.crossBorderActivates')}
+              selected={crossBorder}
+              onPress={() => setCrossBorder(true)}
+              selectedA11y={t('household.crossBorderSelected')}
+            />
           </View>
-          <Switch value={crossBorder} onValueChange={setCrossBorder} />
+          <Text variant="caption" muted>
+            {t('household.crossBorderChangeNote')}
+          </Text>
         </View>
 
         {formError ? (
@@ -107,6 +133,58 @@ export default function HouseholdNewScreen() {
   );
 }
 
+/** A radio-style card for the cross-border question. Selection is signalled by the
+ *  brand fill/border AND a ✓ badge (never colour alone — F30). */
+function OptionCard({
+  title,
+  caption,
+  detail,
+  selected,
+  onPress,
+  selectedA11y,
+}: {
+  title: string;
+  caption: string;
+  detail?: string;
+  selected: boolean;
+  onPress: () => void;
+  selectedA11y: string;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="radio"
+      accessibilityState={{ selected }}
+      accessibilityLabel={selected ? `${title}, ${selectedA11y}` : title}
+      onPress={onPress}
+      style={(state) => {
+        const { pressed, hovered, focused } = state as WebPressableState;
+        return [
+          cardStyles.base,
+          selected ? cardStyles.selected : cardStyles.unselected,
+          hovered && !selected ? cardStyles.hovered : null,
+          pressed ? cardStyles.pressed : null,
+          focused ? webFocusRing : null,
+        ];
+      }}
+    >
+      <View style={cardStyles.textCol}>
+        <Text variant="subheading">{title}</Text>
+        <Text variant="caption" muted>
+          {caption}
+        </Text>
+        {detail ? (
+          <Text variant="caption" style={cardStyles.detail}>
+            {detail}
+          </Text>
+        ) : null}
+      </View>
+      <View style={[cardStyles.check, selected ? cardStyles.checkOn : cardStyles.checkOff]}>
+        {selected ? <Feather name="check" size={14} color={palette.white} /> : null}
+      </View>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
   content: {
@@ -116,7 +194,35 @@ const styles = StyleSheet.create({
     maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
-  switchRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  switchText: { flex: 1, gap: 2 },
+  crossBorder: { gap: spacing.sm },
+  options: { gap: spacing.sm },
   joinLink: { marginTop: spacing.sm, alignSelf: 'center' },
+});
+
+const cardStyles = StyleSheet.create({
+  base: {
+    flexDirection: direction.flexRow,
+    alignItems: 'flex-start',
+    gap: spacing.sm,
+    minHeight: 44,
+    padding: spacing.md,
+    borderRadius: radius.lg,
+    // 2px always so selection changes colour, never width (no reflow).
+    borderWidth: 2,
+  },
+  unselected: { backgroundColor: palette.surface, borderColor: palette.border },
+  selected: { backgroundColor: palette.brandMuted, borderColor: palette.brand },
+  hovered: { backgroundColor: palette.field },
+  pressed: { opacity: 0.9 },
+  textCol: { flex: 1, gap: 2 },
+  detail: { color: palette.textMuted, marginTop: 2 },
+  check: {
+    width: 22,
+    height: 22,
+    borderRadius: radius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkOn: { backgroundColor: palette.brand },
+  checkOff: { borderWidth: 2, borderColor: palette.border },
 });
