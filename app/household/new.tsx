@@ -4,7 +4,6 @@
  *  "what it activates" explainer. Closes to the new household. */
 
 import { Feather } from '@expo/vector-icons';
-import { getLocales } from 'expo-localization';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +20,7 @@ import { palette, radius, spacing, webFocusRing } from '@/components/theme';
 import { Button, CurrencyField, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createHousehold } from '@/features/household/api';
 import { createHouseholdSchema } from '@/features/household/schemas';
+import { defaultCurrencyCode } from '@/lib/defaults';
 import { toAppError } from '@/lib/errors';
 import { direction } from '@/lib/rtl';
 import { validate } from '@/lib/validation';
@@ -28,20 +28,12 @@ import { validate } from '@/lib/validation';
 /** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
 type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
 
-function deviceCurrency(): string {
-  try {
-    return getLocales()[0]?.currencyCode ?? '';
-  } catch {
-    return '';
-  }
-}
-
 export default function HouseholdNewScreen() {
   const { t } = useTranslation();
   const router = useRouter();
 
   const [name, setName] = useState('');
-  const [currency, setCurrency] = useState(deviceCurrency());
+  const [currency, setCurrency] = useState(defaultCurrencyCode());
   const [crossBorder, setCrossBorder] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -83,7 +75,7 @@ export default function HouseholdNewScreen() {
           label={t('household.currencyLabel')}
           value={currency}
           onChange={setCurrency}
-          suggested={[deviceCurrency()].filter(Boolean)}
+          suggested={[defaultCurrencyCode()].filter(Boolean)}
           error={fieldErrors.reportingCurrencyCode ? t('errors.validation') : undefined}
         />
 

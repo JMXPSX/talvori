@@ -3,7 +3,6 @@
  *  name into the household's own retailers (existing createRetailer). Degrades to
  *  manual-only when the directory table isn't seeded yet. */
 
-import { getLocales } from 'expo-localization';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,23 +14,16 @@ import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createRetailer, listRetailerDirectory } from '@/features/retail/api';
 import { createRetailerSchema } from '@/features/retail/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
+import { defaultCountryCode } from '@/lib/defaults';
 import type { RetailerDirectoryRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { validate } from '@/lib/validation';
-
-function deviceCountry(): string {
-  try {
-    return getLocales()[0]?.regionCode ?? 'US';
-  } catch {
-    return 'US';
-  }
-}
 
 export default function RetailNewScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active } = useActiveHousehold();
-  const country = deviceCountry();
+  const country = defaultCountryCode();
 
   const [directory, setDirectory] = useState<RetailerDirectoryRow[]>([]);
   const [query, setQuery] = useState('');
