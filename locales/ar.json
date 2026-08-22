@@ -463,6 +463,10 @@
   },
   "coupons": {
     "title": "الكوبونات",
+    "premium": "مميّز",
+    "savingsBanner": "{{amount}} توفير بالكوبونات على {{list}}",
+    "onYourList": "في قائمتك ✓ — {{item}}",
+    "until": "حتى {{date}}",
     "open": "الكوبونات",
     "active": "نشط",
     "expired": "منتهٍ",

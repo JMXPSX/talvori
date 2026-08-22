@@ -463,6 +463,10 @@
   },
   "coupons": {
     "title": "Coupons",
+    "premium": "PREMIUM",
+    "savingsBanner": "{{amount}} in coupon savings on {{list}}",
+    "onYourList": "On your list ✓ — {{item}}",
+    "until": "Until {{date}}",
     "open": "Coupons",
     "active": "Active",
     "expired": "Expired",

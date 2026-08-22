@@ -10,7 +10,7 @@ import { listRetailerProducts } from '@/features/retail/api';
 
 export interface CouponWithRefs extends CouponRow {
   retailer: Pick<RetailerRow, 'id' | 'name'> | null;
-  retailer_product: Pick<RetailerProductRow, 'id' | 'display_name'> | null;
+  retailer_product: Pick<RetailerProductRow, 'id' | 'display_name' | 'product_id'> | null;
 }
 
 /** Minor-unit coupon input assembled by the screen (major->minor already done). */
@@ -39,7 +39,7 @@ async function currentUserId(): Promise<string> {
 }
 
 const SELECT =
-  '*, retailer:retailers(id,name), retailer_product:retailer_products(id,display_name)';
+  '*, retailer:retailers(id,name), retailer_product:retailer_products(id,display_name,product_id)';
 
 export async function listCoupons(hid: string): Promise<CouponWithRefs[]> {
   const { data, error } = await getSupabase()

@@ -463,6 +463,10 @@
   },
   "coupons": {
     "title": "Mga kupon",
+    "premium": "PREMIUM",
+    "savingsBanner": "{{amount}} na tipid sa kupon sa {{list}}",
+    "onYourList": "Nasa listahan mo ✓ — {{item}}",
+    "until": "Hanggang {{date}}",
     "open": "Mga kupon",
     "active": "Aktibo",
     "expired": "Paso na",
