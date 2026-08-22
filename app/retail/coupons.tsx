@@ -7,7 +7,7 @@ import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, View } f
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { Button, Chip, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { listItems, listLists } from '@/features/grocery/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -282,15 +282,15 @@ export default function CouponsScreen() {
         <View style={styles.form}>
           <Text variant="caption" muted>{t('coupons.chooseRetailer')}</Text>
           <View style={styles.chips}>
-            {retailers.map((r) => {
-              const on = r.id === retailerId;
-              return (
-                <Pressable key={r.id} onPress={() => setRetailerId(r.id)}
-                  style={[styles.chip, on ? styles.chipActive : null]}>
-                  <Text variant="caption" style={{ color: on ? palette.white : palette.text }}>{r.name}</Text>
-                </Pressable>
-              );
-            })}
+            {retailers.map((r) => (
+              <Chip
+                key={r.id}
+                label={r.name}
+                selected={r.id === retailerId}
+                role="radio"
+                onPress={() => setRetailerId(r.id)}
+              />
+            ))}
           </View>
 
           <TextField label={t('coupons.couponTitle')} value={title} onChangeText={setTitle}
@@ -298,12 +298,8 @@ export default function CouponsScreen() {
 
           <Text variant="caption" muted>{t('coupons.discountType')}</Text>
           <View style={styles.chips}>
-            <Pressable onPress={() => setType('fixed')} style={[styles.chip, type === 'fixed' ? styles.chipActive : null]}>
-              <Text variant="caption" style={{ color: type === 'fixed' ? palette.white : palette.text }}>{t('coupons.fixed')}</Text>
-            </Pressable>
-            <Pressable onPress={() => setType('percent')} style={[styles.chip, type === 'percent' ? styles.chipActive : null]}>
-              <Text variant="caption" style={{ color: type === 'percent' ? palette.white : palette.text }}>{t('coupons.percent')}</Text>
-            </Pressable>
+            <Chip label={t('coupons.fixed')} selected={type === 'fixed'} role="radio" onPress={() => setType('fixed')} />
+            <Chip label={t('coupons.percent')} selected={type === 'percent'} role="radio" onPress={() => setType('percent')} />
           </View>
 
           {type === 'fixed' ? (
@@ -373,11 +369,6 @@ const styles = StyleSheet.create({
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  chip: {
-    paddingHorizontal: spacing.md, paddingVertical: spacing.sm,
-    borderRadius: radius.pill, backgroundColor: palette.field,
-  },
-  chipActive: { backgroundColor: palette.brand },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
 });
