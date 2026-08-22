@@ -251,3 +251,18 @@ export async function setActiveLocation(id: string): Promise<void> {
   const { error } = await getSupabase().rpc('set_active_saved_location', { _id: id });
   if (error) fail('retail.errors.saveFailed', error);
 }
+/**
+ * Set a store as the household's active shopping location (5b): reuse an existing
+ * saved_location for that store if present (no duplicates), else create one, then
+ * mark it active. The "Save & set as my location" glue.
+ */
+export async function saveAndActivateLocation(
+  hid: string,
+  storeId: string,
+  label: string,
+): Promise<void> {
+  const existing = await listSavedLocations(hid);
+  const found = existing.find((l) => l.store_id === storeId);
+  const id = found ? found.id : (await createSavedLocation(hid, { label, storeId })).id;
+  await setActiveLocation(id);
+}
