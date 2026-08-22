@@ -369,7 +369,7 @@
       "coverage": "{{priced}} sa {{total}} item may presyo",
       "missing": "{{count}} walang presyo dito",
       "floor": "Pinakamurang presyo kahit saan: {{total}} ({{priced}} sa {{total_items}})",
-      "potentialSavings": "Posibleng matipid sa kupon: {{amount}}",
+      "couponSaved": "🏷 {{amount}} tipid gamit ang kupon",
       "cheapest": "Pinakamura"
     }
   },

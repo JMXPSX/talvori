@@ -11,10 +11,13 @@ import { palette, spacing } from '@/components/theme';
 import { Button, Card, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { listItems } from '@/features/grocery/api';
-import { bestFloorMinor, compareColumns } from '@/features/retail/basket';
-import type { ColumnTotal } from '@/features/retail/basket';
+import { bestFloorMinor } from '@/features/retail/basket';
 import { getBasketPrices } from '@/features/retail/basketApi';
-import { applyCoupon } from '@/features/retail/coupon';
+import {
+  compareColumnsWithCoupons,
+  type ColumnTotalCoupon,
+  type CouponForColumn,
+} from '@/features/retail/basketCoupons';
 import { listCouponsForProduct } from '@/features/retail/couponApi';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
@@ -28,11 +31,10 @@ export default function CompareScreen() {
   const { has } = usePlan();
   const router = useRouter();
 
-  const [columns, setColumns] = useState<ColumnTotal[]>([]);
+  const [columns, setColumns] = useState<ColumnTotalCoupon[]>([]);
   const [labels, setLabels] = useState<Record<string, string>>({});
   const [floor, setFloor] = useState<{ totalMinor: number; pricedCount: number }>({ totalMinor: 0, pricedCount: 0 });
   const [itemCount, setItemCount] = useState(0);
-  const [potentialSavings, setPotentialSavings] = useState(0);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -53,35 +55,27 @@ export default function CompareScreen() {
       if (productIds.length === 0) {
         setColumns([]);
         setFloor({ totalMinor: 0, pricedCount: 0 });
-        setPotentialSavings(0);
         return;
       }
-      const { prices, labels: lbls } = await getBasketPrices(productIds, ccy);
+      const { prices, labels: lbls, columnRetailer } = await getBasketPrices(productIds, ccy);
       const basketItems = productIds.map((productId) => ({ productId }));
-      setColumns(compareColumns(basketItems, prices));
       setLabels(lbls);
       setFloor(bestFloorMinor(basketItems, prices));
 
-      // Potential coupon savings: best applicable coupon per product vs its best price.
+      // Coupons per product (each carries its retailer_id), from the same fetch
+      // the screen already made — then net them into the column totals (2c).
       const now = Date.now();
-      const bestByProduct = new Map<string, number>();
-      for (const p of prices) {
-        const prev = bestByProduct.get(p.productId);
-        if (prev === undefined || p.effectiveMinor < prev) bestByProduct.set(p.productId, p.effectiveMinor);
-      }
-      let savings = 0;
+      const couponsByProduct = new Map<string, CouponForColumn[]>();
       for (const productId of productIds) {
-        const base = bestByProduct.get(productId);
-        if (base === undefined) continue;
         const coupons = await listCouponsForProduct(productId);
-        let best = 0;
-        for (const c of coupons) {
-          const r = applyCoupon(c, base, ccy, now);
-          if (r.applicable && r.savingsMinor > best) best = r.savingsMinor;
-        }
-        savings += best;
+        couponsByProduct.set(
+          productId,
+          coupons.map((c) => ({ retailerId: c.retailer_id, coupon: c })),
+        );
       }
-      setPotentialSavings(savings);
+      setColumns(
+        compareColumnsWithCoupons(basketItems, prices, columnRetailer, couponsByProduct, ccy, now),
+      );
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -130,11 +124,16 @@ export default function CompareScreen() {
           <>
             <View style={styles.list}>
               {columns.map((col, idx) => (
-                <Card key={col.columnKey}>
+                <Card key={col.columnKey} accented={idx === 0}>
                   <View style={styles.cardRow}>
                     <Text variant="subheading">{labels[col.columnKey] ?? col.columnKey}</Text>
-                    <Text variant="heading">{formatAmount(col.totalMinor, ccy)}</Text>
+                    <Text variant="heading">{formatAmount(col.netMinor, ccy)}</Text>
                   </View>
+                  {col.savingsMinor > 0 ? (
+                    <Text variant="caption" style={{ color: palette.accent }}>
+                      {t('grocery.compare.couponSaved', { amount: formatAmount(col.savingsMinor, ccy) })}
+                    </Text>
+                  ) : null}
                   <View style={styles.cardRow}>
                     <Text variant="caption" muted>
                       {t('grocery.compare.coverage', { priced: col.pricedCount, total: itemCount })}
@@ -157,11 +156,6 @@ export default function CompareScreen() {
                   total_items: itemCount,
                 })}
               </Text>
-              {potentialSavings > 0 ? (
-                <Text variant="moneyMin" style={{ color: palette.brand }}>
-                  {t('grocery.compare.potentialSavings', { amount: formatAmount(potentialSavings, ccy) })}
-                </Text>
-              ) : null}
             </Card>
           </>
         )}

@@ -25,8 +25,12 @@ function fail(messageKey: string, cause?: unknown): never {
 export async function getBasketPrices(
   productIds: string[],
   currencyCode: string,
-): Promise<{ prices: PricePoint[]; labels: Record<string, string> }> {
-  if (productIds.length === 0) return { prices: [], labels: {} };
+): Promise<{
+  prices: PricePoint[];
+  labels: Record<string, string>;
+  columnRetailer: Record<string, string>;
+}> {
+  if (productIds.length === 0) return { prices: [], labels: {}, columnRetailer: {} };
 
   // Which retailer_products belong to these products?
   const { data: rps, error: rpErr } = await getSupabase()
@@ -35,7 +39,7 @@ export async function getBasketPrices(
     .in('product_id', productIds);
   if (rpErr) fail('retail.errors.loadFailed', rpErr);
   const rpIds = (rps ?? []).map((r) => (r as { id: string }).id);
-  if (rpIds.length === 0) return { prices: [], labels: {} };
+  if (rpIds.length === 0) return { prices: [], labels: {}, columnRetailer: {} };
 
   const { data, error } = await getSupabase()
     .from('price_snapshots')
@@ -51,6 +55,7 @@ export async function getBasketPrices(
 
   const rows = (data ?? []) as unknown as PriceJoinRow[];
   const labels: Record<string, string> = {};
+  const columnRetailer: Record<string, string> = {};
   // Latest per (productId, columnKey): rows are already newest-first, keep first seen.
   const seen = new Set<string>();
   const prices: PricePoint[] = [];
@@ -60,6 +65,8 @@ export async function getBasketPrices(
     const retailerId = r.retailer_product?.retailer?.id ?? 'unknown';
     const retailerName = r.retailer_product?.retailer?.name ?? '—';
     const columnKey = r.store_id ?? `online:${retailerId}`;
+    // A column always belongs to one retailer — record it for coupon scoping (2c).
+    columnRetailer[columnKey] = retailerId;
     const dedupe = `${productId} ${columnKey}`;
     if (seen.has(dedupe)) continue;
     seen.add(dedupe);
@@ -70,5 +77,5 @@ export async function getBasketPrices(
     prices.push({ productId, columnKey, effectiveMinor });
     labels[columnKey] = r.store?.name ?? `Online · ${retailerName}`;
   }
-  return { prices, labels };
+  return { prices, labels, columnRetailer };
 }

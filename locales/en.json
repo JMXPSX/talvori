@@ -369,7 +369,7 @@
       "coverage": "{{priced}} of {{total}} items priced",
       "missing": "{{count}} unpriced here",
       "floor": "Best price anywhere: {{total}} ({{priced}} of {{total_items}})",
-      "potentialSavings": "Potential coupon savings: {{amount}}",
+      "couponSaved": "🏷 {{amount}} off with coupons",
       "cheapest": "Cheapest"
     }
   },
