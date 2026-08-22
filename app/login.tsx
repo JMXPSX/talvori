@@ -1,23 +1,37 @@
 /**
  * Login screen (4a redesign) — email/password. Brand mark, centred capped card,
- * password visibility eye, right-aligned forgot link, and a create-account
- * footer. On success the auth gate in the root layout redirects into the app.
- * Social / email-code methods land once their providers are configured (spec 03).
+ * password visibility eye, right-aligned forgot link, primary sign-in CTA, then
+ * the spec'd alternate methods (Google / Apple / email code) below an "or" rule,
+ * and a create-account footer. On success the auth gate in the root layout
+ * redirects into the app.
+ *
+ * The alternate methods are laid out now but not yet wired: Google/Apple OAuth and
+ * email-OTP land once their providers are configured (spec 03). Pressing one shows
+ * a "coming soon" notice rather than silently doing nothing.
  */
 
-import { Feather } from '@expo/vector-icons';
+import { Feather, FontAwesome } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Pressable,
+  type PressableStateCallbackType,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { palette, radius, spacing, webFocusRing } from '@/components/theme';
 import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { loginSchema } from '@/features/auth/schemas';
 import { toAppError } from '@/lib/errors';
 import { validate } from '@/lib/validation';
+
+/** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
+type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
 
 export default function LoginScreen() {
   const { t } = useTranslation();
@@ -27,10 +41,12 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [formError, setFormError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   async function onSubmit() {
     setFormError(null);
+    setNotice(null);
     const result = validate(loginSchema, { email, password });
     if (!result.success) {
       setFieldErrors(result.fieldErrors);
@@ -46,6 +62,12 @@ export default function LoginScreen() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  // Alternate methods aren't wired yet (spec 03) — acknowledge the tap honestly.
+  function onMethodPress() {
+    setFormError(null);
+    setNotice('auth.methodComingSoon');
   }
 
   return (
@@ -99,6 +121,45 @@ export default function LoginScreen() {
               onPress={onSubmit}
               loading={submitting}
             />
+
+            <View style={styles.divider}>
+              <View style={styles.rule} />
+              <Text variant="caption" muted>
+                {t('auth.authOr')}
+              </Text>
+              <View style={styles.rule} />
+            </View>
+
+            <View style={styles.methods}>
+              <MethodButton
+                label={t('auth.continueGoogle')}
+                icon={<FontAwesome name="google" size={17} color={palette.text} />}
+                bg={palette.surface}
+                fg={palette.text}
+                bordered
+                onPress={onMethodPress}
+              />
+              <MethodButton
+                label={t('auth.continueApple')}
+                icon={<FontAwesome name="apple" size={19} color={palette.white} />}
+                bg={palette.text}
+                fg={palette.white}
+                onPress={onMethodPress}
+              />
+              <MethodButton
+                label={t('auth.emailCode')}
+                icon={<Feather name="mail" size={17} color={palette.brand} />}
+                bg={palette.brandMuted}
+                fg={palette.brand}
+                onPress={onMethodPress}
+              />
+            </View>
+
+            {notice ? (
+              <Text variant="caption" muted style={styles.center}>
+                {t(notice)}
+              </Text>
+            ) : null}
           </View>
 
           <Link href="/signup" style={styles.footer}>
@@ -109,6 +170,46 @@ export default function LoginScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+/** A social / alternate sign-in button: full-width row of leading icon + label. */
+function MethodButton({
+  label,
+  icon,
+  bg,
+  fg,
+  bordered = false,
+  onPress,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  bg: string;
+  fg: string;
+  bordered?: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={(state) => {
+        const { pressed, hovered, focused } = state as WebPressableState;
+        return [
+          methodStyles.base,
+          { backgroundColor: bg },
+          bordered ? methodStyles.bordered : null,
+          hovered ? methodStyles.hovered : null,
+          pressed ? methodStyles.pressed : null,
+          focused ? webFocusRing : null,
+        ];
+      }}
+    >
+      {icon}
+      <Text variant="button" style={{ color: fg }}>
+        {label}
+      </Text>
+    </Pressable>
   );
 }
 
@@ -133,5 +234,23 @@ const styles = StyleSheet.create({
   center: { textAlign: 'center' },
   form: { gap: spacing.md, marginTop: spacing.lg },
   forgot: { alignSelf: 'flex-end' },
+  divider: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  rule: { flex: 1, height: 1, backgroundColor: palette.border },
+  methods: { gap: spacing.sm },
   footer: { marginTop: spacing.lg, alignSelf: 'center' },
+});
+
+const methodStyles = StyleSheet.create({
+  base: {
+    minHeight: 48,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radius.control,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+  },
+  bordered: { borderWidth: 1, borderColor: palette.border },
+  hovered: { opacity: 0.92 },
+  pressed: { opacity: 0.9, transform: [{ scale: 0.99 }] },
 });
