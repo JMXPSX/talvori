@@ -3,7 +3,8 @@
 > **Adapted to Expo / React Native.** Catalog of reusable primitives in `components/ui/`,
 > exported from the barrel `@/components/ui`. **Check here before building a new component** —
 > reuse an existing primitive rather than introducing a variant. **Update this file after every
-> new primitive is built.**
+> new primitive is built.** (A *proposed* vermilion redesign, not shipped, is in the Appendix of
+> `ui-tokens.md`; this catalog reflects the current shipped system.)
 
 ## How to use
 

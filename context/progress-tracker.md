@@ -72,5 +72,11 @@
   `architecture.md` (and repointed `code-standards.md`); removed `context/adr/`. Then folded the
   17 specs + 8 plans into `build-plan.md` Appendices A/B (anchor forms `#spec-<stem>` /
   `#plan-<stem>`); removed `context/specs/` + `context/plans/` and repointed all references
-  (incl. code comments in `theme.ts` + a migration). build-plan.md is now ~10.8k lines. Next:
-  resume dark-theme provider refactor.
+  (incl. code comments in `theme.ts` + a migration). build-plan.md is now ~10.8k lines.
+- **2026-08-30 (cont.):** Conformed `context/` to the JSM 9-file template: folded
+  `design-proposal.md` (vermilion redesign) into `ui-tokens.md` as a labeled "NOT shipped"
+  Appendix (pointers added from `ui-rules.md`/`ui-registry.md`), and folded `product.md` into
+  `project-overview.md` (positioning, brand, accessibility, durable constraints, fuller
+  principles). Both standalone files removed. `context/` core is now exactly the 9 template files
+  + README + deep-reference (design/, ORCHESTRATION.md, features.md, supabase.md). Next: resume
+  dark-theme provider refactor.

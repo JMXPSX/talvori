@@ -1,10 +1,10 @@
 # Project Overview
 
 > Absorbs: `00_README_START_HERE.md`, `01_MASTER_PROJECT_CONTEXT.md`,
-> `05_GLOBALIZATION_MARKETS_OFW_SPEC.md`, `07_PRODUCT_MODULES_AND_MVP.md`. A short index
-> that defers to [`architecture.md`](architecture.md) and [`build-plan.md`](build-plan.md) for
-> depth, and to [`product.md`](product.md) for the full product-intent record (positioning,
-> brand commitments, durable constraints, accessibility).
+> `05_GLOBALIZATION_MARKETS_OFW_SPEC.md`, `07_PRODUCT_MODULES_AND_MVP.md`, and the `impeccable`
+> product record (formerly `PRODUCT.md`). Defers to [`architecture.md`](architecture.md) and
+> [`build-plan.md`](build-plan.md) for structural/roadmap depth. (The `impeccable` skill may
+> regenerate a `PRODUCT.md` at the repo root on its next run — re-fold or repoint it if so.)
 
 Internal codename: **Global Household App**. (No consumer branding/logos/bundle IDs until
 trademark/legal clearance.)
@@ -25,6 +25,15 @@ different devices, currencies, retailers, addresses, branches, or live in differ
 Cloud data is authoritative: one member adds "Milk" on Android, another sees it on iPhone or
 PC, marks it purchased, and the first device reflects the change. A lost/replaced phone never
 means lost household data.
+
+## Positioning
+
+Not "just an expense tracker." The defensible combination a neighboring product cannot copy
+piecemeal:
+
+> household finance **+** real-time shared collaboration **+** shopping / basket intelligence
+> **+** branch-level retailer pricing & coupons **+** first-class international multi-currency
+> (cross-border, remittance, FX).
 
 ## Target user
 
@@ -84,10 +93,50 @@ full merchant portal, travel-optimized multi-store routing, enterprise features.
 
 ## Product principles
 
-Global from day one · mobile + web from one codebase · security by database policy not just
-UI · money calculations exact · retail data authorized/licensed only · store/branch matters ·
-price freshness visible · subscription pricing regional · MVP simplicity over premature
-complexity.
+1. **Global from day one** — currency, language, locale, timezone, and direction are data,
+   never baked-in assumptions.
+2. **One household, one synchronized truth** — cloud-authoritative; every member sees the same
+   current picture across devices and countries.
+3. **Money is exact and never mixed** — integer minor units + ISO code; correctness over convenience.
+4. **Security by database policy** — RLS is the boundary, not the interface.
+5. **MVP simplicity over premature enterprise complexity** — ship the shared, correct, global
+   core before breadth.
+
+Also load-bearing: retail data authorized/licensed only · store/branch matters · price freshness
+visible · subscription pricing regional (never USD-only).
+
+## Durable constraints (future work must preserve)
+
+Engineering invariants live in [`architecture.md`](architecture.md); the product-level commitments:
+
+- **Money is exact** — integer minor units + ISO code, never float; never mix currencies.
+- **Security in the database (RLS), not the UI** — every table household-scoped.
+- **Globalization is not optional** — country, currency, language, timezone, tax, date format,
+  and text direction are never hard-coded.
+- **Adaptive platform, single design language** — one Expo codebase for iOS/Android/Web-PWA; no
+  per-OS design fork; no native desktop app for MVP (installable PWA covers Windows/macOS).
+- **Retail data must be authorized / licensed / permitted.**
+- **Regional subscription pricing** — support local/regional currencies; never USD-only.
+- **Price freshness must be visible; store/branch matters.**
+- *Explicitly undecided (do not fabricate):* the public product name/brand.
+
+## Brand commitments
+
+- **No confirmed public brand name yet** — an open decision; future work must not invent one.
+  Internal codename: *"Global Household App."*
+- **Shipped design direction:** *"ibilly / Expertly Approachable"* — indigo `#4343D5`, burnt-
+  orange accent, cool blue-white canvas, white bento tiles (per `components/theme.ts`; transcribed
+  in [`ui-tokens.md`](ui-tokens.md)). A vermilion "Broadsheet Ledger" redesign is *proposed, not
+  shipped* — see the Appendix in [`ui-tokens.md`](ui-tokens.md). Visual decisions belong to
+  `impeccable`, not to this record.
+- Voice / personality: not yet formally established.
+
+## Accessibility & inclusion
+
+- **RTL / Arabic is a first-class requirement**, not an afterthought.
+- **Multilingual parity** (English / Filipino / Arabic) is required for all UI copy.
+- No formal WCAG level is set yet — treat standard mobile/web accessibility as the working floor
+  and record a specific standard here when the team commits to one.
 
 ## Success criteria
 

@@ -3,7 +3,9 @@
 > **Adapted to Expo / React Native.** Interface behavior, layout, and interaction rules for
 > the "ibilly / Expertly Approachable" system. Concrete specifications, not abstract
 > guidelines. Tokens come from `components/theme.ts` (see `ui-tokens.md`); components come
-> from `components/ui/` (see `ui-registry.md`).
+> from `components/ui/` (see `ui-registry.md`). A *proposed* vermilion "Broadsheet Ledger"
+> redesign (not shipped) lives in the Appendix of `ui-tokens.md` — these rules describe the
+> current shipped system.
 
 ## Fonts & direction
 

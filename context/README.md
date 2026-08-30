@@ -9,8 +9,7 @@ the tracker is updated after every session.
 
 | File | Role |
 |------|------|
-| [project-overview.md](project-overview.md) | Vision, problem, users, scope, globalization, status |
-| [product.md](product.md) | Canonical product-intent record (impeccable) — positioning, brand, constraints, a11y |
+| [project-overview.md](project-overview.md) | Vision, problem, positioning, users, scope, globalization, brand, a11y, status |
 | [architecture.md](architecture.md) | Stack, folders, boundaries, data flows, DB, auth, RLS, retail, invariants |
 | [build-plan.md](build-plan.md) | Phased roadmap (0–10) + UX overhaul track, with status |
 | [code-standards.md](code-standards.md) | Engineering rules, git/commit, review gates, testing |
@@ -18,7 +17,6 @@ the tracker is updated after every session.
 | [ui-tokens.md](ui-tokens.md) | Design tokens (RN-adapted from `components/theme.ts`) |
 | [ui-rules.md](ui-rules.md) | UI behavior: layout, nav, cards, buttons, forms, states (RN) |
 | [ui-registry.md](ui-registry.md) | Catalog of `components/ui/` primitives |
-| [design-proposal.md](design-proposal.md) | ⚠️ *Proposed* vermilion "Broadsheet Ledger" redesign — NOT shipped; ui-* above is current |
 | [progress-tracker.md](progress-tracker.md) | **Live** status — done / in-progress / next / blocked / decisions |
 
 ## Notes
