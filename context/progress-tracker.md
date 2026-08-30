@@ -27,7 +27,14 @@
 
 Ordered by priority. These are the only items that can be worked without new accounts or data.
 
-- [ ] **4c dark theme — provider refactor** (highest-value unblocked item; already initiated).
+- [ ] **Talvori rebrand — the new target direction** (from `context/design/Budget app analysis/`).
+      Foundational, so do it first: (a) **rename** app → Talvori across config/locales/brand
+      strings; (b) **repalette** `components/theme.ts` to the Talvori tokens; (c) **money-model
+      alignment** to the 8 decided behaviors in `architecture.md`; (d) recreate the Flow Prototype
+      in RN. Full scope in `build-plan.md` §"Talvori rebrand"; tokens in `ui-tokens.md` Talvori
+      appendix.
+- [ ] **4c dark theme — provider refactor.** Build the provider on the **Talvori** palette (do
+      after/with the repalette, not on the ibilly one).
 - [ ] 4b onboarding (incl. cross-border "different countries?" question) — non-blocking polish.
 - [ ] Apply migration `20260820000012` (5a retailer directory) in the Supabase SQL editor —
       small admin task (also tracked under Known issues).
@@ -58,8 +65,14 @@ Ordered by priority. These are the only items that can be worked without new acc
 - i18n parity across en/fil/ar is enforced; RTL is first-class.
 - Modular monolith for MVP; no microservices.
 - 6a manual plan toggle is `__DEV__`-gated so it can't be a free-premium hole in prod.
-- Design direction: "ibilly / Expertly Approachable" (Stitch-adopted), borderless white bento
-  tiles on a cool blue-white canvas.
+- **Brand name: Talvori** (tagline "One plan. Everyone. Together."); "weave" was runner-up.
+  Supersedes the "Global Household App" codename.
+- **Design direction (target): Talvori** — purple `#6D4CFF`/navy/teal/orange, Plus Jakarta Sans.
+  Supersedes ibilly (still in code) and retires the vermilion "Broadsheet Ledger" proposal.
+- **Money model** decided per the Talvori Flow Prototype — 8 behaviors in `architecture.md`
+  §"Money model — decided behavior" (override older specs).
+- Prior design direction: "ibilly / Expertly Approachable" (Stitch-adopted), borderless white
+  bento tiles — currently in `components/theme.ts`, being replaced by Talvori.
 
 ## Session notes
 
@@ -93,7 +106,11 @@ Ordered by priority. These are the only items that can be worked without new acc
   operating runbook (how to drive Terminal/Desktop), not product/codebase docs, so it doesn't
   map to any of the 9 template files. Don't fold it. `supabase.md` remains a fold candidate into
   `architecture.md`/`code-standards.md` if strict conformance is wanted later.
-- **2026-08-30 (cont.):** Re-scoped "Up next" to only truly-buildable-now items (4c dark theme,
-  4b onboarding, apply migration `20260820000012`); moved Full-2c Shop and 5b follow-ups into
-  Blocked (both depend on 5d / an authorized data source). Next: resume dark-theme provider
-  refactor.
+- **2026-08-30 (cont.):** Re-scoped "Up next" to only truly-buildable-now items; moved Full-2c
+  Shop and 5b follow-ups into Blocked (both depend on 5d / an authorized data source).
+- **2026-08-30 (cont.):** Integrated the "Budget app analysis" Claude Design export. Confirmed
+  **Talvori** as the go-forward brand + design direction (purple/navy/teal/orange); captured the
+  brand into `project-overview.md`, the Talvori palette into `ui-tokens.md` (replacing the retired
+  vermilion appendix), the 8-point money model into `architecture.md`, and the rebrand scope into
+  `build-plan.md` + "Up next". Slimmed the raw export (244→21 files) to mockups + Flow Prototype +
+  brand assets + the two handoff docs. Next: start the Talvori rebrand (rename + repalette).

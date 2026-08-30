@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="stylesheet" href="_ds/modernist-8e192862-9781-4c22-977d-61dec6552d0d/styles.css">
+  <script src="_ds/modernist-8e192862-9781-4c22-977d-61dec6552d0d/_ds_bundle.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: var(--color-neutral-200); }
+    a { color: var(--color-accent-700); text-decoration: none; }
+    a:hover { color: var(--color-accent); }
+  </style>
+</helmet>
+<section style="padding: 48px 56px 72px 56px; font-family: var(--font-body); border-bottom: 2px solid var(--color-divider);">
+  <div style="max-width: 1720px;">
+    <div style="border-bottom: 2px solid var(--color-divider); padding-bottom: 20px; margin-bottom: 40px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent);">Turn 5 — seeded retailer directory · US as primary market</div>
+      <div style="display: flex; align-items: center; gap: 14px; margin: 10px 0 8px 0;"><img src="assets/talvori-mark.png" alt="Talvori logo" style="width: 44px; height: 44px; object-fit: contain;"><h1 style="font-family: var(--font-heading); font-size: 40px; font-weight: 800; letter-spacing: -0.01em; margin: 0;">Pick Walmart, don't type it</h1></div>
+      <p style="font-size: 13px; color: var(--color-neutral-700); margin: 0 0 8px 0;"><b style="color: var(--color-text);">Rebrand applied:</b> the app is now <b>Talvori</b> — the Talvori mark and wordmark replace the old identity in every sidebar (1e, 2a–2d, 4d) and on the login screen (4a), and the palette is now the brand's navy #0F172A, purple #6D4CFF, blue #3B82F6, teal #14B8A6 and warm orange #F59E0B, set in Plus Jakarta Sans.</p>
+      <p style="font-size: 15px; color: var(--color-neutral-700); max-width: 840px; margin: 0; line-height: 1.55;">A curated per-country retailer directory replaces free-typing store names — US shown as the primary market (sample household: Miller Family · USD · Austin, TX; earlier turns keep the cross-border example). Prices stay manual per branch until licensed feeds land; the directory just fixes identity, so "Walmart" is one retailer, not five spellings.</p>
+    </div>
+    <div style="display: flex; gap: 56px; flex-wrap: wrap; align-items: flex-start;">
+
+      <!-- ============ 5a RETAILER DIRECTORY ============ -->
+      <div id="5a" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">5a</span>
+          <b style="font-size: 15px;">Add retailer — pick from the directory</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 24px 20px;">
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="color: #6D4CFF; font-size: 18px;">‹</span><b style="font-size: 17px;">Add a retailer</b></div>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <span style="background: #6D4CFF; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 13px; border-radius: 999px;">🇺🇸 United States ▾</span>
+              <span style="background: #fff; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 999px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); color: #475569;">All types ▾</span>
+            </div>
+            <div style="background: #fff; border-radius: 14px; padding: 11px 14px; margin-top: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 8px; color: #475569; font-size: 13.5px;">⌕ <span>Search retailers</span></div>
+            <div style="font-size: 11px; font-weight: 700; color: #475569; letter-spacing: 0.04em; margin-top: 14px;">POPULAR NEAR AUSTIN, TX</div>
+            <div style="background: #fff; border-radius: 16px; margin-top: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); overflow: hidden;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #EDE7FF; color: #6D4CFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">W</div><div style="flex: 1;"><b style="font-size: 14px;">Walmart</b><div style="font-size: 11.5px; color: #475569;">Supercenter · grocery</div></div><span style="background: #F1F5F9; color: #6D4CFF; border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 700;">Add</span></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #FEE2E2; color: #DC2626; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">T</div><div style="flex: 1;"><b style="font-size: 14px;">Target</b><div style="font-size: 11.5px; color: #475569;">grocery · household</div></div><span style="background: #F1F5F9; color: #6D4CFF; border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 700;">Add</span></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #EDE7FF; color: #6D4CFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">HEB</div><div style="flex: 1;"><b style="font-size: 14px;">H-E-B</b><div style="font-size: 11.5px; color: #475569;">grocery · Texas</div></div><span style="background: #6D4CFF; color: #fff; border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 700;">✓ Added</span></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #14B8A6; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">K</div><div style="flex: 1;"><b style="font-size: 14px;">Kroger</b><div style="font-size: 11.5px; color: #475569;">grocery</div></div><span style="background: #F1F5F9; color: #6D4CFF; border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 700;">Add</span></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #F59E0B; color: #0F172A; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">C</div><div style="flex: 1;"><b style="font-size: 14px;">Costco</b><div style="font-size: 11.5px; color: #475569;">warehouse · membership</div></div><span style="background: #F1F5F9; color: #6D4CFF; border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 700;">Add</span></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #EAF2FE; color: #1D4ED8; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">A</div><div style="flex: 1;"><b style="font-size: 14px;">Aldi</b><div style="font-size: 11.5px; color: #475569;">grocery · discount</div></div><span style="background: #F1F5F9; color: #6D4CFF; border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 700;">Add</span></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #EAF2FE; color: #1D4ED8; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px;">TJ</div><div style="flex: 1;"><b style="font-size: 14px;">Trader Joe's</b><div style="font-size: 11.5px; color: #475569;">grocery</div></div><span style="background: #F1F5F9; color: #6D4CFF; border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 700;">Add</span></div>
+            </div>
+            <div style="font-size: 12px; color: #475569; margin-top: 10px;">Also seeded: Safeway, Publix, Sam's Club, Whole Foods, Meijer, Wegmans, Walgreens, CVS, Dollar General…</div>
+            <div style="background: #fff; border: 1px dashed #CBD5E1; border-radius: 14px; padding: 12px 14px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px; color: #475569;">Can't find your store?</span><b style="font-size: 13px; color: #6D4CFF;">Add custom retailer →</b></div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Country pill defaults from household/device locale; entries carry type tags; custom entry keeps today's manual flow as the fallback. <b>Dev:</b> global read-only `retailer_directory` table (country_code, name, kind, brand_key) seeded per launch market; "Add" calls existing createRetailer copying the directory row + storing brand_key — the hook future licensed connectors attach to. No RLS change (directory is public read).</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 5b BRANCH PICKER ============ -->
+      <div id="5b" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">5b</span>
+          <b style="font-size: 15px;">Then the branch — where manual prices live</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 24px 20px;">
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="color: #6D4CFF; font-size: 18px;">‹</span><div><b style="font-size: 17px;">Walmart</b><div style="font-size: 11.5px; color: #475569;">Pick your store — prices are per branch</div></div></div>
+            <div style="background: #fff; border-radius: 14px; padding: 11px 14px; margin-top: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 8px; color: #475569; font-size: 13.5px;">⌕ <span>City or ZIP — "78704"</span></div>
+            <div style="background: #EDE7FF; border-radius: 16px; padding: 12px 14px; margin-top: 12px; display: flex; align-items: center; gap: 12px;">
+              <div style="width: 38px; height: 38px; border-radius: 12px; background: #fff; color: #6D4CFF; display: flex; align-items: center; justify-content: center;">📍</div>
+              <div style="flex: 1;"><b style="font-size: 14px;">Walmart Supercenter — S 1st St</b><div style="font-size: 11.5px; color: #475569;">Austin, TX 78704 · 2.1 mi</div></div>
+              <span style="color: #6D4CFF; font-weight: 800;">✓</span>
+            </div>
+            <div style="background: #fff; border-radius: 16px; margin-top: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); overflow: hidden;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #F1F5F9; display: flex; align-items: center; justify-content: center;">📍</div><div style="flex: 1;"><b style="font-size: 14px;">Walmart Supercenter — Ben White Blvd</b><div style="font-size: 11.5px; color: #475569;">Austin, TX 78745 · 3.8 mi</div></div></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #F1F5F9; display: flex; align-items: center; justify-content: center;">📍</div><div style="flex: 1;"><b style="font-size: 14px;">Walmart Neighborhood Market</b><div style="font-size: 11.5px; color: #475569;">Austin, TX 78702 · 4.2 mi</div></div></div>
+            </div>
+            <div style="background: #fff; border: 1px dashed #CBD5E1; border-radius: 14px; padding: 12px 14px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 13px; color: #475569;">Branch not listed?</span><b style="font-size: 13px; color: #6D4CFF;">Add it manually →</b></div>
+            <div style="background: #0F172A; border-radius: 16px; padding: 14px 16px; margin-top: 14px; color: #fff; font-size: 12px; line-height: 1.55;">Prices you record at this branch stay with it — "milk at S 1st St" ≠ "milk at Ben White". Compare (2c) ranks branches, and the freshness pill (4d) shows how old each price is.</div>
+            <div style="background: #6D4CFF; color: #fff; border-radius: 14px; padding: 14px; text-align: center; font-size: 14.5px; font-weight: 700; margin-top: 14px;">Save & set as my location</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Completes the flow: directory → retailer → branch → saved location; manual price entry is unchanged, just correctly scoped. <b>Dev:</b> branches stay household-created rows on the existing store/branch model (seeded branch data comes later with connectors); "Save & set as my location" chains createStore + setActiveLocation.</div>
+        </sc-if>
+      </div>
+
+    </div>
+  </div>
+</section>
+<section style="padding: 48px 56px 72px 56px; font-family: var(--font-body); border-bottom: 2px solid var(--color-divider);">
+  <div style="max-width: 1720px;">
+    <div style="border-bottom: 2px solid var(--color-divider); padding-bottom: 20px; margin-bottom: 40px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent);">Turn 4 — the optional extras</div>
+      <h1 style="font-family: var(--font-heading); font-size: 40px; font-weight: 800; letter-spacing: -0.01em; margin: 10px 0 8px 0;">Auth, onboarding, dark theme, and the rest of Shop</h1>
+      <p style="font-size: 15px; color: var(--color-neutral-700); max-width: 840px; margin: 0; line-height: 1.55;">The screens outside the audit's Now/Next lists: a login with the spec'd auth methods, the cross-border onboarding question, the dark theme as a token-only reskin, and the Stores + Coupons segments that complete the Shop tab from <a href="#2c">2c</a>.</p>
+    </div>
+    <div style="display: flex; gap: 56px; flex-wrap: wrap; align-items: flex-start;">
+
+      <!-- ============ 4a LOGIN ============ -->
+      <div id="4a" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">4a</span>
+          <b style="font-size: 15px;">Login — a brand moment + the spec'd methods</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 36px 24px 28px 24px;">
+            <div style="display: flex; align-items: center; gap: 11px;">
+              <img src="assets/talvori-mark.png" alt="Talvori" style="width: 52px; height: 52px; object-fit: contain;">
+              <div>
+                <div style="font-size: 28px; font-weight: 800; letter-spacing: -0.03em; color: #0F172A; line-height: 1;">talvori</div>
+                <div style="font-size: 8.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #6D4CFF; margin-top: 4px;">One plan. Everyone. Together.</div>
+              </div>
+            </div>
+            <div style="font-size: 24px; font-weight: 800; margin-top: 22px;">Welcome back</div>
+            <div style="font-size: 13.5px; color: #475569; margin-top: 4px;">One household, one financial picture — on every device.</div>
+            <div style="margin-top: 22px;">
+              <div style="font-size: 11.5px; font-weight: 700; color: #475569;">Email</div>
+              <div style="background: #fff; border: 1px solid #EDF1F7; border-radius: 12px; padding: 12px 14px; margin-top: 6px; font-size: 14px;">maria@santos.ph</div>
+              <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-top: 12px;">Password</div>
+              <div style="background: #fff; border: 1px solid #EDF1F7; border-radius: 12px; padding: 12px 14px; margin-top: 6px; font-size: 14px; display: flex; justify-content: space-between;"><span>••••••••••</span><span style="color: #475569;">👁</span></div>
+              <div style="text-align: right; font-size: 12.5px; color: #6D4CFF; font-weight: 600; margin-top: 8px;">Forgot password?</div>
+            </div>
+            <div style="background: #6D4CFF; color: #fff; border-radius: 14px; padding: 14px; text-align: center; font-size: 14.5px; font-weight: 700; margin-top: 14px;">Sign in</div>
+            <div style="display: flex; align-items: center; gap: 12px; margin: 18px 0;"><span style="flex: 1; height: 1px; background: #E2E8F0;"></span><span style="font-size: 11.5px; color: #475569;">or</span><span style="flex: 1; height: 1px; background: #E2E8F0;"></span></div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="background: #fff; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px; text-align: center; font-size: 13.5px; font-weight: 700;">G &nbsp;Continue with Google</div>
+              <div style="background: #0F172A; color: #fff; border-radius: 14px; padding: 12px; text-align: center; font-size: 13.5px; font-weight: 700;"> &nbsp;Continue with Apple</div>
+              <div style="background: #EDE7FF; color: #6D4CFF; border-radius: 14px; padding: 12px; text-align: center; font-size: 13.5px; font-weight: 700;">✉ &nbsp;Email me a code instead</div>
+            </div>
+            <div style="text-align: center; font-size: 13px; color: #475569; margin-top: 18px;">New here? <b style="color: #6D4CFF;">Create an account</b></div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Adds the brand moment, password visibility toggle, and the auth methods spec 03 requires (Google, Apple, email OTP) as proper buttons — the current tiny caption-links become real affordances. <b>Dev:</b> social buttons ship when their providers are configured; layout lands now with email/password + OTP.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 4b ONBOARDING ============ -->
+      <div id="4b" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">4b</span>
+          <b style="font-size: 15px;">Onboarding — the cross-border question</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 24px 24px 28px 24px; display: flex; flex-direction: column; min-height: 560px;">
+            <div style="display: flex; gap: 6px;"><span style="flex: 1; height: 4px; border-radius: 999px; background: #6D4CFF;"></span><span style="flex: 1; height: 4px; border-radius: 999px; background: #6D4CFF;"></span><span style="flex: 1; height: 4px; border-radius: 999px; background: #E2E8F0;"></span></div>
+            <div style="font-size: 12px; color: #475569; margin-top: 14px; font-weight: 600;">Step 2 of 3</div>
+            <div style="font-size: 23px; font-weight: 800; margin-top: 6px; line-height: 1.25;">Do members of your household live in different countries?</div>
+            <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="background: #fff; border: 1px solid #E2E8F0; border-radius: 18px; padding: 16px;">
+                <b style="font-size: 14.5px;">We're all in one country</b>
+                <div style="font-size: 12.5px; color: #475569; margin-top: 4px;">One currency, one set of stores.</div>
+              </div>
+              <div style="background: #EDE7FF; border: 2px solid #6D4CFF; border-radius: 18px; padding: 16px; position: relative;">
+                <span style="position: absolute; top: 14px; inset-inline-end: 14px; width: 22px; height: 22px; border-radius: 999px; background: #6D4CFF; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px;">✓</span>
+                <b style="font-size: 14.5px;">We live in different countries</b>
+                <div style="font-size: 12.5px; color: #475569; margin-top: 4px;">e.g. working abroad, family at home</div>
+                <div style="background: #fff; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 12px; color: #0F172A; line-height: 1.55;">Turns on: <b>remittance tracking</b> · <b>money sent / received home</b> · <b>FX history</b> · totals in your chosen currency</div>
+              </div>
+            </div>
+            <div style="flex: 1;"></div>
+            <div style="background: #6D4CFF; color: #fff; border-radius: 14px; padding: 14px; text-align: center; font-size: 14.5px; font-weight: 700;">Continue</div>
+            <div style="text-align: center; font-size: 12.5px; color: #475569; margin-top: 10px;">You can change this anytime in Household settings</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Spec 05's onboarding question verbatim, activating the cross-border UX (remittance category, FX views, 2d's cross-border card). Steps: 1 name + currency (via <a href="#3b">3b</a>), 2 this, 3 invite members. Not OFW-branded — works for any international family.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 4c DARK THEME ============ -->
+      <div id="4c" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">4c</span>
+          <b style="font-size: 15px;">Dark theme — a token-only reskin (concept 2, done right)</b>
+        </div>
+        <div style="width: 390px; background: #0F1417; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.3); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #E9EEF1;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 0 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 13px; color: #94A3B8;">Good evening, Maria</div>
+              <span style="display: inline-flex; align-items: center; gap: 6px; background: #1A2126; border-radius: 999px; padding: 6px 12px; margin-top: 6px; font-size: 13px; font-weight: 700;">Santos Family · PHP <span style="color: #8B8BF7;">▾</span></span>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 999px; background: #6D4CFF; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">MS</div>
+          </div>
+          <div style="padding: 16px 20px 24px 20px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: #6D4CFF; border-radius: 24px; padding: 22px 20px; color: #fff;">
+              <div style="font-size: 13px; font-weight: 600; opacity: 0.85;">Household total · PHP</div>
+              <div style="font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-top: 4px;">₱182,436<span style="font-size: 20px; opacity: 0.8;">.20</span></div>
+              <div style="font-size: 12px; opacity: 0.85; margin-top: 6px;">Rates as of Aug 18</div>
+              <div style="height: 8px; background: rgba(255,255,255,0.22); border-radius: 999px; margin-top: 14px; overflow: hidden;"><div style="width: 62%; height: 100%; background: #FDE6C8;"></div></div>
+              <div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-top: 8px; opacity: 0.92;"><span>Spent ₱48,120 · 62%</span><span>11 days left</span></div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+              <div style="background: #1A2126; border-radius: 16px; padding: 12px 4px; text-align: center;"><div style="width: 36px; height: 36px; border-radius: 999px; background: #10331F; color: #4FBF7F; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px;">↙</div><div style="font-size: 11.5px; font-weight: 600; margin-top: 6px;">Income</div></div>
+              <div style="background: #1A2126; border-radius: 16px; padding: 12px 4px; text-align: center;"><div style="width: 36px; height: 36px; border-radius: 999px; background: #262650; color: #8B8BF7; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px;">↗</div><div style="font-size: 11.5px; font-weight: 600; margin-top: 6px;">Expense</div></div>
+              <div style="background: #1A2126; border-radius: 16px; padding: 12px 4px; text-align: center;"><div style="width: 36px; height: 36px; border-radius: 999px; background: #262650; color: #8B8BF7; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px;">⇄</div><div style="font-size: 11.5px; font-weight: 600; margin-top: 6px;">Transfer</div></div>
+              <div style="background: #1A2126; border-radius: 16px; padding: 12px 4px; text-align: center;"><div style="width: 36px; height: 36px; border-radius: 999px; background: #3D2417; color: #FFB68C; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px;">⛁</div><div style="font-size: 11.5px; font-weight: 600; margin-top: 6px;">Compare</div></div>
+            </div>
+            <div style="background: #1A2126; border-radius: 20px; padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;"><b style="font-size: 15px;">Recent</b><span style="font-size: 12.5px; color: #8B8BF7; font-weight: 600;">All →</span></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #232B31;">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: #262650; color: #8B8BF7; display: flex; align-items: center; justify-content: center;">🛒</div>
+                <div style="flex: 1;"><div style="font-size: 13.5px; font-weight: 600;">SM Hypermarket</div><div style="font-size: 11.5px; color: #94A3B8;">Groceries · BPI Checking</div></div>
+                <div style="font-size: 13.5px; font-weight: 700;">−₱2,140.00</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 0;">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: #10331F; color: #4FBF7F; display: flex; align-items: center; justify-content: center;">↙</div>
+                <div style="flex: 1;"><div style="font-size: 13.5px; font-weight: 600;">Salary — Riyadh</div><div style="font-size: 11.5px; color: #94A3B8;">Income · Payroll</div></div>
+                <div style="font-size: 13.5px; font-weight: 700; color: #4FBF7F;">+SAR 6,500.00</div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-around; align-items: center; background: #1A2126; border-top: 1px solid #232B31; padding: 12px 8px 22px 8px; font-size: 10.5px; font-weight: 600; color: #94A3B8;">
+            <div style="color: #8B8BF7; text-align: center;">⌂<br>Home</div><div style="text-align: center;">◔<br>Plan</div><div style="text-align: center;">≡<br>Activity</div><div style="text-align: center;">🛒<br>Shop</div><div style="text-align: center;">•••<br>More</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Proof the token system pays off: only palette values change — bg #0F1417, surface #1A2126, field #232B31, text #E9EEF1, muted #94A3B8, brand-on-dark #8B8BF7, success #4FBF7F, accent-on-dark #FFB68C; the hero keeps #6D4CFF. <b>Dev:</b> a second palette object + a theme setting; requires its own contrast QA pass. Post-beta, per the roadmap.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 4d STORES (DESKTOP) ============ -->
+      <div id="4d" style="width: 1240px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">4d</span>
+          <b style="font-size: 15px;">Shop → Stores — the retail hub grown up (F02, price freshness visible)</b>
+        </div>
+        <div style="width: 1240px; background: #F6F7FB; border-radius: 16px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; display: flex;">
+          <div style="width: 208px; background: #FFFFFF; border-right: 1px solid #EDF1F7; padding: 20px 14px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 0 10px 14px 10px;"><img src="assets/talvori-mark.png" alt="Talvori" style="width: 26px; height: 26px; object-fit: contain;"><span style="font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A;">talvori</span></div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">⌂ Home</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">◔ Plan</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">≡ Activity</div>
+            <div style="background: #EDE7FF; color: #6D4CFF; border-radius: 10px; padding: 9px 12px; font-size: 13px; font-weight: 700;">🛒 Shop</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">✦ Insights</div>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid #EDF1F7;">
+              <div style="display: flex; align-items: center; gap: 16px;"><span style="font-size: 17px; font-weight: 800;">Shop</span><span style="display: inline-flex; background: #EAF2FE; border-radius: 999px; padding: 3px; font-size: 12px; font-weight: 600;"><span style="padding: 5px 14px; color: #475569;">Lists</span><span style="background: #fff; border-radius: 999px; padding: 5px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">Stores</span><span style="padding: 5px 14px; color: #475569;">Coupons</span></span></div>
+              <span style="background: #6D4CFF; color: #fff; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 700;">＋ Add retailer</span>
+            </div>
+            <div style="padding: 22px 28px;">
+              <div style="background: #fff; border-radius: 18px; padding: 16px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 16px;">
+                <div style="width: 40px; height: 40px; border-radius: 12px; background: #EDE7FF; color: #6D4CFF; display: flex; align-items: center; justify-content: center; font-size: 18px;">📍</div>
+                <div style="flex: 1;"><b style="font-size: 14px;">Shopping near: Quezon City — SM North EDSA</b><div style="font-size: 12px; color: #475569; margin-top: 2px;">Prices and coupons are branch-specific — this location scopes everything below.</div></div>
+                <span style="background: #F1F5F9; color: #6D4CFF; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 700;">Change location</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px;">
+                <div style="background: #fff; border-radius: 18px; padding: 18px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                  <div style="display: flex; justify-content: space-between;"><b style="font-size: 15px;">SM Hypermarket</b><span style="font-size: 11px; color: #475569;">PH</span></div>
+                  <div style="font-size: 12px; color: #475569; margin-top: 8px;">3 branches saved · 128 prices</div>
+                  <div style="font-size: 11.5px; margin-top: 10px;"><span style="background: #14B8A6; color: #FFFFFF; border-radius: 999px; padding: 3px 9px; font-weight: 700;">updated Aug 19</span></div>
+                </div>
+                <div style="background: #fff; border-radius: 18px; padding: 18px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                  <div style="display: flex; justify-content: space-between;"><b style="font-size: 15px;">Puregold</b><span style="font-size: 11px; color: #475569;">PH</span></div>
+                  <div style="font-size: 12px; color: #475569; margin-top: 8px;">2 branches saved · 96 prices</div>
+                  <div style="font-size: 11.5px; margin-top: 10px;"><span style="background: #14B8A6; color: #FFFFFF; border-radius: 999px; padding: 3px 9px; font-weight: 700;">updated Aug 19</span></div>
+                </div>
+                <div style="background: #fff; border-radius: 18px; padding: 18px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                  <div style="display: flex; justify-content: space-between;"><b style="font-size: 15px;">Robinsons</b><span style="font-size: 11px; color: #475569;">PH</span></div>
+                  <div style="font-size: 12px; color: #475569; margin-top: 8px;">1 branch saved · 41 prices</div>
+                  <div style="font-size: 11.5px; margin-top: 10px;"><span style="background: #FEE2E2; color: #DC2626; border-radius: 999px; padding: 3px 9px; font-weight: 700;">stale — Jul 30</span></div>
+                </div>
+              </div>
+              <div style="background: #fff; border-radius: 18px; padding: 16px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-top: 16px;">
+                <b style="font-size: 14px;">Saved locations</b>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #EDF1F7; font-size: 13px; margin-top: 6px;"><span><b>Home</b> — SM North EDSA, Quezon City</span><span style="color: #6D4CFF; font-weight: 700; font-size: 12px;">✓ Active</span></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 13px;"><span><b>Province</b> — Puregold Tarlac</span><span style="background: #F1F5F9; color: #6D4CFF; border-radius: 999px; padding: 5px 12px; font-size: 11.5px; font-weight: 700;">Set active</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px; max-width: 1000px;">The retail hub's content, reframed: location explains WHY it matters, retailer cards carry branch/price counts and a freshness pill (green fresh / red stale — the spec's "price freshness must be visible"), add-retailer is a header action opening a modal (3c pattern). Products live inside each retailer; Coupons in 4e.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 4e COUPONS ============ -->
+      <div id="4e" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">4e</span>
+          <b style="font-size: 15px;">Coupons — tied to your list, not a pile</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 24px 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <b style="font-size: 22px;">Coupons</b>
+              <span style="background: #F59E0B; color: #0F172A; font-size: 10.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px;">PREMIUM</span>
+            </div>
+            <div style="font-size: 12px; color: #475569; margin-top: 4px;">At SM North EDSA · Quezon City</div>
+            <div style="background: #F59E0B; color: #0F172A; border-radius: 18px; padding: 14px 16px; margin-top: 14px;">
+              <b style="font-size: 13.5px;">₱145 applies to your Weekly shop</b>
+              <div style="font-size: 12px; opacity: 0.9; margin-top: 3px;">2 coupons match items on your list — counted in Compare.</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
+              <div style="background: #fff; border-radius: 18px; padding: 14px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border-inline-start: 4px solid #B45309;">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14px;">₱25 off — Nestlé Fresh Milk 1L</b><b style="color: #B45309; font-size: 13px;">−₱25</b></div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 4px;">Puregold · min. 2 pcs · until Aug 31</div>
+                <div style="font-size: 11.5px; color: #6D4CFF; font-weight: 700; margin-top: 6px;">On your list ✓ — Milk 1L ×2</div>
+              </div>
+              <div style="background: #fff; border-radius: 18px; padding: 14px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border-inline-start: 4px solid #B45309;">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14px;">10% off — fresh eggs tray</b><b style="color: #B45309; font-size: 13px;">−₱24</b></div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 4px;">SM Hypermarket · loyalty card · until Sep 5</div>
+                <div style="font-size: 11.5px; color: #6D4CFF; font-weight: 700; margin-top: 6px;">On your list ✓ — Eggs ×30</div>
+              </div>
+              <div style="background: #fff; border-radius: 18px; padding: 14px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); opacity: 0.85;">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14px;">₱50 off ₱1,000 — household goods</b><b style="color: #475569; font-size: 13px;">−₱50</b></div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 4px;">Robinsons · until Aug 24 · <span style="color: #DC2626; font-weight: 700;">expires in 4 days</span></div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 6px;">Nothing on your list matches yet</div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-around; align-items: center; background: #fff; border-top: 1px solid #EDF1F7; padding: 12px 8px 22px 8px; font-size: 10.5px; font-weight: 600; color: #475569;">
+            <div style="text-align: center;">⌂<br>Home</div><div style="text-align: center;">◔<br>Plan</div><div style="text-align: center;">≡<br>Activity</div><div style="color: #6D4CFF; text-align: center;">🛒<br>Shop</div><div style="text-align: center;">•••<br>More</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Coupons ranked by relevance to the active list ("On your list ✓"), scoped to the active location, with expiry urgency — the savings roll up into the Compare card (2c) and the header banner. <b>Dev:</b> listCouponsForProduct + applyCoupon against list items; accent (burnt orange) is the coupon color everywhere.</div>
+        </sc-if>
+      </div>
+
+    </div>
+  </div>
+</section>
+<section style="padding: 48px 56px 72px 56px; font-family: var(--font-body); border-bottom: 2px solid var(--color-divider);">
+  <div style="max-width: 1720px;">
+    <div style="border-bottom: 2px solid var(--color-divider); padding-bottom: 20px; margin-bottom: 40px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent);">Turn 3 — remaining recommendations applied</div>
+      <h1 style="font-family: var(--font-heading); font-size: 40px; font-weight: 800; letter-spacing: -0.01em; margin: 10px 0 8px 0;">The rest of the audit, designed</h1>
+      <p style="font-size: 15px; color: var(--color-neutral-700); max-width: 840px; margin: 0; line-height: 1.55;">Every remaining finding now has a build target: the edit sheet (F08 F09 F14 F15), the currency picker (F25), create-forms as modals with real empty states (F13 F19), the primitives board (F16 F17 F20 F22 F27 F30 F32), and the subscription page with regional pricing (F05's counterpart). With <a href="#1a">turn 1</a> and <a href="#2a">turn 2</a>, all 32 findings are covered.</p>
+    </div>
+    <div style="display: flex; gap: 56px; flex-wrap: wrap; align-items: flex-start;">
+
+      <!-- ============ 3a EDIT SHEET ============ -->
+      <div id="3a" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">3a</span>
+          <b style="font-size: 15px;">Transaction edit sheet — F08 F09 F14 F15</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; position: relative;">
+          <div style="filter: blur(1px); opacity: 0.45;">
+            <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+            <div style="padding: 16px 20px; font-size: 22px; font-weight: 800;">Activity</div>
+            <div style="margin: 0 20px; background: #fff; border-radius: 16px; padding: 12px 16px; font-size: 13.5px; font-weight: 600; display: flex; justify-content: space-between;"><span>SM Hypermarket</span><span>−₱2,140.00</span></div>
+            <div style="margin: 8px 20px 0 20px; background: #fff; border-radius: 16px; padding: 12px 16px; font-size: 13.5px; font-weight: 600; display: flex; justify-content: space-between;"><span>Salary — Riyadh</span><span style="color: #0E9384;">+SAR 6,500.00</span></div>
+          </div>
+          <div style="position: relative; margin-top: -8px; background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 10px 20px 26px 20px; box-shadow: 0 -8px 28px rgba(0,0,0,0.14);">
+            <div style="width: 40px; height: 4px; background: #CBD5E1; border-radius: 999px; margin: 0 auto;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;"><b style="font-size: 17px;">Edit transaction</b><span style="font-size: 14px; color: #475569;">✕</span></div>
+            <div style="background: #F1F5F9; border-radius: 14px; padding: 12px 14px; margin-top: 14px;">
+              <div style="font-size: 11px; color: #475569; font-weight: 600;">Amount · PHP</div>
+              <div style="font-size: 28px; font-weight: 800; margin-top: 2px;">₱2,140.00</div>
+            </div>
+            <div style="margin-top: 12px; border: 1px solid #EDF1F7; border-radius: 16px; overflow: hidden;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid #EDF1F7; font-size: 13.5px;"><span style="color: #475569;">Account</span><b>BPI Checking · PHP <span style="color: #CBD5E1;">›</span></b></div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid #EDF1F7; font-size: 13.5px;"><span style="color: #475569;">Category</span><b>Groceries <span style="color: #CBD5E1;">›</span></b></div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid #EDF1F7; font-size: 13.5px;"><span style="color: #475569;">Date</span><b>Today · Aug 20 <span style="color: #CBD5E1;">›</span></b></div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; font-size: 13.5px;"><span style="color: #475569;">Note</span><b>SM Hypermarket</b></div>
+            </div>
+            <div style="background: #6D4CFF; color: #fff; border-radius: 14px; padding: 14px; text-align: center; font-size: 14.5px; font-weight: 700; margin-top: 14px;">Save changes</div>
+            <div style="text-align: center; margin-top: 12px; color: #DC2626; font-size: 13px; font-weight: 600;">Delete transaction</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Row tap (mobile) or ✎ (desktop 2b) opens this; the trash leaves the feed. Select rows replace chip clouds — they open searchable pickers (3b's pattern). Date row enables backdating. <b>Dev:</b> reuse finance/entry.tsx with initialValues + updateTransaction() in features/finance/api; delete keeps its confirm sheet.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 3b CURRENCY PICKER ============ -->
+      <div id="3b" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">3b</span>
+          <b style="font-size: 15px;">Currency picker — F25 F15</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 24px 20px;">
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="color: #6D4CFF; font-size: 18px;">‹</span><b style="font-size: 17px;">Reporting currency</b></div>
+            <div style="font-size: 12.5px; color: #475569; margin-top: 6px; line-height: 1.5;">Household totals are shown in this currency. Members can still hold accounts in others.</div>
+            <div style="background: #fff; border-radius: 14px; padding: 11px 14px; margin-top: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 8px; color: #475569; font-size: 13.5px;">⌕ <span>Search name or code</span></div>
+            <div style="font-size: 11px; font-weight: 700; color: #475569; letter-spacing: 0.04em; margin-top: 16px;">SUGGESTED — FROM YOUR DEVICE</div>
+            <div style="background: #EDE7FF; border-radius: 16px; padding: 12px 14px; margin-top: 8px; display: flex; align-items: center; gap: 12px;">
+              <div style="width: 38px; height: 38px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #6D4CFF;">₱</div>
+              <div style="flex: 1;"><b style="font-size: 14px;">PHP</b><div style="font-size: 12px; color: #475569;">Philippine Peso</div></div>
+              <span style="color: #6D4CFF; font-weight: 800;">✓</span>
+            </div>
+            <div style="font-size: 11px; font-weight: 700; color: #475569; letter-spacing: 0.04em; margin-top: 16px;">ALL CURRENCIES</div>
+            <div style="background: #fff; border-radius: 16px; margin-top: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); overflow: hidden;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">﷼</div><div style="flex: 1;"><b style="font-size: 14px;">SAR</b><div style="font-size: 12px; color: #475569;">Saudi Riyal</div></div></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; font-weight: 700;">$</div><div style="flex: 1;"><b style="font-size: 14px;">USD</b><div style="font-size: 12px; color: #475569;">US Dollar</div></div></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #EDF1F7;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;">د.إ</div><div style="flex: 1;"><b style="font-size: 14px;">AED</b><div style="font-size: 12px; color: #475569;">UAE Dirham</div></div></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 14px;"><div style="width: 38px; height: 38px; border-radius: 12px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; font-weight: 700;">£</div><div style="flex: 1;"><b style="font-size: 14px;">GBP</b><div style="font-size: 12px; color: #475569;">British Pound</div></div></div>
+            </div>
+            <div style="background: #6D4CFF; color: #fff; border-radius: 14px; padding: 14px; text-align: center; font-size: 14.5px; font-weight: 700; margin-top: 16px;">Use PHP</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Replaces every free-typed code field. Device locale pre-selects; search matches code, name, symbol. <b>Dev:</b> one CurrencyPicker sheet reused by household create (3c), account create and FX rates; list from Intl.supportedValuesOf('currency') + Intl.DisplayNames.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 3c CREATE MODAL + EMPTY STATE ============ -->
+      <div id="3c" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">3c</span>
+          <b style="font-size: 15px;">Create as a modal, over a real empty state — F13 F19</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; position: relative;">
+          <div style="filter: blur(1px); opacity: 0.45;">
+            <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+            <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;"><b style="font-size: 22px;">Households</b><span style="width: 40px; height: 40px; border-radius: 999px; background: #6D4CFF; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 20px;">+</span></div>
+            <div style="text-align: center; padding: 28px 40px;">
+              <div style="width: 64px; height: 64px; border-radius: 20px; background: #EDE7FF; color: #6D4CFF; display: inline-flex; align-items: center; justify-content: center; font-size: 26px;">👥</div>
+              <div style="font-size: 15px; font-weight: 700; margin-top: 12px;">No households yet</div>
+              <div style="font-size: 12.5px; color: #475569; margin-top: 4px;">Create one, or join with an invite code.</div>
+            </div>
+          </div>
+          <div style="position: relative; margin-top: -16px; background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 10px 20px 26px 20px; box-shadow: 0 -8px 28px rgba(0,0,0,0.14);">
+            <div style="width: 40px; height: 4px; background: #CBD5E1; border-radius: 999px; margin: 0 auto;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;"><b style="font-size: 17px;">New household</b><span style="font-size: 14px; color: #475569;">✕</span></div>
+            <div style="margin-top: 14px;">
+              <div style="font-size: 11.5px; font-weight: 700; color: #475569;">Name</div>
+              <div style="background: #F1F5F9; border-radius: 12px; padding: 12px 14px; margin-top: 6px; font-size: 14px; font-weight: 600;">Santos Family</div>
+            </div>
+            <div style="margin-top: 12px; border: 1px solid #EDF1F7; border-radius: 16px; overflow: hidden;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid #EDF1F7; font-size: 13.5px;"><span style="color: #475569;">Reporting currency</span><b>₱ PHP <span style="color: #CBD5E1;">›</span></b></div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; font-size: 13.5px;">
+                <div style="flex: 1; padding-right: 10px;"><span style="color: #0F172A; font-weight: 700;">Members live in different countries</span><div style="font-size: 11.5px; color: #475569; margin-top: 2px;">Turns on remittance tracking and FX views</div></div>
+                <span style="width: 44px; height: 26px; border-radius: 999px; background: #6D4CFF; position: relative; display: inline-block;"><span style="position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 999px; background: #fff;"></span></span>
+              </div>
+            </div>
+            <div style="background: #6D4CFF; color: #fff; border-radius: 14px; padding: 14px; text-align: center; font-size: 14.5px; font-weight: 700; margin-top: 14px;">Create household</div>
+            <div style="text-align: center; margin-top: 12px; color: #6D4CFF; font-size: 13px; font-weight: 600;">Have an invite code? Join instead</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">The pattern for every foot-of-page form (household, retailer, allocation): "+" opens a sheet; the list screen behind gets the real EmptyState with CTA. Currency row opens 3b; the cross-border toggle explains what it does (the spec's onboarding question, in place). <b>Dev:</b> grocery/new and budget-new already do this — replicate.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 3d PRIMITIVES BOARD ============ -->
+      <div id="3d" style="width: 560px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">3d</span>
+          <b style="font-size: 15px;">Primitives board — F16 F17 F20 F22 F27 F30 F32</b>
+        </div>
+        <div style="width: 560px; background: #FFFFFF; border: 2px solid var(--color-divider); font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="padding: 14px 20px; border-bottom: 2px solid var(--color-divider); font-family: var(--font-heading); font-weight: 800; font-size: 14px; color: var(--color-text);">Talvori primitives — additions &amp; corrections</div>
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--color-neutral-300);">
+            <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; color: #475569;">BUTTON — DANGER JOINS THE VARIANT MAP (F17)</div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; align-items: center;">
+              <span style="background: #6D4CFF; color: #fff; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 700;">Primary</span>
+              <span style="background: #EDE7FF; color: #6D4CFF; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 700;">Secondary</span>
+              <span style="background: #F59E0B; color: #0F172A; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 700;">Accent</span>
+              <span style="background: #DC2626; color: #fff; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 700;">Danger</span>
+              <span style="color: #DC2626; font-size: 13px; font-weight: 700; padding: 9px 4px;">Danger-quiet</span>
+            </div>
+            <div style="font-size: 11.5px; color: #475569; margin-top: 8px;">Filled red only inside confirm sheets; rows use danger-quiet. No more style overrides.</div>
+          </div>
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--color-neutral-300);">
+            <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; color: #475569;">TYPE RAMP — SUBHEADING FILLS THE GAP (F20) · MONEY FLOOR (F32)</div>
+            <div style="display: flex; align-items: baseline; gap: 18px; margin-top: 10px; flex-wrap: wrap;">
+              <span style="font-size: 28px; font-weight: 700;">Title 28</span>
+              <span style="font-size: 24px; font-weight: 600;">Heading 24</span>
+              <span style="font-size: 18px; font-weight: 600; color: #6D4CFF;">Subheading 18 — new</span>
+              <span style="font-size: 16px;">Body 16</span>
+              <span style="font-size: 14px; font-weight: 600; color: #6D4CFF;">Money-min 14 tabular — new</span>
+            </div>
+            <div style="font-size: 11.5px; color: #475569; margin-top: 8px;">List-row titles drop from heading-24 to subheading-18; amounts never render below 14px, with tabular numerals so columns align.</div>
+          </div>
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--color-neutral-300);">
+            <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; color: #475569;">CHIP — ONE COMPONENT, REAL SEMANTICS (F16 F30)</div>
+            <div style="display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap;">
+              <span style="background: #6D4CFF; color: #fff; border-radius: 999px; padding: 8px 14px; font-size: 12.5px; font-weight: 700;">✓ Groceries</span>
+              <span style="background: #F1F5F9; border-radius: 999px; padding: 8px 14px; font-size: 12.5px; font-weight: 600;">Dining out</span>
+              <span style="background: #F1F5F9; border-radius: 999px; padding: 8px 14px; font-size: 12.5px; font-weight: 600;">Transport</span>
+              <span style="background: #F1F5F9; border-radius: 999px; padding: 8px 14px; font-size: 12.5px; font-weight: 600; outline: 2px solid #6D4CFF; outline-offset: 2px;">Utilities ← focus ring</span>
+            </div>
+            <div style="font-size: 11.5px; color: #475569; margin-top: 8px;">role=radio/checkbox + selected state announced; check glyph so selection isn't color-only; 2px focus-visible ring on web (F22). Inline chip copies in entry/grocery/budgets are deleted in favor of this one.</div>
+          </div>
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--color-neutral-300);">
+            <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; color: #475569;">ONE CARD (F16) · HOVER STATE (F22)</div>
+            <div style="display: flex; gap: 12px; margin-top: 10px;">
+              <div style="flex: 1; background: #fff; border: 1px solid #EDF1F7; border-radius: 16px; padding: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); font-size: 12.5px;"><b>Card</b><div style="color: #475569; margin-top: 4px;">ui/Card everywhere — the 5 hand-rolled copies are deleted.</div></div>
+              <div style="flex: 1; background: #F8FAFF; border: 1px solid #EDE7FF; border-radius: 16px; padding: 14px; box-shadow: 0 8px 28px rgba(0,0,0,0.08); font-size: 12.5px;"><b>Card — hover</b><div style="color: #475569; margin-top: 4px;">Tint + lift on pointer devices; pressed keeps the 0.6 opacity.</div></div>
+            </div>
+          </div>
+          <div style="padding: 16px 20px;">
+            <div style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; color: #475569;">DATES &amp; RANGES — LOCALIZED, RTL-SAFE (F27)</div>
+            <div style="display: flex; gap: 20px; margin-top: 10px; font-size: 13.5px; align-items: center; flex-wrap: wrap;">
+              <span style="text-decoration: line-through; color: #475569;">2026-01-01 → 2026-01-31</span>
+              <span style="font-weight: 700;">Jan 1 – 31, 2026</span>
+              <span style="font-weight: 700; direction: rtl;">١–٣١ يناير ٢٠٢٦</span>
+            </div>
+            <div style="font-size: 11.5px; color: #475569; margin-top: 8px;">Intl.DateTimeFormat.formatRange with the app locale — no hard-coded arrows. Amount inputs accept the locale's decimal separator (F29).</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Everything here lands in components/ui + theme.ts once and propagates — that's the payoff of the token system. <b>Dev:</b> Button variant map + Chip role/state; typography adds subheading + moneyMin; Card replaces local styles.card in grocery/retail/household/subscription/compare; formatRange helper in lib/format.ts.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 3e SUBSCRIPTION ============ -->
+      <div id="3e" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">3e</span>
+          <b style="font-size: 15px;">Subscription — plans with regional pricing</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 24px 20px;">
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="color: #6D4CFF; font-size: 18px;">‹</span><b style="font-size: 17px;">Your plan</b></div>
+            <div style="background: #fff; border-radius: 18px; padding: 16px; margin-top: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+              <div style="display: flex; justify-content: space-between; align-items: center;"><b style="font-size: 15px;">Free</b><span style="background: #EAF2FE; color: #1D4ED8; font-size: 10.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px; color: #475569;">CURRENT</span></div>
+              <div style="font-size: 12.5px; color: #475569; margin-top: 6px; line-height: 1.5;">Unlimited accounts, budgets, goals, shared lists and realtime sync — free stays useful.</div>
+            </div>
+            <div style="background: #6D4CFF; border-radius: 20px; padding: 18px 16px; margin-top: 12px; color: #fff; box-shadow: 0 8px 28px rgba(67,67,213,0.35);">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;"><b style="font-size: 16px;">Premium</b><span><b style="font-size: 22px;">₱149</b><span style="font-size: 12px; opacity: 0.85;">/month</span></span></div>
+              <div style="font-size: 11.5px; opacity: 0.85; margin-top: 2px;">Priced for the Philippines · or ₱1,490/yr (2 months free)</div>
+              <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                <div style="display: flex; gap: 8px;"><span style="color: #FDE6C8;">✓</span>One household total across currencies</div>
+                <div style="display: flex; gap: 8px;"><span style="color: #FDE6C8;">✓</span>Basket compare across stores &amp; branches</div>
+                <div style="display: flex; gap: 8px;"><span style="color: #FDE6C8;">✓</span>Coupons &amp; loyalty prices</div>
+                <div style="display: flex; gap: 8px;"><span style="color: #FDE6C8;">✓</span>Insights: trends, cross-border report</div>
+              </div>
+              <div style="background: #fff; color: #6D4CFF; border-radius: 12px; padding: 12px; text-align: center; font-size: 14px; font-weight: 800; margin-top: 14px;">Try Premium — 14 days free</div>
+            </div>
+            <div style="font-size: 11.5px; color: #475569; margin-top: 12px; line-height: 1.5;">Billed through the App Store / Google Play in your local currency. Only the household owner can change the plan; everyone benefits.</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Replaces the capability bullet list: value framed as jobs, price in local currency (spec: never USD-only), owner-only rule stated instead of a dead end for members. <b>Dev:</b> the __DEV__ toggle stays hidden; price strings come from platform store products per region when billing (6b) lands.</div>
+        </sc-if>
+      </div>
+
+    </div>
+  </div>
+</section>
+<section style="padding: 48px 56px 72px 56px; font-family: var(--font-body); border-bottom: 2px solid var(--color-divider);">
+  <div style="max-width: 1720px;">
+    <div style="border-bottom: 2px solid var(--color-divider); padding-bottom: 20px; margin-bottom: 40px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent);">Turn 2 — the desktop build-out</div>
+      <h1 style="font-family: var(--font-heading); font-size: 40px; font-weight: 800; letter-spacing: -0.01em; margin: 10px 0 8px 0;">Direction locked: Talvori identity, spent-vs-budget hero, option-6 stats — effort on desktop</h1>
+      <p style="font-size: 15px; color: var(--color-neutral-700); max-width: 840px; margin: 0; line-height: 1.55;">The four desktop screens the six concepts never drew, on the sidebar + top-bar shell from <a href="#1e">1e</a>: Plan, Activity, Shop with basket compare, and the premium Insights screen where option 6's stats live. Same 12-column bento, content capped ~1,200px, hover tints + 2px focus ring assumed on every interactive element.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 56px;">
+
+      <!-- ============ 2a DESKTOP PLAN ============ -->
+      <div id="2a" style="width: 1240px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">2a</span>
+          <b style="font-size: 15px;">Plan — the Budget tab as a desktop dashboard (F01 F04)</b>
+        </div>
+        <div style="width: 1240px; background: #F6F7FB; border-radius: 16px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; display: flex;">
+          <div style="width: 208px; background: #FFFFFF; border-right: 1px solid #EDF1F7; padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 0 10px 14px 10px;"><img src="assets/talvori-mark.png" alt="Talvori" style="width: 26px; height: 26px; object-fit: contain;"><span style="font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A;">talvori</span></div>
+            <div style="display: flex; align-items: center; gap: 10px; background: #F1F5F9; border-radius: 12px; padding: 9px 10px; margin-bottom: 14px;"><div style="width: 30px; height: 30px; border-radius: 10px; background: #6D4CFF; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;">SF</div><div style="flex: 1;"><div style="font-size: 12.5px; font-weight: 700;">Santos Family</div><div style="font-size: 10.5px; color: #475569;">PHP · Premium</div></div><span style="color: #475569;">⇅</span></div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">⌂ Home</div>
+            <div style="background: #EDE7FF; color: #6D4CFF; border-radius: 10px; padding: 9px 12px; font-size: 13px; font-weight: 700;">◔ Plan</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">≡ Activity</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">🛒 Shop</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">✦ Insights</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">👥 Household</div>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid #EDF1F7;">
+              <div style="display: flex; align-items: center; gap: 16px;"><span style="font-size: 17px; font-weight: 800;">Plan</span><span style="display: inline-flex; background: #EAF2FE; border-radius: 999px; padding: 3px; font-size: 12px; font-weight: 600; color: #1D4ED8;"><span style="background: #fff; border-radius: 999px; color: #3B82F6; padding: 5px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">August</span><span style="padding: 5px 14px; color: #475569;">July</span></span></div>
+              <div style="display: flex; gap: 10px;"><span style="background: #EDE7FF; color: #6D4CFF; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 700;">＋ New budget</span><span style="background: #6D4CFF; color: #fff; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 700;">＋ Add</span></div>
+            </div>
+            <div style="padding: 22px 28px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px;">
+              <div style="grid-column: span 4; background: #6D4CFF; color: #fff; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; align-items: flex-start;">
+                <div style="font-size: 12.5px; opacity: 0.85;">August budget</div>
+                <div style="display: flex; align-items: center; gap: 18px; margin-top: 14px;">
+                  <div style="width: 96px; height: 96px; border-radius: 999px; background: conic-gradient(#FDE6C8 0 62%, rgba(255,255,255,0.18) 62% 100%); display: flex; align-items: center; justify-content: center;"><div style="width: 68px; height: 68px; border-radius: 999px; background: #6D4CFF; display: flex; flex-direction: column; align-items: center; justify-content: center;"><b style="font-size: 18px;">62%</b><span style="font-size: 9.5px; opacity: 0.8;">used</span></div></div>
+                  <div><div style="font-size: 24px; font-weight: 800;">₱29,879</div><div style="font-size: 12px; opacity: 0.85;">left of ₱78,000</div><div style="font-size: 12px; margin-top: 8px; background: rgba(255,255,255,0.14); border-radius: 8px; padding: 5px 9px;">Safe to spend <b>₱2,716/day</b> · 11 days</div></div>
+                </div>
+              </div>
+              <div style="grid-column: span 8; background: #fff; border-radius: 20px; padding: 20px 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14.5px;">Category budgets</b><span style="font-size: 12px; color: #6D4CFF; font-weight: 700;">Manage allocations →</span></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; margin-top: 14px;">
+                  <div style="display: flex; gap: 10px; align-items: center;"><div style="width: 32px; height: 32px; border-radius: 10px; background: #EDE7FF; display: flex; align-items: center; justify-content: center;">🛒</div><div style="flex: 1;"><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Groceries</b><span style="color: #475569;">₱3,680 left</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 80%; height: 100%; background: #6D4CFF;"></div></div></div></div>
+                  <div style="display: flex; gap: 10px; align-items: center;"><div style="width: 32px; height: 32px; border-radius: 10px; background: #FEE2E2; display: flex; align-items: center; justify-content: center;">🍽</div><div style="flex: 1;"><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Dining out</b><span style="color: #DC2626; font-weight: 700;">over by ₱420</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 100%; height: 100%; background: #DC2626;"></div></div></div></div>
+                  <div style="display: flex; gap: 10px; align-items: center;"><div style="width: 32px; height: 32px; border-radius: 10px; background: #FDE6C8; display: flex; align-items: center; justify-content: center;">✈</div><div style="flex: 1;"><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Remittance home</b><span style="color: #475569;">₱0 left</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 100%; height: 100%; background: #F59E0B;"></div></div></div></div>
+                  <div style="display: flex; gap: 10px; align-items: center;"><div style="width: 32px; height: 32px; border-radius: 10px; background: #EDE7FF; display: flex; align-items: center; justify-content: center;">🚌</div><div style="flex: 1;"><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Transport</b><span style="color: #475569;">₱1,850 left</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 46%; height: 100%; background: #6D4CFF;"></div></div></div></div>
+                </div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 14px;">Tip: click any meter to open Activity filtered to that category and month.</div>
+              </div>
+              <div style="grid-column: span 4; background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14.5px;">Goals</b><span style="font-size: 12px; color: #6D4CFF; font-weight: 700;">All →</span></div>
+                <div style="margin-top: 12px;"><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Tuition fund</b><span style="color: #475569;">68%</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 68%; height: 100%; background: #F59E0B;"></div></div><div style="font-size: 11px; color: #475569; margin-top: 3px;">₱68,000 / ₱100,000</div></div>
+                <div style="margin-top: 12px;"><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Emergency fund</b><span style="color: #475569;">49%</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 49%; height: 100%; background: #F59E0B;"></div></div><div style="font-size: 11px; color: #475569; margin-top: 3px;">₱24,500 / ₱50,000</div></div>
+              </div>
+              <div style="grid-column: span 4; background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14.5px;">Debts</b><span style="font-size: 12px; color: #6D4CFF; font-weight: 700;">Plan →</span></div>
+                <div style="font-size: 22px; font-weight: 800; margin-top: 10px;">₱41,200</div>
+                <div style="font-size: 12px; color: #475569; margin-top: 2px;">2 open · next due <b style="color: #DC2626;">Aug 28</b></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #EDF1F7;"><span>Home Credit — appliance</span><b>₱26,400</b></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-top: 8px;"><span>Salary advance</span><b>₱14,800</b></div>
+              </div>
+              <div style="grid-column: span 4; background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <b style="font-size: 14.5px;">This month so far</b>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+                  <div><div style="font-size: 11px; color: #475569;">Spent</div><div style="font-size: 17px; font-weight: 800;">₱48,120</div></div>
+                  <div><div style="font-size: 11px; color: #475569;">Avg / day</div><div style="font-size: 17px; font-weight: 800;">₱2,406</div></div>
+                  <div><div style="font-size: 11px; color: #475569;">vs July</div><div style="font-size: 17px; font-weight: 800; color: #0E9384;">−12%</div></div>
+                  <div><div style="font-size: 11px; color: #475569;">Projected</div><div style="font-size: 17px; font-weight: 800;">₱74,600</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px; max-width: 1000px;">Replaces the three-link stub with state: ring + safe-to-spend, category meters that deep-link into Activity (F04), goals/debts/stats tiles. <b>Dev:</b> composes existing listBudgetStatus + goals + debts queries into BentoRows; "New budget" keeps the budget-new modal.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 2b DESKTOP ACTIVITY ============ -->
+      <div id="2b" style="width: 1240px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">2b</span>
+          <b style="font-size: 15px;">Activity — a real table with retrieval + row edit (F08 F09 F10 F26)</b>
+        </div>
+        <div style="width: 1240px; background: #F6F7FB; border-radius: 16px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; display: flex;">
+          <div style="width: 208px; background: #FFFFFF; border-right: 1px solid #EDF1F7; padding: 20px 14px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 0 10px 14px 10px;"><img src="assets/talvori-mark.png" alt="Talvori" style="width: 26px; height: 26px; object-fit: contain;"><span style="font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A;">talvori</span></div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">⌂ Home</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">◔ Plan</div>
+            <div style="background: #EDE7FF; color: #6D4CFF; border-radius: 10px; padding: 9px 12px; font-size: 13px; font-weight: 700;">≡ Activity</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">🛒 Shop</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">✦ Insights</div>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid #EDF1F7;">
+              <span style="font-size: 17px; font-weight: 800;">Activity</span>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <span style="background: #fff; border-radius: 999px; padding: 8px 14px; font-size: 12.5px; color: #475569; box-shadow: 0 4px 20px rgba(0,0,0,0.04); width: 210px;">⌕ Search description, note…</span>
+                <span style="background: #6D4CFF; color: #fff; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 700;">＋ Add</span>
+              </div>
+            </div>
+            <div style="padding: 18px 28px 24px 28px;">
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="background: #6D4CFF; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 13px; border-radius: 999px;">August 2026 ▾</span>
+                <span style="background: #fff; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 999px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">All types ▾</span>
+                <span style="background: #fff; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 999px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">All accounts ▾</span>
+                <span style="background: #fff; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 999px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">All categories ▾</span>
+                <span style="background: #fff; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 999px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">Everyone ▾</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 14px;">
+                <div style="background: #fff; border-radius: 14px; padding: 12px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">In</div><div style="font-size: 16px; font-weight: 800; color: #0E9384;">+₱112,300</div></div>
+                <div style="background: #fff; border-radius: 14px; padding: 12px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">Out</div><div style="font-size: 16px; font-weight: 800;">−₱48,120</div></div>
+                <div style="background: #fff; border-radius: 14px; padding: 12px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">Net</div><div style="font-size: 16px; font-weight: 800; color: #6D4CFF;">+₱64,180</div></div>
+                <div style="background: #fff; border-radius: 14px; padding: 12px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">Avg / day</div><div style="font-size: 16px; font-weight: 800;">₱2,406</div></div>
+                <div style="background: #fff; border-radius: 14px; padding: 12px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">Transactions</div><div style="font-size: 16px; font-weight: 800;">32</div></div>
+              </div>
+              <div style="background: #fff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-top: 14px; overflow: hidden;">
+                <div style="display: grid; grid-template-columns: 110px 1fr 150px 160px 120px 150px 44px; gap: 0 14px; padding: 12px 20px; border-bottom: 1px solid #EDF1F7; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; color: #475569;"><span>DATE</span><span>DESCRIPTION</span><span>CATEGORY</span><span>ACCOUNT</span><span>BY</span><span style="text-align: right;">AMOUNT</span><span></span></div>
+                <div style="display: grid; grid-template-columns: 110px 1fr 150px 160px 120px 150px 44px; gap: 0 14px; padding: 13px 20px; border-bottom: 1px solid #EDF1F7; font-size: 12.5px; align-items: center; background: #F8FAFF;"><span style="color: #475569;">Aug 20</span><b>SM Hypermarket</b><span><span style="background: #EDE7FF; color: #6D4CFF; border-radius: 999px; padding: 3px 9px; font-size: 11px; font-weight: 700;">Groceries</span></span><span style="color: #475569;">BPI Checking</span><span style="color: #475569;">Maria</span><b style="text-align: right;">−₱2,140.00</b><span style="color: #6D4CFF; font-weight: 700;">✎</span></div>
+                <div style="display: grid; grid-template-columns: 110px 1fr 150px 160px 120px 150px 44px; gap: 0 14px; padding: 13px 20px; border-bottom: 1px solid #EDF1F7; font-size: 12.5px; align-items: center;"><span style="color: #475569;">Aug 20</span><b>Salary — Riyadh</b><span><span style="background: #14B8A6; color: #FFFFFF; border-radius: 999px; padding: 3px 9px; font-size: 11px; font-weight: 700;">Income</span></span><span style="color: #475569;">Payroll · SAR</span><span style="color: #475569;">Joseph</span><span style="text-align: right;"><b style="color: #0E9384;">+SAR 6,500.00</b><span style="display: block; font-size: 10.5px; color: #475569;">≈ ₱98,865</span></span><span></span></div>
+                <div style="display: grid; grid-template-columns: 110px 1fr 150px 160px 120px 150px 44px; gap: 0 14px; padding: 13px 20px; border-bottom: 1px solid #EDF1F7; font-size: 12.5px; align-items: center;"><span style="color: #475569;">Aug 19</span><b>Grab ride</b><span><span style="background: #EDE7FF; color: #6D4CFF; border-radius: 999px; padding: 3px 9px; font-size: 11px; font-weight: 700;">Transport</span></span><span style="color: #475569;">GCash</span><span style="color: #475569;">Maria</span><b style="text-align: right;">−₱380.00</b><span></span></div>
+                <div style="display: grid; grid-template-columns: 110px 1fr 150px 160px 120px 150px 44px; gap: 0 14px; padding: 13px 20px; border-bottom: 1px solid #EDF1F7; font-size: 12.5px; align-items: center;"><span style="color: #475569;">Aug 18</span><b>Remittance — home</b><span><span style="background: #F59E0B; color: #0F172A; border-radius: 999px; padding: 3px 9px; font-size: 11px; font-weight: 700;">Transfer</span></span><span style="color: #475569;">Payroll → BPI</span><span style="color: #475569;">Joseph</span><b style="text-align: right;">₱20,000.00</b><span></span></div>
+                <div style="display: grid; grid-template-columns: 110px 1fr 150px 160px 120px 150px 44px; gap: 0 14px; padding: 13px 20px; font-size: 12.5px; align-items: center;"><span style="color: #475569;">Aug 17</span><b>Jollibee — family dinner</b><span><span style="background: #FEE2E2; color: #DC2626; border-radius: 999px; padding: 3px 9px; font-size: 11px; font-weight: 700;">Dining out</span></span><span style="color: #475569;">GCash</span><span style="color: #475569;">Maria</span><b style="text-align: right;">−₱1,260.00</b><span></span></div>
+              </div>
+              <div style="font-size: 11.5px; color: #475569; margin-top: 12px;">Hovered row (shown tinted) reveals ✎ edit — the same sheet as mobile; delete lives inside it. Foreign amounts always carry code + ≈ reporting conversion.</div>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px; max-width: 1000px;">The feed becomes a filterable table on wide viewports (cards stay on mobile, <a href="#1c">1c</a>): five filters, five stat tiles (option 6's numbers live here too), member column for household accountability. <b>Dev:</b> same listTransactions query + client filters; stat row derives from the filtered set.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 2c DESKTOP SHOP ============ -->
+      <div id="2c" style="width: 1240px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">2c</span>
+          <b style="font-size: 15px;">Shop — lists + live detail + basket compare surfaced (F02 F11 F21)</b>
+        </div>
+        <div style="width: 1240px; background: #F6F7FB; border-radius: 16px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; display: flex;">
+          <div style="width: 208px; background: #FFFFFF; border-right: 1px solid #EDF1F7; padding: 20px 14px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 0 10px 14px 10px;"><img src="assets/talvori-mark.png" alt="Talvori" style="width: 26px; height: 26px; object-fit: contain;"><span style="font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A;">talvori</span></div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">⌂ Home</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">◔ Plan</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">≡ Activity</div>
+            <div style="background: #EDE7FF; color: #6D4CFF; border-radius: 10px; padding: 9px 12px; font-size: 13px; font-weight: 700;">🛒 Shop</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">✦ Insights</div>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid #EDF1F7;">
+              <div style="display: flex; align-items: center; gap: 16px;"><span style="font-size: 17px; font-weight: 800;">Shop</span><span style="display: inline-flex; background: #EAF2FE; border-radius: 999px; padding: 3px; font-size: 12px; font-weight: 600; color: #1D4ED8;"><span style="background: #fff; border-radius: 999px; color: #3B82F6; padding: 5px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">Lists</span><span style="padding: 5px 14px; color: #475569;">Stores</span><span style="padding: 5px 14px; color: #475569;">Coupons</span></span></div>
+              <span style="background: #6D4CFF; color: #fff; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 700;">＋ New list</span>
+            </div>
+            <div style="padding: 22px 28px; display: grid; grid-template-columns: 300px 1fr; gap: 18px; align-items: start;">
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="background: #fff; border-radius: 16px; padding: 14px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border-inline-start: 4px solid #6D4CFF;"><div style="display: flex; justify-content: space-between; font-size: 13.5px;"><b>Weekly shop</b><span style="font-size: 11px; color: #0E9384; font-weight: 700;">● live</span></div><div style="height: 5px; background: #F1F5F9; border-radius: 999px; margin-top: 8px; overflow: hidden;"><div style="width: 44%; height: 100%; background: #14B8A6;"></div></div><div style="font-size: 11px; color: #475569; margin-top: 6px;">4 of 9 · est ₱3,150</div></div>
+                <div style="background: #fff; border-radius: 16px; padding: 14px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="display: flex; justify-content: space-between; font-size: 13.5px;"><b>School supplies</b></div><div style="height: 5px; background: #F1F5F9; border-radius: 999px; margin-top: 8px; overflow: hidden;"><div style="width: 10%; height: 100%; background: #6D4CFF;"></div></div><div style="font-size: 11px; color: #475569; margin-top: 6px;">1 of 12 · est ₱4,800</div></div>
+                <div style="background: #E6F7F4; border-radius: 16px; padding: 12px 16px; font-size: 12.5px; color: #475569;">✓ July restock — done, logged ₱6,240</div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="background: #fff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); padding: 18px 20px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <b style="font-size: 15px;">Weekly shop</b>
+                    <div style="display: flex; gap: 8px;"><span style="background: #F1F5F9; border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: #6D4CFF;">＋ Add item</span><span style="background: #fff; border: 1px solid #EDF1F7; border-radius: 999px; padding: 6px 10px; font-size: 12px;">⋯</span></div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 34px 1fr 70px 90px 90px 110px; gap: 0 12px; margin-top: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; color: #475569; padding-bottom: 8px; border-bottom: 1px solid #EDF1F7;"><span></span><span>ITEM</span><span>QTY</span><span>EST</span><span>ACTUAL</span><span>BY</span></div>
+                  <div style="display: grid; grid-template-columns: 34px 1fr 70px 90px 90px 110px; gap: 0 12px; padding: 10px 0; border-bottom: 1px solid #EDF1F7; font-size: 12.5px; align-items: center;"><span style="width: 22px; height: 22px; border-radius: 999px; border: 2px solid #CBD5E1; display: inline-block;"></span><span><b>Milk 1L</b> <span style="color: #6D4CFF; font-size: 11px; font-weight: 600;">Nestlé Fresh ↗</span></span><span>×2</span><span>₱180</span><span style="color: #CBD5E1;">—</span><span style="color: #475569;">Maria</span></div>
+                  <div style="display: grid; grid-template-columns: 34px 1fr 70px 90px 90px 110px; gap: 0 12px; padding: 10px 0; border-bottom: 1px solid #EDF1F7; font-size: 12.5px; align-items: center;"><span style="width: 22px; height: 22px; border-radius: 999px; border: 2px solid #CBD5E1; display: inline-block;"></span><span><b>Eggs</b> <span style="color: #475569; font-size: 11px;">link product</span></span><span>×30</span><span>₱240</span><span style="color: #CBD5E1;">—</span><span style="color: #475569;">Joseph</span></div>
+                  <div style="display: grid; grid-template-columns: 34px 1fr 70px 90px 90px 110px; gap: 0 12px; padding: 10px 0; font-size: 12.5px; align-items: center; opacity: 0.8;"><span style="width: 22px; height: 22px; border-radius: 999px; background: #14B8A6; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px;">✓</span><span style="text-decoration: line-through; color: #475569;">Rice 5kg</span><span>×1</span><span>₱1,950</span><b style="color: #0E9384;">₱1,890</b><span style="color: #475569;">Maria</span></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #EDF1F7;"><span style="font-size: 12.5px; color: #475569;">Est <b style="color: #0F172A;">₱3,150</b> · Actual <b style="color: #0F172A;">₱1,890</b></span><span style="background: #6D4CFF; color: #fff; border-radius: 12px; padding: 10px 18px; font-size: 13px; font-weight: 700;">Finish shopping — log expense</span></div>
+                </div>
+                <div style="background: #fff; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); padding: 18px 20px;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline;"><b style="font-size: 15px;">Compare this basket</b><span style="font-size: 11.5px; color: #475569;">near Quezon City · prices as of Aug 19</span></div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px;">
+                    <div style="border: 2px solid #B45309; border-radius: 14px; padding: 12px 14px; background: #FFF7F2;"><div style="display: flex; justify-content: space-between; font-size: 12px;"><b>Puregold</b><span style="background: #F59E0B; color: #0F172A; border-radius: 999px; padding: 2px 8px; font-size: 10px; font-weight: 800;">CHEAPEST</span></div><div style="font-size: 19px; font-weight: 800; margin-top: 6px;">₱2,860</div><div style="font-size: 11px; color: #475569; margin-top: 2px;">9 of 9 priced · save ₱260</div></div>
+                    <div style="border: 1px solid #EDF1F7; border-radius: 14px; padding: 12px 14px;"><b style="font-size: 12px;">SM Hypermarket</b><div style="font-size: 19px; font-weight: 800; margin-top: 6px;">₱3,120</div><div style="font-size: 11px; color: #475569; margin-top: 2px;">8 of 9 priced · 1 missing</div></div>
+                    <div style="border: 1px solid #EDF1F7; border-radius: 14px; padding: 12px 14px;"><b style="font-size: 12px;">Robinsons</b><div style="font-size: 19px; font-weight: 800; margin-top: 6px;">₱3,340</div><div style="font-size: 11px; color: #475569; margin-top: 2px;">7 of 9 priced · 2 missing</div></div>
+                  </div>
+                  <div style="font-size: 12px; color: #B45309; font-weight: 700; margin-top: 10px;">🏷 Coupons could save another ₱145 at Puregold</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px; max-width: 1000px;">The moat gets the tab: Lists · Stores · Coupons segments replace More → Retail; compare renders beside the live list with coverage, freshness date and coupon savings — all data the compare screen already computes. <b>Dev:</b> master-detail from listLists + listItems + compareColumns; the mobile list keeps <a href="#1d">1d</a>.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 2d DESKTOP INSIGHTS ============ -->
+      <div id="2d" style="width: 1240px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">2d</span>
+          <b style="font-size: 15px;">Insights — option 6's stats become the premium screen (F24)</b>
+        </div>
+        <div style="width: 1240px; background: #F6F7FB; border-radius: 16px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; display: flex;">
+          <div style="width: 208px; background: #FFFFFF; border-right: 1px solid #EDF1F7; padding: 20px 14px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 0 10px 14px 10px;"><img src="assets/talvori-mark.png" alt="Talvori" style="width: 26px; height: 26px; object-fit: contain;"><span style="font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A;">talvori</span></div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">⌂ Home</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">◔ Plan</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">≡ Activity</div>
+            <div style="padding: 9px 12px; font-size: 13px; font-weight: 600; color: #475569;">🛒 Shop</div>
+            <div style="background: #EDE7FF; color: #6D4CFF; border-radius: 10px; padding: 9px 12px; font-size: 13px; font-weight: 700;">✦ Insights</div>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid #EDF1F7;">
+              <div style="display: flex; align-items: center; gap: 12px;"><span style="font-size: 17px; font-weight: 800;">Insights</span><span style="background: #F59E0B; color: #0F172A; font-size: 10.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px;">PREMIUM</span></div>
+              <span style="display: inline-flex; background: #EAF2FE; border-radius: 999px; padding: 3px; font-size: 12px; font-weight: 600; color: #1D4ED8;"><span style="background: #fff; border-radius: 999px; color: #3B82F6; padding: 5px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">Month</span><span style="padding: 5px 14px; color: #475569;">Quarter</span><span style="padding: 5px 14px; color: #475569;">Year</span></span>
+            </div>
+            <div style="padding: 22px 28px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px;">
+              <div style="grid-column: span 8; background: #fff; border-radius: 20px; padding: 20px 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14.5px;">Spending trend — August</b><span style="font-size: 12px; color: #0E9384; font-weight: 700;">−12% vs July</span></div>
+                <svg viewBox="0 0 640 180" style="width: 100%; margin-top: 12px;">
+                  <line x1="0" y1="150" x2="640" y2="150" stroke="#EDF1F7" stroke-width="1"></line>
+                  <line x1="0" y1="100" x2="640" y2="100" stroke="#EDF1F7" stroke-width="1"></line>
+                  <line x1="0" y1="50" x2="640" y2="50" stroke="#EDF1F7" stroke-width="1"></line>
+                  <polyline points="0,138 64,128 128,132 192,104 256,112 320,84 384,92 448,60 512,74 576,44 640,52" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-dasharray="6 5"></polyline>
+                  <polyline points="0,144 64,136 128,126 192,118 256,96 320,102 384,78 448,84 512,58 576,64 640,40" fill="none" stroke="#6D4CFF" stroke-width="3.5"></polyline>
+                  <circle cx="640" cy="40" r="5" fill="#6D4CFF"></circle>
+                </svg>
+                <div style="display: flex; gap: 18px; font-size: 11.5px; color: #475569; margin-top: 8px;"><span><span style="display: inline-block; width: 14px; height: 3px; background: #6D4CFF; vertical-align: middle;"></span> August (cumulative)</span><span><span style="display: inline-block; width: 14px; height: 3px; background: #CBD5E1; vertical-align: middle;"></span> July</span></div>
+              </div>
+              <div style="grid-column: span 4; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div style="background: #fff; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">Total spent</div><div style="font-size: 20px; font-weight: 800; margin-top: 4px;">₱48,120</div><div style="font-size: 11px; color: #0E9384; font-weight: 700; margin-top: 2px;">−12%</div></div>
+                <div style="background: #fff; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">Avg / day</div><div style="font-size: 20px; font-weight: 800; margin-top: 4px;">₱2,406</div><div style="font-size: 11px; color: #0E9384; font-weight: 700; margin-top: 2px;">−8%</div></div>
+                <div style="background: #fff; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">Transactions</div><div style="font-size: 20px; font-weight: 800; margin-top: 4px;">32</div><div style="font-size: 11px; color: #DC2626; font-weight: 700; margin-top: 2px;">+3</div></div>
+                <div style="background: #fff; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="font-size: 11px; color: #475569;">Sent home</div><div style="font-size: 20px; font-weight: 800; margin-top: 4px;">₱20,000</div><div style="font-size: 11px; color: #475569; margin-top: 2px;">on plan</div></div>
+              </div>
+              <div style="grid-column: span 7; background: #fff; border-radius: 20px; padding: 20px 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <b style="font-size: 14.5px;">Where August went</b>
+                <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 10px;">
+                  <div><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Remittance home</b><span style="color: #475569;">₱20,000 · 42%</span></div><div style="height: 8px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 42%; height: 100%; background: #F59E0B;"></div></div></div>
+                  <div><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Groceries</b><span style="color: #475569;">₱14,320 · 30%</span></div><div style="height: 8px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 30%; height: 100%; background: #6D4CFF;"></div></div></div>
+                  <div><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Housing</b><span style="color: #475569;">₱6,500 · 14%</span></div><div style="height: 8px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 14%; height: 100%; background: #00617E;"></div></div></div>
+                  <div><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Dining out</b><span style="color: #475569;">₱4,620 · 9%</span></div><div style="height: 8px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 9%; height: 100%; background: #DC2626;"></div></div></div>
+                  <div><div style="display: flex; justify-content: space-between; font-size: 12.5px;"><b>Transport + others</b><span style="color: #475569;">₱2,680 · 5%</span></div><div style="height: 8px; background: #F1F5F9; border-radius: 999px; margin-top: 4px; overflow: hidden;"><div style="width: 5%; height: 100%; background: #7C5CBF;"></div></div></div>
+                </div>
+              </div>
+              <div style="grid-column: span 5; background: #6D4CFF; color: #fff; border-radius: 20px; padding: 20px 22px;">
+                <b style="font-size: 14.5px;">Cross-border month</b>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-top: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2);"><span style="opacity: 0.85;">Earned in SAR</span><b>SAR 6,500 ≈ ₱98,865</b></div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-top: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.2);"><span style="opacity: 0.85;">Sent home</span><b>₱20,000</b></div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-top: 10px;"><span style="opacity: 0.85;">Rate used</span><b>1 SAR = ₱15.21 · Aug 18</b></div>
+                <div style="font-size: 11.5px; opacity: 0.85; margin-top: 14px;">₱1,240 better than July's rate on the same amount.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px; max-width: 1000px;">Option 6's trend/avg/count stats get a real home as the premium analytics screen — plus the one insight none of the concepts had: the cross-border card (earned vs. sent home vs. rate), the OFW household's actual question. <b>Dev:</b> all derivable from existing transactions + FX snapshot queries; gate with has('multi_currency_dashboard') or a new capability.</div>
+        </sc-if>
+      </div>
+
+    </div>
+  </div>
+</section>
+<section style="padding: 48px 56px 96px 56px; font-family: var(--font-body);">
+  <div style="max-width: 1720px;">
+    <div style="border-bottom: 2px solid var(--color-divider); padding-bottom: 20px; margin-bottom: 40px;">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent);">Redesign proposals — turn 1</div>
+      <h1 style="font-family: var(--font-heading); font-size: 40px; font-weight: 800; letter-spacing: -0.01em; margin: 10px 0 8px 0;">Modernized screens, Talvori identity</h1>
+      <p style="font-size: 15px; color: var(--color-neutral-700); max-width: 780px; margin: 0; line-height: 1.55;">Targets for the audit's High/Medium fixes — Talvori brand, bento tiles and Plus Jakarta Sans kept, layout and flows reworked. IDs match references in the <a href="UX Audit — Global Household App.dc.html">audit</a>. Use the Tweaks panel to flip 1a between free and premium, or hide the notes.</p>
+    </div>
+
+    <div style="display: flex; gap: 56px; flex-wrap: wrap; align-items: flex-start;">
+
+      <!-- ============ 1a HOME ============ -->
+      <div id="1a" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">1a</span>
+          <b style="font-size: 15px;">Home — informs before it sells</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 0 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 13px; color: #475569;">Good morning, Maria</div>
+              <button style="display: inline-flex; align-items: center; gap: 6px; background: #FFFFFF; border: none; border-radius: 999px; padding: 6px 12px; margin-top: 6px; font-family: inherit; font-size: 13px; font-weight: 700; color: #0F172A; box-shadow: 0 4px 20px rgba(0,0,0,0.04); cursor: pointer;">Santos Family · PHP <span style="color: #6D4CFF;">▾</span></button>
+            </div>
+            <div style="width: 42px; height: 42px; border-radius: 999px; background: #6D4CFF; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">MS</div>
+          </div>
+          <div style="padding: 16px 20px 24px 20px; display: flex; flex-direction: column; gap: 14px;">
+            <sc-if value="{{ freeTier }}" hint-placeholder-val="{{ true }}">
+              <div style="background: #6D4CFF; border-radius: 24px; padding: 22px 20px; color: #fff; box-shadow: 0 8px 28px rgba(0,0,0,0.08);">
+                <div style="font-size: 13px; font-weight: 600; opacity: 0.85;">Spent in August</div>
+                <div style="font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-top: 4px;">₱48,120<span style="font-size: 20px; opacity: 0.8;">.40</span></div>
+                <div style="height: 8px; background: rgba(255,255,255,0.22); border-radius: 999px; margin-top: 14px; overflow: hidden;"><div style="width: 62%; height: 100%; background: #FDE6C8; border-radius: 999px;"></div></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-top: 8px; opacity: 0.92;"><span>62% of ₱78,000 budget</span><span>₱29,879.60 left · 11 days</span></div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.2); margin-top: 16px; padding-top: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px;">
+                  <div style="display: flex; justify-content: space-between;"><span style="opacity: 0.85;">PHP accounts</span><b>₱52,340.00</b></div>
+                  <div style="display: flex; justify-content: space-between;"><span style="opacity: 0.85;">SAR accounts</span><b>SAR 8,120.00</b></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.12); border-radius: 12px; padding: 8px 10px;"><span style="font-size: 12.5px;">See it as one total in PHP</span><span style="background: #F59E0B; color: #0F172A; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;">PREMIUM</span></div>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ premiumTier }}" hint-placeholder-val="{{ false }}">
+              <div style="background: #6D4CFF; border-radius: 24px; padding: 22px 20px; color: #fff; box-shadow: 0 8px 28px rgba(0,0,0,0.08);">
+                <div style="font-size: 13px; font-weight: 600; opacity: 0.85;">Household total · PHP</div>
+                <div style="font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-top: 4px;">₱182,436<span style="font-size: 20px; opacity: 0.8;">.20</span></div>
+                <div style="font-size: 12px; opacity: 0.85; margin-top: 6px;">Rates as of Aug 18 · 1 SAR = ₱15.21 →</div>
+                <div style="height: 8px; background: rgba(255,255,255,0.22); border-radius: 999px; margin-top: 14px; overflow: hidden;"><div style="width: 62%; height: 100%; background: #FDE6C8; border-radius: 999px;"></div></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-top: 8px; opacity: 0.92;"><span>Spent ₱48,120 · 62% of budget</span><span>11 days left</span></div>
+              </div>
+            </sc-if>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+              <div style="background: #fff; border-radius: 16px; padding: 12px 4px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="width: 36px; height: 36px; border-radius: 999px; background: #14B8A6; color: #FFFFFF; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px;">↙</div><div style="font-size: 11.5px; font-weight: 600; margin-top: 6px;">Income</div></div>
+              <div style="background: #fff; border-radius: 16px; padding: 12px 4px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="width: 36px; height: 36px; border-radius: 999px; background: #EDE7FF; color: #6D4CFF; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px;">↗</div><div style="font-size: 11.5px; font-weight: 600; margin-top: 6px;">Expense</div></div>
+              <div style="background: #fff; border-radius: 16px; padding: 12px 4px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="width: 36px; height: 36px; border-radius: 999px; background: #EDE7FF; color: #6D4CFF; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px;">⇄</div><div style="font-size: 11.5px; font-weight: 600; margin-top: 6px;">Transfer</div></div>
+              <div style="background: #fff; border-radius: 16px; padding: 12px 4px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04);"><div style="width: 36px; height: 36px; border-radius: 999px; background: #F59E0B; color: #0F172A; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 16px;">⛁</div><div style="font-size: 11.5px; font-weight: 600; margin-top: 6px;">Compare</div></div>
+            </div>
+            <div style="background: #fff; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;"><b style="font-size: 15px;">Recent</b><span style="font-size: 12.5px; color: #6D4CFF; font-weight: 600;">All transactions →</span></div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #EDF1F7;">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: #EDE7FF; color: #6D4CFF; display: flex; align-items: center; justify-content: center;">🛒</div>
+                <div style="flex: 1;"><div style="font-size: 13.5px; font-weight: 600;">SM Hypermarket</div><div style="font-size: 11.5px; color: #475569;">Groceries · BPI Checking</div></div>
+                <div style="font-size: 13.5px; font-weight: 700;">−₱2,140.00</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 0;">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: #14B8A6; color: #FFFFFF; display: flex; align-items: center; justify-content: center;">↙</div>
+                <div style="flex: 1;"><div style="font-size: 13.5px; font-weight: 600;">Salary — Riyadh</div><div style="font-size: 11.5px; color: #475569;">Income · Payroll account</div></div>
+                <div style="font-size: 13.5px; font-weight: 700; color: #0E9384;">+SAR 6,500.00</div>
+              </div>
+            </div>
+            <div style="background: #fff; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;"><b style="font-size: 15px;">Budget snapshot</b><span style="font-size: 12.5px; color: #6D4CFF; font-weight: 600;">Plan →</span></div>
+              <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
+                <div><div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 4px;"><span style="font-weight: 600;">Groceries</span><span style="color: #475569;">₱14,320 / ₱18,000</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; overflow: hidden;"><div style="width: 80%; height: 100%; background: #6D4CFF;"></div></div></div>
+                <div><div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 4px;"><span style="font-weight: 600;">Remittance home</span><span style="color: #475569;">₱20,000 / ₱20,000</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; overflow: hidden;"><div style="width: 100%; height: 100%; background: #F59E0B;"></div></div></div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-around; align-items: center; background: #fff; border-top: 1px solid #EDF1F7; padding: 12px 8px 22px 8px; font-size: 10.5px; font-weight: 600; color: #475569;">
+            <div style="color: #6D4CFF; text-align: center;">⌂<br>Home</div><div style="text-align: center;">◔<br>Plan</div><div style="text-align: center;">≡<br>Activity</div><div style="text-align: center;">🛒<br>Shop</div><div style="text-align: center;">•••<br>More</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Fixes F05 F06 F03 — spent-vs-budget hero (stolen from the concepts), free tier sees real per-currency balances with a one-line premium upsell, household switcher in the header, FX rates demoted to a caption beside the number they affect, recent activity restored, Compare in the action row.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 1b PLAN ============ -->
+      <div id="1b" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">1b</span>
+          <b style="font-size: 15px;">Plan tab — a dashboard, not a menu</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 24px 20px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-size: 22px; font-weight: 800;">Plan</div>
+              <div style="display: flex; background: #EAF2FE; border-radius: 999px; padding: 3px; font-size: 12px; font-weight: 600; color: #1D4ED8;"><span style="background: #fff; border-radius: 999px; color: #3B82F6; padding: 5px 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">August</span><span style="padding: 5px 12px; color: #475569;">July</span></div>
+            </div>
+            <div style="background: #fff; border-radius: 24px; padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; gap: 16px; align-items: center;">
+              <div style="width: 92px; height: 92px; border-radius: 999px; background: conic-gradient(#6D4CFF 0 62%, #F1F5F9 62% 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><div style="width: 66px; height: 66px; border-radius: 999px; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;"><b style="font-size: 17px;">62%</b><span style="font-size: 9.5px; color: #475569;">used</span></div></div>
+              <div style="flex: 1;">
+                <div style="font-size: 12.5px; color: #475569;">August budget</div>
+                <div style="font-size: 21px; font-weight: 800; margin-top: 2px;">₱29,879 <span style="font-size: 13px; font-weight: 600; color: #0E9384;">left</span></div>
+                <div style="font-size: 12px; color: #475569; margin-top: 3px;">₱48,120 spent of ₱78,000 · 11 days to go</div>
+                <div style="font-size: 12px; color: #6D4CFF; font-weight: 600; margin-top: 6px;">Safe to spend ₱2,716 / day</div>
+              </div>
+            </div>
+            <div style="background: #fff; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;"><b style="font-size: 15px;">Budgets</b><span style="font-size: 12.5px; color: #6D4CFF; font-weight: 600;">Manage →</span></div>
+              <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 34px; height: 34px; border-radius: 12px; background: #EDE7FF; display: flex; align-items: center; justify-content: center;">🛒</div><div style="flex: 1;"><div style="display: flex; justify-content: space-between; font-size: 13px;"><b>Groceries</b><span style="color: #475569;">₱3,680 left</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 5px; overflow: hidden;"><div style="width: 80%; height: 100%; background: #6D4CFF;"></div></div></div></div>
+                <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 34px; height: 34px; border-radius: 12px; background: #FEE2E2; display: flex; align-items: center; justify-content: center;">🍽</div><div style="flex: 1;"><div style="display: flex; justify-content: space-between; font-size: 13px;"><b>Dining out</b><span style="color: #DC2626; font-weight: 700;">over by ₱420</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 5px; overflow: hidden;"><div style="width: 100%; height: 100%; background: #DC2626;"></div></div></div></div>
+                <div style="display: flex; align-items: center; gap: 12px;"><div style="width: 34px; height: 34px; border-radius: 12px; background: #EDE7FF; display: flex; align-items: center; justify-content: center;">🚌</div><div style="flex: 1;"><div style="display: flex; justify-content: space-between; font-size: 13px;"><b>Transport</b><span style="color: #475569;">₱1,850 left</span></div><div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 5px; overflow: hidden;"><div style="width: 46%; height: 100%; background: #6D4CFF;"></div></div></div></div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px;">
+              <div style="flex: 1; background: #fff; border-radius: 20px; padding: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="font-size: 12px; color: #475569;">Goals</div>
+                <div style="font-size: 15px; font-weight: 800; margin-top: 3px;">Tuition fund</div>
+                <div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 8px; overflow: hidden;"><div style="width: 68%; height: 100%; background: #F59E0B;"></div></div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 5px;">₱68,000 / ₱100,000</div>
+              </div>
+              <div style="flex: 1; background: #fff; border-radius: 20px; padding: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="font-size: 12px; color: #475569;">Debts</div>
+                <div style="font-size: 15px; font-weight: 800; margin-top: 3px;">₱41,200</div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 8px;">2 open · next due <b style="color: #DC2626;">Aug 28</b></div>
+                <div style="font-size: 12px; color: #6D4CFF; font-weight: 600; margin-top: 5px;">View plan →</div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-around; align-items: center; background: #fff; border-top: 1px solid #EDF1F7; padding: 12px 8px 22px 8px; font-size: 10.5px; font-weight: 600; color: #475569;">
+            <div style="text-align: center;">⌂<br>Home</div><div style="color: #6D4CFF; text-align: center;">◔<br>Plan</div><div style="text-align: center;">≡<br>Activity</div><div style="text-align: center;">🛒<br>Shop</div><div style="text-align: center;">•••<br>More</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Fixes F01 F04 — the tab carries state: month ring with safe-to-spend, top category meters (tap → filtered transactions), goals + debts as glanceable tiles. The old three links become the section "Manage →" affordances.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 1c ACTIVITY ============ -->
+      <div id="1c" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">1c</span>
+          <b style="font-size: 15px;">Activity — retrieval + edit, no trash cans</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 16px 20px 24px 20px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-size: 22px; font-weight: 800;">Activity</div>
+              <div style="width: 40px; height: 40px; border-radius: 999px; background: #6D4CFF; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px;">+</div>
+            </div>
+            <div style="background: #fff; border-radius: 16px; padding: 10px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 8px; color: #475569; font-size: 13.5px;">⌕ <span>Search description, category…</span></div>
+            <div style="display: flex; gap: 8px; overflow: hidden;">
+              <span style="background: #6D4CFF; color: #fff; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px;">August ▾</span>
+              <span style="background: #fff; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">All types ▾</span>
+              <span style="background: #fff; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">All accounts ▾</span>
+            </div>
+            <div style="background: #fff; border-radius: 16px; padding: 12px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; justify-content: space-around; text-align: center;">
+              <div><div style="font-size: 11px; color: #475569;">In</div><div style="font-size: 15px; font-weight: 800; color: #0E9384;">+₱112,300</div></div>
+              <div style="width: 1px; background: #EDF1F7;"></div>
+              <div><div style="font-size: 11px; color: #475569;">Out</div><div style="font-size: 15px; font-weight: 800;">−₱48,120</div></div>
+              <div style="width: 1px; background: #EDF1F7;"></div>
+              <div><div style="font-size: 11px; color: #475569;">Net</div><div style="font-size: 15px; font-weight: 800; color: #6D4CFF;">+₱64,180</div></div>
+            </div>
+            <div style="font-size: 12px; font-weight: 700; color: #475569; letter-spacing: 0.03em;">TODAY</div>
+            <div style="background: #fff; border-radius: 20px; padding: 4px 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #EDF1F7;">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: #EDE7FF; display: flex; align-items: center; justify-content: center;">🛒</div>
+                <div style="flex: 1;"><div style="font-size: 13.5px; font-weight: 600;">SM Hypermarket</div><div style="font-size: 11.5px; color: #475569;">Groceries · BPI Checking</div></div>
+                <div style="text-align: right;"><div style="font-size: 13.5px; font-weight: 700;">−₱2,140.00</div><div style="font-size: 10.5px; color: #475569;">PHP</div></div>
+                <span style="color: #CBD5E1;">›</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0;">
+                <div style="width: 38px; height: 38px; border-radius: 12px; background: #D6F5F0; display: flex; align-items: center; justify-content: center;">↙</div>
+                <div style="flex: 1;"><div style="font-size: 13.5px; font-weight: 600;">Salary — Riyadh</div><div style="font-size: 11.5px; color: #475569;">Income · Payroll</div></div>
+                <div style="text-align: right;"><div style="font-size: 13.5px; font-weight: 700; color: #0E9384;">+SAR 6,500.00</div><div style="font-size: 10.5px; color: #475569;">≈ ₱98,865</div></div>
+                <span style="color: #CBD5E1;">›</span>
+              </div>
+            </div>
+            <div style="background: #0F172A; border-radius: 16px; padding: 14px 16px; color: #fff; display: flex; gap: 12px; align-items: center;">
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 700;">Tap a row to view &amp; edit</div>
+                <div style="font-size: 11.5px; opacity: 0.75; margin-top: 2px;">Amount, category, date, account — delete lives inside, behind a confirm. Swipe left for quick delete.</div>
+              </div>
+              <div style="background: #6D4CFF; border-radius: 10px; padding: 8px 12px; font-size: 12px; font-weight: 700;">Edit</div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-around; align-items: center; background: #fff; border-top: 1px solid #EDF1F7; padding: 12px 8px 22px 8px; font-size: 10.5px; font-weight: 600; color: #475569;">
+            <div style="text-align: center;">⌂<br>Home</div><div style="text-align: center;">◔<br>Plan</div><div style="color: #6D4CFF; text-align: center;">≡<br>Activity</div><div style="text-align: center;">🛒<br>Shop</div><div style="text-align: center;">•••<br>More</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Fixes F08 F09 F10 F26 — search + month/type/account filters, month in/out/net header, rows open an edit sheet (chevron affordance), currency code / ≈ conversion caption on foreign amounts, destructive action demoted off the surface.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 1d GROCERY ============ -->
+      <div id="1d" style="width: 390px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">1d</span>
+          <b style="font-size: 15px;">Grocery list — built for the aisle</b>
+        </div>
+        <div style="width: 390px; background: #F6F7FB; border-radius: 28px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A;">
+          <div style="display: flex; justify-content: space-between; padding: 14px 24px 0 24px; font-size: 13px; font-weight: 600;"><span>9:41</span><span>▪▪▪ ⌁ ▮</span></div>
+          <div style="padding: 14px 20px 12px 20px; background: #F6F7FB;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 8px;"><span style="color: #6D4CFF; font-size: 18px;">‹</span><b style="font-size: 17px;">Weekly shop</b></div>
+              <div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 12px; font-weight: 700; color: #6D4CFF;">Compare ⛁</span><span style="width: 30px; height: 30px; border-radius: 999px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: inline-flex; align-items: center; justify-content: center;">⋯</span></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+              <div style="flex: 1; height: 7px; background: #EAF2FE; border-radius: 999px; overflow: hidden;"><div style="width: 44%; height: 100%; background: #3B82F6;"></div></div>
+              <span style="font-size: 12px; font-weight: 700; color: #475569;">4 of 9</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #475569; margin-top: 6px;"><span>Est. ₱3,150.00</span><b style="color: #0F172A;">Actual ₱1,890.00</b></div>
+            <div style="background: #fff; border-radius: 14px; padding: 10px 12px; margin-top: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 10px;">
+              <span style="color: #475569;">＋</span><span style="flex: 1; font-size: 13.5px; color: #475569;">Add item — try "Milk 1L ×2"</span><span style="background: #6D4CFF; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px;">Add</span>
+            </div>
+          </div>
+          <div style="padding: 4px 20px 20px 20px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="background: #fff; border-radius: 16px; padding: 12px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 12px;">
+              <div style="width: 26px; height: 26px; border-radius: 999px; border: 2.5px solid #CBD5E1; flex-shrink: 0;"></div>
+              <div style="flex: 1;"><div style="font-size: 14px; font-weight: 700;">Milk 1L <span style="color: #475569; font-weight: 500;">×2</span></div><div style="font-size: 11.5px; color: #475569;">Maria · est ₱180 · <span style="color: #6D4CFF; font-weight: 600;">Nestlé Fresh ↗</span></div></div>
+              <div style="font-size: 13px; font-weight: 700; color: #475569;">₱180</div>
+            </div>
+            <div style="background: #fff; border-radius: 16px; padding: 12px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 12px;">
+              <div style="width: 26px; height: 26px; border-radius: 999px; border: 2.5px solid #CBD5E1; flex-shrink: 0;"></div>
+              <div style="flex: 1;"><div style="font-size: 14px; font-weight: 700;">Eggs <span style="color: #475569; font-weight: 500;">×30</span></div><div style="font-size: 11.5px; color: #475569;">Joseph · est ₱240 · <span style="color: #6D4CFF; font-weight: 600;">Link product</span></div></div>
+              <div style="font-size: 13px; font-weight: 700; color: #475569;">₱240</div>
+            </div>
+            <div style="background: #E6F7F4; border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; opacity: 0.9;">
+              <div style="width: 26px; height: 26px; border-radius: 999px; background: #14B8A6; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">✓</div>
+              <div style="flex: 1;"><div style="font-size: 14px; font-weight: 700; text-decoration: line-through; color: #475569;">Rice 5kg</div><div style="font-size: 11.5px; color: #475569;">bought by Maria · paid ₱1,890</div></div>
+              <div style="font-size: 13px; font-weight: 700; color: #0E9384;">₱1,890</div>
+            </div>
+            <div style="background: #0F172A; border-radius: 16px; padding: 12px 14px; color: #fff; font-size: 11.5px; line-height: 1.5;">Ticking an item asks one optional question — "what did it cost?" — prefilled with the estimate. Add form no longer hides at the bottom; delete list moved into ⋯.</div>
+          </div>
+          <div style="padding: 0 20px 24px 20px;">
+            <div style="background: #6D4CFF; border-radius: 16px; padding: 15px; text-align: center; color: #fff; font-size: 14.5px; font-weight: 700; box-shadow: 0 8px 28px rgba(67,67,213,0.35);">Finish shopping — log ₱1,890 as expense</div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px;">Fixes F11 F12 F17 — sticky header holds progress, totals, quick-add and Compare; 44px tick circles replace per-row buttons; checkout is one pinned CTA opening an account/category sheet; list deletion lives in the overflow menu with a danger-variant confirm.</div>
+        </sc-if>
+      </div>
+
+      <!-- ============ 1e WEB DASHBOARD ============ -->
+      <div id="1e" style="width: 1240px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="background: var(--color-accent); color: #fff; font-family: var(--font-heading); font-weight: 800; font-size: 13px; padding: 3px 9px;">1e</span>
+          <b style="font-size: 15px;">Web / desktop ≥1024px — a real dashboard, not a wide phone</b>
+        </div>
+        <div style="width: 1240px; background: #F6F7FB; border-radius: 16px; box-shadow: 0 14px 44px rgba(22,29,31,0.16); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; color: #0F172A; display: flex;">
+          <div style="width: 232px; background: #FFFFFF; border-right: 1px solid #EDF1F7; padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 0 10px 14px 10px;"><img src="assets/talvori-mark.png" alt="Talvori" style="width: 26px; height: 26px; object-fit: contain;"><span style="font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: #0F172A;">talvori</span></div>
+            <div style="display: flex; align-items: center; gap: 10px; background: #F1F5F9; border-radius: 12px; padding: 10px; margin-bottom: 14px; cursor: pointer;">
+              <div style="width: 34px; height: 34px; border-radius: 10px; background: #6D4CFF; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">SF</div>
+              <div style="flex: 1;"><div style="font-size: 13px; font-weight: 700;">Santos Family</div><div style="font-size: 11px; color: #475569;">PHP · Premium</div></div>
+              <span style="color: #475569;">⇅</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; background: #EDE7FF; color: #6D4CFF; border-radius: 10px; padding: 10px 12px; font-size: 13.5px; font-weight: 700;">⌂ Home</div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: #475569;">◔ Plan</div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: #475569;">≡ Activity</div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: #475569;">🛒 Shop</div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: #475569;">👥 Household</div>
+            <div style="flex: 1;"></div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 13.5px; font-weight: 600; color: #475569;">⚙ Settings</div>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; background: rgba(244,250,253,0.9); border-bottom: 1px solid #EDF1F7;">
+              <div style="font-size: 17px; font-weight: 800;">Home</div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="background: #fff; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; color: #475569; box-shadow: 0 4px 20px rgba(0,0,0,0.04); width: 220px;">⌕ Search</div>
+                <div style="background: #6D4CFF; color: #fff; border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 700;">＋ Add</div>
+                <div style="width: 36px; height: 36px; border-radius: 999px; background: #6D4CFF; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;">MS</div>
+              </div>
+            </div>
+            <div style="padding: 24px 28px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px;">
+              <div style="grid-column: span 5; background: #6D4CFF; border-radius: 20px; padding: 22px; color: #fff;">
+                <div style="font-size: 13px; opacity: 0.85;">Household total · PHP</div>
+                <div style="font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-top: 4px;">₱182,436.20</div>
+                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Rates as of Aug 18 · manage rates →</div>
+                <div style="display: flex; gap: 18px; border-top: 1px solid rgba(255,255,255,0.2); margin-top: 16px; padding-top: 12px; font-size: 13px;">
+                  <div><div style="opacity: 0.8; font-size: 11.5px;">PHP</div><b>₱52,340</b></div>
+                  <div><div style="opacity: 0.8; font-size: 11.5px;">SAR</div><b>8,120</b></div>
+                  <div><div style="opacity: 0.8; font-size: 11.5px;">Spent Aug</div><b>₱48,120</b></div>
+                  <div><div style="opacity: 0.8; font-size: 11.5px;">Budget left</div><b>₱29,879</b></div>
+                </div>
+              </div>
+              <div style="grid-column: span 4; background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14.5px;">Spending trend</b><span style="font-size: 12px; color: #0E9384; font-weight: 700;">−12% vs July</span></div>
+                <svg viewBox="0 0 300 96" style="width: 100%; margin-top: 10px;"><polyline points="0,70 30,64 60,68 90,52 120,58 150,40 180,46 210,30 240,38 270,24 300,30" fill="none" stroke="#6D4CFF" stroke-width="3"></polyline><line x1="0" y1="88" x2="300" y2="88" stroke="#EDF1F7" stroke-width="1"></line></svg>
+                <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #475569; margin-top: 6px;"><span>Avg ₱2,406/day</span><span>32 transactions</span></div>
+              </div>
+              <div style="grid-column: span 3; background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <b style="font-size: 14.5px;">Quick actions</b>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px;">
+                  <div style="background: #F1F5F9; border-radius: 12px; padding: 10px 6px; text-align: center; font-size: 11.5px; font-weight: 600;">↙ Income</div>
+                  <div style="background: #F1F5F9; border-radius: 12px; padding: 10px 6px; text-align: center; font-size: 11.5px; font-weight: 600;">↗ Expense</div>
+                  <div style="background: #F1F5F9; border-radius: 12px; padding: 10px 6px; text-align: center; font-size: 11.5px; font-weight: 600;">⇄ Transfer</div>
+                  <div style="background: #FDE6C8; border-radius: 12px; padding: 10px 6px; text-align: center; font-size: 11.5px; font-weight: 600; color: #B45309;">⛁ Compare</div>
+                </div>
+              </div>
+              <div style="grid-column: span 7; background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14.5px;">Recent activity</b><span style="font-size: 12px; color: #6D4CFF; font-weight: 700;">View all →</span></div>
+                <div style="display: grid; grid-template-columns: auto 1fr auto auto auto; gap: 10px 14px; align-items: center; margin-top: 12px; font-size: 13px;">
+                  <div style="width: 32px; height: 32px; border-radius: 10px; background: #EDE7FF; display: flex; align-items: center; justify-content: center;">🛒</div><div><b>SM Hypermarket</b> <span style="color: #475569;">· Groceries</span></div><span style="color: #475569;">BPI Checking</span><span style="color: #475569;">Today</span><b>−₱2,140.00</b>
+                  <div style="width: 32px; height: 32px; border-radius: 10px; background: #D6F5F0; display: flex; align-items: center; justify-content: center;">↙</div><div><b>Salary — Riyadh</b> <span style="color: #475569;">· Income</span></div><span style="color: #475569;">Payroll · SAR</span><span style="color: #475569;">Today</span><b style="color: #0E9384;">+SAR 6,500.00</b>
+                  <div style="width: 32px; height: 32px; border-radius: 10px; background: #EDE7FF; display: flex; align-items: center; justify-content: center;">🚌</div><div><b>Grab ride</b> <span style="color: #475569;">· Transport</span></div><span style="color: #475569;">GCash</span><span style="color: #475569;">Yesterday</span><b>−₱380.00</b>
+                </div>
+              </div>
+              <div style="grid-column: span 5; background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                <div style="display: flex; justify-content: space-between;"><b style="font-size: 14.5px;">Weekly shop</b><span style="font-size: 12px; color: #475569;">4 of 9 · live</span></div>
+                <div style="height: 6px; background: #F1F5F9; border-radius: 999px; margin-top: 10px; overflow: hidden;"><div style="width: 44%; height: 100%; background: #14B8A6;"></div></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: #475569; margin-top: 10px;"><span>Est ₱3,150 · Actual ₱1,890</span><span style="color: #B45309; font-weight: 700;">Best basket: Puregold ₱2,860</span></div>
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                  <div style="flex: 1; background: #F1F5F9; border-radius: 10px; padding: 8px; text-align: center; font-size: 12px; font-weight: 700; color: #6D4CFF;">Open list</div>
+                  <div style="flex: 1; background: #FDE6C8; border-radius: 10px; padding: 8px; text-align: center; font-size: 12px; font-weight: 700; color: #B45309;">Compare stores</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top: 14px; font-size: 13px; line-height: 1.55; color: var(--color-neutral-700); border-top: 2px solid var(--color-divider); padding-top: 10px; max-width: 900px;">Fixes F21 F22 F23 F03 F24 F02 — persistent top bar (title · search · global add), household switcher in the sidebar, 12-column bento with a content cap ~1200px, Insights stats from concept 6 promoted to a desktop tile, grocery + basket compare surfaced on the dashboard. Hover tints and a 2px focus ring apply to every interactive element.</div>
+        </sc-if>
+      </div>
+
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1840, &quot;height&quot;: 1400}, &quot;freeTier&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Home hero&quot;}, &quot;showNotes&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Canvas&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const free = this.props.freeTier ?? true;
+    return { freeTier: free, premiumTier: !free, showNotes: this.props.showNotes ?? true };
+  }
+}
+</script>
+</body>
+</html>

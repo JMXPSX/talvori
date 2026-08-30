@@ -157,6 +157,33 @@ pack, never display name alone. **Only authorized data sources** — official AP
 feed, partner/affiliate, permitted dataset, merchant data. No unauthorized scraping; never
 fake coupon clipping or bypass retailer account protections.
 
+## Money model — decided behavior (Talvori)
+
+> From the Talvori interactive Flow Prototype ("Budget app analysis" design workspace). These
+> were decided with the product owner and **override anything looser in older spec docs** — build
+> the finance core to match.
+
+1. **Accounts are user-defined, plural, renameable** — seed `Checking` + `Savings`, floor of 2.
+   Rename cascades to transactions (both transfer legs), category funding accounts, and the
+   dashboard scope; delete re-points affected budgets to the first remaining account.
+2. **Payroll is not an account** — salary is income *into* Checking/Savings, origin captured by
+   the `Salary` category. Account pickers never list a payroll/holding account.
+3. **Every category budget names a funding account** (`{limit, account}`). Legacy numeric limit is
+   read as `{limit, account: 'Checking'}`.
+4. **Dashboard hero is account-scoped** — pills `All · <each account>` filter both halves of the
+   spend/budget ratio; Checking and Savings are never silently combined.
+5. **Dashboard "By account"** is the account-ledger surface — one row per account with In/Out/Net
+   for the month (transfers count both legs; goal contributions + debt payments count as Out).
+   Two-way synced with the hero scope; each row carries a ✎ (rename/delete/add).
+6. **Goals & debts write to the ledger** — a contribution/payment posts a **read-only** transaction
+   (🎯 goal contribution · Goal / 🧾 debt payment · Debt payment) and appends to that goal/debt's
+   history. Excluded from budget "Spent"; not editable from Activity (would desync the balance).
+7. **Transfers**: kept in the data model (neutral sign; excluded from In/Out/Net and budget spend;
+   both legs credited in By-account; same-account guard) but **not** in quick actions — the
+   quick-action row is three tiles: **Income · Expense · Compare**.
+8. **Transaction edit is destructive-safe** — ✎ on income/expense rows only, same sheet as
+   creation, with a two-tap-confirm delete.
+
 ## Key decisions & rationale
 
 > Folded in from the former ADRs (`context/adr/`, now in git history). Kept as a **dated

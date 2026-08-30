@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/modernist-8e192862-9781-4c22-977d-61dec6552d0d/styles.css">
+  <script src="_ds/modernist-8e192862-9781-4c22-977d-61dec6552d0d/_ds_bundle.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-accent: #6D4CFF; --color-accent-700: #5A38E8; --color-accent-600: #5A38E8;
+      --color-accent-300: #C4B5FF; --color-accent-200: #EDE7FF; --color-accent-100: #F4F0FF;
+      --color-accent-2: #14B8A6; --color-accent-2-700: #0E9384; --color-accent-2-200: #D6F5F0;
+      --color-text: #0F172A; --color-divider: #0F172A;
+      --font-heading: 'Plus Jakarta Sans', sans-serif; --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+    body { margin: 0; background: #0F172A; }
+    a { color: #6D4CFF; } a:hover { color: #5A38E8; }
+  </style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+  <section data-label="Cover" data-speaker-notes="Code-level audit of the Expo/Supabase build plus the six UI concepts. Three files: this deck, the full audit doc, the redesign mockups." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; border-bottom: 4px solid var(--color-text); padding-bottom: 28px; font-size: 26px; font-weight: 600;"><span>UX / UI audit — web + mobile</span><span style="color: var(--color-accent);">August 2026</span></div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <img src="assets/talvori-mark.png" alt="Talvori" style="width: 78px; height: 78px; object-fit: contain;">
+        <div>
+          <div style="font-size: 54px; font-weight: 800; letter-spacing: -0.03em; color: var(--color-text); line-height: 1;">talvori</div>
+          <div style="font-size: 27px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent); margin-top: 10px;">One plan. Everyone. Together.</div>
+        </div>
+      </div>
+      <div style="font-size: 30px; font-weight: 700; color: var(--color-accent); letter-spacing: 0.06em; margin-top: 40px;">GLOBAL HOUSEHOLD APP</div>
+      <h1 style="font-family: var(--font-heading); font-size: 112px; line-height: 1.0; font-weight: 800; letter-spacing: -0.02em; margin: 20px 0 0 0; max-width: 1500px;">Strong bones.<br>The experience layer hasn't caught up.</h1>
+    </div>
+    <div style="display: flex; gap: 64px; border-top: 2px solid var(--color-divider); padding-top: 28px; font-size: 24px; color: var(--color-neutral-700);"><span>40+ screens reviewed from code</span><span>32 findings · 5 high</span><span>6 concept options judged</span></div>
+  </section>
+
+  <section data-label="Scorecard" data-speaker-notes="Money and i18n foundations are genuinely good. Web adaptation is the weakest surface — and web is the stated Windows and macOS strategy." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <h2 style="font-family: var(--font-heading); font-size: 72px; font-weight: 800; margin: 0; letter-spacing: -0.01em;">Scorecard</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--color-neutral-300); border: 3px solid var(--color-text); margin-top: 56px;">
+      <div style="background: var(--color-bg); padding: 44px;"><div style="font-family: var(--font-heading); font-size: 96px; font-weight: 800;">B+</div><div style="font-size: 28px; font-weight: 700; margin-top: 10px;">Money &amp; i18n</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 8px; line-height: 1.4;">Minor units, locale keys, RTL-aware nav. Keep.</div></div>
+      <div style="background: var(--color-bg); padding: 44px;"><div style="font-family: var(--font-heading); font-size: 96px; font-weight: 800;">B−</div><div style="font-size: 28px; font-weight: 700; margin-top: 10px;">Visual system</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 8px; line-height: 1.4;">One token file — but two card systems, no danger variant.</div></div>
+      <div style="background: var(--color-bg); padding: 44px;"><div style="font-family: var(--font-heading); font-size: 96px; font-weight: 800;">C+</div><div style="font-size: 28px; font-weight: 700; margin-top: 10px;">Core flows</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 8px; line-height: 1.4;">Solid CRUD; no editing, forms parked under lists.</div></div>
+      <div style="background: var(--color-bg); padding: 44px;"><div style="font-family: var(--font-heading); font-size: 96px; font-weight: 800;">C+</div><div style="font-size: 28px; font-weight: 700; margin-top: 10px;">Accessibility</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 8px; line-height: 1.4;">Labels exist; chips and charts lack semantics.</div></div>
+      <div style="background: var(--color-bg); padding: 44px;"><div style="font-family: var(--font-heading); font-size: 96px; font-weight: 800;">C</div><div style="font-size: 28px; font-weight: 700; margin-top: 10px;">Information architecture</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 8px; line-height: 1.4;">Budget tab is a stub; the moat hides under "More".</div></div>
+      <div style="background: var(--color-accent); color: #fff; padding: 44px;"><div style="font-family: var(--font-heading); font-size: 96px; font-weight: 800;">C−</div><div style="font-size: 28px; font-weight: 700; margin-top: 10px;">Web / large screen</div><div style="font-size: 25px; margin-top: 8px; line-height: 1.4; opacity: 0.95;">Mostly a 1,440px-wide phone. Weakest surface.</div></div>
+    </div>
+  </section>
+
+  <section data-label="Path to A" data-speaker-notes="Grades score the shipped code, so they move when phases ship, not when designs land. Four aspects hit A on implementation alone; flows and accessibility also need a validation pass with real users and screen readers." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <h2 style="font-family: var(--font-heading); font-size: 64px; font-weight: 800; margin: 0;">The path to straight A's</h2>
+    <div style="flex: 1; margin-top: 44px; border-top: 3px solid var(--color-text); display: flex; flex-direction: column;">
+      <div style="display: grid; grid-template-columns: 420px 150px 220px 1fr; gap: 0 32px; padding: 18px 0; border-bottom: 2px solid var(--color-neutral-300); font-size: 25px; font-weight: 700; letter-spacing: 0.05em; color: var(--color-neutral-600);"><span>ASPECT</span><span>TODAY</span><span>HANDOFF SHIPS</span><span>WHAT LOCKS THE A</span></div>
+      <div style="display: grid; grid-template-columns: 420px 150px 220px 1fr; gap: 0 32px; padding: 17px 0; border-bottom: 1px solid var(--color-neutral-300); align-items: center; font-size: 24px;"><b>Web / large screen</b><span style="font-family: var(--font-heading); font-weight: 800; color: var(--color-accent-700);">C−</span><span style="font-family: var(--font-heading); font-weight: 800; font-size: 30px;">A</span><span style="color: var(--color-neutral-800); font-size: 25px;">Desktop shell + tables (1e, 2a–2d) in primitives, not per screen — Phase C</span></div>
+      <div style="display: grid; grid-template-columns: 420px 150px 220px 1fr; gap: 0 32px; padding: 17px 0; border-bottom: 1px solid var(--color-neutral-300); align-items: center; font-size: 24px;"><b>Information architecture</b><span style="font-family: var(--font-heading); font-weight: 800; color: var(--color-accent-700);">C</span><span style="font-family: var(--font-heading); font-weight: 800; font-size: 30px;">A−</span><span style="color: var(--color-neutral-800); font-size: 25px;">Plan + Shop tabs shipped; A when beta users validate the nav (spec 07's own rule)</span></div>
+      <div style="display: grid; grid-template-columns: 420px 150px 220px 1fr; gap: 0 32px; padding: 17px 0; border-bottom: 1px solid var(--color-neutral-300); align-items: center; font-size: 24px;"><b>Core flows</b><span style="font-family: var(--font-heading); font-weight: 800;">C+</span><span style="font-family: var(--font-heading); font-weight: 800; font-size: 30px;">A−</span><span style="color: var(--color-neutral-800); font-size: 25px;">Edit, in-store mode, modals shipped; A after a 5-household usability test, one in a real store</span></div>
+      <div style="display: grid; grid-template-columns: 420px 150px 220px 1fr; gap: 0 32px; padding: 17px 0; border-bottom: 1px solid var(--color-neutral-300); align-items: center; font-size: 24px;"><b>Accessibility</b><span style="font-family: var(--font-heading); font-weight: 800;">C+</span><span style="font-family: var(--font-heading); font-weight: 800; font-size: 30px;">B+</span><span style="color: var(--color-neutral-800); font-size: 25px;">Semantics + focus shipped in Phase A; A needs a VoiceOver/TalkBack/web pass + contrast QA</span></div>
+      <div style="display: grid; grid-template-columns: 420px 150px 220px 1fr; gap: 0 32px; padding: 17px 0; border-bottom: 1px solid var(--color-neutral-300); align-items: center; font-size: 24px;"><b>Visual system</b><span style="font-family: var(--font-heading); font-weight: 800;">B−</span><span style="font-family: var(--font-heading); font-weight: 800; font-size: 30px;">A</span><span style="color: var(--color-neutral-800); font-size: 25px;">One Card, one Chip, danger variant, type additions — Phase A alone gets here</span></div>
+      <div style="display: grid; grid-template-columns: 420px 150px 220px 1fr; gap: 0 32px; padding: 17px 0; align-items: center; font-size: 24px;"><b>Money &amp; i18n</b><span style="font-family: var(--font-heading); font-weight: 800;">B+</span><span style="font-family: var(--font-heading); font-weight: 800; font-size: 30px;">A−</span><span style="color: var(--color-neutral-800); font-size: 25px;">Picker, codes, localized ranges shipped; A after a Filipino + Arabic RTL device pass</span></div>
+    </div>
+    <div style="border-top: 2px solid var(--color-divider); padding-top: 24px; font-size: 24px; color: var(--color-neutral-800);">Grades score shipped code, not drawings — the designs (turns 1–5) remove every known design blocker; the last step to A is execution + the three validation passes above.</div>
+  </section>
+
+  <section data-label="Strengths" data-speaker-notes="Don't let the findings read as a teardown — these four foundations are why the fixes are cheap." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <h2 style="font-family: var(--font-heading); font-size: 72px; font-weight: 800; margin: 0;">What's already strong</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 48px;">
+      <div style="border-top: 3px solid var(--color-text); padding: 36px 48px 36px 0;"><div style="font-size: 32px; font-weight: 800;">One-file reskin</div><div style="font-size: 24px; color: var(--color-neutral-700); margin-top: 12px; line-height: 1.45;">Every color, radius and type role lives in theme.ts — any concept direction is a token edit, not a rebuild.</div></div>
+      <div style="border-top: 3px solid var(--color-text); padding: 36px 0 36px 48px;"><div style="font-size: 32px; font-weight: 800;">Width-based adaptivity</div><div style="font-size: 24px; color: var(--color-neutral-700); margin-top: 12px; line-height: 1.45;">Tabs vs. sidebar decided by viewport, not OS — correct for a PWA; the sidebar already flips for RTL.</div></div>
+      <div style="border-top: 3px solid var(--color-text); padding: 36px 48px 36px 0;"><div style="font-size: 32px; font-weight: 800;">Exact, honest money</div><div style="font-size: 24px; color: var(--color-neutral-700); margin-top: 12px; line-height: 1.45;">Minor-unit integers everywhere; consolidation only through explicit FX snapshots, with missing rates surfaced.</div></div>
+      <div style="border-top: 3px solid var(--color-text); padding: 36px 0 36px 48px;"><div style="font-size: 32px; font-weight: 800;">Realtime where it matters</div><div style="font-size: 24px; color: var(--color-neutral-700); margin-top: 12px; line-height: 1.45;">Grocery lists sync live across devices — the product's core promise already works.</div></div>
+    </div>
+  </section>
+
+  <section data-label="Divider — 5 high findings" data-speaker-notes="The five things I'd fix before beta." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-accent); color: #fff; font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column; justify-content: flex-end;">
+    <div style="font-size: 28px; font-weight: 700; letter-spacing: 0.08em;">FINDINGS</div>
+    <h2 style="font-family: var(--font-heading); font-size: 150px; font-weight: 800; line-height: 0.98; letter-spacing: -0.02em; margin: 20px 0 0 0; max-width: 1500px;">Five high-severity problems</h2>
+  </section>
+
+  <section data-label="F01+F02 — IA" data-speaker-notes="The Budget tab renders three links and dead space. Retail pricing — the stated moat — is three taps deep under More." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline;"><h2 style="font-family: var(--font-heading); font-size: 64px; font-weight: 800; margin: 0; max-width: 1250px;">Navigation wastes its best slots — and hides the moat</h2><span style="background: var(--color-accent); color: #fff; font-size: 24px; font-weight: 700; padding: 8px 18px;">F01 · F02</span></div>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 52px;">
+      <div>
+        <div style="font-size: 26px; font-weight: 700; color: var(--color-accent); letter-spacing: 0.05em;">AS BUILT</div>
+        <div style="border: 3px solid var(--color-text); margin-top: 20px;">
+          <div style="display: flex; border-bottom: 2px solid var(--color-neutral-300); font-size: 24px;"><div style="padding: 20px 24px; font-weight: 700; width: 260px; background: var(--color-neutral-200);">Budget tab</div><div style="padding: 20px 24px;">3 links (Budgets, Goals, Debts) — no data, no state</div></div>
+          <div style="display: flex; font-size: 24px;"><div style="padding: 20px 24px; font-weight: 700; width: 260px; background: var(--color-neutral-200);">Retail + coupons</div><div style="padding: 20px 24px;">More → Retail → two plain text links</div></div>
+        </div>
+        <div style="font-size: 23px; color: var(--color-neutral-700); margin-top: 24px; line-height: 1.5;">"Household finance + shopping intelligence" is the differentiation per the vision doc — yet a first-time user can miss the entire retail module.</div>
+      </div>
+      <div>
+        <div style="font-size: 26px; font-weight: 700; letter-spacing: 0.05em;">FIX</div>
+        <div style="border-top: 3px solid var(--color-text); margin-top: 20px; padding-top: 24px; font-size: 26px; line-height: 1.55;">
+          <b>Budget → "Plan" dashboard:</b> month ring, safe-to-spend, category meters, goals + debts tiles (mockup <a href="Redesign Mockups.dc.html#1b">1b</a>).<br><br>
+          <b>Shopping under one "Shop" tab:</b> Lists · Stores · Coupons segments; "Compare basket" as a first-class action on every list and on the Home action row.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="F05 — Paywall-first home" data-speaker-notes="Free households open the app to a locked tile as the hero. Inform first, sell one line lower — mockup 1a shows both tiers." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline;"><h2 style="font-family: var(--font-heading); font-size: 64px; font-weight: 800; margin: 0;">The free dashboard sells before it informs</h2><span style="background: var(--color-accent); color: #fff; font-size: 24px; font-weight: 700; padding: 8px 18px;">F05</span></div>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 52px; align-items: start;">
+      <div style="border: 3px solid var(--color-text); padding: 40px;">
+        <div style="font-size: 24px; font-weight: 700; color: var(--color-accent); letter-spacing: 0.05em;">AS BUILT — FIRST ELEMENT, FREE PLAN</div>
+        <div style="background: var(--color-neutral-800); color: var(--color-neutral-100); padding: 36px; margin-top: 24px;">
+          <div style="font-size: 25px; opacity: 0.75;">MULTI-CURRENCY TOTAL</div>
+          <div style="font-size: 40px; font-weight: 800; margin-top: 10px;">Premium feature — locked</div>
+          <div style="font-size: 25px; opacity: 0.8; margin-top: 10px;">Manage subscription →</div>
+        </div>
+        <div style="font-size: 23px; color: var(--color-neutral-700); margin-top: 24px; line-height: 1.5;">The largest tile on the most-seen screen shows no money at all. First-run impression: the app is an ad.</div>
+      </div>
+      <div style="border-top: 3px solid var(--color-text); padding-top: 24px;">
+        <div style="font-size: 26px; font-weight: 700; letter-spacing: 0.05em;">FIX</div>
+        <div style="font-size: 26px; line-height: 1.6; margin-top: 20px;">Free hero shows <b>real balances grouped per currency</b> and the month's spend meter. Only the one consolidated number is premium — upsold as a single quiet row inside the hero, priced regionally.</div>
+        <div style="font-size: 24px; color: var(--color-neutral-700); margin-top: 28px;">Bonus: "Manage FX rates" leaves the quick-action grid and becomes a caption on the number it affects — with the rates' as-of date (spec: freshness must be visible).</div>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="F08 — No editing" data-speaker-notes="Biggest trust gap: transactions are immutable. Every row shows a trash can instead. Ship edit before beta." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline;"><h2 style="font-family: var(--font-heading); font-size: 64px; font-weight: 800; margin: 0;">You can't fix a typo in a money app</h2><span style="background: var(--color-accent); color: #fff; font-size: 24px; font-weight: 700; padding: 8px 18px;">F08 · F09 · F10</span></div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 0; margin-top: 40px;">
+      <div style="display: grid; grid-template-columns: 420px 1fr; border-top: 3px solid var(--color-text); padding: 30px 0; font-size: 27px;"><b>No edit, anywhere</b><span style="color: var(--color-neutral-800); line-height: 1.5;">Fixing an amount = delete + re-enter, losing the original date. Fix: tap row → edit sheet (the entry form, prefilled).</span></div>
+      <div style="display: grid; grid-template-columns: 420px 1fr; border-top: 2px solid var(--color-neutral-300); padding: 30px 0; font-size: 27px;"><b>A trash can on every row</b><span style="color: var(--color-neutral-800); line-height: 1.5;">The only visible action is destructive. Fix: delete moves inside the edit sheet; swipe on mobile, hover-menu on web.</span></div>
+      <div style="display: grid; grid-template-columns: 420px 1fr; border-top: 2px solid var(--color-neutral-300); padding: 30px 0; font-size: 27px;"><b>No retrieval tools</b><span style="color: var(--color-neutral-800); line-height: 1.5;">No search, filters, or month totals — day grouping stops scaling in weeks. Fix: month in/out/net header + filter chips (mockup <a href="Redesign Mockups.dc.html#1c">1c</a>).</span></div>
+    </div>
+  </section>
+
+  <section data-label="F11 — Grocery in the aisle" data-speaker-notes="This screen is used one-handed pushing a cart. Today: add form at the bottom, checkout inline, delete-list the most reachable button." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline;"><h2 style="font-family: var(--font-heading); font-size: 64px; font-weight: 800; margin: 0;">The grocery list isn't shaped for the store</h2><span style="background: var(--color-accent); color: #fff; font-size: 24px; font-weight: 700; padding: 8px 18px;">F11 · F12</span></div>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 52px;">
+      <div>
+        <div style="font-size: 26px; font-weight: 700; color: var(--color-accent); letter-spacing: 0.05em;">AS BUILT — ONE LONG SCROLL</div>
+        <div style="border-inline-start: 6px solid var(--color-text); padding-inline-start: 32px; margin-top: 24px; font-size: 26px; line-height: 2.1; color: var(--color-neutral-800);">Totals (plain text)<br>Item cards — button + price field each<br>Add-item form <b>below every item</b><br>Checkout form below that<br><span style="color: var(--color-accent); font-weight: 700;">"Delete list" — the last, easiest button</span></div>
+      </div>
+      <div>
+        <div style="font-size: 26px; font-weight: 700; letter-spacing: 0.05em;">FIX — MOCKUP <a href="Redesign Mockups.dc.html#1d">1d</a></div>
+        <div style="border-inline-start: 6px solid var(--color-accent); padding-inline-start: 32px; margin-top: 24px; font-size: 26px; line-height: 2.1;">Sticky header: progress · totals · quick-add · Compare<br>44px tick circles; price asked on tick, prefilled<br>One pinned CTA: "Finish shopping — log ₱1,890"<br>Checkout as a sheet; delete into the ⋯ menu</div>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="F21 — Desktop" data-speaker-notes="Web is the Windows and macOS strategy, so this is the product on desktop. Only three screens compose bento; the rest stretch to 1440." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline;"><h2 style="font-family: var(--font-heading); font-size: 64px; font-weight: 800; margin: 0;">On desktop, most screens are a 1,440px-wide phone</h2><span style="background: var(--color-accent); color: #fff; font-size: 24px; font-weight: 700; padding: 8px 18px;">F21 · F22 · F23</span></div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 40px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; background: var(--color-neutral-300); border: 3px solid var(--color-text);">
+        <div style="background: var(--color-bg); padding: 40px;"><div style="font-family: var(--font-heading); font-size: 64px; font-weight: 800;">3<span style="font-size: 32px; color: var(--color-neutral-600);"> of 11</span></div><div style="font-size: 24px; margin-top: 10px; line-height: 1.45;">screen groups use the bento grid; the rest are single columns with ~1,360px-wide form fields.</div></div>
+        <div style="background: var(--color-bg); padding: 40px;"><div style="font-family: var(--font-heading); font-size: 64px; font-weight: 800;">0</div><div style="font-size: 24px; margin-top: 10px; line-height: 1.45;">hover states or visible keyboard-focus rings — desktop users navigate blind.</div></div>
+        <div style="background: var(--color-bg); padding: 40px;"><div style="font-family: var(--font-heading); font-size: 64px; font-weight: 800;">2</div><div style="font-size: 24px; margin-top: 10px; line-height: 1.45;">header vocabularies — tab screens self-title, stack screens use native chrome; no persistent top bar.</div></div>
+      </div>
+      <div style="font-size: 27px; margin-top: 40px; line-height: 1.55; max-width: 1500px;"><b>Fix (mockup <a href="Redesign Mockups.dc.html#1e">1e</a>):</b> sidebar + fixed top bar (title · search · global add · household switcher), 12-column bento capped ~1,200px, forms at 480px, hover tints + 2px focus ring baked into the shared primitives once.</div>
+    </div>
+  </section>
+
+  <section data-label="Money, i18n, a11y" data-speaker-notes="Medium fixes that protect the global-first promise. Currency picker is the cheapest big win." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <h2 style="font-family: var(--font-heading); font-size: 64px; font-weight: 800; margin: 0;">Global-first promise, six leaks</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0 96px; margin-top: 48px; align-content: center;">
+      <div style="border-top: 2px solid var(--color-neutral-300); padding: 26px 0; font-size: 26px; line-height: 1.45;"><b>Currency typed by hand</b> — "PHP" in a free-text field gates every number. → searchable picker.</div>
+      <div style="border-top: 2px solid var(--color-neutral-300); padding: 26px 0; font-size: 26px; line-height: 1.45;"><b>"$" means four launch markets</b> — USD/AUD/SGD/NZD collide in mixed feeds. → show codes when &gt;1 currency.</div>
+      <div style="border-top: 2px solid var(--color-neutral-300); padding: 26px 0; font-size: 26px; line-height: 1.45;"><b>"2026-01-01 → 2026-01-31"</b> — raw ISO + an arrow that won't flip in Arabic. → Intl.formatRange.</div>
+      <div style="border-top: 2px solid var(--color-neutral-300); padding: 26px 0; font-size: 26px; line-height: 1.45;"><b>Decimal commas rejected</b> — "12,50" fails numeric parsing with no guidance. → localized amount input.</div>
+      <div style="border-top: 2px solid var(--color-neutral-300); padding: 26px 0; font-size: 26px; line-height: 1.45;"><b>Chips without semantics</b> — selection is color-only, unannounced. → role + state + check glyph on one shared Chip.</div>
+      <div style="border-top: 2px solid var(--color-neutral-300); padding: 26px 0; font-size: 26px; line-height: 1.45;"><b>Money at 12px</b> — legend and budget amounts use the caption token. → 14px floor, tabular numerals.</div>
+    </div>
+  </section>
+
+  <section data-label="Six concepts" data-speaker-notes="Stay on the Talvori identity. Steal the spent-vs-budget hero from all six and the stats from option 6. None answers desktop — that's where the effort goes." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <h2 style="font-family: var(--font-heading); font-size: 64px; font-weight: 800; margin: 0;">The six concepts: keep the identity, steal two ideas</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--color-neutral-300); border: 3px solid var(--color-text); margin-top: 48px;">
+      <div style="background: var(--color-bg); padding: 34px;"><div style="font-size: 27px; font-weight: 800;">1 · Modern clean <span style="color: var(--color-accent);">— closest to built</span></div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 10px; line-height: 1.45;">Safest evolution; drop its duplicate header tabs.</div></div>
+      <div style="background: var(--color-bg); padding: 34px;"><div style="font-size: 27px; font-weight: 800;">2 · Dark mode</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 10px; line-height: 1.45;">A theme, not a design — cheap later via tokens. Post-beta setting.</div></div>
+      <div style="background: var(--color-bg); padding: 34px;"><div style="font-size: 27px; font-weight: 800;">3 · Pastel + mascot</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 10px; line-height: 1.45;">Undermines trust for remittance money; contrast fails. Keep only encouraging microcopy.</div></div>
+      <div style="background: var(--color-bg); padding: 34px;"><div style="font-size: 27px; font-weight: 800;">4 · Card / Material</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 10px; line-height: 1.45;">2019 Material wave header; fights the Talvori identity. Pass.</div></div>
+      <div style="background: var(--color-bg); padding: 34px;"><div style="font-size: 27px; font-weight: 800;">5 · Minimal / focus</div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 10px; line-height: 1.45;">Keep the restraint + "days left" stat; its menu body repeats navigation.</div></div>
+      <div style="background: var(--color-bg); padding: 34px;"><div style="font-size: 27px; font-weight: 800;">6 · Insights <span style="color: var(--color-accent);">— steal the stats</span></div><div style="font-size: 25px; color: var(--color-neutral-700); margin-top: 10px; line-height: 1.45;">Trend, avg/day, count → the premium analytics screen and desktop tiles.</div></div>
+    </div>
+    <div style="font-size: 26px; margin-top: 36px; color: var(--color-neutral-800);">All six are phone-only and all six lead with spent-vs-budget — adopt that hero; spend the saved effort on desktop, which none of them answers.</div>
+  </section>
+
+  <section data-label="Order of work" data-speaker-notes="Now list ships before beta — all six are small because the foundations are good. Full detail and mockups are in the companion files." style="width: 100%; height: 100%; box-sizing: border-box; background: var(--color-accent); color: #fff; font-family: var(--font-body); padding: 96px 110px; display: flex; flex-direction: column;">
+    <h2 style="font-family: var(--font-heading); font-size: 84px; font-weight: 800; margin: 0; letter-spacing: -0.01em;">Order of work</h2>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 72px; margin-top: 56px;">
+      <div style="border-top: 4px solid #fff; padding-top: 28px;"><div style="font-size: 26px; font-weight: 800; letter-spacing: 0.06em;">NOW — BEFORE BETA</div><div style="font-size: 26px; line-height: 1.9; margin-top: 20px;">Transaction edit<br>Free-tier hero informs first<br>Budget tab → Plan dashboard<br>Currency picker<br>Danger variant · one Card<br>Form width caps on web</div></div>
+      <div style="border-top: 4px solid #fff; padding-top: 28px;"><div style="font-size: 26px; font-weight: 800; letter-spacing: 0.06em;">NEXT — BETA CYCLE</div><div style="font-size: 26px; line-height: 1.9; margin-top: 20px;">Grocery in-store mode<br>Feed search · filters · totals<br>Hover + focus states<br>Top bar + household switcher<br>Entry date field · currency codes</div></div>
+      <div style="border-top: 4px solid #fff; padding-top: 28px;"><div style="font-size: 26px; font-weight: 800; letter-spacing: 0.06em;">LATER</div><div style="font-size: 26px; line-height: 1.9; margin-top: 20px;">Insights screen (concept 6)<br>Dark theme via tokens<br>Retail catalog UX at data-scale<br>Regional-price plan page<br>Plan ↔ evidence cross-links</div></div>
+    </div>
+    <div style="border-top: 2px solid rgba(255,255,255,0.4); padding-top: 26px; font-size: 24px; display: flex; gap: 64px;"><span>Full detail: UX Audit — Global Household App</span><span>Targets: Redesign Mockups 1a–1e</span></div>
+  </section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

@@ -91,6 +91,21 @@ subscription, 2d insights), F (5a retailer directory). Retail follow-ups: 4d Sto
 **Remaining (architectural):** 4b onboarding, 4c dark theme (provider refactor), full-2c Shop
 tab, 5b branch-picker follow-ups.
 
+### Talvori rebrand — new target direction (from "Budget app analysis")
+
+The design workspace `context/design/Budget app analysis/` supersedes the ibilly look with a
+confirmed new direction, **Talvori**. Scope to land:
+- **Rename** app → *Talvori* across `app.json`/`package.json`/lockfile/locales + brand strings
+  (full file list in `ui-tokens.md` §"Migration"). Zero legacy "ibilly" / "Global Household App".
+- **Repalette** `components/theme.ts` to the Talvori tokens (purple `#6D4CFF`, navy, teal income,
+  orange shopping — see `ui-tokens.md` Talvori appendix). Token *names* stay; only values change,
+  so screens reskin from the tokens.
+- **Money-model alignment** — rework the finance core to the 8 decided behaviors in
+  `architecture.md` §"Money model — decided behavior" (account-scoped hero, By-account ledger,
+  goals/debts post to ledger, 3-tile quick actions, `{limit, account}` budgets, …).
+- **Flow** — recreate the interactive `Flow Prototype.dc.html` (sign-in → 3-step onboarding →
+  dashboard → Plan/Activity/forms) in React Native as the reference for the above.
+
 ## MVP boundary reminders
 
 - **Out unless approved:** bank sync, receipt OCR, AI adviser, brokerage sync, remittance
