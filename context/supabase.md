@@ -13,7 +13,7 @@ supabase/
 
 - **Every** schema change is a versioned migration. No ad-hoc SQL against prod.
 - Household-owned tables carry `household_id` and are protected by **RLS**
-  (`03_SECURITY_AUTHENTICATION_SPEC.md`). No production schema exists yet — it
+  (see `context/architecture.md` §security). No production schema exists yet — it
   arrives with Phase 2 (auth/household) and Phase 3 (finance).
 - Server secrets (service-role key, Stripe/SMS/FX/retailer secrets) live only in
   Edge Function secrets — never in the client or `EXPO_PUBLIC_*`.

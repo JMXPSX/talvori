@@ -4,7 +4,7 @@
 --   2. delete_my_account(): self-service deletion with a blocking
 --      owner-handoff rule. Owned by postgres (SQL editor), which may delete
 --      from auth.users — the documented Supabase self-deletion pattern.
--- Spec: docs/superpowers/specs/2026-08-13-account-deletion-export-design.md
+-- Spec: context/specs/2026-08-13-account-deletion-export-design.md
 
 -- 1) created_by-style columns: nullable + on delete set null ------------------
 

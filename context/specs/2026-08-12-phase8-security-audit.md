@@ -39,7 +39,7 @@ Site URL + redirect allow-list in Supabase auth settings.
 
 ## Remaining Phase 8 QA items (scoped for a focused session)
 
-These are the roadmap's remaining hardening items (08_DEVELOPMENT_PHASES.md); each
+These are the roadmap's remaining hardening items (`context/build-plan.md`); each
 is buildable without external accounts except where noted:
 
 1. **Auth / session tests** — ✅ pure slice DONE (2026-08-13): `mapAuthError`

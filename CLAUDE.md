@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Global Household App** (internal codename) — a universal Expo app (iOS / Android / Web-PWA) for global household finance: budgeting, shared shopping, retail price intelligence, and multi-currency money, on a Supabase backend. One codebase; RLS is the security boundary; first-class multi-currency, i18n (English / Filipino / Arabic), and RTL.
 
-Status: **Phases 1–8 are built and verified; Phase 9 (Beta) is entry-gated on external accounts** (web host, Apple/Google dev, Sentry) — see `docs/superpowers/specs/2026-08-13-phase9-beta-runbook.md`. For per-slice design history read `docs/superpowers/specs/` + `docs/superpowers/plans/`; the numbered product specs `00_`–`11_*.md` at the repo root carry product intent (money/security/globalization/retail rules). `08_DEVELOPMENT_PHASES.md` is the roadmap.
+Status: **Phases 1–8 are built and verified; Phase 9 (Beta) is entry-gated on external accounts** (web host, Apple/Google dev, Sentry) — see `context/specs/2026-08-13-phase9-beta-runbook.md`. **All project context now lives in `context/` — start at `context/README.md`.** Product intent and the money/security/globalization/retail rules are in `context/project-overview.md`, `context/product.md`, and `context/architecture.md`; `context/build-plan.md` is the roadmap; per-slice design history is under `context/specs/` + `context/plans/`. (The former numbered `00_`–`11_*.md` root specs were consolidated into `context/` and removed — recoverable from git history.)
 
 ## Commands
 
@@ -50,7 +50,7 @@ Pure helpers and the money/plan/basket/coupon logic have jest unit tests (`tests
 
 ## Work deferred / blocked (do not build speculatively)
 
-Two areas need external accounts/credentials and are intentionally **not** implemented — each has a ready ADR under `docs/superpowers/specs/`:
+Two areas need external accounts/credentials and are intentionally **not** implemented — each has a ready ADR under `context/specs/`:
 - **6b billing** (Apple IAP / Google Play / Stripe-web + webhooks) — needs store/processor accounts. 6a ships the `household_subscriptions` model + a manual owner plan toggle; billing writes the same row via its `source` field.
 - **5d live retail** (real connectors, the Edge Function around `ingestFromConnector`, loyalty OAuth, global catalog) — needs an authorized data source. The connector *interface* + a mock connector + the ingest pipeline already exist.
 
@@ -58,4 +58,4 @@ The 6a manual plan toggle in `app/subscription.tsx` is now **dev-gated** (`__DEV
 
 ## Workflow (how changes are made here)
 
-This project uses the superpowers/GSD flow: **brainstorm → spec (`docs/superpowers/specs/`) → plan (`docs/superpowers/plans/`) → execute** per slice, with atomic commits. Commit messages use conventional prefixes (`feat(scope):`, `test(scope):`, `docs(scope):`). Cross-session context lives in the claude-mem memory (`MEMORY.md` index).
+This project uses the superpowers/GSD flow: **brainstorm → spec (`context/specs/`) → plan (`context/plans/`) → execute** per slice, with atomic commits. Commit messages use conventional prefixes (`feat(scope):`, `test(scope):`, `docs(scope):`). Cross-session context lives in the claude-mem memory (`MEMORY.md` index).

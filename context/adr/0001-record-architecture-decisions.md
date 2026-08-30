@@ -5,13 +5,13 @@
 
 ## Context
 
-Per `10_DEVELOPER_REVIEW_AND_GIT_WORKFLOW.md`, major architectural choices must
+Per `context/code-standards.md` (the git/review workflow), major architectural choices must
 be recorded (context, decision, alternatives, consequences) so the software
 consultant/developer can review reasoning, not just code.
 
 ## Decision
 
-Use lightweight Architecture Decision Records in `docs/adr/`, one file per
+Use lightweight Architecture Decision Records in `context/adr/`, one file per
 decision, numbered sequentially. Each records context, the decision,
 alternatives considered, and consequences.
 

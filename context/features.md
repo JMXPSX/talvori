@@ -1,6 +1,6 @@
 # features/
 
-Feature-based organization (see `02_NON_NEGOTIABLE_ARCHITECTURE_RULES.md`).
+Feature-based organization (see `context/architecture.md`).
 
 Each domain gets its own folder containing its screens' logic, hooks, schemas
 (`schemas.ts` using Zod — see `lib/validation.ts`), and data access. Routes in

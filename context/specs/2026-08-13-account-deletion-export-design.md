@@ -114,7 +114,7 @@ New stack route (native header, title `account.title`), reached from a new
   `deleteMyAccount()`. On success: local `signOut()`; the auth gate lands on
   /login. `owner_handoff_required` renders inline via `ErrorNotice` (no retry).
 
-This is the interim step-up per 03_SECURITY (real MFA/biometric step-up is a
+This is the interim step-up per `context/architecture.md` §security (real MFA/biometric step-up is a
 later phase).
 
 ## 4. i18n (en/fil/ar, matching key sets)

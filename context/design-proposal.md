@@ -101,7 +101,16 @@ components:
     height: "48px"
 ---
 
-# Design System: Household
+# Design System: Household — PROPOSED (not yet shipped)
+
+> ⚠️ **Status: proposed redesign, NOT the current shipped system.** This is the vermilion
+> "Broadsheet Ledger" direction produced by the `impeccable` skill (the frontmatter above is its
+> machine-readable token block). **The app in code today is still the indigo "ibilly" system** —
+> `components/theme.ts` and [`ui-tokens.md`](ui-tokens.md) / [`ui-rules.md`](ui-rules.md) /
+> [`ui-registry.md`](ui-registry.md) are the source of truth for what actually renders. Treat
+> everything below as design intent; adopt it only when the reskin is scheduled and executed.
+> Note the "ibilly is the anti-reference" framing further down is aspirational — it is the
+> reverse of current reality, so do not act on it yet.
 
 ## Overview
 

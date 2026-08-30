@@ -29,7 +29,7 @@ second writer reintroduces exactly the clobbering that a single-writer rule prev
 
 ## The loop
 
-1. **Terminal** implements one step from the active spec in `docs/superpowers/specs/`, runs
+1. **Terminal** implements one step from the active spec in `context/specs/`, runs
    `npm run typecheck` and `npm test`, and commits.
 2. **Desktop** has the preview already running. Metro's HMR pushes the change in; no restart
    needed. Desktop compares the render against the relevant mock.
@@ -60,7 +60,7 @@ common way this setup breaks.
 
 ## Handoff between sessions
 
-- **Specs** in `docs/superpowers/specs/` are the durable contract. A lane that deviates
+- **Specs** in `context/specs/` are the durable contract. A lane that deviates
   updates the spec in the same commit, so the other surface never reads a stale plan.
 - **`claude-mem`** carries observations across surfaces and sessions — this is how a Desktop
   session knows what Terminal did earlier.

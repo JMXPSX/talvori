@@ -4,8 +4,8 @@ We are implementing the approved **UX overhaul** of the Global Household App.
 
 You have been provided:
 - The approved project context files (`00`–`11`) — still source of truth for architecture.
-- `design_handoff_ux_overhaul/README.md` — source of truth for the UX overhaul (32 audit findings F01–F32, 21 approved screen designs 1a–5b).
-- `design_handoff_ux_overhaul/Redesign Mockups.dc.html` + `screenshots/` — visual reference only; recreate in the existing codebase, never ship the HTML.
+- `context/design/README.md` — source of truth for the UX overhaul (32 audit findings F01–F32, 21 approved screen designs 1a–5b).
+- `context/design/Redesign Mockups.dc.html` + `screenshots/` — visual reference only; recreate in the existing codebase, never ship the HTML.
 
 ## IMPORTANT
 Do NOT implement all 21 screens yet.
@@ -17,7 +17,7 @@ We are beginning only:
 This phase changes shared primitives and tokens ONLY, so every later screen phase lands on corrected foundations. No screen redesigns in this phase beyond mechanical substitutions.
 
 ## Non-Negotiable Global Rules
-1. All rules from `02_NON_NEGOTIABLE_ARCHITECTURE_RULES.md` remain in force.
+1. All rules from `context/architecture.md` (non-negotiable architecture rules) remain in force.
 2. Never hard-code a color, size, or font — extend `components/theme.ts`; screens consume tokens.
 3. Never hard-code UI strings — every new label is a locale key in `locales/en.json`, `fil.json`, `ar.json`.
 4. Money stays in minor units; no floating-point persistence.

@@ -5,7 +5,8 @@
 
 ## Context
 
-Phase 1 (`09_PHASE_1_CLAUDE_BUILD_PROMPT.md`) builds the technical foundation for
+Phase 1 (the former `09_PHASE_1_CLAUDE_BUILD_PROMPT.md`, now in git history; see
+`context/build-plan.md`) builds the technical foundation for
 a global, multi-currency, multi-platform household finance app: no business
 logic yet, but choices here must not block Phase 2+ (auth, RLS, money, FX, RTL).
 

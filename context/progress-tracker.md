@@ -1,0 +1,70 @@
+# Progress Tracker
+
+> The one **live** context file — update it after each work session. This repo-committed
+> tracker is for humans and agents that don't load claude-mem; claude-mem (`MEMORY.md` + the
+> observation DB) remains the richer cross-session memory. Seeded 2026-08-27 from current state.
+>
+> Current branch: `design/ibilly-adoption`.
+
+## Completed
+
+- [x] Phases 1–8 built and verified (foundation, auth+household+RLS, finance core, shared
+      shopping, retail beta, commercialization 6a, globalization, QA/hardening).
+- [x] RLS isolation drill green on the live backend (household isolation across every table).
+- [x] Money/FX engine + tests; account deletion/export (incl. `protect_last_owner` cascade fix);
+      forgot-password flow; app-wide guarded deletes; ActionSheet web fallback.
+- [x] "ibilly / Expertly Approachable" design system + script-aware fonts + dashboard hero/donut.
+- [x] UX overhaul A–F + retail follow-ups (4d Stores, 4e coupon→grocery matching, 5b branch
+      picker, 2c rank-by-net Compare, segmented Shop hub). typecheck / ~192 tests / lint / web
+      bundle green.
+- [x] `context/` created from the JSM context-driven-dev structure (this migration).
+
+## In progress
+
+- [ ] Dark theme — initiated (needs a provider refactor; see "Up next" 4c).
+
+## Up next
+
+- [ ] 4b onboarding (incl. cross-border "different countries?" question).
+- [ ] 4c dark theme — provider refactor.
+- [ ] Full-2c Shop tab.
+- [ ] 5b branch-picker follow-ups.
+- [ ] Phase 9 Beta prep — once external accounts exist.
+
+## Blocked
+
+| Item | Blocker |
+|------|---------|
+| 6b billing (Apple IAP / Google Play / Stripe-web + webhooks, regional pricing, restore) | Needs store/processor accounts. Writes the same `household_subscriptions` row via `source`. |
+| 5d live retail (real connectors, Edge Function around `ingestFromConnector`, loyalty OAuth, global catalog) | Needs an authorized data source. Interface + mock connector + ingest pipeline already exist. |
+| Phase 9 Beta launch | Needs web host, Apple/Google dev accounts, Sentry, real Site URL. |
+| Crash monitoring | Needs monitoring account (Sentry). |
+
+## Known issues
+
+| Issue | Severity | Status |
+|-------|----------|--------|
+| Migration `20260820000012` (5a retailer directory) must be applied by hand | Medium | Open — apply in Supabase SQL editor |
+| Two diverged checkouts share the branch name (`C:\dev` vs OneDrive) — "canonical" ambiguous | Low | Open — OneDrive holds the newest work |
+
+## Decisions made (don't re-debate)
+
+- Money = integer minor units + ISO currency code; never float; never mix currencies.
+- RLS is the security boundary, not the client. Every household table is `household_id`-scoped.
+- Migrations are hand-authored and hand-applied; `lib/database.types.ts` synced by hand.
+- i18n parity across en/fil/ar is enforced; RTL is first-class.
+- Modular monolith for MVP; no microservices.
+- 6a manual plan toggle is `__DEV__`-gated so it can't be a free-premium hole in prod.
+- Design direction: "ibilly / Expertly Approachable" (Stitch-adopted), borderless white bento
+  tiles on a cool blue-white canvas.
+
+## Session notes
+
+- **2026-08-27:** Adopted JS Mastery's context-driven-dev structure. Migrated the numbered
+  `00_–11_` root specs into `context/` (9 files); domain specs (05 globalization/OFW, 06
+  retail engine) absorbed into `architecture.md` + `project-overview.md`; the numbered originals
+  were removed (recoverable from git history). `PRODUCT.md` → `product.md` and `DESIGN.md` →
+  `design-proposal.md` (proposed vermilion redesign, not shipped) moved in; `docs/` deep archive
+  (adr/, specs/, plans/, ORCHESTRATION) and the code READMEs (features/, supabase/) pulled under
+  `context/` too — all project docs now live here. UI trio stays indigo ibilly (matches
+  theme.ts). Next: resume dark-theme provider refactor.

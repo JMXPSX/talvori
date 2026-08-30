@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Self-service GDPR-style data export (full household JSON) and account deletion (blocking owner-handoff rule) per `docs/superpowers/specs/2026-08-13-account-deletion-export-design.md`.
+**Goal:** Self-service GDPR-style data export (full household JSON) and account deletion (blocking owner-handoff rule) per `context/specs/2026-08-13-account-deletion-export-design.md`.
 
 **Architecture:** One hand-applied SQL migration (FK re-pointing + `delete_my_account()` security-definer RPC); pure export shaper + IO reader loop in `features/account/`; one new `app/account.tsx` screen reached from the More tab.
 

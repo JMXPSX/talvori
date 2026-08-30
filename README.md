@@ -1,7 +1,7 @@
 # Global Household App
 
 Internal codename: **Global Household App** (no public branding yet — see
-`00_README_START_HERE.md`).
+`context/project-overview.md`).
 
 A global household finance, budgeting, shared-shopping, retail-pricing and
 multi-currency platform. One universal codebase (Expo) targets **iOS, Android,
@@ -18,8 +18,8 @@ boundary**.
 > GDPR-style data export and account deletion, and a hardening pass (security
 > audit, live RLS drill, money property tests). Deferred until external
 > accounts exist: store billing (6b), live retailer connectors (5d), crash
-> monitoring. Roadmap: `08_DEVELOPMENT_PHASES.md`; beta steps:
-> `docs/superpowers/specs/2026-08-13-phase9-beta-runbook.md`.
+> monitoring. Roadmap: `context/build-plan.md`; beta steps:
+> `context/specs/2026-08-13-phase9-beta-runbook.md`.
 
 ## Prerequisites
 
@@ -97,7 +97,8 @@ lib/            env, supabase client, i18n, rtl, fonts, money, format,
 locales/        en / fil / ar catalogs (key parity enforced by tests)
 supabase/       hand-applied SQL migrations (schema + RLS + RPCs + triggers)
 tests/          jest unit/component tests + live RLS integration drill
-docs/           ADRs + superpowers specs/plans (per-slice design docs)
+context/        all project docs — overview, architecture, standards, UI, build
+                plan, product record; adr/ specs/ plans/ (per-slice design docs)
 ```
 
 Path alias: `@/*` maps to the repo root (e.g. `import { money } from '@/lib/money'`).
@@ -119,7 +120,7 @@ Path alias: `@/*` maps to the repo root (e.g. `import { money } from '@/lib/mone
 ## Contributing
 
 Small, reviewable changes on short-lived feature branches; PRs for meaningful
-work (`10_DEVELOPER_REVIEW_AND_GIT_WORKFLOW.md`). High-risk areas (auth, RLS,
+work (`context/code-standards.md`). High-risk areas (auth, RLS,
 money, FX, payments, secrets) require developer review and tests before merge.
 ```
 feat(auth): add email OTP verification flow
