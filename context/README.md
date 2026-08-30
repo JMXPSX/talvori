@@ -37,8 +37,6 @@ All remaining project docs were consolidated here too, so `context/` is the sing
 
 | Path | What it holds |
 |------|----------------|
-| [specs/](specs/) | Per-slice design specs (formerly `docs/superpowers/specs/`) |
-| [plans/](plans/) | Per-slice execution plans (formerly `docs/superpowers/plans/`) |
 | [design/](design/) | UX-overhaul handoff bundle — audit, mockups, screenshots (indigo ibilly direction) |
 | [ORCHESTRATION.md](ORCHESTRATION.md) | Multi-lane terminal orchestration notes |
 | [features.md](features.md) | `features/` layout guide (formerly `features/README.md`) |
@@ -46,7 +44,9 @@ All remaining project docs were consolidated here too, so `context/` is the sing
 
 The former `adr/` decision records were folded into
 [architecture.md](architecture.md) §"Key decisions & rationale" (a dated decision log); add new
-decisions there.
+decisions there. The former `specs/` and `plans/` per-slice docs were folded into
+[build-plan.md](build-plan.md) **Appendix A** (design specs) and **Appendix B** (execution
+plans) — anchor forms `#spec-<stem>` / `#plan-<stem>`.
 
 The repo root keeps only `CLAUDE.md` (Claude Code's operational entry) and `README.md` (the
 GitHub/developer front door); both point into this folder.

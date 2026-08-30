@@ -1,6 +1,6 @@
 /**
  * Design tokens — the "ibilly" direction (adopted from the Google Stitch export,
- * see context/specs/2026-08-15-stitch-design-adoption-design.md).
+ * see context/build-plan.md#spec-2026-08-15-stitch-design-adoption-design).
  *
  * A global household budget app for families managing shared money across
  * currencies and borders. The identity is "Expertly Approachable": an indigo

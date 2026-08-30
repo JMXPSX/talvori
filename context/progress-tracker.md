@@ -69,5 +69,8 @@
   `context/` too — all project docs now live here. UI trio stays indigo ibilly (matches
   theme.ts).
 - **2026-08-30:** Folded the 3 ADRs into a dated "Key decisions & rationale" log in
-  `architecture.md` (and repointed `code-standards.md`); removed `context/adr/`. Next: resume
-  dark-theme provider refactor.
+  `architecture.md` (and repointed `code-standards.md`); removed `context/adr/`. Then folded the
+  17 specs + 8 plans into `build-plan.md` Appendices A/B (anchor forms `#spec-<stem>` /
+  `#plan-<stem>`); removed `context/specs/` + `context/plans/` and repointed all references
+  (incl. code comments in `theme.ts` + a migration). build-plan.md is now ~10.8k lines. Next:
+  resume dark-theme provider refactor.

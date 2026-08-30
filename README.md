@@ -19,7 +19,7 @@ boundary**.
 > audit, live RLS drill, money property tests). Deferred until external
 > accounts exist: store billing (6b), live retailer connectors (5d), crash
 > monitoring. Roadmap: `context/build-plan.md`; beta steps:
-> `context/specs/2026-08-13-phase9-beta-runbook.md`.
+> `context/build-plan.md#spec-2026-08-13-phase9-beta-runbook`.
 
 ## Prerequisites
 
