@@ -59,3 +59,5 @@ The 6a manual plan toggle in `app/subscription.tsx` is now **dev-gated** (`__DEV
 ## Workflow (how changes are made here)
 
 This project uses the superpowers/GSD flow: **brainstorm → spec → plan → execute** per slice, with atomic commits (historical specs/plans are folded into `context/build-plan.md` Appendices A/B). Commit messages use conventional prefixes (`feat(scope):`, `test(scope):`, `docs(scope):`). Cross-session context lives in the claude-mem memory (`MEMORY.md` index).
+
+**Doc hygiene — keep the docs compact:** ALL project documentation lives in `context/` (the 9-file context-driven-dev structure) — see `README.md` § "Project documentation". Do **not** create new root or loose `.md` files for project info; extend an existing `context/` file instead. If the `impeccable` skill regenerates `PRODUCT.md` or `DESIGN.md` at the repo root, re-fold them into `context/project-overview.md` (product intent) / the `context/ui-tokens.md` proposed-redesign appendix, then delete the root copies. GSD's `.planning/` tree, if you use GSD workflows, is a separate tool-owned space and does not belong in `context/`.
