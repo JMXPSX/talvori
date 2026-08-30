@@ -23,13 +23,14 @@
 
 - [ ] Dark theme — initiated (needs a provider refactor; see "Up next" 4c).
 
-## Up next
+## Up next (buildable now — no external blockers)
 
-- [ ] 4b onboarding (incl. cross-border "different countries?" question).
-- [ ] 4c dark theme — provider refactor.
-- [ ] Full-2c Shop tab.
-- [ ] 5b branch-picker follow-ups.
-- [ ] Phase 9 Beta prep — once external accounts exist.
+Ordered by priority. These are the only items that can be worked without new accounts or data.
+
+- [ ] **4c dark theme — provider refactor** (highest-value unblocked item; already initiated).
+- [ ] 4b onboarding (incl. cross-border "different countries?" question) — non-blocking polish.
+- [ ] Apply migration `20260820000012` (5a retailer directory) in the Supabase SQL editor —
+      small admin task (also tracked under Known issues).
 
 ## Blocked
 
@@ -37,6 +38,8 @@
 |------|---------|
 | 6b billing (Apple IAP / Google Play / Stripe-web + webhooks, regional pricing, restore) | Needs store/processor accounts. Writes the same `household_subscriptions` row via `source`. |
 | 5d live retail (real connectors, Edge Function around `ingestFromConnector`, loyalty OAuth, global catalog) | Needs an authorized data source. Interface + mock connector + ingest pipeline already exist. |
+| **Full-2c Shop tab** | Needs live multi-store pricing → depends on **5d**. Partial (segmented Shop hub + rank-by-net Compare) already shipped on manual/seeded data. |
+| **5b branch-picker follow-ups** | Needs live branch data → depends on **5d**. Picker UI already shipped; branches stay household-created rows until connectors land. |
 | Phase 9 Beta launch | Needs web host, Apple/Google dev accounts, Sentry, real Site URL. |
 | Crash monitoring | Needs monitoring account (Sentry). |
 
@@ -89,5 +92,8 @@
 - **Decision (2026-08-30):** `ORCHESTRATION.md` stays **standalone** — it's a two-agent
   operating runbook (how to drive Terminal/Desktop), not product/codebase docs, so it doesn't
   map to any of the 9 template files. Don't fold it. `supabase.md` remains a fold candidate into
-  `architecture.md`/`code-standards.md` if strict conformance is wanted later. Next: resume
-  dark-theme provider refactor.
+  `architecture.md`/`code-standards.md` if strict conformance is wanted later.
+- **2026-08-30 (cont.):** Re-scoped "Up next" to only truly-buildable-now items (4c dark theme,
+  4b onboarding, apply migration `20260820000012`); moved Full-2c Shop and 5b follow-ups into
+  Blocked (both depend on 5d / an authorized data source). Next: resume dark-theme provider
+  refactor.
