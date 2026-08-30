@@ -36,7 +36,7 @@ All remaining project docs were consolidated here too, so `context/` is the sing
 | Path | What it holds |
 |------|----------------|
 | [design/](design/) | UX-overhaul handoff bundle — audit, mockups, screenshots (indigo ibilly direction) |
-| [ORCHESTRATION.md](ORCHESTRATION.md) | Multi-lane terminal orchestration notes |
+| [ORCHESTRATION.md](ORCHESTRATION.md) | **Standalone by design** — operational runbook for the two-agent (Terminal-writes / Desktop-reviews) workflow; not a product/codebase doc, so intentionally outside the 9-file template |
 | [supabase.md](supabase.md) | `supabase/` migrations/RLS guide (formerly `supabase/README.md`) |
 
 The former `adr/` decision records were folded into

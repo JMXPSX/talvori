@@ -81,5 +81,9 @@
   + README + deep-reference (design/, ORCHESTRATION.md, features.md, supabase.md).
 - **2026-08-30 (cont.):** Folded `features.md` (feature-module layout) into `architecture.md`
   as a "Feature modules" table (updated stale `shopping/`→`grocery/`, `subscription/`→`billing/`;
-  dropped the stale "nothing built yet" line); removed the standalone file. Next: resume
+  dropped the stale "nothing built yet" line); removed the standalone file.
+- **Decision (2026-08-30):** `ORCHESTRATION.md` stays **standalone** — it's a two-agent
+  operating runbook (how to drive Terminal/Desktop), not product/codebase docs, so it doesn't
+  map to any of the 9 template files. Don't fold it. `supabase.md` remains a fold candidate into
+  `architecture.md`/`code-standards.md` if strict conformance is wanted later. Next: resume
   dark-theme provider refactor.
