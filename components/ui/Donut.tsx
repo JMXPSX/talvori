@@ -38,7 +38,7 @@ export function Donut({ segments, size = 160, stroke = 22 }: DonutProps) {
           fill="none"
           strokeDasharray={`${s.fraction * c} ${c - s.fraction * c}`}
           strokeDashoffset={-s.offset * c}
-          // "Soft stroke": rounded caps per the ibilly data-viz rule.
+          // "Soft stroke": rounded caps per the Talvori data-viz rule.
           strokeLinecap="round"
           transform={`rotate(-90 ${center} ${center})`}
         />

@@ -1,5 +1,5 @@
 /**
- * Circular progress meter — the per-category ring from the ibilly budget mock.
+ * Circular progress meter — the per-category ring from the Talvori budget mock.
  *
  * Pure presentation: pass a fraction and a state, exactly like ProgressBar, so
  * the two meters stay interchangeable and share the caller's colour semantics.

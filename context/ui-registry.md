@@ -3,8 +3,7 @@
 > **Adapted to Expo / React Native.** Catalog of reusable primitives in `components/ui/`,
 > exported from the barrel `@/components/ui`. **Check here before building a new component** —
 > reuse an existing primitive rather than introducing a variant. **Update this file after every
-> new primitive is built.** (The **target** direction is **Talvori** — see the Talvori appendix in
-> `ui-tokens.md`; this catalog reflects the currently shipped ibilly system.)
+> new primitive is built.** (Design system: **Talvori** — see `ui-tokens.md`.)
 
 ## How to use
 

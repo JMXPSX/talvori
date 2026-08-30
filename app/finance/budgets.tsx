@@ -228,7 +228,7 @@ export default function BudgetsScreen() {
                   row.limit_minor > 0 ? row.spent_minor / row.limit_minor : row.spent_minor > 0 ? 1 : 0;
                 return (
                   <Card key={row.allocation_id}>
-                    {/* Ring + label + spend, per the ibilly budget mock. */}
+                    {/* Ring + label + spend, per the Talvori budget mock. */}
                     <View style={styles.allocRow}>
                       <ProgressRing fraction={fraction} state={state}>
                         <Text variant="caption" style={over ? styles.overCaption : undefined}>

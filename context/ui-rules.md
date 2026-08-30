@@ -1,11 +1,9 @@
 # UI Rules
 
-> **Adapted to Expo / React Native.** Interface behavior, layout, and interaction rules for
-> the "ibilly / Expertly Approachable" system. Concrete specifications, not abstract
-> guidelines. Tokens come from `components/theme.ts` (see `ui-tokens.md`); components come
-> from `components/ui/` (see `ui-registry.md`). The **target** design direction is **Talvori**
-> (see the Talvori appendix in `ui-tokens.md`); these rules describe the currently shipped ibilly
-> system, which the Talvori rebrand replaces.
+> **Adapted to Expo / React Native.** Interface behavior, layout, and interaction rules for the
+> **Talvori** design system (purple/navy/teal/orange, Plus Jakarta Sans). Concrete specifications,
+> not abstract guidelines. Tokens come from `components/theme.ts` (see `ui-tokens.md`); components
+> come from `components/ui/` (see `ui-registry.md`).
 
 ## Fonts & direction
 

@@ -3,7 +3,7 @@
  * bar). Presentational only — the caller maps navigation state into `items`, so
  * this component has no dependency on the navigator and stays easy to test.
  *
- * Shape follows the ibilly web mock: wordmark, a household/plan header, then
+ * Shape follows the Talvori web mock: wordmark, a household/plan header, then
  * nav rows where the active row is an indigo label on a tinted pill.
  */
 

@@ -1,5 +1,5 @@
 /**
- * Typography faces for the "ibilly" system.
+ * Typography faces for the "Talvori" system.
  *   - All Latin roles: Plus Jakarta Sans (geometric, friendly, strong figures)
  *   - Arabic (all roles): Readex Pro (harmonizes with the geometric Latin, full
  *     Arabic coverage — Plus Jakarta Sans has none) — RN selects weight by FAMILY

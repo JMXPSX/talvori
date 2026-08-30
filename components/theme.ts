@@ -1,13 +1,13 @@
 /**
- * Design tokens — the "ibilly" direction (adopted from the Google Stitch export,
- * see context/build-plan.md#spec-2026-08-15-stitch-design-adoption-design).
+ * Design tokens — the "Talvori" direction (from the "Budget app analysis" design
+ * workspace; see context/ui-tokens.md).
  *
- * A global household budget app for families managing shared money across
- * currencies and borders. The identity is "Expertly Approachable": an indigo
- * primary for technological reliability on a cool blue-white canvas, warmed by a
- * burnt-orange secondary and a sky tertiary reserved for data. Cards are
- * borderless white bento tiles that float on the canvas via soft ambient shadow
- * rather than hairline rules.
+ * Talvori ("One plan. Everyone. Together.") is a global household budget app for
+ * families managing shared money across currencies and borders. The identity pairs
+ * a purple primary with a navy ink on a near-white canvas; teal marks income and
+ * positive balances, warm orange marks shopping and goals, and blue is reserved for
+ * informational accents. Cards are borderless white tiles that float via soft
+ * ambient shadow rather than hairline rules.
  *
  * Token NAMES are the public API that every screen calls; only their values moved
  * when the palette changed. Screens and primitives consume these, so the whole app
@@ -17,25 +17,25 @@
 import { Platform, type ViewStyle } from 'react-native';
 
 export const palette = {
-  brand: '#4343D5', // indigo — primary actions
-  brandDeep: '#2E2BC2', // pressed / emphasis
-  brandMuted: '#E1E0FF', // meters, chips, muted fills
-  accent: '#944A1C', // burnt orange — "growth"/warmth, legible as ink on light
-  accentMuted: '#FFDBCA', // tinted accent fills
-  text: '#161D1F', // deep slate ink
-  textMuted: '#464555',
-  background: '#F4FAFD', // cool blue-white canvas
-  surface: '#FFFFFF', // bento tiles sit brighter than the canvas
-  border: '#C7C4D7', // soft hairline — used sparingly; depth comes from shadow
-  danger: '#BA1A1A',
-  success: '#1E7B45', // no Stitch equivalent; retained
+  brand: '#6D4CFF', // purple — primary actions, active nav, hero
+  brandDeep: '#5A38E8', // pressed / emphasis
+  brandMuted: '#EDE7FF', // meters, chips, muted fills (purple tint)
+  accent: '#F59E0B', // warm orange — shopping + goal accents
+  accentMuted: '#FEF3C7', // tinted accent fills (amber)
+  text: '#0F172A', // navy ink / dark surfaces
+  textMuted: '#475569', // secondary text
+  background: '#F6F7FB', // near-white app canvas
+  surface: '#FFFFFF', // tiles sit brighter than the canvas
+  border: '#E2E8F0', // soft hairline — used sparingly; depth comes from shadow
+  danger: '#DC2626',
+  success: '#14B8A6', // teal — income, positive balances, on-track meters
   white: '#FFFFFF',
-  // — additions the bento spec requires —
-  field: '#F1F3F9', // input fills, so fields stay visible inside white tiles
-  tertiary: '#00617E', // sky — informational + secondary data series
-  surfaceMuted: '#E8EFF1', // inset panels, segmented-control tracks
-  dangerMuted: '#FFDAD6', // error container fill
-  successMuted: '#D8EFE1', // success container fill (income tiles)
+  // — supporting fills / semantics —
+  field: '#F1F5F9', // input fills, so fields stay visible inside white tiles
+  tertiary: '#3B82F6', // blue — informational + secondary data series
+  surfaceMuted: '#EDF1F7', // inset panels, segmented-control tracks
+  dangerMuted: '#FEE2E2', // error container fill
+  successMuted: '#CCFBF1', // teal container fill (income tiles)
 } as const;
 
 /**
@@ -43,28 +43,28 @@ export const palette = {
  * palette has a single home — features/finance/donut.ts imports it.
  */
 export const chartSeries = [
-  palette.brand, // indigo
-  palette.accent, // burnt orange
-  palette.tertiary, // sky
+  palette.brand, // purple
+  palette.accent, // warm orange
+  palette.tertiary, // blue
   palette.danger, // red
   '#7C5CBF', // violet
-  palette.success, // green
-  '#8AD0F1', // light sky (tertiary-fixed-dim)
-  '#767586', // slate (outline)
+  palette.success, // teal
+  '#93C5FD', // light blue
+  '#94A3B8', // slate (outline)
 ] as const;
 
 export const spacing = {
   xs: 4,
   sm: 8,
-  md: 16, // Stitch margin-mobile
-  lg: 24, // Stitch gutter
+  md: 16, // mobile margin
+  lg: 24, // gutter
   xl: 32,
   xxl: 48,
 } as const;
 
 export const radius = {
   sm: 4,
-  control: 8, // buttons + chips stay tactile (Stitch rounded.DEFAULT)
+  control: 8, // buttons + chips stay tactile
   md: 12,
   lg: 16, // the standard bento container
   xl: 24, // hero / feature tiles
@@ -73,7 +73,7 @@ export const radius = {
 
 /**
  * Line heights are absolute pixels (RN has no unitless ratios); letterSpacing is
- * px converted from Stitch's em values.
+ * in px.
  */
 export const typography = {
   title: { fontSize: 28, fontWeight: '700', lineHeight: 34, letterSpacing: -0.5 },
@@ -83,7 +83,7 @@ export const typography = {
   subheading: { fontSize: 18, fontWeight: '600', lineHeight: 24 },
   body: { fontSize: 16, fontWeight: '400', lineHeight: 26 },
   caption: { fontSize: 12, fontWeight: '500', lineHeight: 14 },
-  // Section label. Sentence-case: the ibilly system has no uppercase label style.
+  // Section label. Sentence-case: the Talvori system has no uppercase label style.
   eyebrow: { fontSize: 14, fontWeight: '600', lineHeight: 17, letterSpacing: 0.14 },
   button: { fontSize: 16, fontWeight: '600', lineHeight: 19 },
   // The floor for any rendered amount (F32): nothing below 14px, tabular figures

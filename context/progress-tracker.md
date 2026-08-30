@@ -18,6 +18,9 @@
       picker, 2c rank-by-net Compare, segmented Shop hub). typecheck / ~192 tests / lint / web
       bundle green.
 - [x] `context/` created from the JSM context-driven-dev structure (this migration).
+- [x] **Talvori rebrand — rename + repalette.** App renamed → Talvori (config/locales/brand
+      strings); `components/theme.ts` repaletted to the Talvori tokens (purple/navy/teal/orange);
+      zero ibilly strings in code. typecheck + 211 tests + i18n parity green.
 
 ## In progress
 
@@ -27,14 +30,12 @@
 
 Ordered by priority. These are the only items that can be worked without new accounts or data.
 
-- [ ] **Talvori rebrand — the new target direction** (from `context/design/Budget app analysis/`).
-      Foundational, so do it first: (a) **rename** app → Talvori across config/locales/brand
-      strings; (b) **repalette** `components/theme.ts` to the Talvori tokens; (c) **money-model
-      alignment** to the 8 decided behaviors in `architecture.md`; (d) recreate the Flow Prototype
-      in RN. Full scope in `build-plan.md` §"Talvori rebrand"; tokens in `ui-tokens.md` Talvori
-      appendix.
-- [ ] **4c dark theme — provider refactor.** Build the provider on the **Talvori** palette (do
-      after/with the repalette, not on the ibilly one).
+- [ ] **Talvori rebrand — money-model alignment (remaining).** Rename ✅ and repalette ✅ are
+      done (`components/theme.ts` is now Talvori; zero ibilly strings in code). Remaining: align
+      the finance core to the 8 decided behaviors in `architecture.md` §"Money model — decided
+      behavior", using the Flow Prototype (`context/design/Budget app analysis/`) as reference —
+      recreate it in RN. This is **rework** of existing Phase-3/UX screens, not just new work.
+- [ ] **4c dark theme — provider refactor** (now built on the Talvori palette).
 - [ ] 4b onboarding (incl. cross-border "different countries?" question) — non-blocking polish.
 - [ ] Apply migration `20260820000012` (5a retailer directory) in the Supabase SQL editor —
       small admin task (also tracked under Known issues).
@@ -67,12 +68,12 @@ Ordered by priority. These are the only items that can be worked without new acc
 - 6a manual plan toggle is `__DEV__`-gated so it can't be a free-premium hole in prod.
 - **Brand name: Talvori** (tagline "One plan. Everyone. Together."); "weave" was runner-up.
   Supersedes the "Global Household App" codename.
-- **Design direction (target): Talvori** — purple `#6D4CFF`/navy/teal/orange, Plus Jakarta Sans.
-  Supersedes ibilly (still in code) and retires the vermilion "Broadsheet Ledger" proposal.
+- **Design direction: Talvori** — purple `#6D4CFF`/navy/teal/orange, Plus Jakarta Sans; **shipped**
+  in `components/theme.ts`. Replaced ibilly; retired the vermilion "Broadsheet Ledger" proposal.
 - **Money model** decided per the Talvori Flow Prototype — 8 behaviors in `architecture.md`
   §"Money model — decided behavior" (override older specs).
-- Prior design direction: "ibilly / Expertly Approachable" (Stitch-adopted), borderless white
-  bento tiles — currently in `components/theme.ts`, being replaced by Talvori.
+- Prior design direction "ibilly / Expertly Approachable" (Stitch-adopted) was replaced by the
+  Talvori repalette; recoverable from git history.
 
 ## Session notes
 

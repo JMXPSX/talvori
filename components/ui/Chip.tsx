@@ -1,7 +1,7 @@
 /**
  * Pill chip for filters and category tags — the ONE chip in the system (F30).
  *
- * Follows the segmented control in the ibilly mocks: an unselected chip is a
+ * Follows the segmented control in the Talvori mocks: an unselected chip is a
  * tinted fill with dark ink, a selected one is a solid brand fill with white.
  * Borderless — the system gets separation from tone, not rules.
  *

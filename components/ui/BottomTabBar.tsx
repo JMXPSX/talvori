@@ -2,7 +2,7 @@
  * Mobile bottom navigation (the narrow-layout counterpart to SideNav).
  * Presentational only — the caller maps navigation state into `items`.
  *
- * Shape follows the ibilly dashboard mock: a white bar with rounded top
+ * Shape follows the Talvori dashboard mock: a white bar with rounded top
  * corners floating over the canvas on a raised shadow; the active tab is an
  * indigo pill holding its icon and label, inactive tabs are muted icon+label.
  */

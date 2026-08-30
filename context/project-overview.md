@@ -127,12 +127,12 @@ Engineering invariants live in [`architecture.md`](architecture.md); the product
   −0.02em), tagline **"One plan. Everyone. Together."**, mark `talvori-mark.png` (navy app-icon
   tile). Supersedes the "Global Household App" internal codename and the earlier "no name yet"
   status; "weave" was the runner-up.
-- **Design direction (target): Talvori** — purple `#6D4CFF` primary, navy `#0F172A`, teal
-  `#14B8A6` (income), warm orange `#F59E0B` (shopping/goals), Plus Jakarta Sans — see the Talvori
-  appendix in [`ui-tokens.md`](ui-tokens.md). **Current code still renders the older indigo
-  "ibilly" system** (`components/theme.ts`); the rebrand + repalette is pending (see
-  [`build-plan.md`](build-plan.md) / [`progress-tracker.md`](progress-tracker.md)). The earlier
-  vermilion "Broadsheet Ledger" proposal is retired (superseded by Talvori).
+- **Design direction: Talvori** — purple `#6D4CFF` primary, navy `#0F172A`, teal `#14B8A6`
+  (income), warm orange `#F59E0B` (shopping/goals), Plus Jakarta Sans — now **shipped** in
+  `components/theme.ts` (transcribed in [`ui-tokens.md`](ui-tokens.md)). Replaced the earlier
+  indigo "ibilly" system; the vermilion "Broadsheet Ledger" proposal is retired. Remaining rebrand
+  work is money-model alignment (see [`build-plan.md`](build-plan.md) /
+  [`progress-tracker.md`](progress-tracker.md)).
 - Voice / personality: tagline-led ("One plan. Everyone. Together."); not otherwise formalized.
 
 ## Accessibility & inclusion

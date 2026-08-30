@@ -3,7 +3,7 @@
  * Tabs: Home, Budget, Transactions, Grocery, More.
  *
  * Narrow viewports get the bottom tab bar; wide ones (desktop browsers, tablets
- * in landscape) get the sidebar from the ibilly web mock. The split is by width,
+ * in landscape) get the sidebar from the Talvori web mock. The split is by width,
  * not platform, because the app ships as a Web-PWA — a phone browser must still
  * get the mobile layout. Direction-aware: the sidebar sits on the right in RTL.
  */
