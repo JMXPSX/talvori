@@ -1,7 +1,8 @@
-# Global Household App
+# Talvori
 
-Internal codename: **Global Household App** (no public branding yet — see
-`context/project-overview.md`).
+**Talvori** — *"One plan. Everyone. Together."* The public brand for this global household
+finance app (chosen in the design workspace; see `context/project-overview.md`). The current code
+still renders the older indigo "ibilly" visual system — the Talvori repalette is the next step.
 
 A global household finance, budgeting, shared-shopping, retail-pricing and
 multi-currency platform. One universal codebase (Expo) targets **iOS, Android,

@@ -165,7 +165,7 @@ export default function ThemeGalleryScreen() {
           </Card>
           <View style={styles.navPreview}>
             <SideNav
-              brand="Global Household App"
+              brand="Talvori"
               title="Test 2"
               subtitle="USD"
               items={[
