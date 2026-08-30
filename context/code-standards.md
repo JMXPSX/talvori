@@ -90,8 +90,10 @@ secrets, data deletion/export. **Do not merge high-risk changes without relevant
 - Self-documenting code; comment the *why*, not the *what*. Match surrounding comment density.
 - Don't add dependencies arbitrarily. Stick to the approved stack (see `architecture.md`).
 
-## ADRs
+## Decision records
 
-Record major choices under `context/adr/` (context, decision, alternatives, consequences).
-Examples worth an ADR: why modular monolith, why integer minor units, why Supabase Broadcast,
-why retailer connectors, why PWA before native desktop.
+Major choices — why modular monolith, why integer minor units, why `SECURITY DEFINER` helpers,
+why retailer connectors, why PWA before native desktop — are recorded with their context,
+alternatives, and consequences as a **dated decision log** in `architecture.md` §"Key decisions
+& rationale". Add a new dated entry there for any future high-risk decision (auth, RLS, money,
+FX, connectors, platform).

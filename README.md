@@ -97,8 +97,8 @@ lib/            env, supabase client, i18n, rtl, fonts, money, format,
 locales/        en / fil / ar catalogs (key parity enforced by tests)
 supabase/       hand-applied SQL migrations (schema + RLS + RPCs + triggers)
 tests/          jest unit/component tests + live RLS integration drill
-context/        all project docs — overview, architecture, standards, UI, build
-                plan, product record; adr/ specs/ plans/ (per-slice design docs)
+context/        all project docs — overview, architecture (incl. decision log),
+                standards, UI, build plan, product record; specs/ plans/ (per-slice)
 ```
 
 Path alias: `@/*` maps to the repo root (e.g. `import { money } from '@/lib/money'`).

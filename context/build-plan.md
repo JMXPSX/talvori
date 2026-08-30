@@ -18,7 +18,7 @@ implement them incrementally. MVP simplicity beats premature enterprise complexi
 
 ## Phase 0 — Product / architecture freeze ✅
 PRD/TRD, architecture diagram, ERD, screen map, permission matrix, RLS plan, MVP backlog,
-ADR starter. → captured across `context/` + `context/adr/`.
+ADR starter. → captured across `context/`; decision log in `architecture.md` §"Key decisions & rationale".
 
 ## Phase 1 — Technical foundation ✅
 Expo universal app, TypeScript, Expo Router, Supabase client, env strategy, localization,

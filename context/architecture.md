@@ -143,6 +143,45 @@ pack, never display name alone. **Only authorized data sources** — official AP
 feed, partner/affiliate, permitted dataset, merchant data. No unauthorized scraping; never
 fake coupon clipping or bypass retailer account protections.
 
+## Key decisions & rationale
+
+> Folded in from the former ADRs (`context/adr/`, now in git history). Kept as a **dated
+> decision log**: the *facts* live in the sections above; this records the *why*, the
+> alternatives rejected, and the consequences — the trail reviewers need for high-risk areas.
+
+**Foundation — Phase 1 (ADR 0002, 2026-08-12).**
+- **Modular monolith on Expo + Expo Router**, one universal codebase — not microservices (no
+  scale justification in MVP; extraction only when scale demands it).
+- **Flat, feature-based layout** with the `@/*` alias, rejecting the SDK's default `src/`
+  nesting — the alias makes the flat layout ergonomic and matches the named layout.
+- **i18n + RTL from day one**, rejecting deferral — retrofitting Arabic/RTL later is expensive.
+  *Consequence:* adding a language = one JSON catalog + a `SUPPORTED_LANGUAGES` entry.
+- **Money via `lib/money.ts` only** — direct float arithmetic on major units is disallowed (a
+  rule, not a guideline). *Consequence:* backend (schema/RLS/Edge Functions) was intentionally
+  left empty until Phase 2.
+
+**Auth & household isolation — Phase 2 (ADR 0003, 2026-08-12).**
+- **RLS everywhere, membership-derived** — access decided by `household_members`, never a
+  client-supplied `household_id`.
+- **`SECURITY DEFINER` helpers** (`is_member_of`, `has_role_in`, `shares_household_with`) do the
+  checks — this is what avoids the infinite recursion a `household_members` policy hits when it
+  queries `household_members` under RLS.
+- **Atomic `SECURITY DEFINER` RPCs** (`create_household`, `accept_invitation`) solve the
+  chicken-and-egg of inserting your own first membership under RLS, and validate invite
+  email/expiry server-side.
+- **Last-owner guard trigger** — a household can never lose its last owner.
+- **Invitations are tokened rows**, shared manually until the invite-email Edge Function lands.
+- **`typedRoutes` experiment disabled** — its generated href types were unreliable
+  (stale/malformed unions after route groups); runtime unaffected, revisit when stable.
+- *Consequence:* isolation is verifiable via `npm run test:rls`; `lib/database.types.ts` is
+  hand-synced until CLI type-gen is wired.
+
+**Practice (ADR 0001, 2026-08-12).** Major architecture choices are recorded with their
+context, decision, alternatives, and consequences — now **inline in this section** rather than
+as separate ADR files (one narrative log was chosen over one-file-per-decision to keep all
+context in one place). Add a new dated entry here for future high-risk decisions (auth, RLS,
+money, FX, connectors, platform).
+
 ## Invariants (non-negotiable)
 
 1. RLS is the security boundary, not the client. Every household table is `household_id`-scoped.

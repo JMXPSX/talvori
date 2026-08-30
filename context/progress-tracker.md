@@ -67,4 +67,7 @@
   `design-proposal.md` (proposed vermilion redesign, not shipped) moved in; `docs/` deep archive
   (adr/, specs/, plans/, ORCHESTRATION) and the code READMEs (features/, supabase/) pulled under
   `context/` too — all project docs now live here. UI trio stays indigo ibilly (matches
-  theme.ts). Next: resume dark-theme provider refactor.
+  theme.ts).
+- **2026-08-30:** Folded the 3 ADRs into a dated "Key decisions & rationale" log in
+  `architecture.md` (and repointed `code-standards.md`); removed `context/adr/`. Next: resume
+  dark-theme provider refactor.
