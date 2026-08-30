@@ -97,11 +97,38 @@ lib/            env, supabase client, i18n, rtl, fonts, money, format,
 locales/        en / fil / ar catalogs (key parity enforced by tests)
 supabase/       hand-applied SQL migrations (schema + RLS + RPCs + triggers)
 tests/          jest unit/component tests + live RLS integration drill
-context/        all project docs — overview, architecture (incl. decision log),
-                standards, UI, build plan, product record; specs/ plans/ (per-slice)
+context/        all project docs (see "Project documentation" below) — overview,
+                architecture, standards, library, UI, build plan, progress tracker
 ```
 
 Path alias: `@/*` maps to the repo root (e.g. `import { money } from '@/lib/money'`).
+
+## Project documentation
+
+All project context lives in [`context/`](context/), adopting JS Mastery's
+[context-driven-dev](https://github.com/jsmastery-pro/context-driven-dev) structure — the premise
+being that agents fail not because they can't code, but because they don't know the project.
+**Read these at the start of each session** (all but the tracker are stable reference; the tracker
+updates every session):
+
+| File | Role |
+|------|------|
+| [context/project-overview.md](context/project-overview.md) | Vision, problem, positioning, users, scope, globalization, brand, a11y, status |
+| [context/architecture.md](context/architecture.md) | Stack, folders, boundaries, data flows, DB, auth, RLS, retail, invariants, decision log |
+| [context/build-plan.md](context/build-plan.md) | Phased roadmap + per-slice specs (Appendix A) & plans (Appendix B) |
+| [context/code-standards.md](context/code-standards.md) | Engineering rules, git/commit, review gates, testing |
+| [context/library-docs.md](context/library-docs.md) | `lib/*` + external dependency usage rules (override training knowledge) |
+| [context/ui-tokens.md](context/ui-tokens.md) | Design tokens (RN-adapted from `components/theme.ts`) + proposed-redesign appendix |
+| [context/ui-rules.md](context/ui-rules.md) | UI behavior: layout, nav, cards, buttons, forms, states |
+| [context/ui-registry.md](context/ui-registry.md) | Catalog of `components/ui/` primitives |
+| [context/progress-tracker.md](context/progress-tracker.md) | **Live** status — done / in-progress / next / blocked / decisions |
+
+Deep reference in the same folder: [`context/design/`](context/design/) (UX-overhaul handoff —
+audit, mockups, screenshots), [`context/supabase.md`](context/supabase.md) (migrations/RLS guide),
+and [`context/ORCHESTRATION.md`](context/ORCHESTRATION.md) (standalone runbook for the two-agent
+Terminal-writes / Desktop-reviews workflow). The former numbered `00_`–`11_` root specs, ADRs, and
+separate `specs/`/`plans/` folders were consolidated into the files above — all recoverable from
+git history. `CLAUDE.md` is Claude Code's operational entry point and refers into these.
 
 ## Non-negotiable rules (enforced across the codebase)
 

@@ -82,6 +82,10 @@
 - **2026-08-30 (cont.):** Folded `features.md` (feature-module layout) into `architecture.md`
   as a "Feature modules" table (updated stale `shopping/`→`grocery/`, `subscription/`→`billing/`;
   dropped the stale "nothing built yet" line); removed the standalone file.
+- **2026-08-30 (cont.):** Folded the `context/README.md` index into the root `README.md` as a
+  "Project documentation" section (links rewritten to `context/…` paths); removed the standalone
+  `context/README.md`. Repointed `CLAUDE.md` to start at `context/project-overview.md`. Root
+  `README.md` is now the single doc entry point.
 - **Decision (2026-08-30):** `ORCHESTRATION.md` stays **standalone** — it's a two-agent
   operating runbook (how to drive Terminal/Desktop), not product/codebase docs, so it doesn't
   map to any of the 9 template files. Don't fold it. `supabase.md` remains a fold candidate into
