@@ -37,7 +37,6 @@ All remaining project docs were consolidated here too, so `context/` is the sing
 |------|----------------|
 | [design/](design/) | UX-overhaul handoff bundle — audit, mockups, screenshots (indigo ibilly direction) |
 | [ORCHESTRATION.md](ORCHESTRATION.md) | Multi-lane terminal orchestration notes |
-| [features.md](features.md) | `features/` layout guide (formerly `features/README.md`) |
 | [supabase.md](supabase.md) | `supabase/` migrations/RLS guide (formerly `supabase/README.md`) |
 
 The former `adr/` decision records were folded into

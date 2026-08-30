@@ -34,6 +34,20 @@ tests/         Jest unit/component tests + the live RLS isolation drill.
 
 Path alias: `@/*` → repo root (e.g. `import { money } from '@/lib/money'`).
 
+### Feature modules
+
+Each `features/<domain>/` folder owns its screens' logic, hooks, `schemas.ts` (zod), and data
+access; routes in `app/` stay thin and delegate here.
+
+| Module | First shipped | Domain |
+|--------|---------------|--------|
+| `auth/` | Phase 2 | registration, login, OTP, MFA, biometric unlock |
+| `household/` | Phase 2 | households, members, invitations, roles, RLS access |
+| `finance/` | Phase 3 | accounts, transactions, budgets, goals, debts, FX |
+| `grocery/` | Phase 4 | grocery lists, realtime sync, expense conversion |
+| `retail/` | Phase 5 | products, stores, prices, coupons (UI over services) |
+| `billing/` | Phase 6 | plans, entitlements, regional pricing |
+
 ## System boundaries
 
 - **Screens never call `getSupabase()` directly.** Only `features/*/api.ts` touches the

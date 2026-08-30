@@ -78,5 +78,8 @@
   Appendix (pointers added from `ui-rules.md`/`ui-registry.md`), and folded `product.md` into
   `project-overview.md` (positioning, brand, accessibility, durable constraints, fuller
   principles). Both standalone files removed. `context/` core is now exactly the 9 template files
-  + README + deep-reference (design/, ORCHESTRATION.md, features.md, supabase.md). Next: resume
+  + README + deep-reference (design/, ORCHESTRATION.md, features.md, supabase.md).
+- **2026-08-30 (cont.):** Folded `features.md` (feature-module layout) into `architecture.md`
+  as a "Feature modules" table (updated stale `shopping/`→`grocery/`, `subscription/`→`billing/`;
+  dropped the stale "nothing built yet" line); removed the standalone file. Next: resume
   dark-theme provider refactor.
