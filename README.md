@@ -124,10 +124,10 @@ updates every session):
 | [context/ui-registry.md](context/ui-registry.md) | Catalog of `components/ui/` primitives |
 | [context/progress-tracker.md](context/progress-tracker.md) | **Live** status — done / in-progress / next / blocked / decisions |
 
-Deep reference in the same folder: [`context/design/`](context/design/) (UX-overhaul handoff —
-audit, mockups, screenshots), [`context/supabase.md`](context/supabase.md) (migrations/RLS guide),
-and [`context/ORCHESTRATION.md`](context/ORCHESTRATION.md) (standalone runbook for the two-agent
-Terminal-writes / Desktop-reviews workflow). The former numbered `00_`–`11_` root specs, ADRs, and
+Deep reference in the same folder: [`context/supabase.md`](context/supabase.md) (migrations/RLS
+guide) and [`context/ORCHESTRATION.md`](context/ORCHESTRATION.md) (standalone runbook for the
+two-agent Terminal-writes / Desktop-reviews workflow). Talvori brand image assets live in
+`assets/brand/`; the raw design workspace is archived in git history. The former numbered `00_`–`11_` root specs, ADRs, and
 separate `specs/`/`plans/` folders were consolidated into the files above — all recoverable from
 git history. `CLAUDE.md` is Claude Code's operational entry point and refers into these.
 

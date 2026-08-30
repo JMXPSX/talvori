@@ -122,8 +122,8 @@ Engineering invariants live in [`architecture.md`](architecture.md); the product
 
 ## Brand commitments
 
-- **Public brand name: Talvori.** Chosen via the "Budget app analysis" design workspace
-  (`context/design/Budget app analysis/`). Lowercase wordmark "talvori" (Plus Jakarta Sans 800,
+- **Public brand name: Talvori.** Chosen via the Talvori design workspace (a Claude Design export,
+  archived in git history; brand images in `assets/brand/`). Lowercase wordmark "talvori" (Plus Jakarta Sans 800,
   −0.02em), tagline **"One plan. Everyone. Together."**, mark `talvori-mark.png` (navy app-icon
   tile). Supersedes the "Global Household App" internal codename and the earlier "no name yet"
   status; "weave" was the runner-up.

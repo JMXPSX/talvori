@@ -33,8 +33,8 @@ Ordered by priority. These are the only items that can be worked without new acc
 - [ ] **Talvori rebrand — money-model alignment (remaining).** Rename ✅ and repalette ✅ are
       done (`components/theme.ts` is now Talvori; zero ibilly strings in code). Remaining: align
       the finance core to the 8 decided behaviors in `architecture.md` §"Money model — decided
-      behavior", using the Flow Prototype (`context/design/Budget app analysis/`) as reference —
-      recreate it in RN. This is **rework** of existing Phase-3/UX screens, not just new work.
+      behavior", using the Flow Prototype (archived in git history) as reference — recreate it in
+      RN. This is **rework** of existing Phase-3/UX screens, not just new work.
 - [ ] **4c dark theme — provider refactor** (now built on the Talvori palette).
 - [ ] 4b onboarding (incl. cross-border "different countries?" question) — non-blocking polish.
 - [ ] Apply migration `20260820000012` (5a retailer directory) in the Supabase SQL editor —
@@ -114,4 +114,9 @@ Ordered by priority. These are the only items that can be worked without new acc
   brand into `project-overview.md`, the Talvori palette into `ui-tokens.md` (replacing the retired
   vermilion appendix), the 8-point money model into `architecture.md`, and the rebrand scope into
   `build-plan.md` + "Up next". Slimmed the raw export (244→21 files) to mockups + Flow Prototype +
-  brand assets + the two handoff docs. Next: start the Talvori rebrand (rename + repalette).
+  brand assets + the two handoff docs.
+- **2026-08-30 (cont.):** Talvori rebrand steps 1–2 done — renamed app → Talvori (commit
+  `7eecfe3`) and repaletted `components/theme.ts` + purged ibilly references (commit `3df4a50`).
+  Then removed `context/design/` entirely (design decisions are captured in the md files; raw
+  export archived in git history), relocating the Talvori brand images to `assets/brand/`. Next:
+  the money-model alignment (finance-core rework).

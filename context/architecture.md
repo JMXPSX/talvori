@@ -159,7 +159,7 @@ fake coupon clipping or bypass retailer account protections.
 
 ## Money model — decided behavior (Talvori)
 
-> From the Talvori interactive Flow Prototype ("Budget app analysis" design workspace). These
+> From the Talvori interactive Flow Prototype (design workspace, archived in git history). These
 > were decided with the product owner and **override anything looser in older spec docs** — build
 > the finance core to match.
 
