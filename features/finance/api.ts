@@ -74,6 +74,19 @@ export async function createAccount(
   return data as AccountRow;
 }
 
+/** Rename an account. Only the display name changes; the account id (and thus all
+ *  transaction / budget references) is stable, so history is preserved. RLS: member+. */
+export async function updateAccount(id: string, patch: { name: string }): Promise<AccountRow> {
+  const { data, error } = await getSupabase()
+    .from('accounts')
+    .update({ name: patch.name })
+    .eq('id', id)
+    .select('*')
+    .single();
+  if (error) fail('finance.errors.accountFailed', error);
+  return data as AccountRow;
+}
+
 // --- categories ------------------------------------------------------------
 export async function listCategories(
   householdId: string,

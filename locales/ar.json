@@ -150,6 +150,7 @@
       "currencyLabel": "العملة",
       "openingBalanceLabel": "الرصيد الافتتاحي",
       "createCta": "إضافة حساب",
+      "rename": "إعادة تسمية",
       "confirmDeleteTitle": "حذف هذا الحساب؟",
       "confirmDeleteBody": "سيؤدي هذا أيضًا إلى حذف كل معاملة مسجلة عليه نهائيًا.",
       "types": {

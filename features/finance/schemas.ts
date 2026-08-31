@@ -20,6 +20,11 @@ export const createAccountSchema = z.object({
 });
 export type CreateAccountInput = z.infer<typeof createAccountSchema>;
 
+export const renameAccountSchema = z.object({
+  name: z.string().trim().min(1).max(80),
+});
+export type RenameAccountInput = z.infer<typeof renameAccountSchema>;
+
 export const createEntrySchema = z.object({
   accountId: z.string().uuid(),
   type: z.enum(['income', 'expense']),

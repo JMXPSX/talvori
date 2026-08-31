@@ -150,6 +150,7 @@
       "currencyLabel": "Currency",
       "openingBalanceLabel": "Panimulang balanse",
       "createCta": "Magdagdag ng account",
+      "rename": "Palitan ang pangalan",
       "confirmDeleteTitle": "Burahin ang account na ito?",
       "confirmDeleteBody": "Permanente ring mabubura ang bawat transaksyong naitala rito.",
       "types": {

@@ -1,5 +1,5 @@
-/** Manage accounts: list with balances + create. Opening balance is entered in
- *  major units and converted to minor units before saving. */
+/** Manage accounts: list with balances + create + inline rename. Opening balance is
+ *  entered in major units and converted to minor units before saving. */
 
 import { getLocales } from 'expo-localization';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -12,8 +12,8 @@ import { Feather } from '@expo/vector-icons';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
 import { Button, CONTENT_MAX_WIDTH, CurrencyField, Text, TextField, useActionSheet } from '@/components/ui';
-import { createAccount, deleteAccount, listAccountBalances, listAccounts } from '@/features/finance/api';
-import { accountTypeSchema, createAccountSchema } from '@/features/finance/schemas';
+import { createAccount, deleteAccount, listAccountBalances, listAccounts, updateAccount } from '@/features/finance/api';
+import { accountTypeSchema, createAccountSchema, renameAccountSchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { AccountBalanceRow, AccountRow, AccountType } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
@@ -49,6 +49,10 @@ export default function AccountsScreen() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [savingRename, setSavingRename] = useState(false);
 
   const load = useCallback(async () => {
     if (!active) {
@@ -100,6 +104,32 @@ export default function AccountsScreen() {
     });
   }
 
+  function onStartRename(account: AccountRow) {
+    setEditingId(account.id);
+    setEditName(account.name);
+  }
+
+  function onCancelRename() {
+    setEditingId(null);
+    setEditName('');
+  }
+
+  async function onSaveRename(id: string) {
+    const result = validate(renameAccountSchema, { name: editName });
+    if (!result.success) return; // empty/too-long name: keep editing
+    setSavingRename(true);
+    try {
+      await updateAccount(id, { name: result.data.name });
+      setEditingId(null);
+      setEditName('');
+      await load();
+    } catch (err) {
+      setErrorKey(toAppError(err).messageKey);
+    } finally {
+      setSavingRename(false);
+    }
+  }
+
   async function onCreate() {
     if (!active) return;
     setFormError(null);
@@ -147,22 +177,60 @@ export default function AccountsScreen() {
               const bal = balances[a.id];
               return (
                 <View key={a.id} style={styles.card}>
-                  <View style={styles.cardRow}>
-                    <Text>{a.name}</Text>
-                    <View style={styles.cardTrailing}>
-                      <Text>
-                        {formatAmount(bal ? bal.balance_minor : a.opening_balance_minor, a.currency_code)}
-                      </Text>
+                  {editingId === a.id ? (
+                    <View style={styles.editRow}>
+                      <View style={{ flex: 1 }}>
+                        <TextField
+                          label={t('finance.accounts.nameLabel')}
+                          value={editName}
+                          onChangeText={setEditName}
+                          autoCapitalize="words"
+                        />
+                      </View>
                       <Pressable
                         accessibilityRole="button"
-                        accessibilityLabel={t('finance.delete')}
+                        accessibilityLabel={t('common.save')}
                         hitSlop={12}
-                        onPress={() => onDeleteAccount(a)}
+                        disabled={savingRename}
+                        onPress={() => void onSaveRename(a.id)}
                       >
-                        <Feather name="trash-2" size={18} color={palette.textMuted} />
+                        <Feather name="check" size={20} color={palette.brand} />
+                      </Pressable>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={t('common.cancel')}
+                        hitSlop={12}
+                        onPress={onCancelRename}
+                      >
+                        <Feather name="x" size={20} color={palette.textMuted} />
                       </Pressable>
                     </View>
-                  </View>
+                  ) : (
+                    <View style={styles.cardRow}>
+                      <Text>{a.name}</Text>
+                      <View style={styles.cardTrailing}>
+                        <Text>
+                          {formatAmount(bal ? bal.balance_minor : a.opening_balance_minor, a.currency_code)}
+                        </Text>
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={t('finance.accounts.rename')}
+                          hitSlop={12}
+                          onPress={() => onStartRename(a)}
+                        >
+                          <Feather name="edit-2" size={18} color={palette.textMuted} />
+                        </Pressable>
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={t('finance.delete')}
+                          hitSlop={12}
+                          onPress={() => onDeleteAccount(a)}
+                        >
+                          <Feather name="trash-2" size={18} color={palette.textMuted} />
+                        </Pressable>
+                      </View>
+                    </View>
+                  )}
                   <Text variant="caption" muted>
                     {t(`finance.accounts.types.${a.type}`)} · {a.currency_code}
                   </Text>
@@ -263,6 +331,7 @@ const styles = StyleSheet.create({
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  editRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },

@@ -150,6 +150,7 @@
       "currencyLabel": "Currency",
       "openingBalanceLabel": "Opening balance",
       "createCta": "Add account",
+      "rename": "Rename",
       "confirmDeleteTitle": "Delete this account?",
       "confirmDeleteBody": "This also permanently deletes every transaction recorded on it.",
       "types": {

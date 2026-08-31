@@ -24,6 +24,13 @@
 
 ## In progress
 
+- [ ] **Talvori money-model alignment (Step 3)** — sliced, safest-first:
+  - **Slice A** (pure UI/API, no migration): #1 account rename ✅ · #4 dashboard scope · #7 quick
+    actions (drop Transfer → Income·Expense·Compare) · #8 transfer edit destructive-safe.
+  - **Slice B** (data + ledger): #2 payroll flag *(migration)* · #5 By-account ledger · #6 extend.
+  - **Slice C**: #3 budget funding account `{limit, account}` *(migration + backfill)*.
+  - Migrations are hand-applied → **checkpoint before Slices B/C**. Gap analysis: 3/8 already
+    ~compliant (#6/#7/#8), #6 already correctly siloed.
 - [ ] Dark theme — initiated (needs a provider refactor; see "Up next" 4c).
 
 ## Up next (buildable now — no external blockers)
