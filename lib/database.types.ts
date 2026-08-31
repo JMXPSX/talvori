@@ -29,6 +29,8 @@ export interface HouseholdRow {
   name: string;
   reporting_currency_code: string;
   is_cross_border: boolean;
+  /** Standing human-shareable join code, e.g. "WVH-4827" (migration 15). */
+  code: string;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -259,6 +261,7 @@ export interface Database {
           created_by: string;
           id?: string;
           is_cross_border?: boolean;
+          code?: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -308,6 +311,10 @@ export interface Database {
       accept_invitation: {
         Args: { _token: string };
         Returns: HouseholdMemberRow;
+      };
+      join_household_by_code: {
+        Args: { _code: string };
+        Returns: HouseholdRow;
       };
     };
     Enums: {

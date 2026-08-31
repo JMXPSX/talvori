@@ -473,7 +473,21 @@ async function main() {
   const { error: bPlanErr } = await b.rpc('set_household_plan', { _household_id: hid, _plan_code: 'premium' });
   ok("B cannot set A's plan via RPC", Boolean(bPlanErr));
 
-  // Positive path: A invites B, B accepts, B becomes a member.
+  // --- join by code (§5.4, migration 15) -----------------------------------
+  // The standing join code must NOT be readable by a non-member via table scan
+  // (households_select still requires membership), yet joining BY the code makes
+  // B a member. Runs while B is still a non-member, before the invite path below.
+  const { data: hCodeRow } = await admin.from('households').select('code').eq('id', hid).single();
+  const { data: bCodePeek } = await b.from('households').select('code').eq('id', hid);
+  ok('non-member B cannot read the household join code', (bCodePeek ?? []).length === 0);
+  const { error: joinErr } = await b.rpc('join_household_by_code', { _code: hCodeRow?.code });
+  ok('B can join the household by its code', !joinErr);
+  const { error: rejoinErr } = await b.rpc('join_household_by_code', { _code: hCodeRow?.code });
+  ok('joining again is rejected (already a member)', Boolean(rejoinErr));
+  const { error: badCodeErr } = await b.rpc('join_household_by_code', { _code: 'ZZZ-0000' });
+  ok('an unknown code is rejected', Boolean(badCodeErr));
+
+  // Positive path: A invites B, B accepts (idempotent now that B is a member).
   const { error: inviteErr } = await a.from('household_invitations').insert({
     household_id: hid,
     email: userB.email,

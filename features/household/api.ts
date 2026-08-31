@@ -44,6 +44,34 @@ export async function createHousehold(input: CreateHouseholdInput): Promise<Hous
   return data as HouseholdRow;
 }
 
+/**
+ * Join a household by its standing code (§5.4). The RPC (migration 15) adds the
+ * caller as an active member and returns the household. Two expected failures are
+ * mapped to their own message keys so the screen can show the spec copy:
+ *   • P0002 — no household has that code
+ *   • P0003 — the caller is already a member
+ */
+export async function joinHouseholdByCode(code: string): Promise<HouseholdRow> {
+  const { data, error } = await getSupabase().rpc('join_household_by_code', {
+    _code: code.trim().toUpperCase(),
+  });
+  if (error) {
+    if (error.code === 'P0002') fail('household.errors.codeNotFound', error);
+    if (error.code === 'P0003') fail('household.errors.alreadyMember', error);
+    fail('household.errors.joinFailed', error);
+  }
+  return data as HouseholdRow;
+}
+
+/** Toggle cross-border tracking (§6.11). RLS narrows the update to owner/admin. */
+export async function setCrossBorder(householdId: string, value: boolean): Promise<void> {
+  const { error } = await getSupabase()
+    .from('households')
+    .update({ is_cross_border: value })
+    .eq('id', householdId);
+  if (error) fail('household.errors.saveFailed', error);
+}
+
 export async function listMyHouseholds(): Promise<HouseholdRow[]> {
   const { data, error } = await getSupabase()
     .from('households')
@@ -51,6 +79,19 @@ export async function listMyHouseholds(): Promise<HouseholdRow[]> {
     .order('created_at', { ascending: true });
   if (error) fail('household.errors.loadFailed', error);
   return data ?? [];
+}
+
+/** Active-member count per household the caller belongs to (§6.4 switcher rows).
+ *  One RLS-scoped query — members_select only returns your households' members. */
+export async function listMyMemberCounts(): Promise<Record<string, number>> {
+  const { data, error } = await getSupabase()
+    .from('household_members')
+    .select('household_id')
+    .eq('status', 'active');
+  if (error) fail('household.errors.loadFailed', error);
+  const counts: Record<string, number> = {};
+  for (const row of data ?? []) counts[row.household_id] = (counts[row.household_id] ?? 0) + 1;
+  return counts;
 }
 
 export async function getHousehold(id: string): Promise<HouseholdRow | null> {
