@@ -5,12 +5,14 @@ import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable } from 'react-native';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useTheme } from '@/components/ThemeProvider';
 
 /** Header "+" that opens the create-household modal (3c). */
 function HeaderAddHousehold() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { palette } = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
@@ -26,6 +28,7 @@ function HeaderAddHousehold() {
 
 export default function HouseholdLayout() {
   const { t } = useTranslation();
+  const { palette } = useTheme();
   return (
     <Stack
       screenOptions={{

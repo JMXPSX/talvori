@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Card, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { listItems } from '@/features/grocery/api';
@@ -30,6 +31,8 @@ export default function CompareScreen() {
   const { active } = useActiveHousehold();
   const { has } = usePlan();
   const router = useRouter();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [columns, setColumns] = useState<ColumnTotalCoupon[]>([]);
   const [labels, setLabels] = useState<Record<string, string>>({});
@@ -164,8 +167,8 @@ export default function CompareScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,

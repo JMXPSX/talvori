@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Chip, FORM_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
 import {
   deleteTransaction,
@@ -33,6 +34,8 @@ export default function EditTransactionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const txId = String(id);
   const sheet = useActionSheet();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [tx, setTx] = useState<TransactionWithRefs | null>(null);
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
@@ -293,9 +296,9 @@ function formatAmountFor(tx: TransactionWithRefs): string {
   return `${tx.currency_code} ${major}`;
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
-  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
+  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,

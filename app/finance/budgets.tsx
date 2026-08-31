@@ -9,7 +9,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Feather } from '@expo/vector-icons';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import {
   BentoPage,
   Button,
@@ -44,6 +45,8 @@ export default function BudgetsScreen() {
   const router = useRouter();
   const { active } = useActiveHousehold();
   const sheet = useActionSheet();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [budgets, setBudgets] = useState<BudgetRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
@@ -354,8 +357,8 @@ export default function BudgetsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -366,13 +369,13 @@ const styles = StyleSheet.create({
   },
   list: { gap: spacing.sm },
   // Selection reads as a tinted tile — cards no longer draw borders.
-  cardSelected: { backgroundColor: palette.brandMuted },
+  cardSelected: { backgroundColor: c.brandMuted },
   cardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   section: { gap: spacing.sm },
   allocRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   allocMain: { flex: 1, gap: 2 },
-  leftCaption: { color: palette.success },
-  overCaption: { color: palette.danger },
+  leftCaption: { color: c.success },
+  overCaption: { color: c.danger },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
 });

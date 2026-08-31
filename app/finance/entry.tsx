@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Chip, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createEntry, listAccounts, listCategories } from '@/features/finance/api';
 import { createEntrySchema } from '@/features/finance/schemas';
@@ -24,6 +25,8 @@ export default function EntryScreen() {
   const { active } = useActiveHousehold();
   const params = useLocalSearchParams<{ type?: string }>();
   const kind: 'income' | 'expense' = params.type === 'income' ? 'income' : 'expense';
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
@@ -196,9 +199,9 @@ export default function EntryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
-  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
+  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,

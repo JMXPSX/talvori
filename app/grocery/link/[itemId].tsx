@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
 import { setGroceryItemProduct } from '@/features/grocery/api';
 import { listProducts } from '@/features/retail/api';
@@ -20,6 +21,8 @@ export default function LinkProductScreen() {
   const { itemId } = useLocalSearchParams<{ itemId: string }>();
   const id = String(itemId);
   const { active } = useActiveHousehold();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,8 +83,8 @@ export default function LinkProductScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -94,7 +97,7 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile, gap: spacing.xs,
   },
 });

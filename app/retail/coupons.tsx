@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Chip, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { listItems, listLists } from '@/features/grocery/api';
@@ -33,6 +34,8 @@ export default function CouponsScreen() {
   const { active } = useActiveHousehold();
   const { has } = usePlan();
   const router = useRouter();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [coupons, setCoupons] = useState<CouponWithRefs[]>([]);
   // Expiry reference time, captured when coupons load (render must stay pure).
@@ -326,8 +329,8 @@ export default function CouponsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -341,34 +344,34 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: 'row' },
   premiumPill: {
     alignSelf: 'flex-start',
-    backgroundColor: palette.accentMuted,
+    backgroundColor: c.accentMuted,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
     borderRadius: radius.pill,
   },
   banner: {
-    backgroundColor: palette.accentMuted,
+    backgroundColor: c.accentMuted,
     padding: spacing.md,
     borderRadius: radius.lg,
   },
   coupon: {
     flexDirection: 'row',
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile,
     overflow: 'hidden',
   },
-  accentBar: { width: 4, backgroundColor: palette.accent },
+  accentBar: { width: 4, backgroundColor: c.accent },
   couponBody: { flex: 1, padding: spacing.lg, gap: spacing.xs },
   dim: { opacity: 0.85 },
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile, gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
 });

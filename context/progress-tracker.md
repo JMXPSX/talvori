@@ -42,32 +42,24 @@
 
 ## In progress
 
-- [ ] **Dark theme (4c)** — infra done, screen migration remaining.
+- [x] **Dark theme (4c)** — light/dark with System/Light/Dark toggle, fully migrated.
   - [x] **Infra**: `components/theme.ts` split into `lightPalette` + `darkPalette` (same token
-    names) + `type Palette`; `palette` stays a static light alias so unmigrated modules compile.
-    New `components/ThemeProvider` (`useTheme()` + `useThemedStyles(factory)`), scheme persisted to
-    AsyncStorage, follows OS via `Appearance`, resolves System/Light/Dark. Wired at the root in
-    `_layout` (themed nav + `StatusBar`). Appearance control (System/Light/Dark chips) added to the
-    **More** tab (that screen migrated as the reference). All 16 `components/ui/*` primitives
-    migrated to the hook. `useTheme()` falls back to light outside a provider (component tests);
-    jest gets the AsyncStorage mock. `settings.appearance.*` keys in en/fil/ar. typecheck + 216
-    tests + lint green.
-  - [ ] **Screens** (~40 under `app/`) still import the static light `palette`, so in dark mode
-    their screen-local surfaces stay light while primitives flip — **dark mode isn't visually
-    complete until these are migrated** (same mechanical `makeStyles(c)` + `useThemedStyles`
-    pattern). Toggle works today but judge dark only after this batch.
-  - [ ] Follow-ups: theme `chartSeries`/donut colours for dark; revisit `elevation` shadows on dark.
+    names) + `type Palette`; `palette` stays a static light alias (only `_layout`'s pre-provider
+    font gate still uses it). New `components/ThemeProvider` (`useTheme()` + `useThemedStyles`),
+    scheme persisted to AsyncStorage, follows OS via `Appearance`. Wired at the root (themed nav +
+    `StatusBar`). Appearance control on the **More** tab. `useTheme()` falls back to light outside
+    a provider (component tests); jest gets the AsyncStorage mock. `settings.appearance.*` in en/
+    fil/ar.
+  - [x] **Screens**: all 16 `components/ui/*` primitives + every `app/` screen migrated to
+    `makeStyles(c)` + `useThemedStyles` (module-scope helpers like `txIcon`/`catTint`/`typeIcon`/
+    `LABEL_COLOR`/`SWATCHES` and layout `screenOptions` handled). typecheck + 216 tests + lint green.
+  - [ ] Follow-ups (minor): theme `chartSeries`/donut colours for dark; revisit `elevation` shadow
+    contrast on dark; needs an in-app dark pass to catch any hard-coded light patches.
 
 ## Up next (buildable now — no external blockers)
 
 Ordered by priority. These are the only items that can be worked without new accounts or data.
 
-- [ ] **Talvori rebrand — money-model alignment (remaining).** Rename ✅ and repalette ✅ are
-      done (`components/theme.ts` is now Talvori; zero ibilly strings in code). Remaining: align
-      the finance core to the 8 decided behaviors in `architecture.md` §"Money model — decided
-      behavior", using the Flow Prototype (archived in git history) as reference — recreate it in
-      RN. This is **rework** of existing Phase-3/UX screens, not just new work.
-- [ ] **4c dark theme — provider refactor** (now built on the Talvori palette).
 - [ ] 4b onboarding (incl. cross-border "different countries?" question) — non-blocking polish.
 - [ ] Apply migration `20260820000012` (5a retailer directory) in the Supabase SQL editor —
       small admin task (also tracked under Known issues).

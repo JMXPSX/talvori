@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Chip, CONTENT_MAX_WIDTH, ProgressBar, Text, TextField, useActionSheet } from '@/components/ui';
 import { listAccounts, listCategories } from '@/features/finance/api';
 import {
@@ -37,6 +38,8 @@ export default function GroceryListScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listId = String(id);
   const sheet = useActionSheet();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [list, setList] = useState<GroceryListRow | null>(null);
   const [items, setItems] = useState<GroceryItemRow[]>([]);
@@ -452,8 +455,8 @@ export default function GroceryListScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -467,11 +470,11 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile,
     gap: spacing.xs,
   },
-  doneCard: { backgroundColor: palette.surfaceMuted },
+  doneCard: { backgroundColor: c.surfaceMuted },
   struck: { textDecorationLine: 'line-through' },
   itemRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   // ≥44px hit target around a 26px tick circle.
@@ -481,14 +484,14 @@ const styles = StyleSheet.create({
     height: 26,
     borderRadius: radius.pill,
     borderWidth: 2.5,
-    borderColor: palette.border,
+    borderColor: c.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tickDone: { backgroundColor: palette.success, borderColor: palette.success },
+  tickDone: { backgroundColor: c.success, borderColor: c.success },
   itemMid: { flex: 1, gap: 2 },
   itemTrail: { alignItems: 'flex-end', gap: spacing.xs },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   modalScrim: {
@@ -501,7 +504,7 @@ const styles = StyleSheet.create({
   modalCard: {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     borderRadius: radius.lg,
     padding: spacing.lg,
     gap: spacing.sm,

@@ -16,7 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { BentoPage, BentoRow, Card, Chip, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -42,12 +43,12 @@ import { formatAmount } from '@/lib/format';
 type FeatherName = keyof typeof Feather.glyphMap;
 
 /** Icon + tint for a transaction type (recent-activity rows). */
-function txIcon(type: TransactionType): { name: FeatherName; color: string; bg: string } {
-  if (type === 'income') return { name: 'arrow-down-left', color: palette.success, bg: palette.successMuted };
-  if (type === 'transfer') return { name: 'repeat', color: palette.brand, bg: palette.brandMuted };
-  if (type === 'goal_contribution') return { name: 'target', color: palette.brand, bg: palette.brandMuted };
-  if (type === 'debt_payment') return { name: 'file-text', color: palette.accent, bg: palette.accentMuted };
-  return { name: 'arrow-up-right', color: palette.brand, bg: palette.brandMuted };
+function txIcon(c: Palette, type: TransactionType): { name: FeatherName; color: string; bg: string } {
+  if (type === 'income') return { name: 'arrow-down-left', color: c.success, bg: c.successMuted };
+  if (type === 'transfer') return { name: 'repeat', color: c.brand, bg: c.brandMuted };
+  if (type === 'goal_contribution') return { name: 'target', color: c.brand, bg: c.brandMuted };
+  if (type === 'debt_payment') return { name: 'file-text', color: c.accent, bg: c.accentMuted };
+  return { name: 'arrow-up-right', color: c.brand, bg: c.brandMuted };
 }
 
 /** Fallback description for a transaction row that has no note. */
@@ -64,6 +65,8 @@ export default function HomeScreen() {
   const router = useRouter();
   const { active, loading: hLoading } = useActiveHousehold();
   const { has } = usePlan();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [balances, setBalances] = useState<Record<string, AccountBalanceRow>>({});
@@ -440,7 +443,7 @@ export default function HomeScreen() {
                 </View>
                 {visibleTxns.slice(0, 5).map((tx) => {
                   const positive = tx.direction === 'in';
-                  const ic = txIcon(tx.type);
+                  const ic = txIcon(palette, tx.type);
                   const caption = [tx.category?.name, tx.account?.name].filter(Boolean).join(' · ');
                   return (
                     <Pressable
@@ -479,9 +482,9 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
-  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
+  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background },
   padded: { padding: spacing.lg, gap: spacing.md },
   scope: { gap: spacing.xs },
   scopePills: { flexDirection: 'row', gap: spacing.sm, paddingVertical: spacing.xs },
@@ -502,24 +505,24 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
   },
   // In-scope row echoes the selected pill (two-way sync, #5).
-  accountRowSelected: { backgroundColor: palette.brandMuted },
+  accountRowSelected: { backgroundColor: c.brandMuted },
   accountMain: { flex: 1, gap: 4 },
   accountTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   ledgerRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.sm },
-  netUp: { color: palette.success },
-  netDown: { color: palette.danger },
+  netUp: { color: c.success },
+  netDown: { color: c.danger },
   rowPressed: { opacity: 0.6 },
   hero: {
     flex: 1,
-    backgroundColor: palette.brand,
+    backgroundColor: c.brand,
     borderRadius: radius.xl,
     padding: spacing.lg,
     gap: spacing.xs,
     boxShadow: elevation.raised,
   },
-  heroLabel: { color: palette.white, opacity: 0.85 },
-  heroAmount: { color: palette.white, fontSize: 36 },
-  heroHint: { color: palette.white, opacity: 0.9 },
+  heroLabel: { color: c.white, opacity: 0.85 },
+  heroAmount: { color: c.white, fontSize: 36 },
+  heroHint: { color: c.white, opacity: 0.9 },
   heroTrack: {
     height: 6,
     borderRadius: radius.pill,
@@ -527,14 +530,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: spacing.xs,
   },
-  heroFill: { height: '100%', borderRadius: radius.pill, backgroundColor: palette.white },
-  heroFillOver: { backgroundColor: palette.accent },
-  heroOver: { color: palette.accent },
-  heroBalance: { color: palette.white, opacity: 0.85, marginTop: spacing.xs },
+  heroFill: { height: '100%', borderRadius: radius.pill, backgroundColor: c.white },
+  heroFillOver: { backgroundColor: c.accent },
+  heroOver: { color: c.accent },
+  heroBalance: { color: c.white, opacity: 0.85, marginTop: spacing.xs },
   heroRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  heroRowLabel: { color: palette.white, opacity: 0.9, flex: 1 },
-  heroRowValue: { color: palette.white },
-  heroRule: { height: 1, backgroundColor: palette.white, opacity: 0.2, marginVertical: spacing.xs },
+  heroRowLabel: { color: c.white, opacity: 0.9, flex: 1 },
+  heroRowValue: { color: c.white },
+  heroRule: { height: 1, backgroundColor: c.white, opacity: 0.2, marginVertical: spacing.xs },
   upsell: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -545,14 +548,14 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     backgroundColor: 'rgba(255,255,255,0.12)',
   },
-  upsellText: { color: palette.white, opacity: 0.95, flex: 1 },
+  upsellText: { color: c.white, opacity: 0.95, flex: 1 },
   premiumPill: {
-    backgroundColor: palette.accentMuted,
+    backgroundColor: c.accentMuted,
     borderRadius: radius.pill,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
-  premiumText: { color: palette.accent },
+  premiumText: { color: c.accent },
   tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   tile: {
     flexGrow: 1,
@@ -562,13 +565,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     borderRadius: radius.md,
     // Inset tile inside the actions card: tone, not a rule.
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
   },
   tileIcon: {
     width: 40,
     height: 40,
     borderRadius: radius.pill,
-    backgroundColor: palette.brandMuted,
+    backgroundColor: c.brandMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -582,7 +585,7 @@ const styles = StyleSheet.create({
   dot: { width: 10, height: 10, borderRadius: radius.pill },
   recentSlot: { flex: 1 },
   recentHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  recentAll: { color: palette.brand },
+  recentAll: { color: c.brand },
   recentRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 48 },
   recentIcon: {
     width: 32,
@@ -592,5 +595,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   recentMid: { flex: 1, gap: 2 },
-  recentIn: { color: palette.success },
+  recentIn: { color: c.success },
 });

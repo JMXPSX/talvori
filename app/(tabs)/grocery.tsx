@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text } from '@/components/ui';
 import { listLists, subscribeToLists } from '@/features/grocery/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -19,6 +20,8 @@ export default function GroceryScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active } = useActiveHousehold();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [lists, setLists] = useState<GroceryListRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -129,8 +132,8 @@ export default function GroceryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -144,7 +147,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: radius.pill,
-    backgroundColor: palette.brand,
+    backgroundColor: c.brand,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: radius.pill,
-    backgroundColor: palette.successMuted,
+    backgroundColor: c.successMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },

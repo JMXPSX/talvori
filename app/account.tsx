@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Button, Card, CONTENT_MAX_WIDTH, ErrorNotice, Text, TextField, useActionSheet } from '@/components/ui';
 import { deleteMyAccount } from '@/features/account/api';
 import { exportFilename } from '@/features/account/export';
@@ -20,6 +21,7 @@ export default function AccountScreen() {
   const { t } = useTranslation();
   const { user, signOut } = useAuth();
   const sheet = useActionSheet();
+  const styles = useThemedStyles(makeStyles);
 
   const [exporting, setExporting] = useState(false);
   const [exportErrorKey, setExportErrorKey] = useState<string | null>(null);
@@ -126,8 +128,8 @@ export default function AccountScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   // Cards are borderless now; the danger zone reads as a tonal container.
-  dangerCard: { backgroundColor: palette.dangerMuted },
-  dangerTitle: { color: palette.danger },
-  dangerButton: { backgroundColor: palette.danger },
+  dangerCard: { backgroundColor: c.dangerMuted },
+  dangerTitle: { color: c.danger },
+  dangerButton: { backgroundColor: c.danger },
 });

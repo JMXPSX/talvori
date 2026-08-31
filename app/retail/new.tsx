@@ -9,7 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createRetailer, listRetailerDirectory } from '@/features/retail/api';
 import { createRetailerSchema } from '@/features/retail/schemas';
@@ -24,6 +25,8 @@ export default function RetailNewScreen() {
   const router = useRouter();
   const { active } = useActiveHousehold();
   const country = defaultCountryCode();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [directory, setDirectory] = useState<RetailerDirectoryRow[]>([]);
   const [query, setQuery] = useState('');
@@ -149,8 +152,8 @@ export default function RetailNewScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -164,12 +167,12 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: radius.md,
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  monogramText: { color: palette.textMuted },
+  monogramText: { color: c.textMuted },
   rowMid: { flex: 1, gap: 2 },
   addBtn: { minHeight: 40, paddingHorizontal: spacing.md },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
 });

@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, I18nManager, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { BentoPage, Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
 import { listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -23,10 +24,10 @@ function isEditable(type: TransactionWithRefs['type']): boolean {
 }
 
 /** Category pill tint by transaction type (2b table). */
-function catTint(type: TransactionWithRefs['type']): { bg: string; fg: string } {
-  if (type === 'income') return { bg: palette.successMuted, fg: palette.success };
-  if (type === 'transfer' || type === 'debt_payment') return { bg: palette.accentMuted, fg: palette.accent };
-  return { bg: palette.brandMuted, fg: palette.brand };
+function catTint(c: Palette, type: TransactionWithRefs['type']): { bg: string; fg: string } {
+  if (type === 'income') return { bg: c.successMuted, fg: c.success };
+  if (type === 'transfer' || type === 'debt_payment') return { bg: c.accentMuted, fg: c.accent };
+  return { bg: c.brandMuted, fg: c.brand };
 }
 
 type DayGroup = { key: string; label: string; items: TransactionWithRefs[] };
@@ -66,16 +67,16 @@ function groupByDay(
   return groups;
 }
 
-function typeIcon(type: TransactionWithRefs['type']): {
+function typeIcon(c: Palette, type: TransactionWithRefs['type']): {
   name: keyof typeof Feather.glyphMap;
   color: string;
   bg: string;
 } {
-  if (type === 'income') return { name: 'arrow-down-left', color: palette.success, bg: palette.successMuted };
-  if (type === 'transfer') return { name: 'repeat', color: palette.brand, bg: palette.brandMuted };
-  if (type === 'goal_contribution') return { name: 'target', color: palette.brand, bg: palette.brandMuted };
-  if (type === 'debt_payment') return { name: 'file-text', color: palette.accent, bg: palette.accentMuted };
-  return { name: 'arrow-up-right', color: palette.brand, bg: palette.brandMuted };
+  if (type === 'income') return { name: 'arrow-down-left', color: c.success, bg: c.successMuted };
+  if (type === 'transfer') return { name: 'repeat', color: c.brand, bg: c.brandMuted };
+  if (type === 'goal_contribution') return { name: 'target', color: c.brand, bg: c.brandMuted };
+  if (type === 'debt_payment') return { name: 'file-text', color: c.accent, bg: c.accentMuted };
+  return { name: 'arrow-up-right', color: c.brand, bg: c.brandMuted };
 }
 
 export default function TransactionsScreen() {
@@ -84,6 +85,8 @@ export default function TransactionsScreen() {
   const { active, loading: hLoading } = useActiveHousehold();
   const isWide = useIsWideLayout();
   const sheet = useActionSheet();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const shortDate = (iso: string): string =>
     new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric' }).format(new Date(iso));
@@ -193,7 +196,7 @@ export default function TransactionsScreen() {
             </View>
             {items.map((tx, index) => {
               const positive = tx.direction === 'in';
-              const tint = catTint(tx.type);
+              const tint = catTint(palette, tx.type);
               // Money-model #8/#6: only income/expense rows are editable; transfers and the
               // goal/debt ledger mirrors are read-only (editing would desync a paired balance).
               const editable = isEditable(tx.type);
@@ -249,7 +252,7 @@ export default function TransactionsScreen() {
                 <Card style={styles.groupCard}>
                   {group.items.map((tx, index) => {
                     const positive = tx.direction === 'in';
-                    const icon = typeIcon(tx.type);
+                    const icon = typeIcon(palette, tx.type);
                     const editable = isEditable(tx.type);
                     const caption = [tx.category?.name, tx.account?.name].filter(Boolean).join(' · ');
                     return (
@@ -305,9 +308,9 @@ export default function TransactionsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
-  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
+  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -321,7 +324,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: radius.pill,
-    backgroundColor: palette.brand,
+    backgroundColor: c.brand,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -335,7 +338,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     paddingVertical: spacing.md,
   },
-  rowDivider: { borderTopWidth: 1, borderTopColor: palette.border },
+  rowDivider: { borderTopWidth: 1, borderTopColor: c.border },
   iconTile: {
     width: 36,
     height: 36,
@@ -344,7 +347,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rowMid: { flex: 1, gap: 2 },
-  amountIn: { color: palette.success },
+  amountIn: { color: c.success },
   // 2b desktop table
   table: { padding: 0, gap: 0 },
   trow: {
@@ -356,7 +359,7 @@ const styles = StyleSheet.create({
   },
   thead: { paddingVertical: spacing.sm },
   th: { letterSpacing: 0.5 },
-  trowHover: { backgroundColor: palette.field },
+  trowHover: { backgroundColor: c.field },
   cDate: { width: 84 },
   cDesc: { flex: 1, minWidth: 0 },
   cCat: { width: 150 },

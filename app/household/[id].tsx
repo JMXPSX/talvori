@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import {
   inviteMember,
@@ -32,6 +33,8 @@ export default function HouseholdDetailScreen() {
   const { user } = useAuth();
   const { id } = useLocalSearchParams<{ id: string }>();
   const householdId = String(id);
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [members, setMembers] = useState<MemberWithProfile[]>([]);
   const [invitations, setInvitations] = useState<HouseholdInvitationRow[]>([]);
@@ -214,9 +217,9 @@ export default function HouseholdDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
-  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
+  centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -229,25 +232,25 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile,
     gap: spacing.xs,
   },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   chip: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
   },
-  chipActive: { backgroundColor: palette.brand },
+  chipActive: { backgroundColor: c.brand },
   tokenBox: {
     padding: spacing.md,
     borderRadius: radius.md,
-    backgroundColor: palette.brandMuted,
+    backgroundColor: c.brandMuted,
     gap: spacing.xs,
   },
-  token: { fontFamily: 'monospace', color: palette.text },
+  token: { fontFamily: 'monospace', color: c.text },
 });

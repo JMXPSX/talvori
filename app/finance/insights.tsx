@@ -9,7 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { chartSeries, palette, radius, spacing } from '@/components/theme';
+import { chartSeries, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { BentoPage, BentoRow, Button, Card, ErrorNotice, Text } from '@/components/ui';
 import { listTransactions, listCategories, type TransactionWithRefs } from '@/features/finance/api';
 import { insightsForMonth, monthKeyOf } from '@/features/finance/insights';
@@ -25,6 +26,8 @@ export default function InsightsScreen() {
   const router = useRouter();
   const { active } = useActiveHousehold();
   const { has } = usePlan();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [txns, setTxns] = useState<TransactionWithRefs[]>([]);
   const [rates, setRates] = useState<LatestFxRateRow[]>([]);
@@ -157,17 +160,17 @@ export default function InsightsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   padded: { padding: spacing.lg, gap: spacing.md },
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   premiumPill: {
-    backgroundColor: palette.accentMuted,
+    backgroundColor: c.accentMuted,
     borderRadius: radius.pill,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
-  premiumText: { color: palette.accent },
+  premiumText: { color: c.accent },
   tile: { flex: 1 },
   catRow: { gap: spacing.xs, paddingVertical: spacing.xs },
   catHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 8,
     borderRadius: radius.pill,
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
     overflow: 'hidden',
   },
 });

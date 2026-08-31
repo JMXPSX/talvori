@@ -23,7 +23,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing, webFocusRing } from '@/components/theme';
+import { radius, spacing, webFocusRing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { loginSchema } from '@/features/auth/schemas';
@@ -36,6 +37,9 @@ type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focus
 export default function LoginScreen() {
   const { t } = useTranslation();
   const { signIn } = useAuth();
+  const styles = useThemedStyles(makeStyles);
+  const methodStyles = useThemedStyles(makeMethodStyles);
+  const { palette } = useTheme();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -138,6 +142,7 @@ export default function LoginScreen() {
                 fg={palette.text}
                 bordered
                 onPress={onMethodPress}
+                methodStyles={methodStyles}
               />
               <MethodButton
                 label={t('auth.continueApple')}
@@ -145,6 +150,7 @@ export default function LoginScreen() {
                 bg={palette.text}
                 fg={palette.white}
                 onPress={onMethodPress}
+                methodStyles={methodStyles}
               />
               <MethodButton
                 label={t('auth.emailCode')}
@@ -152,6 +158,7 @@ export default function LoginScreen() {
                 bg={palette.brandMuted}
                 fg={palette.brand}
                 onPress={onMethodPress}
+                methodStyles={methodStyles}
               />
             </View>
 
@@ -181,6 +188,7 @@ function MethodButton({
   fg,
   bordered = false,
   onPress,
+  methodStyles,
 }: {
   label: string;
   icon: React.ReactNode;
@@ -188,6 +196,7 @@ function MethodButton({
   fg: string;
   bordered?: boolean;
   onPress: () => void;
+  methodStyles: ReturnType<typeof makeMethodStyles>;
 }) {
   return (
     <Pressable
@@ -213,8 +222,8 @@ function MethodButton({
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   scroll: { flexGrow: 1, justifyContent: 'center', padding: spacing.lg },
   card: {
     width: '100%',
@@ -226,7 +235,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: radius.lg,
-    backgroundColor: palette.brand,
+    backgroundColor: c.brand,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.sm,
@@ -235,12 +244,12 @@ const styles = StyleSheet.create({
   form: { gap: spacing.md, marginTop: spacing.lg },
   forgot: { alignSelf: 'flex-end' },
   divider: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  rule: { flex: 1, height: 1, backgroundColor: palette.border },
+  rule: { flex: 1, height: 1, backgroundColor: c.border },
   methods: { gap: spacing.sm },
   footer: { marginTop: spacing.lg, alignSelf: 'center' },
 });
 
-const methodStyles = StyleSheet.create({
+const makeMethodStyles = (c: Palette) => StyleSheet.create({
   base: {
     minHeight: 48,
     paddingHorizontal: spacing.lg,
@@ -250,7 +259,7 @@ const methodStyles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing.sm,
   },
-  bordered: { borderWidth: 1, borderColor: palette.border },
+  bordered: { borderWidth: 1, borderColor: c.border },
   hovered: { opacity: 0.92 },
   pressed: { opacity: 0.9, transform: [{ scale: 0.99 }] },
 });

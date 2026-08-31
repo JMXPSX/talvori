@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Card, FORM_MAX_WIDTH, Text } from '@/components/ui';
 import { setHouseholdPlan } from '@/features/billing/api';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
@@ -26,6 +27,8 @@ export default function SubscriptionScreen() {
   const { user } = useAuth();
   const [busy, setBusy] = useState(false);
   const [errorKey, setErrorKey] = useState<string | null>(null);
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const isOwner = Boolean(active && user && active.created_by === user.id);
 
@@ -106,8 +109,8 @@ export default function SubscriptionScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -118,28 +121,28 @@ const styles = StyleSheet.create({
   list: { gap: spacing.sm },
   cardHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   pill: {
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
     borderRadius: radius.pill,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
   pillAccent: {
-    backgroundColor: palette.accentMuted,
+    backgroundColor: c.accentMuted,
     borderRadius: radius.pill,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
-  pillAccentText: { color: palette.accent },
-  premiumCard: { backgroundColor: palette.brand, boxShadow: elevation.raised },
-  white: { color: palette.white },
-  whiteMuted: { color: palette.white, opacity: 0.85 },
+  pillAccentText: { color: c.accent },
+  premiumCard: { backgroundColor: c.brand, boxShadow: elevation.raised },
+  white: { color: c.white },
+  whiteMuted: { color: c.white, opacity: 0.85 },
   jobs: { gap: spacing.sm, marginTop: spacing.xs },
   jobRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   jobCheck: {
     width: 22,
     height: 22,
     borderRadius: radius.pill,
-    backgroundColor: palette.accentMuted,
+    backgroundColor: c.accentMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },

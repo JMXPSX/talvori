@@ -9,7 +9,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Feather } from '@expo/vector-icons';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Chip, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
 import { listAccounts } from '@/features/finance/api';
 import {
@@ -39,6 +40,8 @@ export default function DebtsScreen() {
   const { t } = useTranslation();
   const { active } = useActiveHousehold();
   const sheet = useActionSheet();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [debts, setDebts] = useState<DebtRow[]>([]);
   const [status, setStatus] = useState<Record<string, DebtStatusRow>>({});
@@ -298,8 +301,8 @@ export default function DebtsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -313,7 +316,7 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile,
     gap: spacing.xs,
   },
@@ -322,6 +325,6 @@ const styles = StyleSheet.create({
   accountChips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.xs },
   inlineRow: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm, marginTop: spacing.xs },
   inlineField: { flex: 1 },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
 });

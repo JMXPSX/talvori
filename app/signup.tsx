@@ -9,7 +9,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useTheme } from '@/components/ThemeProvider';
 import { Button, Screen, Text, TextField } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { signupSchema } from '@/features/auth/schemas';
@@ -19,6 +20,7 @@ import { validate } from '@/lib/validation';
 export default function SignupScreen() {
   const { t } = useTranslation();
   const { signUp } = useAuth();
+  const { palette } = useTheme();
 
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');

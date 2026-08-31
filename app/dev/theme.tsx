@@ -13,7 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { chartSeries, palette, radius, spacing, typography } from '@/components/theme';
+import { chartSeries, radius, spacing, typography } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import {
   BentoRow,
   Button,
@@ -34,19 +35,16 @@ import {
 import { useIsWideLayout, WIDE_LAYOUT_MIN_WIDTH } from '@/lib/breakpoints';
 import { isArabicLanguage } from '@/lib/fonts';
 
-const SWATCHES: { name: string; value: string }[] = Object.entries(palette).map(([name, value]) => ({
-  name,
-  value,
-}));
-
 const VARIANTS = Object.keys(typography) as (keyof typeof typography)[];
 
 /** Pangram-ish sample per script, so the faces can be compared directly. */
 const SAMPLE = { latin: 'Household balance 1,234.56', arabic: 'رصيد الأسرة ١٢٣٤٫٥٦' };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  // Module-scope component: its one style has no palette, so keep it inline
+  // rather than reach into the screen's themed `styles`.
   return (
-    <View style={styles.section}>
+    <View style={{ gap: spacing.sm }}>
       <Text variant="eyebrow" muted>
         {title}
       </Text>
@@ -62,6 +60,13 @@ export default function ThemeGalleryScreen() {
   const [navIndex, setNavIndex] = useState(0);
   const sheet = useActionSheet();
   const isWide = useIsWideLayout();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
+
+  const SWATCHES: { name: string; value: string }[] = Object.entries(palette).map(([name, value]) => ({
+    name,
+    value,
+  }));
 
   if (!__DEV__) return null;
 
@@ -272,8 +277,8 @@ export default function ThemeGalleryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.lg,
@@ -288,7 +293,7 @@ const styles = StyleSheet.create({
   typeSample: {},
   swatches: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   swatch: { width: 72, gap: spacing.xs },
-  chip: { height: 40, borderRadius: radius.control, borderWidth: 1, borderColor: palette.border },
+  chip: { height: 40, borderRadius: radius.control, borderWidth: 1, borderColor: c.border },
   ringRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg, flexWrap: 'wrap' },
   chipRow: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   navPreview: { height: 380, borderRadius: radius.lg, overflow: 'hidden', alignSelf: 'flex-start' },

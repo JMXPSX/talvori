@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Card, CONTENT_MAX_WIDTH, EmptyState, Text } from '@/components/ui';
 import { listMyHouseholds } from '@/features/household/api';
 import type { HouseholdRow } from '@/lib/database.types';
@@ -19,6 +20,8 @@ import { toAppError } from '@/lib/errors';
 export default function HouseholdsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [households, setHouseholds] = useState<HouseholdRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -79,8 +82,8 @@ export default function HouseholdsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,

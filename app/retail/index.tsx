@@ -9,7 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Card, Chip, CONTENT_MAX_WIDTH, EmptyState, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -32,6 +33,8 @@ export default function RetailHubScreen() {
   const { active } = useActiveHousehold();
   const { has } = usePlan();
   const isWide = useIsWideLayout();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [segment, setSegment] = useState<Segment>('stores');
   const [retailers, setRetailers] = useState<RetailerRow[]>([]);
@@ -236,6 +239,7 @@ function RetailerCard({
   onPress: () => void;
 }) {
   const { t } = useTranslation();
+  const { palette } = useTheme();
 
   let pill: { label: string; bg: string; fg: string };
   if (stat.lastObservedAt === null) {
@@ -264,8 +268,8 @@ function RetailerCard({
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -278,7 +282,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: radius.md,
-    backgroundColor: palette.brandMuted,
+    backgroundColor: c.brandMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -290,7 +294,7 @@ const styles = StyleSheet.create({
   locRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   flex: { flex: 1 },
-  manage: { color: palette.brand, marginTop: spacing.xs },
+  manage: { color: c.brand, marginTop: spacing.xs },
 });
 
 const cardStyles = StyleSheet.create({

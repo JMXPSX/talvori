@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CurrencyField, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createBudget } from '@/features/finance/planningApi';
 import { createBudgetSchema } from '@/features/finance/planningSchemas';
@@ -37,6 +38,8 @@ export default function BudgetNewScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active } = useActiveHousehold();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
   const bounds = monthBounds();
 
   const [name, setName] = useState('');
@@ -122,8 +125,8 @@ export default function BudgetNewScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.sm,

@@ -16,7 +16,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing, webFocusRing } from '@/components/theme';
+import { radius, spacing, webFocusRing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CurrencyField, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { createHousehold } from '@/features/household/api';
 import { createHouseholdSchema } from '@/features/household/schemas';
@@ -31,6 +32,8 @@ type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focus
 export default function HouseholdNewScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [name, setName] = useState('');
   const [currency, setCurrency] = useState(defaultCurrencyCode());
@@ -142,6 +145,8 @@ function OptionCard({
   onPress: () => void;
   selectedA11y: string;
 }) {
+  const cardStyles = useThemedStyles(makeCardStyles);
+  const { palette } = useTheme();
   return (
     <Pressable
       accessibilityRole="radio"
@@ -177,8 +182,8 @@ function OptionCard({
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -191,7 +196,7 @@ const styles = StyleSheet.create({
   joinLink: { marginTop: spacing.sm, alignSelf: 'center' },
 });
 
-const cardStyles = StyleSheet.create({
+const makeCardStyles = (c: Palette) => StyleSheet.create({
   base: {
     flexDirection: direction.flexRow,
     alignItems: 'flex-start',
@@ -202,12 +207,12 @@ const cardStyles = StyleSheet.create({
     // 2px always so selection changes colour, never width (no reflow).
     borderWidth: 2,
   },
-  unselected: { backgroundColor: palette.surface, borderColor: palette.border },
-  selected: { backgroundColor: palette.brandMuted, borderColor: palette.brand },
-  hovered: { backgroundColor: palette.field },
+  unselected: { backgroundColor: c.surface, borderColor: c.border },
+  selected: { backgroundColor: c.brandMuted, borderColor: c.brand },
+  hovered: { backgroundColor: c.field },
   pressed: { opacity: 0.9 },
   textCol: { flex: 1, gap: 2 },
-  detail: { color: palette.textMuted, marginTop: 2 },
+  detail: { color: c.textMuted, marginTop: 2 },
   check: {
     width: 22,
     height: 22,
@@ -215,6 +220,6 @@ const cardStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  checkOn: { backgroundColor: palette.brand },
-  checkOff: { borderWidth: 2, borderColor: palette.border },
+  checkOn: { backgroundColor: c.brand },
+  checkOff: { borderWidth: 2, borderColor: c.border },
 });

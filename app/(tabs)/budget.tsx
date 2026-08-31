@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import {
   BentoPage,
   BentoRow,
@@ -49,6 +50,8 @@ export default function PlanScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active } = useActiveHousehold();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [budget, setBudget] = useState<BudgetRow | null>(null);
   const [status, setStatus] = useState<BudgetStatusRow[]>([]);
@@ -226,16 +229,16 @@ export default function PlanScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   ringRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg },
   ringCenter: { textAlign: 'center' },
   ringMain: { flex: 1, gap: 2 },
-  left: { color: palette.success },
-  over: { color: palette.danger },
-  safeSpend: { color: palette.brand },
+  left: { color: c.success },
+  over: { color: c.danger },
+  safeSpend: { color: c.brand },
   cardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  manage: { color: palette.brand },
+  manage: { color: c.brand },
   allocRow: { gap: spacing.xs, paddingVertical: spacing.xs },
   allocHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   allocName: { flex: 1 },

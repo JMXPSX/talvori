@@ -3,10 +3,11 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { palette } from '@/components/theme';
+import { useTheme } from '@/components/ThemeProvider';
 
 export default function GroceryLayout() {
   const { t } = useTranslation();
+  const { palette } = useTheme();
   return (
     <Stack
       screenOptions={{

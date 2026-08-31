@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import {
   createSavedLocation,
@@ -28,6 +29,8 @@ import { validate } from '@/lib/validation';
 export default function SavedLocationsScreen() {
   const { t } = useTranslation();
   const { active } = useActiveHousehold();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [locations, setLocations] = useState<SavedLocationWithStore[]>([]);
   const [stores, setStores] = useState<RetailerStoreRow[]>([]);
@@ -195,8 +198,8 @@ export default function SavedLocationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -209,16 +212,16 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile, gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   chip: {
     paddingHorizontal: spacing.md, paddingVertical: spacing.sm,
-    borderRadius: radius.pill, backgroundColor: palette.field,
+    borderRadius: radius.pill, backgroundColor: c.field,
   },
-  chipActive: { backgroundColor: palette.brand },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  chipActive: { backgroundColor: c.brand },
+  divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
 });

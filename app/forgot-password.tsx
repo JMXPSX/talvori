@@ -6,7 +6,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, Screen, Text, TextField } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { forgotPasswordSchema } from '@/features/auth/schemas';
@@ -16,6 +17,8 @@ import { validate } from '@/lib/validation';
 export default function ForgotPasswordScreen() {
   const { t } = useTranslation();
   const { requestPasswordReset } = useAuth();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [email, setEmail] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
@@ -81,8 +84,8 @@ export default function ForgotPasswordScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   form: { gap: spacing.md, marginTop: spacing.lg },
-  sent: { marginTop: spacing.lg, color: palette.success },
+  sent: { marginTop: spacing.lg, color: c.success },
   link: { marginTop: spacing.lg },
 });

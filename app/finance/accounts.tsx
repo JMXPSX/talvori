@@ -10,7 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Feather } from '@expo/vector-icons';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CONTENT_MAX_WIDTH, CurrencyField, Text, TextField, useActionSheet } from '@/components/ui';
 import { createAccount, deleteAccount, listAccountBalances, listAccounts, updateAccount } from '@/features/finance/api';
 import { accountTypeSchema, createAccountSchema, renameAccountSchema } from '@/features/finance/schemas';
@@ -36,6 +37,8 @@ export default function AccountsScreen() {
   const router = useRouter();
   const { active } = useActiveHousehold();
   const sheet = useActionSheet();
+  const styles = useThemedStyles(makeStyles);
+  const { palette } = useTheme();
 
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [balances, setBalances] = useState<Record<string, AccountBalanceRow>>({});
@@ -311,8 +314,8 @@ export default function AccountsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: palette.background },
+const makeStyles = (c: Palette) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.background },
   content: {
     padding: spacing.lg,
     gap: spacing.md,
@@ -325,22 +328,22 @@ const styles = StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile,
     gap: spacing.xs,
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   editRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },
+  divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   chip: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
   },
-  chipActive: { backgroundColor: palette.brand },
+  chipActive: { backgroundColor: c.brand },
   manage: { marginTop: spacing.lg, alignSelf: 'center' },
 });
