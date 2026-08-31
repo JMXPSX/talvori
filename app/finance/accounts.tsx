@@ -14,12 +14,12 @@ import { elevation, radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CONTENT_MAX_WIDTH, CurrencyField, Text, TextField, useActionSheet } from '@/components/ui';
 import { createAccount, deleteAccount, listAccountBalances, listAccounts, updateAccount } from '@/features/finance/api';
-import { accountTypeSchema, createAccountSchema, renameAccountSchema } from '@/features/finance/schemas';
+import { accountTypeSchema, createAccountSchema, editAccountSchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { AccountBalanceRow, AccountRow, AccountType } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
-import { toMinorUnits } from '@/lib/money';
+import { money, toMajorUnits, toMinorUnits } from '@/lib/money';
 import { validate } from '@/lib/validation';
 
 const ACCOUNT_TYPES = accountTypeSchema.options;
@@ -55,6 +55,7 @@ export default function AccountsScreen() {
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
+  const [editOpening, setEditOpening] = useState('');
   const [savingRename, setSavingRename] = useState(false);
 
   const load = useCallback(async () => {
@@ -110,21 +111,30 @@ export default function AccountsScreen() {
   function onStartRename(account: AccountRow) {
     setEditingId(account.id);
     setEditName(account.name);
+    setEditOpening(String(toMajorUnits(money(account.opening_balance_minor, account.currency_code))));
   }
 
   function onCancelRename() {
     setEditingId(null);
     setEditName('');
+    setEditOpening('');
   }
 
-  async function onSaveRename(id: string) {
-    const result = validate(renameAccountSchema, { name: editName });
-    if (!result.success) return; // empty/too-long name: keep editing
+  async function onSaveRename(account: AccountRow) {
+    const result = validate(editAccountSchema, {
+      name: editName,
+      openingBalanceMajor: editOpening === '' ? 0 : editOpening,
+    });
+    if (!result.success) return; // empty/too-long name or non-numeric amount: keep editing
     setSavingRename(true);
     try {
-      await updateAccount(id, { name: result.data.name });
+      await updateAccount(account.id, {
+        name: result.data.name,
+        openingBalanceMinor: toMinorUnits(result.data.openingBalanceMajor, account.currency_code),
+      });
       setEditingId(null);
       setEditName('');
+      setEditOpening('');
       await load();
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
@@ -181,32 +191,49 @@ export default function AccountsScreen() {
               return (
                 <View key={a.id} style={styles.card}>
                   {editingId === a.id ? (
-                    <View style={styles.editRow}>
-                      <View style={{ flex: 1 }}>
-                        <TextField
-                          label={t('finance.accounts.nameLabel')}
-                          value={editName}
-                          onChangeText={setEditName}
-                          autoCapitalize="words"
-                        />
+                    <View style={styles.editForm}>
+                      <TextField
+                        label={t('finance.accounts.nameLabel')}
+                        value={editName}
+                        onChangeText={setEditName}
+                        autoCapitalize="words"
+                      />
+                      <TextField
+                        label={t('finance.accounts.openingBalanceLabel')}
+                        value={editOpening}
+                        onChangeText={setEditOpening}
+                        keyboardType="numeric"
+                      />
+                      <Text variant="caption" muted>
+                        {t('finance.accounts.currentBalanceNote', {
+                          amount: formatAmount(
+                            bal ? bal.balance_minor : a.opening_balance_minor,
+                            a.currency_code,
+                          ),
+                        })}
+                      </Text>
+                      <Text variant="caption" muted>
+                        {t('finance.accounts.openingBalanceHint')}
+                      </Text>
+                      <View style={styles.editActions}>
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={t('common.save')}
+                          hitSlop={12}
+                          disabled={savingRename}
+                          onPress={() => void onSaveRename(a)}
+                        >
+                          <Feather name="check" size={22} color={palette.brand} />
+                        </Pressable>
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={t('common.cancel')}
+                          hitSlop={12}
+                          onPress={onCancelRename}
+                        >
+                          <Feather name="x" size={22} color={palette.textMuted} />
+                        </Pressable>
                       </View>
-                      <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={t('common.save')}
-                        hitSlop={12}
-                        disabled={savingRename}
-                        onPress={() => void onSaveRename(a.id)}
-                      >
-                        <Feather name="check" size={20} color={palette.brand} />
-                      </Pressable>
-                      <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={t('common.cancel')}
-                        hitSlop={12}
-                        onPress={onCancelRename}
-                      >
-                        <Feather name="x" size={20} color={palette.textMuted} />
-                      </Pressable>
                     </View>
                   ) : (
                     <View style={styles.cardRow}>
@@ -334,7 +361,8 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   cardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  editRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  editForm: { gap: spacing.sm },
+  editActions: { flexDirection: 'row', justifyContent: 'flex-end', gap: spacing.lg, marginTop: spacing.xs },
   divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
   form: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },

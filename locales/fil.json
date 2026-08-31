@@ -195,7 +195,9 @@
         "card": "Card",
         "wallet": "Wallet",
         "other": "Iba pa"
-      }
+      },
+      "openingBalanceHint": "Itinatakda nito ang panimulang balanse; ina-adjust pa rin ito ng mga naitalang transaksyon.",
+      "currentBalanceNote": "Kasalukuyang balanse: {{amount}} (panimula + mga naitalang transaksyon)."
     },
     "entry": {
       "incomeTitle": "Magdagdag ng kita",

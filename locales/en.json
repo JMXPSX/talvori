@@ -195,7 +195,9 @@
         "card": "Card",
         "wallet": "Wallet",
         "other": "Other"
-      }
+      },
+      "openingBalanceHint": "This sets the starting balance; recorded transactions still adjust the total.",
+      "currentBalanceNote": "Current balance: {{amount}} (opening + recorded transactions)."
     },
     "entry": {
       "incomeTitle": "Add income",

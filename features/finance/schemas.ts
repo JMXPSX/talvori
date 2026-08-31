@@ -20,10 +20,11 @@ export const createAccountSchema = z.object({
 });
 export type CreateAccountInput = z.infer<typeof createAccountSchema>;
 
-export const renameAccountSchema = z.object({
+export const editAccountSchema = z.object({
   name: z.string().trim().min(1).max(80),
+  openingBalanceMajor: z.coerce.number().finite().default(0),
 });
-export type RenameAccountInput = z.infer<typeof renameAccountSchema>;
+export type EditAccountInput = z.infer<typeof editAccountSchema>;
 
 export const createEntrySchema = z.object({
   accountId: z.string().uuid(),

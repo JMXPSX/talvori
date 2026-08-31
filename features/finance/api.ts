@@ -76,10 +76,15 @@ export async function createAccount(
 
 /** Rename an account. Only the display name changes; the account id (and thus all
  *  transaction / budget references) is stable, so history is preserved. RLS: member+. */
-export async function updateAccount(id: string, patch: { name: string }): Promise<AccountRow> {
+export async function updateAccount(
+  id: string,
+  patch: { name: string; openingBalanceMinor?: number },
+): Promise<AccountRow> {
+  const update: { name: string; opening_balance_minor?: number } = { name: patch.name };
+  if (patch.openingBalanceMinor !== undefined) update.opening_balance_minor = patch.openingBalanceMinor;
   const { data, error } = await getSupabase()
     .from('accounts')
-    .update({ name: patch.name })
+    .update(update)
     .eq('id', id)
     .select('*')
     .single();
