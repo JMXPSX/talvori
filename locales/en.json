@@ -121,7 +121,9 @@
       "codeNotFound": "No household found for {{code}}. Check the code with whoever invited you.",
       "alreadyMember": "You're already in that household.",
       "joinFailed": "Couldn't join that household. Please try again.",
-      "saveFailed": "Couldn't save the change."
+      "saveFailed": "Couldn't save the change.",
+      "leaveFailed": "Couldn't leave — an owner must transfer or delete the household first.",
+      "deleteFailed": "Couldn't delete the household."
     },
     "detailSub": "People who share this budget.",
     "activeMembers_one": "{{count}} active member",
@@ -133,7 +135,18 @@
     "memberCan": "Add income and expenses, view shared budgets, use the grocery list, see household activity.",
     "ownerAccess": "Full access",
     "memberAccess": "Shared budget",
-    "crossBorderToggle": "Members in another country?"
+    "crossBorderToggle": "Members in another country?",
+    "manageTitle": "Households",
+    "manageSub": "Switch, create, or leave a household.",
+    "leaveCta": "Leave",
+    "deleteCta": "Delete",
+    "leaveConfirmTitle": "Leave {{name}}?",
+    "leaveConfirmBody": "You'll lose access to its shared budgets and lists. You can rejoin with the code.",
+    "deleteConfirmTitle": "Delete {{name}}?",
+    "deleteConfirmBody": "This permanently removes the household and all its data for everyone.",
+    "leftToast": "Left {{name}}",
+    "deletedToast": "Deleted {{name}}",
+    "active": "In view"
   },
   "finance": {
     "overviewTitle": "Accounts",

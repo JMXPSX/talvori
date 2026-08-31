@@ -121,7 +121,9 @@
       "codeNotFound": "Walang sambahayan para sa {{code}}. Tingnan ang code sa nag-imbita sa iyo.",
       "alreadyMember": "Miyembro ka na ng sambahayang iyon.",
       "joinFailed": "Hindi makasali sa sambahayang iyon. Pakisubukan muli.",
-      "saveFailed": "Hindi na-save ang pagbabago."
+      "saveFailed": "Hindi na-save ang pagbabago.",
+      "leaveFailed": "Hindi makaalis — kailangang ilipat o burahin muna ng owner ang sambahayan.",
+      "deleteFailed": "Hindi mabura ang sambahayan."
     },
     "detailSub": "Mga taong naghahati sa budget na ito.",
     "activeMembers_one": "{{count}} aktibong miyembro",
@@ -133,7 +135,18 @@
     "memberCan": "Magdagdag ng kita at gastos, tingnan ang mga shared na badyet, gamitin ang listahan sa grocery, makita ang aktibidad.",
     "ownerAccess": "Buong access",
     "memberAccess": "Shared na badyet",
-    "crossBorderToggle": "May miyembro sa ibang bansa?"
+    "crossBorderToggle": "May miyembro sa ibang bansa?",
+    "manageTitle": "Mga Sambahayan",
+    "manageSub": "Lumipat, gumawa, o umalis sa isang sambahayan.",
+    "leaveCta": "Umalis",
+    "deleteCta": "Burahin",
+    "leaveConfirmTitle": "Aalis sa {{name}}?",
+    "leaveConfirmBody": "Mawawalan ka ng access sa mga shared na badyet at listahan. Maaari kang sumali muli gamit ang code.",
+    "deleteConfirmTitle": "Burahin ang {{name}}?",
+    "deleteConfirmBody": "Permanenteng inaalis nito ang sambahayan at lahat ng datos nito para sa lahat.",
+    "leftToast": "Umalis sa {{name}}",
+    "deletedToast": "Binura ang {{name}}",
+    "active": "Nakatingin"
   },
   "finance": {
     "overviewTitle": "Mga Account",

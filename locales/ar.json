@@ -121,7 +121,9 @@
       "codeNotFound": "لا يوجد منزل للرمز {{code}}. تحقّق من الرمز مع من دعاك.",
       "alreadyMember": "أنت عضو بالفعل في ذلك المنزل.",
       "joinFailed": "تعذّر الانضمام إلى ذلك المنزل. حاول مرة أخرى.",
-      "saveFailed": "تعذّر حفظ التغيير."
+      "saveFailed": "تعذّر حفظ التغيير.",
+      "leaveFailed": "تعذّرت المغادرة — على المالك نقل الملكية أو حذف المنزل أولاً.",
+      "deleteFailed": "تعذّر حذف المنزل."
     },
     "detailSub": "من يشاركون هذه الميزانية.",
     "activeMembers_one": "عضو {{count}} نشِط",
@@ -133,7 +135,18 @@
     "memberCan": "إضافة الدخل والمصروفات وعرض الميزانيات المشتركة واستخدام قائمة البقالة ورؤية نشاط المنزل.",
     "ownerAccess": "وصول كامل",
     "memberAccess": "ميزانية مشتركة",
-    "crossBorderToggle": "هل لديك أعضاء في بلد آخر؟"
+    "crossBorderToggle": "هل لديك أعضاء في بلد آخر؟",
+    "manageTitle": "المنازل",
+    "manageSub": "بدّل أو أنشئ أو غادر منزلاً.",
+    "leaveCta": "مغادرة",
+    "deleteCta": "حذف",
+    "leaveConfirmTitle": "مغادرة {{name}}؟",
+    "leaveConfirmBody": "ستفقد الوصول إلى ميزانياته وقوائمه المشتركة. يمكنك الانضمام مجددًا بالرمز.",
+    "deleteConfirmTitle": "حذف {{name}}؟",
+    "deleteConfirmBody": "يزيل هذا المنزل وجميع بياناته نهائيًا للجميع.",
+    "leftToast": "غادرت {{name}}",
+    "deletedToast": "تم حذف {{name}}",
+    "active": "قيد العرض"
   },
   "finance": {
     "overviewTitle": "الحسابات",

@@ -12,6 +12,7 @@
 import type {
   HouseholdInvitationRow,
   HouseholdMemberRow,
+  HouseholdRole,
   HouseholdRow,
   ProfileRow,
 } from '@/lib/database.types';
@@ -92,6 +93,35 @@ export async function listMyMemberCounts(): Promise<Record<string, number>> {
   const counts: Record<string, number> = {};
   for (const row of data ?? []) counts[row.household_id] = (counts[row.household_id] ?? 0) + 1;
   return counts;
+}
+
+/** The caller's role in each household they belong to (for the manage screen). */
+export async function listMyRoles(): Promise<Record<string, HouseholdRole>> {
+  const uid = await currentUserId();
+  const { data, error } = await getSupabase()
+    .from('household_members')
+    .select('household_id, role')
+    .eq('user_id', uid)
+    .eq('status', 'active');
+  if (error) fail('household.errors.loadFailed', error);
+  return Object.fromEntries((data ?? []).map((r) => [r.household_id, r.role as HouseholdRole]));
+}
+
+/** Leave a household (remove own membership). Blocked by the DB for a last owner. */
+export async function leaveHousehold(householdId: string): Promise<void> {
+  const uid = await currentUserId();
+  const { error } = await getSupabase()
+    .from('household_members')
+    .delete()
+    .eq('household_id', householdId)
+    .eq('user_id', uid);
+  if (error) fail('household.errors.leaveFailed', error);
+}
+
+/** Delete a household and (via FK cascade) all its data. RLS narrows to owners. */
+export async function deleteHousehold(householdId: string): Promise<void> {
+  const { error } = await getSupabase().from('households').delete().eq('id', householdId);
+  if (error) fail('household.errors.deleteFailed', error);
 }
 
 export async function getHousehold(id: string): Promise<HouseholdRow | null> {

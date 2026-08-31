@@ -150,11 +150,9 @@ export function HouseholdSwitcher({ visible, onClose }: { visible: boolean; onCl
                 <Pressable accessibilityRole="button" onPress={() => { setPanel('join'); setError(null); }} style={styles.actionRow}>
                   <Text variant="button" style={styles.link}>{t('home.joinWithCode')}</Text>
                 </Pressable>
-                {active ? (
-                  <Pressable accessibilityRole="button" onPress={() => { onClose(); router.push(`/household/${active.id}`); }} style={styles.actionRow}>
-                    <Text variant="button" muted>{t('home.manageHousehold')}</Text>
-                  </Pressable>
-                ) : null}
+                <Pressable accessibilityRole="button" onPress={() => { onClose(); router.push('/household'); }} style={styles.actionRow}>
+                  <Text variant="button" muted>{t('home.manageHousehold')}</Text>
+                </Pressable>
               </View>
             )}
           </ScrollView>
