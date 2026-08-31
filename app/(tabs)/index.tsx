@@ -3,6 +3,10 @@
  * reporting currency (premium; free sees an upgrade hero). Below: an icon
  * quick-action grid and the accounts list with live balances. All money is
  * formatted per the device locale and each account's own currency.
+ *
+ * Account-scope pills (money-model #4) filter the hero, the spending donut, and
+ * recent activity to one account or all — Checking and Savings are never silently
+ * combined; a caption states what is in view.
  */
 
 import { Feather } from '@expo/vector-icons';
@@ -13,7 +17,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
-import { BentoPage, BentoRow, Card, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
+import { BentoPage, BentoRow, Card, Chip, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
@@ -45,6 +49,7 @@ export default function HomeScreen() {
   const [txns, setTxns] = useState<TransactionWithRefs[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!active) {
@@ -102,7 +107,14 @@ export default function HomeScreen() {
   }
 
   const reporting = active.reporting_currency_code;
-  const items = accounts.map((a) => ({
+  // Money-model decision #4: account-scoped dashboard. `scope` = null → all accounts;
+  // Checking and Savings are never silently combined. Filtering the source arrays
+  // re-derives the hero, the spending donut, and recent activity for the chosen scope.
+  const scope =
+    selectedAccountId && accounts.some((a) => a.id === selectedAccountId) ? selectedAccountId : null;
+  const visibleAccounts = scope ? accounts.filter((a) => a.id === scope) : accounts;
+  const visibleTxns = scope ? txns.filter((tx) => tx.account_id === scope) : txns;
+  const items = visibleAccounts.map((a) => ({
     balanceMinor: balances[a.id]?.balance_minor ?? a.opening_balance_minor,
     currency: a.currency_code,
   }));
@@ -112,7 +124,7 @@ export default function HomeScreen() {
   // Free tier: honest per-currency subtotals (no locked hero — F05).
   const perCurrency = sumByCurrency(items);
   const multiCurrency = perCurrency.length > 1;
-  const breakdown = categoryBreakdown(txns, reporting, makeRateLookup(rates), t('finance.categories.none'));
+  const breakdown = categoryBreakdown(visibleTxns, reporting, makeRateLookup(rates), t('finance.categories.none'));
   const segments = donutArcs(breakdown.slices.map((s) => s.amountMinor)).map((a, i) => ({
     ...a,
     color: breakdown.slices[i]?.color ?? palette.border,
@@ -132,6 +144,38 @@ export default function HomeScreen() {
       <ScrollView>
         <BentoPage>
           <Text variant="eyebrow" muted>{active.name}</Text>
+
+          {/* Account-scope pills (#4) — only when there's more than one account to scope. */}
+          {accounts.length > 1 ? (
+            <View style={styles.scope}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.scopePills}
+              >
+                <Chip
+                  label={t('finance.allAccounts')}
+                  selected={scope === null}
+                  role="radio"
+                  onPress={() => setSelectedAccountId(null)}
+                />
+                {accounts.map((a) => (
+                  <Chip
+                    key={a.id}
+                    label={a.name}
+                    selected={scope === a.id}
+                    role="radio"
+                    onPress={() => setSelectedAccountId(a.id)}
+                  />
+                ))}
+              </ScrollView>
+              <Text variant="caption" muted>
+                {scope
+                  ? t('finance.showing', { name: accounts.find((a) => a.id === scope)?.name ?? '' })
+                  : t('finance.showingAll')}
+              </Text>
+            </View>
+          ) : null}
 
           {/* Row 1 — the balance hero leads; quick actions ride beside it on wide. */}
           <BentoRow>
@@ -264,8 +308,8 @@ export default function HomeScreen() {
             </Card>
           </BentoRow>
 
-          {/* Row 3 — recent activity (uses the already-fetched transactions). */}
-          {txns.length > 0 ? (
+          {/* Row 3 — recent activity (scoped to the selected account, #4). */}
+          {visibleTxns.length > 0 ? (
             <BentoRow>
               <Card style={styles.recentSlot}>
                 <View style={styles.recentHeader}>
@@ -276,7 +320,7 @@ export default function HomeScreen() {
                     </Text>
                   </Pressable>
                 </View>
-                {txns.slice(0, 5).map((tx) => {
+                {visibleTxns.slice(0, 5).map((tx) => {
                   const positive = tx.direction === 'in';
                   const ic = txIcon(tx.type);
                   const caption = [tx.category?.name, tx.account?.name].filter(Boolean).join(' · ');
@@ -326,6 +370,8 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: palette.background },
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background },
   padded: { padding: spacing.lg, gap: spacing.md },
+  scope: { gap: spacing.xs },
+  scopePills: { flexDirection: 'row', gap: spacing.sm, paddingVertical: spacing.xs },
   // Flex weights: on wide viewports the hero takes two thirds beside the
   // actions; BentoRow collapses both to full width on narrow.
   heroSlot: { flex: 2 },
