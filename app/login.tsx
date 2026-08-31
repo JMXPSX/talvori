@@ -10,7 +10,7 @@
  * a "coming soon" notice rather than silently doing nothing.
  */
 
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { radius, spacing, webFocusRing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { BrandLockup, Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { loginSchema } from '@/features/auth/schemas';
 import { toAppError } from '@/lib/errors';
@@ -47,10 +47,21 @@ export default function LoginScreen() {
   const [formError, setFormError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   async function onSubmit() {
     setFormError(null);
     setNotice(null);
+    // §6.2 zero-state + validation banners, checked before the schema so the exact
+    // spec copy surfaces (empty fields / a missing @) rather than a generic message.
+    if (!email.trim() || !password) {
+      setFormError('auth.requireBoth');
+      return;
+    }
+    if (!email.includes('@')) {
+      setFormError('auth.emailInvalidBanner');
+      return;
+    }
     const result = validate(loginSchema, { email, password });
     if (!result.success) {
       setFieldErrors(result.fieldErrors);
@@ -78,21 +89,18 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.card}>
-          <View style={styles.mark}>
-            <Feather name="home" size={26} color={palette.white} />
-          </View>
-          <Text variant="title" style={styles.center}>
+          <BrandLockup markSize={52} showTagline />
+          <Text variant="title" style={styles.title}>
             {t('auth.loginTitle')}
           </Text>
-          <Text muted style={styles.center}>
-            {t('auth.loginSubtitle')}
-          </Text>
+          <Text muted>{t('auth.loginSubtitle')}</Text>
 
           <View style={styles.form}>
             <TextField
               label={t('auth.emailLabel')}
               value={email}
               onChangeText={setEmail}
+              placeholder="you@example.com"
               keyboardType="email-address"
               autoComplete="email"
               error={fieldErrors.email ? t('errors.validation') : undefined}
@@ -101,27 +109,40 @@ export default function LoginScreen() {
               label={t('auth.passwordLabel')}
               value={password}
               onChangeText={setPassword}
-              secureToggle
-              toggleShowLabel={t('auth.showPassword')}
-              toggleHideLabel={t('auth.hidePassword')}
+              placeholder="••••••••"
+              secureTextEntry={!showPw}
               autoComplete="current-password"
               error={fieldErrors.password ? t('errors.validation') : undefined}
             />
 
-            <Link href="/forgot-password" style={styles.forgot}>
-              <Text variant="caption" style={{ color: palette.brand }}>
-                {t('auth.forgotLink')}
-              </Text>
-            </Link>
+            {/* §6.2 — Show/Hide password (left) · Forgot password? (right), one row. */}
+            <View style={styles.pwRow}>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => setShowPw((s) => !s)}
+                hitSlop={8}
+              >
+                <Text variant="caption" muted>
+                  {showPw ? t('auth.hidePassword') : t('auth.showPassword')}
+                </Text>
+              </Pressable>
+              <Link href="/forgot-password">
+                <Text variant="caption" style={{ color: palette.primary }}>
+                  {t('auth.forgotLink')}
+                </Text>
+              </Link>
+            </View>
 
             {formError ? (
-              <Text variant="caption" style={{ color: palette.danger }}>
-                {t(formError)}
-              </Text>
+              <View style={styles.banner}>
+                <Text variant="caption" style={{ color: palette.danger }}>
+                  {t(formError)}
+                </Text>
+              </View>
             ) : null}
 
             <Button
-              label={submitting ? t('auth.processing') : t('auth.loginCta')}
+              label={submitting ? t('auth.signingIn') : t('auth.loginCta')}
               onPress={onSubmit}
               loading={submitting}
             />
@@ -147,23 +168,15 @@ export default function LoginScreen() {
               <MethodButton
                 label={t('auth.continueApple')}
                 icon={<FontAwesome name="apple" size={19} color={palette.white} />}
-                bg={palette.text}
+                bg={palette.ink}
                 fg={palette.white}
-                onPress={onMethodPress}
-                methodStyles={methodStyles}
-              />
-              <MethodButton
-                label={t('auth.emailCode')}
-                icon={<Feather name="mail" size={17} color={palette.brand} />}
-                bg={palette.brandMuted}
-                fg={palette.brand}
                 onPress={onMethodPress}
                 methodStyles={methodStyles}
               />
             </View>
 
             {notice ? (
-              <Text variant="caption" muted style={styles.center}>
+              <Text variant="caption" muted style={styles.noticeCenter}>
                 {t(notice)}
               </Text>
             ) : null}
@@ -231,18 +244,16 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     alignSelf: 'center',
     gap: spacing.sm,
   },
-  mark: {
-    width: 52,
-    height: 52,
-    borderRadius: radius.lg,
-    backgroundColor: c.brand,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.sm,
-  },
-  center: { textAlign: 'center' },
+  title: { marginTop: spacing.lg },
   form: { gap: spacing.md, marginTop: spacing.lg },
-  forgot: { alignSelf: 'flex-end' },
+  pwRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  noticeCenter: { textAlign: 'center' },
+  banner: {
+    backgroundColor: c.dangerTint,
+    borderRadius: radius.control,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+  },
   divider: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   rule: { flex: 1, height: 1, backgroundColor: c.border },
   methods: { gap: spacing.sm },

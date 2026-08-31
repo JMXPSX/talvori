@@ -11,14 +11,13 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { palette } from '@/components/theme';
 import { ThemeProvider, useTheme } from '@/components/ThemeProvider';
+import { Splash, ToastProvider } from '@/components/ui';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 import { EntitlementsProvider } from '@/features/billing/EntitlementsProvider';
-import { ActiveHouseholdProvider } from '@/features/household/ActiveHouseholdProvider';
+import { ActiveHouseholdProvider, useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { fontMap } from '@/lib/fonts';
 
 const AUTH_ROUTES = ['login', 'signup'];
@@ -26,23 +25,35 @@ const AUTH_ROUTES = ['login', 'signup'];
 /** Redirect based on session state once the initial session is known. */
 function useAuthGate() {
   const { initializing, session } = useAuth();
+  const { loading: householdsLoading, households } = useActiveHousehold();
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
     if (initializing) return;
-    const inAuthRoute = AUTH_ROUTES.includes(segments[0] ?? '');
+    const seg0 = segments[0] ?? '';
+    const inAuthRoute = AUTH_ROUTES.includes(seg0);
+    const inOnboarding = seg0 === 'onboarding';
     // The design-system gallery under /dev is reachable without a session so the
     // primitives can be reviewed without signing in. __DEV__ only, and the route
     // itself renders null in production builds.
-    const inDevRoute = __DEV__ && segments[0] === 'dev';
+    const inDevRoute = __DEV__ && seg0 === 'dev';
 
     if (!session && !inAuthRoute && !inDevRoute) {
       router.replace('/login');
     } else if (session && inAuthRoute) {
       router.replace('/');
+    } else if (
+      // New user / no household → Onboarding (§6.3, navigation map §4).
+      session &&
+      !householdsLoading &&
+      households.length === 0 &&
+      !inOnboarding &&
+      !inDevRoute
+    ) {
+      router.replace('/onboarding');
     }
-  }, [initializing, session, segments, router]);
+  }, [initializing, session, householdsLoading, households.length, segments, router]);
 }
 
 function RootNavigator() {
@@ -52,11 +63,7 @@ function RootNavigator() {
   useAuthGate();
 
   if (initializing) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background }}>
-        <ActivityIndicator color={c.brand} />
-      </View>
-    );
+    return <Splash />;
   }
 
   return (
@@ -70,6 +77,7 @@ function RootNavigator() {
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="household" options={{ headerShown: false }} />
       <Stack.Screen name="finance" options={{ headerShown: false }} />
       {/* Auth screens draw their own in-screen titles; a native header doubles them. */}
@@ -79,6 +87,9 @@ function RootNavigator() {
       <Stack.Screen name="reset-password" options={{ headerShown: false }} />
       <Stack.Screen name="subscription" options={{ title: t('billing.title') }} />
       <Stack.Screen name="account" options={{ title: t('account.title') }} />
+      <Stack.Screen name="settings" options={{ title: t('settings.title') }} />
+      <Stack.Screen name="help" options={{ title: t('help.title') }} />
+      <Stack.Screen name="bills" options={{ title: t('bills.title') }} />
     </Stack>
     </>
   );
@@ -90,9 +101,7 @@ export default function RootLayout() {
   if (!fontsLoaded) {
     return (
       <SafeAreaProvider>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background }}>
-          <ActivityIndicator color={palette.brand} />
-        </View>
+        <Splash />
       </SafeAreaProvider>
     );
   }
@@ -103,7 +112,9 @@ export default function RootLayout() {
         <AuthProvider>
           <ActiveHouseholdProvider>
             <EntitlementsProvider>
-              <RootNavigator />
+              <ToastProvider>
+                <RootNavigator />
+              </ToastProvider>
             </EntitlementsProvider>
           </ActiveHouseholdProvider>
         </AuthProvider>
