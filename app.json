@@ -21,7 +21,8 @@
       "expo-router",
       "expo-localization",
       "expo-font",
-      "expo-sharing"
+      "expo-sharing",
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": false

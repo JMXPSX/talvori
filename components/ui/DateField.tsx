@@ -10,9 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { spacing } from '@/components/theme';
+import { CustomDateInput } from '@/components/ui/CustomDateInput';
 import { Segmented } from '@/components/ui/Segmented';
 import { Text } from '@/components/ui/Text';
-import { TextField } from '@/components/ui/TextField';
 
 export type DateMode = 'today' | 'yesterday' | 'custom';
 
@@ -78,14 +78,7 @@ export function DateField({
         onChange={handleMode}
       />
       {mode === 'custom' ? (
-        <TextField
-          label={t('finance.form.dateLabel')}
-          value={customDate}
-          onChangeText={onCustomChange}
-          placeholder={t('finance.form.customDatePlaceholder')}
-          keyboardType="numbers-and-punctuation"
-          error={error}
-        />
+        <CustomDateInput value={customDate} onChange={onCustomChange} error={error} />
       ) : null}
     </View>
   );

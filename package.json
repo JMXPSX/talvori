@@ -19,6 +19,7 @@
     "@expo-google-fonts/readex-pro": "^0.4.1",
     "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/datetimepicker": "9.1.0",
     "@supabase/supabase-js": "^2.45.4",
     "expo": "~57.0.13",
     "expo-clipboard": "~57.0.1",
