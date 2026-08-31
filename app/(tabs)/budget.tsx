@@ -1,17 +1,21 @@
-/** Plan tab (1b — fixes F01/F04): the month budget ring + per-category meters,
- *  with Goals and Debts summary tiles. Replaces the old link-only hub. */
+/** Plan tab (1b): the month budget ring + per-category meters (with each
+ *  category's spent/limit + funding account), plus inline Savings goals and
+ *  Debts — matching the Flow Prototype. Contribute / Record payment open the
+ *  dedicated management screens where the funding-account flow lives. */
 
+import { Feather } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import {
   BentoPage,
   BentoRow,
+  Button,
   Card,
   EmptyState,
   ErrorNotice,
@@ -19,7 +23,7 @@ import {
   ProgressRing,
   Text,
 } from '@/components/ui';
-import { listCategories } from '@/features/finance/api';
+import { listAccounts, listCategories } from '@/features/finance/api';
 import {
   aggregateBudget,
   daysRemaining,
@@ -32,15 +36,20 @@ import {
   listBudgetStatus,
   listBudgets,
   listDebtStatus,
+  listDebts,
   listGoalStatus,
+  listGoals,
 } from '@/features/finance/planningApi';
-import { budgetRemainingMinor } from '@/features/finance/progress';
+import { budgetRemainingMinor, progressRatio } from '@/features/finance/progress';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type {
+  AccountRow,
   BudgetRow,
   BudgetStatusRow,
   CategoryRow,
+  DebtRow,
   DebtStatusRow,
+  SavingsGoalRow,
   SavingsGoalStatusRow,
 } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
@@ -56,8 +65,11 @@ export default function PlanScreen() {
   const [budget, setBudget] = useState<BudgetRow | null>(null);
   const [status, setStatus] = useState<BudgetStatusRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
-  const [goals, setGoals] = useState<SavingsGoalStatusRow[]>([]);
-  const [debts, setDebts] = useState<DebtStatusRow[]>([]);
+  const [accounts, setAccounts] = useState<AccountRow[]>([]);
+  const [goalRows, setGoalRows] = useState<SavingsGoalRow[]>([]);
+  const [goalStatus, setGoalStatus] = useState<Record<string, SavingsGoalStatusRow>>({});
+  const [debtRows, setDebtRows] = useState<DebtRow[]>([]);
+  const [debtStatus, setDebtStatus] = useState<Record<string, DebtStatusRow>>({});
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -68,15 +80,21 @@ export default function PlanScreen() {
     }
     setErrorKey(null);
     try {
-      const [budgets, cats, g, d] = await Promise.all([
+      const [budgets, cats, accs, gRows, gStat, dRows, dStat] = await Promise.all([
         listBudgets(active.id),
         listCategories(active.id, 'expense'),
+        listAccounts(active.id),
+        listGoals(active.id),
         listGoalStatus(active.id),
+        listDebts(active.id),
         listDebtStatus(active.id),
       ]);
       setCategories(cats);
-      setGoals(g);
-      setDebts(d);
+      setAccounts(accs);
+      setGoalRows(gRows);
+      setGoalStatus(Object.fromEntries(gStat.map((r) => [r.goal_id, r])));
+      setDebtRows(dRows);
+      setDebtStatus(Object.fromEntries(dStat.map((r) => [r.debt_id, r])));
       const current = pickCurrentBudget(budgets, new Date().toISOString());
       setBudget(current);
       setStatus(current ? await listBudgetStatus(current.id) : []);
@@ -97,6 +115,21 @@ export default function PlanScreen() {
     if (!id) return t('planning.budgets.uncategorized');
     return categories.find((c) => c.id === id)?.name ?? t('planning.budgets.uncategorized');
   }
+
+  function accountName(id: string | null): string {
+    if (!id) return t('planning.budgets.unassignedAccount');
+    return accounts.find((a) => a.id === id)?.name ?? t('planning.budgets.unassignedAccount');
+  }
+
+  const debtsOwedByCurrency = debtRows.reduce<Record<string, number>>((acc, d) => {
+    const bal = debtStatus[d.id]?.balance_minor ?? d.principal_minor;
+    acc[d.currency_code] = (acc[d.currency_code] ?? 0) + Math.max(0, bal);
+    return acc;
+  }, {});
+  const totalOwedLabel = Object.entries(debtsOwedByCurrency)
+    .map(([cur, amt]) => formatAmount(amt, cur))
+    .join(' · ');
+  const todayDay = new Date().getDate();
 
   const ccy = budget?.currency_code ?? active?.reporting_currency_code ?? 'USD';
   const agg = aggregateBudget(status);
@@ -164,6 +197,7 @@ export default function PlanScreen() {
                           <Pressable
                             key={row.allocation_id}
                             accessibilityRole="button"
+                            accessibilityLabel={categoryName(row.category_id)}
                             onPress={() => router.push('/finance/budgets')}
                             style={({ pressed }) => [styles.allocRow, pressed ? styles.pressed : null]}
                           >
@@ -176,11 +210,19 @@ export default function PlanScreen() {
                                   ? t('planning.budgets.overBy', { amount: formatAmount(-remaining, row.currency_code) })
                                   : t('planning.budgets.left', { amount: formatAmount(remaining, row.currency_code) })}
                               </Text>
+                              <Feather name="edit-2" size={14} color={palette.textMuted} />
                             </View>
                             <ProgressBar
                               fraction={spentFraction(row.limit_minor, row.spent_minor)}
                               state={meterState(row.limit_minor, row.spent_minor)}
                             />
+                            <Text variant="caption" muted>
+                              {t('planning.budgets.spentOf', {
+                                spent: formatAmount(row.spent_minor, row.currency_code),
+                                limit: formatAmount(row.limit_minor, row.currency_code),
+                              })}{' · '}
+                              {t('planning.budgets.paidFrom', { account: accountName(row.account_id) })}
+                            </Text>
                           </Pressable>
                         );
                       })}
@@ -197,28 +239,90 @@ export default function PlanScreen() {
               )}
 
               <BentoRow>
+                {/* Savings goals — inline progress + Contribute (opens the Goals screen). */}
                 <Card style={styles.tile}>
                   <View style={styles.cardHeader}>
                     <Text variant="subheading">{t('planning.goals.title')}</Text>
                     <Pressable accessibilityRole="button" onPress={() => router.push('/finance/goals')}>
-                      <Text variant="caption" style={styles.manage}>
-                        {t('planning.plan.manage')}
-                      </Text>
+                      <Text variant="caption" style={styles.manage}>{t('planning.plan.manage')}</Text>
                     </Pressable>
                   </View>
-                  <Text variant="title">{goals.length}</Text>
+                  {goalRows.length === 0 ? (
+                    <Pressable accessibilityRole="button" onPress={() => router.push('/finance/goals')}>
+                      <Text variant="caption" style={styles.addLink}>{t('planning.goals.addTitle')}</Text>
+                    </Pressable>
+                  ) : (
+                    goalRows.map((g) => {
+                      const saved = goalStatus[g.id]?.saved_minor ?? 0;
+                      const ratio = progressRatio(saved, g.target_minor);
+                      return (
+                        <View key={g.id} style={styles.planItem}>
+                          <View style={styles.allocHeader}>
+                            <Text variant="button" numberOfLines={1} style={styles.allocName}>{g.name}</Text>
+                            <Text variant="caption" style={styles.pct}>
+                              {t('planning.plan.usedPct', { pct: Math.round(ratio * 100) })}
+                            </Text>
+                          </View>
+                          <ProgressBar fraction={ratio} />
+                          <View style={styles.allocHeader}>
+                            <Text variant="caption" muted>
+                              {formatAmount(saved, g.currency_code)} / {formatAmount(g.target_minor, g.currency_code)}
+                            </Text>
+                            <Button
+                              label={t('planning.goals.contributeCta')}
+                              variant="accent"
+                              style={styles.smallBtn}
+                              onPress={() => router.push('/finance/goals')}
+                            />
+                          </View>
+                        </View>
+                      );
+                    })
+                  )}
                 </Card>
 
+                {/* Debts — inline balance + Record payment (opens the Debts screen). */}
                 <Card style={styles.tile}>
                   <View style={styles.cardHeader}>
                     <Text variant="subheading">{t('planning.debts.title')}</Text>
-                    <Pressable accessibilityRole="button" onPress={() => router.push('/finance/debts')}>
-                      <Text variant="caption" style={styles.manage}>
-                        {t('planning.plan.manage')}
+                    {debtRows.length > 0 ? (
+                      <Text variant="caption" muted>
+                        {t('planning.debts.totalOwed', { amount: totalOwedLabel })}
                       </Text>
-                    </Pressable>
+                    ) : null}
                   </View>
-                  <Text variant="title">{debts.length}</Text>
+                  {debtRows.length === 0 ? (
+                    <Pressable accessibilityRole="button" onPress={() => router.push('/finance/debts')}>
+                      <Text variant="caption" style={styles.addLink}>{t('planning.debts.addTitle')}</Text>
+                    </Pressable>
+                  ) : (
+                    debtRows.map((d) => {
+                      const bal = debtStatus[d.id]?.balance_minor ?? d.principal_minor;
+                      const overdue = d.due_day != null && bal > 0 && todayDay > d.due_day;
+                      return (
+                        <View key={d.id} style={styles.planItem}>
+                          <View style={styles.allocHeader}>
+                            <Text variant="button" numberOfLines={1} style={styles.allocName}>{d.name}</Text>
+                            <Text variant="moneyMin" style={bal > 0 ? styles.over : styles.left}>
+                              {formatAmount(bal, d.currency_code)}
+                            </Text>
+                          </View>
+                          <View style={styles.allocHeader}>
+                            <Text variant="caption" style={overdue ? styles.over : undefined} muted={!overdue}>
+                              {overdue
+                                ? t('planning.debts.overdueOn', { day: d.due_day })
+                                : d.due_day != null
+                                  ? t('planning.debts.dueDay', { day: d.due_day })
+                                  : ''}
+                            </Text>
+                            <Pressable accessibilityRole="button" onPress={() => router.push('/finance/debts')}>
+                              <Text variant="caption" style={styles.recordLink}>{t('planning.debts.payCta')}</Text>
+                            </Pressable>
+                          </View>
+                        </View>
+                      );
+                    })
+                  )}
                 </Card>
               </BentoRow>
             </>
@@ -244,6 +348,11 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   allocName: { flex: 1 },
   pressed: { opacity: 0.7 },
   tile: { flex: 1 },
+  planItem: { gap: spacing.xs, paddingVertical: spacing.sm },
+  pct: { color: c.accent },
+  addLink: { color: c.brand },
+  recordLink: { color: c.tertiary },
+  smallBtn: { minHeight: 34, paddingHorizontal: spacing.md, borderRadius: radius.pill },
   // 2a desktop: ring beside the budget meters (weights collapse to a stack on mobile).
   ringTile: { flex: 1 },
   budgetsTile: { flex: 2 },

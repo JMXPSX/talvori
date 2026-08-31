@@ -268,7 +268,9 @@
       "confirmDeleteTitle": "Delete this budget?",
       "confirmDeleteBody": "Its category limits are removed too. Transactions are not affected.",
       "confirmDeleteAllocationTitle": "Remove this limit?",
-      "confirmDeleteAllocationBody": "Spending history is not affected."
+      "confirmDeleteAllocationBody": "Spending history is not affected.",
+      "spentOf": "{{spent}} spent of {{limit}}",
+      "unassignedAccount": "unassigned"
     },
     "goals": {
       "title": "Savings goals",
@@ -308,7 +310,10 @@
       "confirmDeleteTitle": "Delete this debt?",
       "confirmDeleteBody": "Its payment history is removed too.",
       "noFundingAccount": "Add a {{currency}} account to make a payment.",
-      "fundedFrom": "Paid from {{name}}"
+      "fundedFrom": "Paid from {{name}}",
+      "totalOwed": "Total owed: {{amount}}",
+      "overdueOn": "Overdue — was due day {{day}}",
+      "dueDay": "Due day {{day}}"
     },
     "errors": {
       "loadFailed": "Couldn't load planning data.",
