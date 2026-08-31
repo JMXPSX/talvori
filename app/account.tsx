@@ -4,25 +4,28 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { spacing } from '@/components/theme';
 import { useThemedStyles, type Palette } from '@/components/ThemeProvider';
-import { Button, Card, CONTENT_MAX_WIDTH, ErrorNotice, Text, TextField, useActionSheet } from '@/components/ui';
+import { Avatar, Button, Card, CONTENT_MAX_WIDTH, ErrorNotice, Text, TextField, useActionSheet } from '@/components/ui';
 import { deleteMyAccount } from '@/features/account/api';
 import { exportFilename } from '@/features/account/export';
 import { assembleExport } from '@/features/account/exportApi';
 import { saveExport } from '@/features/account/saveExport';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { toAppError } from '@/lib/errors';
 
 export default function AccountScreen() {
   const { t } = useTranslation();
   const { user, signOut } = useAuth();
+  const { plan } = usePlan();
   const sheet = useActionSheet();
   const styles = useThemedStyles(makeStyles);
 
+  const [signingOut, setSigningOut] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [exportErrorKey, setExportErrorKey] = useState<string | null>(null);
   const [confirmEmail, setConfirmEmail] = useState('');
@@ -30,7 +33,18 @@ export default function AccountScreen() {
   const [deleteErrorKey, setDeleteErrorKey] = useState<string | null>(null);
 
   const email = user?.email ?? '';
+  const displayName =
+    (typeof user?.user_metadata?.display_name === 'string' && user.user_metadata.display_name) || '';
   const armed = confirmEmail.trim().toLowerCase() === email.toLowerCase() && email.length > 0;
+
+  async function onSignOut() {
+    setSigningOut(true);
+    try {
+      await signOut(); // auth gate redirects to /login
+    } finally {
+      setSigningOut(false);
+    }
+  }
 
   async function onExport() {
     if (!user) return;
@@ -77,6 +91,19 @@ export default function AccountScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
+        {/* Profile identity (§6.15). Photo upload/crop + name/email save need
+            storage + a profile-update API — deferred; initials + read-only for now. */}
+        <Card>
+          <View style={styles.profileRow}>
+            <Avatar name={displayName || email} size={64} variant="self" />
+            <View style={styles.profileMid}>
+              <Text variant="subheading">{displayName || email.split('@')[0]}</Text>
+              <Text variant="caption" muted numberOfLines={1}>{email}</Text>
+              <Text variant="caption" muted>{t(plan === 'premium' ? 'more.planPremium' : 'more.planFree')}</Text>
+            </View>
+          </View>
+        </Card>
+
         <Card>
           <Text variant="heading">{t('account.exportTitle')}</Text>
           <Text variant="caption" muted>
@@ -122,6 +149,9 @@ export default function AccountScreen() {
             style={styles.dangerButton}
           />
         </Card>
+
+        {/* Sign out — separated from the fields above (§6.15). */}
+        <Button label={t('auth.signOut')} variant="secondary" onPress={onSignOut} loading={signingOut} />
       </ScrollView>
       {sheet.element}
     </SafeAreaView>
@@ -138,6 +168,8 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     maxWidth: CONTENT_MAX_WIDTH,
     alignSelf: 'center',
   },
+  profileRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  profileMid: { flex: 1, gap: 2 },
   // Cards are borderless now; the danger zone reads as a tonal container.
   dangerCard: { backgroundColor: c.dangerMuted },
   dangerTitle: { color: c.danger },

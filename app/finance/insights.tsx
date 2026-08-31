@@ -14,6 +14,7 @@ import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvi
 import { BentoPage, BentoRow, Button, Card, ErrorNotice, Text } from '@/components/ui';
 import { listTransactions, listCategories, type TransactionWithRefs } from '@/features/finance/api';
 import { insightsForMonth, monthKeyOf } from '@/features/finance/insights';
+import { monthFlow } from '@/features/finance/flow';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -85,6 +86,9 @@ export default function InsightsScreen() {
   const insights = insightsForMonth(txns, monthKey, reporting, makeRateLookup(rates));
   const dayOfMonth = new Date().getDate();
   const avgMinor = dayOfMonth > 0 ? Math.round(insights.totalSpentMinor / dayOfMonth) : 0;
+  // §6.12 Income / Expenses / Net cash flow for the range (this month), transfers excluded.
+  const flow = monthFlow(txns, monthKey, reporting, makeRateLookup(rates));
+  const savingsPct = flow.inMinor > 0 ? Math.round((flow.netMinor / flow.inMinor) * 100) : 0;
 
   const categoryName = (id: string | null): string =>
     id ? (categories.find((c) => c.id === id)?.name ?? t('planning.budgets.uncategorized')) : t('finance.categories.none');
@@ -108,6 +112,32 @@ export default function InsightsScreen() {
             <Text muted>{t('insights.empty')}</Text>
           ) : (
             <>
+              {/* §6.12 — Income + Expenses, then Net cash flow with savings-rate copy. */}
+              <BentoRow>
+                <Card style={styles.tile}>
+                  <Text variant="caption" muted>{t('insights.income')}</Text>
+                  <Text variant="title" style={styles.incomeAmt}>{formatAmount(flow.inMinor, reporting)}</Text>
+                </Card>
+                <Card style={styles.tile}>
+                  <Text variant="caption" muted>{t('insights.expenses')}</Text>
+                  <Text variant="title">{formatAmount(flow.outMinor, reporting)}</Text>
+                </Card>
+              </BentoRow>
+
+              <Card style={styles.netCard}>
+                <Text variant="eyebrow" style={styles.netLabel}>{t('insights.netCashFlow', { range: t('insights.thisMonth') })}</Text>
+                <Text variant="title" style={styles.netAmt}>
+                  {flow.netMinor >= 0 ? '+' : '−'}{formatAmount(Math.abs(flow.netMinor), reporting)}
+                </Text>
+                <Text variant="caption" style={styles.netSub}>
+                  {flow.inMinor <= 0
+                    ? t('insights.noIncome')
+                    : flow.netMinor >= 0
+                      ? t('insights.savingsRate', { pct: savingsPct, range: t('insights.thisMonth') })
+                      : t('insights.spentMore', { amount: formatAmount(-flow.netMinor, reporting), range: t('insights.thisMonth') })}
+                </Text>
+              </Card>
+
               <BentoRow>
                 <Card style={styles.tile}>
                   <Text variant="caption" muted>{t('insights.totalSpent')}</Text>
@@ -172,6 +202,11 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   premiumText: { color: c.accent },
   tile: { flex: 1 },
+  incomeAmt: { color: c.positiveStrong },
+  netCard: { backgroundColor: c.primary, gap: spacing.xs },
+  netLabel: { color: c.white, opacity: 0.85 },
+  netAmt: { color: c.white },
+  netSub: { color: c.white, opacity: 0.9, lineHeight: 18 },
   catRow: { gap: spacing.xs, paddingVertical: spacing.xs },
   catHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   catLabel: { flex: 1 },

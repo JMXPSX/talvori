@@ -1,32 +1,25 @@
 /**
- * Household detail: members list, invite-by-email form, and pending invitations.
- * Writes are RLS-gated (owner/admin only) — the DB rejects unauthorized changes
- * even if the UI is bypassed.
+ * Household (§6.11) — the active household's people. A card with the name, the
+ * roster-derived member count and reporting currency, and an Invite panel showing
+ * the standing join CODE (Copy / Share). Member rows carry an avatar, role line and
+ * a role badge. A roles card explains each role; owners/admins get the cross-border
+ * toggle. All writes are RLS-gated (the DB rejects unauthorized changes).
  */
 
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Share, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Clipboard from 'expo-clipboard';
 
-import { elevation, radius, spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField } from '@/components/ui';
-import {
-  inviteMember,
-  listMembers,
-  listPendingInvitations,
-  revokeInvitation,
-  type MemberWithProfile,
-} from '@/features/household/api';
-import { invitableRoleSchema, inviteMemberSchema } from '@/features/household/schemas';
+import { Avatar, Button, Card, CONTENT_MAX_WIDTH, Text, Toggle } from '@/components/ui';
+import { getHousehold, listMembers, setCrossBorder, type MemberWithProfile } from '@/features/household/api';
 import { useAuth } from '@/features/auth/AuthProvider';
-import type { HouseholdInvitationRow, HouseholdRole } from '@/lib/database.types';
+import type { HouseholdRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
-import { validate } from '@/lib/validation';
-
-const INVITABLE_ROLES = invitableRoleSchema.options;
 
 export default function HouseholdDetailScreen() {
   const { t } = useTranslation();
@@ -36,27 +29,19 @@ export default function HouseholdDetailScreen() {
   const styles = useThemedStyles(makeStyles);
   const { palette } = useTheme();
 
+  const [household, setHousehold] = useState<HouseholdRow | null>(null);
   const [members, setMembers] = useState<MemberWithProfile[]>([]);
-  const [invitations, setInvitations] = useState<HouseholdInvitationRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState<HouseholdRole>('member');
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
-  const [formError, setFormError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [lastInvite, setLastInvite] = useState<HouseholdInvitationRow | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const load = useCallback(async () => {
     setLoadError(null);
     try {
-      const [m, inv] = await Promise.all([
-        listMembers(householdId),
-        listPendingInvitations(householdId),
-      ]);
+      const [h, m] = await Promise.all([getHousehold(householdId), listMembers(householdId)]);
+      setHousehold(h);
       setMembers(m);
-      setInvitations(inv);
     } catch (err) {
       setLoadError(toAppError(err).messageKey);
     } finally {
@@ -70,34 +55,26 @@ export default function HouseholdDetailScreen() {
     }, [load]),
   );
 
-  async function onInvite() {
-    setFormError(null);
-    setLastInvite(null);
-    const result = validate(inviteMemberSchema, { email, role });
-    if (!result.success) {
-      setFieldErrors(result.fieldErrors);
-      return;
-    }
-    setFieldErrors({});
-    setSubmitting(true);
-    try {
-      const created = await inviteMember(householdId, result.data);
-      setLastInvite(created);
-      setEmail('');
-      await load();
-    } catch (err) {
-      setFormError(toAppError(err).messageKey);
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  const me = members.find((m) => m.user_id === user?.id);
+  const canManage = me?.role === 'owner' || me?.role === 'admin';
 
-  async function onRevoke(invitationId: string) {
+  async function onCopy() {
+    if (!household) return;
+    await Clipboard.setStringAsync(household.code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
+  async function onShare() {
+    if (household) await Share.share({ message: household.code });
+  }
+  async function onToggleCrossBorder(value: boolean) {
+    if (!household) return;
+    setHousehold({ ...household, is_cross_border: value });
     try {
-      await revokeInvitation(invitationId);
-      await load();
+      await setCrossBorder(household.id, value);
     } catch (err) {
-      setFormError(toAppError(err).messageKey);
+      setHousehold({ ...household, is_cross_border: !value });
+      setLoadError(toAppError(err).messageKey);
     }
   }
 
@@ -111,107 +88,91 @@ export default function HouseholdDetailScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
+      <Stack.Screen options={{ title: t('screens.moreTitle') }} />
       <ScrollView contentContainerStyle={styles.content}>
+        <View>
+          <Text variant="title">{household?.name ?? ''}</Text>
+          <Text muted>{t('household.detailSub')}</Text>
+        </View>
+
         {loadError ? <Text style={{ color: palette.danger }}>{t(loadError)}</Text> : null}
 
-        <Text variant="heading">{t('household.membersTitle')}</Text>
-        <View style={styles.list}>
-          {members.map((m) => (
-            <View key={m.user_id} style={styles.card}>
-              <Text>
-                {m.profile?.display_name || m.profile?.email || m.user_id}
-                {m.user_id === user?.id ? ` ${t('household.you')}` : ''}
-              </Text>
+        {/* Household card — name, member count · currency, Invite (code panel). */}
+        <Card>
+          <View style={styles.rowBetween}>
+            <View style={styles.rowMid}>
+              <Text variant="subheading">{household?.name ?? ''}</Text>
               <Text variant="caption" muted>
-                {t(`household.roles.${m.role}`)}
+                {t(members.length === 1 ? 'household.activeMembers_one' : 'household.activeMembers_other', { count: members.length })}
+                {' · '}{household?.reporting_currency_code}
               </Text>
             </View>
-          ))}
-        </View>
-
-        <View style={styles.divider} />
-
-        <Text variant="heading">{t('household.inviteTitle')}</Text>
-        <View style={styles.form}>
-          <TextField
-            label={t('auth.emailLabel')}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            error={fieldErrors.email ? t('errors.validation') : undefined}
-          />
-          <Text variant="caption" muted>
-            {t('household.roleLabel')}
-          </Text>
-          <View style={styles.chips}>
-            {INVITABLE_ROLES.map((r) => {
-              const active = r === role;
-              return (
-                <Pressable
-                  key={r}
-                  onPress={() => setRole(r)}
-                  style={[styles.chip, active ? styles.chipActive : null]}
-                >
-                  <Text
-                    variant="caption"
-                    style={{ color: active ? palette.white : palette.text }}
-                  >
-                    {t(`household.roles.${r}`)}
-                  </Text>
-                </Pressable>
-              );
-            })}
+            <Button
+              label={inviteOpen ? t('household.close') : t('household.invite')}
+              variant={inviteOpen ? 'secondary' : 'primary'}
+              onPress={() => setInviteOpen((o) => !o)}
+              style={styles.inviteBtn}
+            />
           </View>
-
-          {formError ? (
-            <Text variant="caption" style={{ color: palette.danger }}>
-              {t(formError)}
-            </Text>
-          ) : null}
-
-          <Button
-            label={submitting ? t('auth.processing') : t('household.inviteCta')}
-            onPress={onInvite}
-            loading={submitting}
-          />
-
-          {lastInvite ? (
-            <View style={styles.tokenBox}>
-              <Text variant="caption" style={{ color: palette.success }}>
-                {t('household.inviteCreatedTitle')}
-              </Text>
-              <Text variant="caption" muted>
-                {t('household.inviteCreatedBody', { email: lastInvite.email })}
-              </Text>
-              <Text selectable style={styles.token}>
-                {lastInvite.token}
-              </Text>
-            </View>
-          ) : null}
-        </View>
-
-        <View style={styles.divider} />
-
-        <Text variant="heading">{t('household.invitationsTitle')}</Text>
-        {invitations.length === 0 ? (
-          <Text muted>{t('household.noInvitations')}</Text>
-        ) : (
-          <View style={styles.list}>
-            {invitations.map((inv) => (
-              <View key={inv.id} style={styles.card}>
-                <Text>{inv.email}</Text>
-                <Text variant="caption" muted>
-                  {t(`household.roles.${inv.role}`)}
-                </Text>
-                <Pressable onPress={() => onRevoke(inv.id)}>
-                  <Text variant="caption" style={{ color: palette.danger }}>
-                    {t('household.revoke')}
-                  </Text>
+          {inviteOpen ? (
+            <View style={styles.invitePanel}>
+              <Text variant="eyebrow" muted style={styles.center}>{t('onboarding.inviteCodeLabel')}</Text>
+              <Text style={styles.code}>{household?.code}</Text>
+              <View style={styles.inviteActions}>
+                <Pressable accessibilityRole="button" onPress={onCopy} style={[styles.pill, styles.pillTint]}>
+                  <Text variant="button" style={styles.pillTintText}>{copied ? t('onboarding.copied') : t('onboarding.copyCode')}</Text>
+                </Pressable>
+                <Pressable accessibilityRole="button" onPress={onShare} style={[styles.pill, styles.pillOutline]}>
+                  <Text variant="button">{t('onboarding.share')}</Text>
                 </Pressable>
               </View>
-            ))}
-          </View>
-        )}
+            </View>
+          ) : null}
+        </Card>
+
+        {/* Members */}
+        <Card>
+          {members.map((m, i) => {
+            const name = m.profile?.display_name || m.profile?.email || m.user_id;
+            const isOwner = m.role === 'owner';
+            const roleLine = `${t(`household.roles.${m.role}`)} · ${isOwner ? t('household.ownerAccess') : t('household.memberAccess')}`;
+            return (
+              <View key={m.user_id} style={[styles.memberRow, i > 0 ? styles.divider : null]}>
+                <Avatar name={name} size={40} variant={m.user_id === user?.id ? 'self' : 'default'} />
+                <View style={styles.rowMid}>
+                  <Text variant="button">{name}{m.user_id === user?.id ? ` ${t('household.you')}` : ''}</Text>
+                  <Text variant="caption" muted>{roleLine}</Text>
+                </View>
+                <View style={[styles.badge, isOwner ? styles.badgeOwner : styles.badgeMember]}>
+                  <Text variant="caption" style={isOwner ? styles.badgeOwnerText : undefined}>{t(`household.roles.${m.role}`)}</Text>
+                </View>
+              </View>
+            );
+          })}
+        </Card>
+
+        {/* Roles explainer */}
+        <Card>
+          <Text variant="subheading">{t('household.rolesTitle')}</Text>
+          <Text variant="button" style={styles.roleHead}>{t('household.roles.owner')}</Text>
+          <Text variant="caption" muted>{t('household.ownerCan')}</Text>
+          <Text variant="button" style={styles.roleHead}>{t('household.roles.member')}</Text>
+          <Text variant="caption" muted>{t('household.memberCan')}</Text>
+        </Card>
+
+        {/* Cross-border toggle (owner/admin) */}
+        {canManage ? (
+          <Card>
+            <View style={styles.rowBetween}>
+              <Text variant="button" style={styles.rowMid}>{t('household.crossBorderToggle')}</Text>
+              <Toggle
+                value={household?.is_cross_border ?? false}
+                onValueChange={onToggleCrossBorder}
+                accessibilityLabel={t('household.crossBorderToggle')}
+              />
+            </View>
+          </Card>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
@@ -220,37 +181,23 @@ export default function HouseholdDetailScreen() {
 const makeStyles = (c: Palette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: c.background },
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background },
-  content: {
-    padding: spacing.lg,
-    gap: spacing.md,
-    // Cap + centre so the screen does not stretch edge to edge on a monitor.
-    width: '100%',
-    maxWidth: CONTENT_MAX_WIDTH,
-    alignSelf: 'center',
-  },
-  list: { gap: spacing.sm },
-  card: {
-    padding: spacing.lg,
-    borderRadius: radius.lg,
-    backgroundColor: c.surface,
-    boxShadow: elevation.tile,
-    gap: spacing.xs,
-  },
-  divider: { height: 1, backgroundColor: c.border, marginVertical: spacing.sm },
-  form: { gap: spacing.sm },
-  chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  chip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    backgroundColor: c.field,
-  },
-  chipActive: { backgroundColor: c.brand },
-  tokenBox: {
-    padding: spacing.md,
-    borderRadius: radius.md,
-    backgroundColor: c.brandMuted,
-    gap: spacing.xs,
-  },
-  token: { fontFamily: 'monospace', color: c.text },
+  content: { padding: spacing.lg, gap: spacing.md, width: '100%', maxWidth: CONTENT_MAX_WIDTH, alignSelf: 'center' },
+  rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  rowMid: { flex: 1, gap: 2 },
+  inviteBtn: { minHeight: 40, paddingHorizontal: spacing.md },
+  invitePanel: { alignItems: 'center', gap: spacing.sm, marginTop: spacing.md },
+  center: { textAlign: 'center' },
+  code: { fontSize: 28, fontWeight: '800', color: c.primary, letterSpacing: 4 },
+  inviteActions: { flexDirection: 'row', gap: spacing.sm },
+  pill: { minHeight: 44, paddingHorizontal: spacing.lg, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },
+  pillTint: { backgroundColor: c.primaryTint },
+  pillTintText: { color: c.primary },
+  pillOutline: { backgroundColor: c.surface, borderWidth: 1, borderColor: c.border },
+  memberRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.sm },
+  divider: { borderTopWidth: 1, borderTopColor: c.divider },
+  badge: { paddingHorizontal: spacing.sm, paddingVertical: 2, borderRadius: radius.pill },
+  badgeOwner: { backgroundColor: c.primaryTint },
+  badgeMember: { backgroundColor: c.fill },
+  badgeOwnerText: { color: c.primary },
+  roleHead: { marginTop: spacing.sm },
 });
