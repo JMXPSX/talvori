@@ -184,19 +184,23 @@ export default function TransactionsScreen() {
             {items.map((tx, index) => {
               const positive = tx.direction === 'in';
               const tint = catTint(tx.type);
+              // Money-model decision #8: only income/expense rows are editable; transfers are
+              // read-only in Activity (editing a leg would desync the paired account).
+              const editable = tx.type !== 'transfer';
               return (
                 <Pressable
                   key={tx.id}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('finance.edit.title')}
-                  onPress={() => router.push(`/finance/edit/${tx.id}`)}
+                  accessibilityRole={editable ? 'button' : undefined}
+                  accessibilityLabel={editable ? t('finance.edit.title') : undefined}
+                  disabled={!editable}
+                  onPress={editable ? () => router.push(`/finance/edit/${tx.id}`) : undefined}
                   style={(s) => {
                     const st = s as { pressed?: boolean; hovered?: boolean };
                     return [
                       styles.trow,
                       index > 0 ? styles.rowDivider : null,
-                      st.hovered ? styles.trowHover : null,
-                      st.pressed ? styles.pressed : null,
+                      editable && st.hovered ? styles.trowHover : null,
+                      editable && st.pressed ? styles.pressed : null,
                     ];
                   }}
                 >
@@ -219,7 +223,7 @@ export default function TransactionsScreen() {
                     {formatAmount(tx.amount_minor, tx.currency_code)}
                   </Text>
                   <View style={styles.cEdit}>
-                    <Feather name="edit-2" size={16} color={palette.textMuted} />
+                    {editable ? <Feather name="edit-2" size={16} color={palette.textMuted} /> : null}
                   </View>
                 </Pressable>
               );

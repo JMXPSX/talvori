@@ -118,12 +118,13 @@ export default function HomeScreen() {
     color: breakdown.slices[i]?.color ?? palette.border,
   }));
 
+  // Money-model decision #7: three quick actions — Income · Expense · Compare.
+  // Transfer stays a transaction kind (created from Activity's "+"), not a quick action;
+  // Accounts are reached from the accounts section below and rates from the hero caption.
   const actions: { icon: FeatherName; label: string; href: string }[] = [
     { icon: 'arrow-down-left', label: t('finance.addIncome'), href: '/finance/entry?type=income' },
     { icon: 'arrow-up-right', label: t('finance.addExpense'), href: '/finance/entry?type=expense' },
-    { icon: 'repeat', label: t('finance.addTransfer'), href: '/finance/transfer' },
-    { icon: 'credit-card', label: t('finance.manageAccounts'), href: '/finance/accounts' },
-    { icon: 'trending-up', label: t('fx.manageRates'), href: '/finance/rates' },
+    { icon: 'shopping-bag', label: t('finance.compare'), href: '/retail' },
   ];
 
   return (

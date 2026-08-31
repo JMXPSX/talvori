@@ -1,7 +1,8 @@
 /** Transaction edit sheet (3a — fixes F08 F09 F14 F15). Opens over the Activity
  *  feed to edit an income/expense: amount, account, category, date (backdating)
  *  and note. Delete lives HERE (dangerQuiet + confirm), not as a row-level trash
- *  icon. Transfers are shown read-only with delete — they're edited elsewhere. */
+ *  icon. Transfers are shown read-only with NO delete — they aren't editable or
+ *  deletable from Activity (editing a leg would desync the paired account). */
 
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
@@ -267,7 +268,9 @@ export default function EditTransactionScreen() {
           </View>
         )}
 
-        <Button label={t('finance.edit.deleteCta')} variant="dangerQuiet" onPress={onDelete} />
+        {isTransfer ? null : (
+          <Button label={t('finance.edit.deleteCta')} variant="dangerQuiet" onPress={onDelete} />
+        )}
       </ScrollView>
       {sheet.element}
     </SafeAreaView>
