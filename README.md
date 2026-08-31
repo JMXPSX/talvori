@@ -81,6 +81,34 @@ npm run lint       # expo lint (eslint 9, expo flat config)
 npm run test:rls   # LIVE household-isolation + deletion drill (see .env note)
 ```
 
+## Troubleshooting
+
+- **`Unable to resolve module <pkg>` right after installing a package** — Metro
+  caches its module map and does not pick up a newly installed dependency while
+  running. Stop the dev server and restart with a clean cache:
+  ```bash
+  npx expo start -c
+  ```
+  Native modules bundled in Expo Go (e.g. `@react-native-community/datetimepicker`)
+  work after this restart — no custom dev build needed.
+- **Changed a context provider or `lib/i18n` and nothing updates** — Fast Refresh
+  does not reliably re-run context providers or side-effect module init. Do a
+  **full reload** (Expo Go: shake → *Reload*, or press `r` in the Metro terminal),
+  and add `-c` if you touched i18n init.
+- **Android shows raw plural fallback, or a date screen crashes with
+  `undefined is not a function`** — Hermes on Android ships a *partial* `Intl`
+  (`NumberFormat` works; `PluralRules`, `DisplayNames`, and
+  `DateTimeFormat.formatRange` do not). This repo already compensates: the
+  `intl-pluralrules` polyfill is imported in `lib/i18n`, `lib/format.ts` guards
+  `formatRange`, and `lib/currencies.ts` supplies static currency names when
+  `Intl.DisplayNames` is absent. If you add new `Intl` usage, gate
+  `RelativeTimeFormat` / `ListFormat` / `Segmenter` / `formatRange` behind a
+  capability check or polyfill it.
+- **Login bounces an existing member to onboarding** — the auth gate must only
+  redirect once households have actually loaded; `ActiveHouseholdProvider` derives
+  `loading` from a session-scoped id so the gate never acts on a stale empty read.
+  If you see this, restart clean (`npx expo start -c`) before debugging further.
+
 ## Project structure
 
 ```
@@ -93,7 +121,9 @@ app/            Expo Router routes (file-based navigation)
   account.tsx   data export + guarded account deletion
 components/     design system: theme tokens + ui/ primitives
                 (Text, Screen, Button, TextField, Card, EmptyState, Donut,
-                 ProgressBar, ListRow, ActionSheet, ErrorNotice)
+                 ProgressBar, ListRow, ActionSheet, ErrorNotice, Select, Chip,
+                 CurrencyField, DateField — a platform-split date picker:
+                 native picker on iOS/Android, <input type="date"> on web)
 features/       per-domain logic: api.ts (data access) + schemas + pure helpers
 lib/            env, supabase client, i18n, rtl, fonts, money, format,
                 errors, logger, validation, database.types
