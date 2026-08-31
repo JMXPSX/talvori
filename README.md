@@ -1,8 +1,10 @@
 # Talvori
 
 **Talvori** — *"One plan. Everyone. Together."* The public brand for this global household
-finance app (chosen in the design workspace; see `context/project-overview.md`). The current code
-still renders the older indigo "ibilly" visual system — the Talvori repalette is the next step.
+finance app (chosen in the design workspace; see `context/project-overview.md`). The app now
+renders the **Talvori** design system — purple `#6D4CFF`/navy/teal/orange on Plus Jakarta Sans,
+built section-by-section from `context/claude_code_handoff/TALVORI_MOBILE_UI_SPEC.md` (the earlier
+indigo look is retired).
 
 A global household finance, budgeting, shared-shopping, retail-pricing and
 multi-currency platform. One universal codebase (Expo) targets **iOS, Android,

@@ -60,8 +60,8 @@ subscription row via its `source` field.
 
 ## Phase 7 — Globalization ✅
 Validated priority markets for currencies, languages, dates/numbers, timezones, RTL,
-subscriptions, privacy flows, retailer availability. "Ledger & Remittance"/"ibilly" design
-system + script-aware fonts landed here.
+subscriptions, privacy flows, retailer availability. The earlier "Ledger & Remittance" (Stitch
+indigo) design system + script-aware fonts landed here.
 
 ## Phase 8 — Security / QA / hardening ✅
 RLS audit, secret audit, auth tests, money/FX tests + fix, session tests, account
@@ -81,7 +81,7 @@ separately marked beta/supported.
 
 ---
 
-## UX overhaul track (post-Phase-8, on `design/ibilly-adoption`)
+## UX overhaul track (post-Phase-8, on `design/talvori-adoption`)
 
 Phases A–F delivered: A (component layer), B (screens 3a/3b/1a/1b), C (2b table/form caps/2a
 Plan desktop), D (3c modals, 1d grocery, 2c segmented Shop hub), E (4a login+eye, 3e
@@ -94,7 +94,7 @@ tab, 5b branch-picker follow-ups.
 ### Talvori rebrand — the new design direction (from "Budget app analysis")
 
 The Talvori design workspace (a Claude Design export, archived in git history; brand images
-relocated to `assets/brand/`) replaced the ibilly look. Status:
+relocated to `assets/brand/`) replaced the earlier indigo look. Status:
 - **Rename** app → Talvori — ✅ done (config/locales/brand strings; zero legacy strings).
 - **Repalette** `components/theme.ts` to the Talvori tokens — ✅ done (purple `#6D4CFF`, navy,
   teal income, orange shopping — see `ui-tokens.md`).
@@ -1588,24 +1588,29 @@ code-side is ready (Phases 1–8 complete, suite at 135 tests + live RLS drill).
 
 ## spec 2026-08-15-stitch-design-adoption-design
 
-# Stitch "ibilly" design adoption — design
+# Stitch indigo design adoption — design
+
+> **SUPERSEDED (2026-08-31):** this archived spec captured an interim Stitch-generated
+> indigo direction. The shipped design system is **Talvori** — see
+> `context/claude_code_handoff/TALVORI_MOBILE_UI_SPEC.md` and `context/ui-tokens.md`.
+> Kept for historical record only.
 
 **Date:** 2026-08-15
-**Status:** Approved for slices A+B
-**Source:** `stitch_universal_budget_tracker/` export (Google Stitch), `ibilly/DESIGN.md`
+**Status:** Superseded by Talvori (was: approved for slices A+B)
+**Source:** `stitch_universal_budget_tracker/` export (Google Stitch), archived DESIGN.md
 
 ## Intent
 
 Replace the "Ledger & Remittance" design direction (money-teal + remittance-gold on
-warm paper) with the Stitch-generated "ibilly" system: indigo primary on cool
+warm paper) with the Stitch-generated indigo system: indigo primary on cool
 blue-white, Plus Jakarta Sans, borderless bento cards with soft ambient shadows.
 
 This is a **rebrand, not a reskin**. The teal/gold identity is retired.
 
 ## Source material
 
-The export contains four screen mocks (`ibilly_dashboard`, `ibilly_web_dashboard`,
-`budget_settings`, `money_flow`) plus `ibilly/DESIGN.md`, which carries the design
+The export contains four screen mocks (dashboard, web dashboard, budget settings,
+money flow) plus an archived DESIGN.md, which carries the design
 system as YAML frontmatter (~40 Material 3 colour tokens, 8 typography roles, radius
 and spacing scales) followed by prose on brand, elevation, shape and components.
 
@@ -1831,7 +1836,8 @@ green), `npm run lint`, and a manual spot-check of five real screens.
 - **Dark mode.** `DESIGN.md` ships a light-only palette; the app has no dark mode today.
 - **Screen layouts.** Slices C and D.
 - **New primitives.** Slice C.
-- **Renaming the app to "ibilly".** That is Stitch's invented brand, not a decision made here.
+- **Renaming the app to the Stitch export's invented brand.** Not a decision made here — the app
+  is **Talvori** (chosen later in the design workspace).
 
 
 ## spec 2026-08-22-2c-compare-coupon-savings-design

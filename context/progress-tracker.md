@@ -4,7 +4,8 @@
 > tracker is for humans and agents that don't load claude-mem; claude-mem (`MEMORY.md` + the
 > observation DB) remains the richer cross-session memory. Seeded 2026-08-27 from current state.
 >
-> Current branch: `design/ibilly-adoption`.
+> Current branch: `design/talvori-adoption` (renamed from `design/ibilly-adoption` 2026-08-31 — the
+> Talvori design system is now the shipped look; "ibilly" is retired).
 
 ## Completed
 
@@ -13,14 +14,14 @@
 - [x] RLS isolation drill green on the live backend (household isolation across every table).
 - [x] Money/FX engine + tests; account deletion/export (incl. `protect_last_owner` cascade fix);
       forgot-password flow; app-wide guarded deletes; ActionSheet web fallback.
-- [x] "ibilly / Expertly Approachable" design system + script-aware fonts + dashboard hero/donut.
+- [x] Earlier "Expertly Approachable" (Stitch indigo) design system + script-aware fonts + dashboard hero/donut.
 - [x] UX overhaul A–F + retail follow-ups (4d Stores, 4e coupon→grocery matching, 5b branch
       picker, 2c rank-by-net Compare, segmented Shop hub). typecheck / ~192 tests / lint / web
       bundle green.
 - [x] `context/` created from the JSM context-driven-dev structure (this migration).
 - [x] **Talvori rebrand — rename + repalette.** App renamed → Talvori (config/locales/brand
       strings); `components/theme.ts` repaletted to the Talvori tokens (purple/navy/teal/orange);
-      zero ibilly strings in code. typecheck + 211 tests + i18n parity green.
+      zero legacy-brand strings in code. typecheck + 211 tests + i18n parity green.
 - [x] **Talvori money-model alignment (Step 3)** — all 8 decided behaviors shipped (migrations
       `20260830000013`/`20260830000014` applied to prod via MCP; typecheck + 216 tests + i18n +
       lint green). Detail:
@@ -100,11 +101,12 @@ shipped. The next work needs external accounts — see Blocked._
 - **Brand name: Talvori** (tagline "One plan. Everyone. Together."); "weave" was runner-up.
   Supersedes the "Global Household App" codename.
 - **Design direction: Talvori** — purple `#6D4CFF`/navy/teal/orange, Plus Jakarta Sans; **shipped**
-  in `components/theme.ts`. Replaced ibilly; retired the vermilion "Broadsheet Ledger" proposal.
+  in `components/theme.ts`, then built out screen-by-screen from the Talvori mobile UI spec.
+  Replaced the earlier indigo system; retired the vermilion "Broadsheet Ledger" proposal.
 - **Money model** decided per the Talvori Flow Prototype — 8 behaviors in `architecture.md`
   §"Money model — decided behavior" (override older specs).
-- Prior design direction "ibilly / Expertly Approachable" (Stitch-adopted) was replaced by the
-  Talvori repalette; recoverable from git history.
+- Prior design direction "Expertly Approachable" (Stitch-adopted indigo) was replaced by the
+  Talvori design system; recoverable from git history.
 
 ## Session notes
 
@@ -114,8 +116,8 @@ shipped. The next work needs external accounts — see Blocked._
   were removed (recoverable from git history). `PRODUCT.md` → `product.md` and `DESIGN.md` →
   `design-proposal.md` (proposed vermilion redesign, not shipped) moved in; `docs/` deep archive
   (adr/, specs/, plans/, ORCHESTRATION) and the code READMEs (features/, supabase/) pulled under
-  `context/` too — all project docs now live here. UI trio stays indigo ibilly (matches
-  theme.ts).
+  `context/` too — all project docs now live here. (At the time, the UI trio still used the
+  earlier indigo tokens; since superseded by Talvori.)
 - **2026-08-30:** Folded the 3 ADRs into a dated "Key decisions & rationale" log in
   `architecture.md` (and repointed `code-standards.md`); removed `context/adr/`. Then folded the
   17 specs + 8 plans into `build-plan.md` Appendices A/B (anchor forms `#spec-<stem>` /
@@ -147,7 +149,7 @@ shipped. The next work needs external accounts — see Blocked._
   `build-plan.md` + "Up next". Slimmed the raw export (244→21 files) to mockups + Flow Prototype +
   brand assets + the two handoff docs.
 - **2026-08-30 (cont.):** Talvori rebrand steps 1–2 done — renamed app → Talvori (commit
-  `7eecfe3`) and repaletted `components/theme.ts` + purged ibilly references (commit `3df4a50`).
+  `7eecfe3`) and repaletted `components/theme.ts` + purged legacy-brand references (commit `3df4a50`).
   Then removed `context/design/` entirely (design decisions are captured in the md files; raw
   export archived in git history), relocating the Talvori brand images to `assets/brand/`. Next:
   the money-model alignment (finance-core rework).

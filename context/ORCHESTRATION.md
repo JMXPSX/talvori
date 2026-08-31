@@ -90,7 +90,7 @@ SQL editor. It is re-runnable and its teardown is one `delete` documented in the
 
 ## When you *would* want worktrees
 
-If two genuinely independent features are in flight — say the ibilly design work and the
+If two genuinely independent features are in flight — say the Talvori design work and the
 `wip/household-management` branch, which touch disjoint files — then a worktree per feature
 is correct, each with its own branch, its own `npm install`, a copy of the gitignored `.env`,
 and its own Metro port. That is a different setup from the one described above, and it is not

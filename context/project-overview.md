@@ -130,9 +130,9 @@ Engineering invariants live in [`architecture.md`](architecture.md); the product
 - **Design direction: Talvori** — purple `#6D4CFF` primary, navy `#0F172A`, teal `#14B8A6`
   (income), warm orange `#F59E0B` (shopping/goals), Plus Jakarta Sans — now **shipped** in
   `components/theme.ts` (transcribed in [`ui-tokens.md`](ui-tokens.md)). Replaced the earlier
-  indigo "ibilly" system; the vermilion "Broadsheet Ledger" proposal is retired. Remaining rebrand
-  work is money-model alignment (see [`build-plan.md`](build-plan.md) /
-  [`progress-tracker.md`](progress-tracker.md)).
+  indigo system; the vermilion "Broadsheet Ledger" proposal is retired. The Talvori UI was
+  then built out section-by-section from `context/claude_code_handoff/TALVORI_MOBILE_UI_SPEC.md`
+  (see [`progress-tracker.md`](progress-tracker.md)).
 - Voice / personality: tagline-led ("One plan. Everyone. Together."); not otherwise formalized.
 
 ## Accessibility & inclusion
