@@ -14,8 +14,9 @@ describe('isArabicLanguage', () => {
 });
 
 describe('fontFamilyFor (Latin)', () => {
-  it('uses Plus Jakarta Sans bold for the display role', () => {
-    expect(fontFamilyFor('title', false)).toBe('PlusJakartaSans_700Bold');
+  it('uses Plus Jakarta Sans extra-bold (800) for the display role', () => {
+    // §2.3 — screen titles, the wordmark and hero numbers are 800.
+    expect(fontFamilyFor('title', false)).toBe('PlusJakartaSans_800ExtraBold');
   });
   it('uses semibold for heading, subheading, moneyMin, button and eyebrow', () => {
     expect(fontFamilyFor('heading', false)).toBe('PlusJakartaSans_600SemiBold');

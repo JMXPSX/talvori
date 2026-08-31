@@ -37,15 +37,18 @@ export interface ChipProps {
   role?: 'radio' | 'checkbox';
   /** Light fill for the unselected state (e.g. a category colour). */
   tint?: string;
+  /** Selected-fill hue. Default 'primary'; 'warn' marks the transfer To-account (§6.5). */
+  tone?: 'primary' | 'warn';
   style?: ViewStyle;
 }
 
 /** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
 type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
 
-export function Chip({ label, selected = false, onPress, role, tint, style }: ChipProps) {
+export function Chip({ label, selected = false, onPress, role, tint, tone = 'primary', style }: ChipProps) {
   const { palette } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const selectedFill = tone === 'warn' ? palette.warnStrong : palette.brand;
   return (
     <Pressable
       accessibilityRole={role ?? 'button'}
@@ -55,7 +58,7 @@ export function Chip({ label, selected = false, onPress, role, tint, style }: Ch
         const { pressed, hovered, focused } = state as WebPressableState;
         return [
           styles.chip,
-          { backgroundColor: selected ? palette.brand : (tint ?? palette.field) },
+          { backgroundColor: selected ? selectedFill : (tint ?? palette.field) },
           hovered ? styles.hovered : null,
           pressed ? styles.pressed : null,
           focused ? webFocusRing : null,

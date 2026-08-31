@@ -20,7 +20,7 @@ import { radius, spacing, typography, webFocusRing } from '@/components/theme';
 import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Text } from '@/components/ui/Text';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'danger' | 'dangerQuiet';
+export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'success' | 'danger' | 'dangerQuiet';
 
 export interface ButtonProps {
   label: string;
@@ -48,6 +48,7 @@ export function Button({
     primary: palette.white,
     secondary: palette.brand,
     accent: palette.white, // white on burnt orange clears 4.5:1
+    success: palette.white, // white on teal clears 4.5:1 (income actions)
     danger: palette.white, // white on red clears 4.5:1
     dangerQuiet: palette.danger,
   };
@@ -103,6 +104,9 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   accent: {
     backgroundColor: c.accent,
+  },
+  success: {
+    backgroundColor: c.positive,
   },
   danger: {
     backgroundColor: c.danger,

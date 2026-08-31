@@ -16,21 +16,28 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { chartSeries, radius, spacing, typography } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import {
+  Avatar,
   BentoRow,
   Button,
   Card,
   Chip,
   CONTENT_MAX_WIDTH,
+  DestructiveAction,
   Donut,
   EmptyState,
   ErrorNotice,
+  InlineEditor,
   ListRow,
   ProgressBar,
   ProgressRing,
+  Segmented,
+  Select,
   SideNav,
   Text,
   TextField,
+  Toggle,
   useActionSheet,
+  useToast,
 } from '@/components/ui';
 import { useIsWideLayout, WIDE_LAYOUT_MIN_WIDTH } from '@/lib/breakpoints';
 import { isArabicLanguage } from '@/lib/fonts';
@@ -58,7 +65,12 @@ export default function ThemeGalleryScreen() {
   const isArabic = isArabicLanguage(i18n.language);
   const [field, setField] = useState('');
   const [navIndex, setNavIndex] = useState(0);
+  const [toggleOn, setToggleOn] = useState(true);
+  const [segMode, setSegMode] = useState<'today' | 'yesterday' | 'custom'>('today');
+  const [account, setAccount] = useState<'checking' | 'savings' | 'cash'>('checking');
+  const [editorOpen, setEditorOpen] = useState(true);
   const sheet = useActionSheet();
+  const toast = useToast();
   const isWide = useIsWideLayout();
   const styles = useThemedStyles(makeStyles);
   const { palette } = useTheme();
@@ -231,6 +243,81 @@ export default function ThemeGalleryScreen() {
           </Card>
         </Section>
 
+        <Section title="Controls (§3)">
+          <Card>
+            <View style={styles.controlRow}>
+              <Text variant="button">Toggle</Text>
+              <Toggle value={toggleOn} onValueChange={setToggleOn} accessibilityLabel="Demo toggle" />
+            </View>
+            <Text variant="caption" muted>Segmented — one active</Text>
+            <Segmented
+              options={[
+                { value: 'today', label: 'Today' },
+                { value: 'yesterday', label: 'Yesterday' },
+                { value: 'custom', label: 'Custom' },
+              ]}
+              value={segMode}
+              onChange={setSegMode}
+            />
+            <Text variant="caption" muted>Select — stored value always shown</Text>
+            <Select
+              accessibilityLabel="Demo account"
+              options={[
+                { value: 'checking', label: 'BOA Checking' },
+                { value: 'savings', label: 'Chase Savings' },
+                { value: 'cash', label: 'Cash' },
+              ]}
+              value={account}
+              onChange={setAccount}
+            />
+          </Card>
+        </Section>
+
+        <Section title="Avatars (§3.13)">
+          <Card>
+            <View style={styles.controlRow}>
+              <Avatar name="Jo Cruz" size={42} variant="self" />
+              <Avatar name="Miller Family" size={40} />
+              <Avatar name="A" size={34} />
+              <Avatar
+                name="Photo"
+                size={40}
+                photoUrl="https://i.pravatar.cc/80"
+              />
+            </View>
+          </Card>
+        </Section>
+
+        <Section title="Inline editor (§3.3) + two-tap delete (§3.4)">
+          {editorOpen ? (
+            <InlineEditor
+              saveLabel="Save"
+              cancelLabel="Cancel"
+              onSave={() => toast.show('✓ Saved', { tone: 'success' })}
+              onCancel={() => setEditorOpen(false)}
+              destructive={
+                <DestructiveAction
+                  label="🗑 Delete"
+                  confirmLabel="Tap again to confirm"
+                  onConfirm={() => setEditorOpen(false)}
+                />
+              }
+            >
+              <TextField label="Account name" value="BOA Checking" onChangeText={() => undefined} />
+            </InlineEditor>
+          ) : (
+            <Button label="Reopen editor" variant="secondary" onPress={() => setEditorOpen(true)} />
+          )}
+        </Section>
+
+        <Section title="Toast (§3.10)">
+          <Card>
+            <Button label="Show success" onPress={() => toast.show('✓ Expense saved — −$86.40', { tone: 'success' })} />
+            <Button label="Show money (4s)" variant="secondary" onPress={() => toast.show('✓ Transfer saved — $200.00', { tone: 'success', money: true })} />
+            <Button label="Show error" variant="dangerQuiet" onPress={() => toast.show('Enter an amount greater than zero.', { tone: 'error' })} />
+          </Card>
+        </Section>
+
         <Section title="Chart series">
           <Card>
             <View style={styles.donutRow}>
@@ -296,6 +383,7 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   chip: { height: 40, borderRadius: radius.control, borderWidth: 1, borderColor: c.border },
   ringRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg, flexWrap: 'wrap' },
   chipRow: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
+  controlRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, flexWrap: 'wrap' },
   navPreview: { height: 380, borderRadius: radius.lg, overflow: 'hidden', alignSelf: 'flex-start' },
   donutRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg },
   legend: { flex: 1, gap: spacing.xs },

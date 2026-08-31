@@ -14,6 +14,7 @@ import {
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
 } from '@expo-google-fonts/plus-jakarta-sans';
 import {
   ReadexPro_400Regular,
@@ -28,6 +29,7 @@ export const fontMap = {
   PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
   ReadexPro_400Regular,
   ReadexPro_600SemiBold,
   ReadexPro_700Bold,
@@ -52,7 +54,8 @@ export function fontFamilyFor(variant: TypographyVariant, isArabic: boolean): st
   }
   switch (variant) {
     case 'title':
-      return 'PlusJakartaSans_700Bold';
+      // §2.3 — screen titles, the wordmark and hero numbers are 800.
+      return 'PlusJakartaSans_800ExtraBold';
     case 'heading':
     case 'subheading':
     case 'moneyMin':
