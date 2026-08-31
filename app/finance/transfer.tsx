@@ -1,26 +1,39 @@
-/** Move money between two accounts. Same-currency transfers mirror the amount;
- *  cross-currency transfers take an amount in each account's own currency. */
+/** Transfer money between two accounts (§6.5). From/To account chips (To excludes
+ *  From and is warn-toned; changing From auto-moves a colliding To), an amount card,
+ *  date and note. Same-currency mirrors the amount; cross-currency takes an amount
+ *  in each account's own currency. Posts a neutral-signed transfer and toasts back. */
 
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { radius, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { Button, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import {
+  AmountCard,
+  Button,
+  Chip,
+  DateField,
+  FORM_MAX_WIDTH,
+  resolveDate,
+  Text,
+  TextField,
+  useToast,
+  type DateMode,
+} from '@/components/ui';
 import { createTransfer, listAccounts } from '@/features/finance/api';
-import { createTransferSchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { AccountRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
+import { formatAmount } from '@/lib/format';
 import { toMinorUnits } from '@/lib/money';
-import { validate } from '@/lib/validation';
 
 export default function TransferScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const toast = useToast();
   const { active } = useActiveHousehold();
   const styles = useThemedStyles(makeStyles);
   const { palette } = useTheme();
@@ -32,7 +45,9 @@ export default function TransferScreen() {
   const [toId, setToId] = useState<string | null>(null);
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [dateMode, setDateMode] = useState<DateMode>('today');
+  const [customDate, setCustomDate] = useState('');
+  const [note, setNote] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -63,29 +78,42 @@ export default function TransferScreen() {
   const to = useMemo(() => accounts.find((a) => a.id === toId) ?? null, [accounts, toId]);
   const sameCurrency = Boolean(from && to && from.currency_code === to.currency_code);
 
+  // Changing From auto-moves a colliding To to the first other account (§6.5 #4).
+  function pickFrom(id: string) {
+    setFromId(id);
+    if (toId === id) setToId(accounts.find((a) => a.id !== id)?.id ?? null);
+  }
+
   async function onSave() {
     if (!from || !to) return;
     setFormError(null);
-    const receivedAmount = sameCurrency ? fromAmount : toAmount;
-    const result = validate(createTransferSchema, {
-      fromAccountId: from.id,
-      toAccountId: to.id,
-      fromAmountMajor: fromAmount,
-      toAmountMajor: receivedAmount,
-    });
-    if (!result.success) {
-      setFieldErrors(result.fieldErrors);
+    if (from.id === to.id) {
+      setFormError('finance.transfer.sameAccounts');
       return;
     }
-    setFieldErrors({});
+    const fromParsed = Number(fromAmount);
+    const toParsed = sameCurrency ? fromParsed : Number(toAmount);
+    if (!Number.isFinite(fromParsed) || fromParsed <= 0 || !Number.isFinite(toParsed) || toParsed <= 0) {
+      setFormError('finance.form.amountPositive');
+      return;
+    }
     setSubmitting(true);
     try {
       await createTransfer({
         fromAccountId: from.id,
         toAccountId: to.id,
-        fromAmountMinor: toMinorUnits(result.data.fromAmountMajor, from.currency_code),
-        toAmountMinor: toMinorUnits(result.data.toAmountMajor, to.currency_code),
+        fromAmountMinor: toMinorUnits(fromParsed, from.currency_code),
+        toAmountMinor: toMinorUnits(toParsed, to.currency_code),
+        occurredAt: new Date(`${resolveDate(dateMode, customDate)}T12:00:00`).toISOString(),
       });
+      toast.show(
+        t('finance.toast.transferSaved', {
+          amount: formatAmount(toMinorUnits(fromParsed, from.currency_code), from.currency_code),
+          from: from.name,
+          to: to.name,
+        }),
+        { tone: 'success', money: true },
+      );
       router.back();
     } catch (err) {
       setFormError(toAppError(err).messageKey);
@@ -94,7 +122,7 @@ export default function TransferScreen() {
     }
   }
 
-  if (loading) {
+  if (loading || !active) {
     return (
       <SafeAreaView style={styles.centered} edges={['left', 'right', 'bottom']}>
         <ActivityIndicator color={palette.brand} />
@@ -106,75 +134,83 @@ export default function TransferScreen() {
     return (
       <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
         <View style={styles.content}>
+          <Text variant="title">{t('finance.transfer.moneyTitle')}</Text>
           <Text muted>{t('finance.transfer.needTwo')}</Text>
         </View>
       </SafeAreaView>
     );
   }
 
-  // Render helper (not a nested component — those remount on every render).
-  function renderAccountPicker({
-    selected,
-    onSelect,
-    exclude,
-  }: {
-    selected: string | null;
-    onSelect: (id: string) => void;
-    exclude: string | null;
-  }) {
-    return (
-      <View style={styles.chips}>
-        {accounts
-          .filter((a) => a.id !== exclude)
-          .map((a) => {
-            const activeChip = a.id === selected;
-            return (
-              <Pressable
-                key={a.id}
-                onPress={() => onSelect(a.id)}
-                style={[styles.chip, activeChip ? styles.chipActive : null]}
-              >
-                <Text variant="caption" style={{ color: activeChip ? palette.white : palette.text }}>
-                  {a.name} ({a.currency_code})
-                </Text>
-              </Pressable>
-            );
-          })}
-      </View>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text variant="caption" muted>
-          {t('finance.transfer.fromLabel')}
-        </Text>
-        {renderAccountPicker({ selected: fromId, onSelect: setFromId, exclude: toId })}
+        <Text variant="title">{t('finance.transfer.moneyTitle')}</Text>
 
-        <Text variant="caption" muted>
-          {t('finance.transfer.toLabel')}
-        </Text>
-        {renderAccountPicker({ selected: toId, onSelect: setToId, exclude: fromId })}
-
-        <TextField
-          label={`${t('finance.transfer.fromAmountLabel')}${from ? ` (${from.currency_code})` : ''}`}
+        <AmountCard
+          currencyCode={from?.currency_code ?? active.reporting_currency_code}
           value={fromAmount}
-          onChangeText={setFromAmount}
-          keyboardType="numeric"
-          error={fieldErrors.fromAmountMajor ? t('errors.validation') : undefined}
+          onChangeValue={setFromAmount}
         />
 
+        <View style={styles.group}>
+          <Text variant="caption" muted>{t('finance.form.fromAccount')}</Text>
+          <View style={styles.chips}>
+            {accounts.map((a) => (
+              <Chip
+                key={a.id}
+                label={a.name}
+                selected={a.id === fromId}
+                role="radio"
+                onPress={() => pickFrom(a.id)}
+              />
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.group}>
+          <Text variant="caption" muted>{t('finance.form.toAccount')}</Text>
+          <View style={styles.chips}>
+            {accounts
+              .filter((a) => a.id !== fromId)
+              .map((a) => (
+                <Chip
+                  key={a.id}
+                  label={a.name}
+                  selected={a.id === toId}
+                  tone="warn"
+                  role="radio"
+                  onPress={() => setToId(a.id)}
+                />
+              ))}
+          </View>
+        </View>
+
         {!sameCurrency ? (
-          <TextField
-            label={`${t('finance.transfer.toAmountLabel')}${to ? ` (${to.currency_code})` : ''}`}
-            value={toAmount}
-            onChangeText={setToAmount}
-            keyboardType="numeric"
-            hint={t('finance.transfer.crossCurrencyHint')}
-            error={fieldErrors.toAmountMajor ? t('errors.validation') : undefined}
-          />
+          <View style={styles.group}>
+            <Text variant="caption" muted>{t('finance.transfer.crossCurrencyHint')}</Text>
+            <AmountCard
+              currencyCode={to?.currency_code ?? active.reporting_currency_code}
+              value={toAmount}
+              onChangeValue={setToAmount}
+              label={t('finance.transfer.toAmountLabel')}
+            />
+          </View>
         ) : null}
+
+        <DateField
+          mode={dateMode}
+          customDate={customDate}
+          onModeChange={setDateMode}
+          onCustomChange={setCustomDate}
+        />
+
+        <TextField
+          label={t('finance.form.noteLabel')}
+          value={note}
+          onChangeText={setNote}
+          placeholder={t('finance.transfer.notePlaceholderExample')}
+          autoCapitalize="sentences"
+        />
 
         {formError ? (
           <Text variant="caption" style={{ color: palette.danger }}>
@@ -183,7 +219,7 @@ export default function TransferScreen() {
         ) : null}
 
         <Button
-          label={submitting ? t('auth.processing') : t('finance.transfer.saveCta')}
+          label={t('finance.transfer.saveTransfer')}
           onPress={onSave}
           loading={submitting}
         />
@@ -198,17 +234,10 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   content: {
     padding: spacing.lg,
     gap: spacing.md,
-    // Cap + centre so the screen does not stretch edge to edge on a monitor.
     width: '100%',
     maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
+  group: { gap: spacing.sm },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
-  chip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    backgroundColor: c.field,
-  },
-  chipActive: { backgroundColor: c.brand },
 });

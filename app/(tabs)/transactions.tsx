@@ -76,11 +76,12 @@ function typeIcon(c: Palette, type: TransactionWithRefs['type']): {
   color: string;
   bg: string;
 } {
-  if (type === 'income') return { name: 'arrow-down-left', color: c.success, bg: c.successMuted };
-  if (type === 'transfer') return { name: 'repeat', color: c.brand, bg: c.brandMuted };
-  if (type === 'goal_contribution') return { name: 'target', color: c.brand, bg: c.brandMuted };
-  if (type === 'debt_payment') return { name: 'file-text', color: c.accent, bg: c.accentMuted };
-  return { name: 'arrow-up-right', color: c.brand, bg: c.brandMuted };
+  // §6.6 row-icon tints (bg / glyph).
+  if (type === 'income') return { name: 'arrow-down-left', color: c.positiveStrong, bg: c.positiveTint };
+  if (type === 'transfer') return { name: 'repeat', color: c.infoStrong, bg: c.infoTint };
+  if (type === 'goal_contribution') return { name: 'target', color: c.ink, bg: c.warn };
+  if (type === 'debt_payment') return { name: 'file-text', color: c.ink, bg: c.divider };
+  return { name: 'shopping-cart', color: c.primary, bg: c.primaryTint };
 }
 
 export default function TransactionsScreen() {
@@ -196,7 +197,7 @@ export default function TransactionsScreen() {
             </View>
             <View style={styles.summaryCol}>
               <Text variant="caption" muted>{t('finance.ledger.net')}</Text>
-              <Text variant="moneyMin" style={styles.netAmt}>
+              <Text variant="moneyMin" style={flow.netMinor >= 0 ? styles.inAmt : styles.netNeg}>
                 {flow.netMinor >= 0 ? '+' : '−'}{formatAmount(Math.abs(flow.netMinor), reporting)}
               </Text>
             </View>
@@ -215,7 +216,7 @@ export default function TransactionsScreen() {
         {items.length === 0 ? (
           <EmptyState
             icon="list"
-            message={t('finance.noTransactions')}
+            message={t('finance.activity.empty')}
             ctaLabel={t('finance.addExpense')}
             onCta={() => router.push('/finance/entry?type=expense')}
           />
@@ -336,6 +337,13 @@ export default function TransactionsScreen() {
             ))}
           </View>
         )}
+
+        {/* §6.6 footer hint — how to fix a wrong entry. */}
+        {items.length > 0 ? (
+          <Text variant="caption" muted style={styles.footerHint}>
+            {t('finance.activity.footerHint')}
+          </Text>
+        ) : null}
         </BentoPage>
       </ScrollView>
       {sheet.element}
@@ -357,9 +365,10 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   summary: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   summaryCol: { flex: 1, gap: 2, alignItems: 'center' },
-  inAmt: { color: c.success },
-  netAmt: { color: c.brand },
+  inAmt: { color: c.positiveStrong },
+  netNeg: { color: c.danger },
   missingNote: { marginTop: -spacing.xs },
+  footerHint: { lineHeight: 16, marginTop: spacing.xs },
   addButton: {
     width: 44,
     height: 44,

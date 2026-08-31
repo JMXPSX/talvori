@@ -18,9 +18,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { elevation, radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { BentoPage, BentoRow, Card, Chip, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
+import { Avatar, BentoPage, BentoRow, Card, Chip, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
+import { useAuth } from '@/features/auth/AuthProvider';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
+import { HouseholdSwitcher } from '@/features/household/HouseholdSwitcher';
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { categoryBreakdown, donutArcs } from '@/features/finance/donut';
 import { sumByCurrency, sumInReporting } from '@/features/finance/fx';
@@ -62,6 +64,7 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active, loading: hLoading } = useActiveHousehold();
+  const { user } = useAuth();
   const { has } = usePlan();
   const styles = useThemedStyles(makeStyles);
   const { palette } = useTheme();
@@ -75,6 +78,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
 
   const load = useCallback(async () => {
     if (!active) {
@@ -139,6 +143,10 @@ export default function HomeScreen() {
   }
 
   const reporting = active.reporting_currency_code;
+  const avatarName =
+    (typeof user?.user_metadata?.display_name === 'string' && user.user_metadata.display_name) ||
+    user?.email ||
+    '';
   // Money-model decision #4: account-scoped dashboard. `scope` = null → all accounts;
   // Checking and Savings are never silently combined. Filtering the source arrays
   // re-derives the hero, the spending donut, and recent activity for the chosen scope.
@@ -174,18 +182,38 @@ export default function HomeScreen() {
     color: breakdown.slices[i]?.color ?? palette.border,
   }));
 
-  // Quick actions — Income · Expense · Transfer (matches the Flow Prototype).
-  const actions: { icon: FeatherName; label: string; href: string }[] = [
-    { icon: 'arrow-down-left', label: t('finance.addIncome'), href: '/finance/entry?type=income' },
-    { icon: 'arrow-up-right', label: t('finance.addExpense'), href: '/finance/entry?type=expense' },
-    { icon: 'repeat', label: t('finance.addTransfer'), href: '/finance/transfer' },
+  // Quick actions — Income · Expense · Transfer (§6.4). Income gets the positive
+  // (green) circle; Expense and Transfer use the purple tint.
+  const actions: { icon: FeatherName; label: string; href: string; bg: string; fg: string }[] = [
+    { icon: 'arrow-down-left', label: t('finance.addIncome'), href: '/finance/entry?type=income', bg: palette.positiveTint, fg: palette.positiveStrong },
+    { icon: 'arrow-up-right', label: t('finance.addExpense'), href: '/finance/entry?type=expense', bg: palette.primaryTint, fg: palette.primary },
+    { icon: 'repeat', label: t('finance.addTransfer'), href: '/finance/transfer', bg: palette.primaryTint, fg: palette.primary },
   ];
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <ScrollView>
         <BentoPage>
-          <Text variant="eyebrow" muted>{active.name}</Text>
+          {/* §6.4 header — greeting + household·currency pill (opens the switcher)
+              on the left, the user avatar (→ Profile) on the right. */}
+          <View style={styles.homeHeader}>
+            <View style={styles.homeHeaderLeft}>
+              <Text variant="title" style={styles.greeting}>{t('home.greeting')}</Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={active.name}
+                onPress={() => setSwitcherOpen(true)}
+                style={styles.householdPill}
+              >
+                <Text variant="button">{`${active.name} · ${reporting}`}</Text>
+                <Feather name="chevron-down" size={16} color={palette.textSecondary} />
+              </Pressable>
+            </View>
+            <Pressable accessibilityRole="button" accessibilityLabel={avatarName} onPress={() => router.push('/account')}>
+              <Avatar name={avatarName} size={44} variant="self" />
+            </Pressable>
+          </View>
+          <HouseholdSwitcher visible={switcherOpen} onClose={() => setSwitcherOpen(false)} />
 
           {/* Account-scope pills (#4) — only when there's more than one account to scope. */}
           {accounts.length > 1 ? (
@@ -314,8 +342,8 @@ export default function HomeScreen() {
               <View style={styles.tiles}>
                 {actions.map((a) => (
                   <Pressable key={a.href} style={styles.tile} onPress={() => router.push(a.href as never)}>
-                    <View style={styles.tileIcon}>
-                      <Feather name={a.icon} size={20} color={palette.brand} />
+                    <View style={[styles.tileIcon, { backgroundColor: a.bg }]}>
+                      <Feather name={a.icon} size={20} color={a.fg} />
                     </View>
                     <Text variant="caption" style={styles.tileLabel}>{a.label}</Text>
                   </Pressable>
@@ -466,6 +494,21 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: c.background },
   centered: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background },
   padded: { padding: spacing.lg, gap: spacing.md },
+  homeHeader: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: spacing.md },
+  homeHeaderLeft: { flex: 1, gap: spacing.sm },
+  greeting: { fontSize: 22 },
+  householdPill: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.pill,
+    backgroundColor: c.surface,
+    borderWidth: 1,
+    borderColor: c.border,
+  },
   scope: { gap: spacing.xs },
   scopePills: { flexDirection: 'row', gap: spacing.sm, paddingVertical: spacing.xs },
   // Flex weights: on wide viewports the hero takes two thirds beside the

@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { Button, Chip, FORM_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
+import { AmountCard, Button, Chip, FORM_MAX_WIDTH, Text, TextField, useActionSheet, useToast } from '@/components/ui';
 import {
   deleteTransaction,
   getTransaction,
@@ -25,7 +25,7 @@ import { isoDatePart, occurredAtFrom } from '@/features/finance/editTx';
 import type { AccountRow, CategoryRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { parseAmount } from '@/lib/amountInput';
-import { localeTag } from '@/lib/format';
+import { formatAmount, localeTag } from '@/lib/format';
 import { money, toMajorUnits, toMinorUnits } from '@/lib/money';
 
 export default function EditTransactionScreen() {
@@ -34,6 +34,7 @@ export default function EditTransactionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const txId = String(id);
   const sheet = useActionSheet();
+  const toast = useToast();
   const styles = useThemedStyles(makeStyles);
   const { palette } = useTheme();
 
@@ -117,14 +118,17 @@ export default function EditTransactionScreen() {
     setFieldErrors({});
     setSubmitting(true);
     try {
+      const amountMinor = toMinorUnits(major as number, selectedAccount.currency_code);
       await updateTransaction(tx.id, {
         accountId: selectedAccount.id,
         currencyCode: selectedAccount.currency_code,
-        amountMinor: toMinorUnits(major as number, selectedAccount.currency_code),
+        amountMinor,
         categoryId: categoryId ?? null,
         description: description.trim() || null,
         occurredAt: occurredAt as string,
       });
+      const signed = `${tx.direction === 'in' ? '+' : '−'}${formatAmount(amountMinor, selectedAccount.currency_code)}`;
+      toast.show(t('finance.toast.changesSaved', { amount: signed }), { tone: 'success', money: true });
       close();
     } catch (err) {
       setFormError(toAppError(err).messageKey);
@@ -208,14 +212,25 @@ export default function EditTransactionScreen() {
           </View>
         ) : (
           <View style={styles.form}>
+            <AmountCard
+              currencyCode={selectedAccount?.currency_code ?? tx?.currency_code ?? ''}
+              value={amount}
+              onChangeValue={setAmount}
+            />
+            {fieldErrors.amount ? (
+              <Text variant="caption" style={{ color: palette.danger }}>
+                {t('finance.form.amountPositive')}
+              </Text>
+            ) : null}
+
             <Text variant="caption" muted>
-              {t('finance.entry.accountLabel')}
+              {tx?.type === 'income' ? t('finance.form.toAccount') : t('finance.form.fromAccount')}
             </Text>
             <View style={styles.chips}>
               {accounts.map((a) => (
                 <Chip
                   key={a.id}
-                  label={`${a.name} (${a.currency_code})`}
+                  label={a.name}
                   selected={a.id === accountId}
                   role="radio"
                   onPress={() => setAccountId(a.id)}
@@ -223,20 +238,10 @@ export default function EditTransactionScreen() {
               ))}
             </View>
 
-            <TextField
-              label={`${t('finance.entry.amountLabel')}${
-                selectedAccount ? ` (${selectedAccount.currency_code})` : ''
-              }`}
-              value={amount}
-              onChangeText={setAmount}
-              keyboardType="numeric"
-              error={fieldErrors.amount ? t('errors.validation') : undefined}
-            />
-
             {categories.length > 0 ? (
               <>
                 <Text variant="caption" muted>
-                  {t('finance.entry.categoryLabel')}
+                  {t('finance.form.category')}
                 </Text>
                 <View style={styles.chips}>
                   <Chip
@@ -267,9 +272,10 @@ export default function EditTransactionScreen() {
             />
 
             <TextField
-              label={t('finance.entry.descriptionLabel')}
+              label={t('finance.form.noteLabel')}
               value={description}
               onChangeText={setDescription}
+              placeholder={t('finance.form.notePlaceholder')}
               autoCapitalize="sentences"
             />
 

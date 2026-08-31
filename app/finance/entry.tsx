@@ -1,6 +1,7 @@
-/** Add a single income or expense. `type` comes from the ?type= query param.
+/** Add a single income or expense (§6.5). One screen, spec layout: amount card,
+ *  To/From account chips, category chips, date (Today/Yesterday/Custom), note.
  *  Amount is entered in major units and converted using the selected account's
- *  currency before saving. */
+ *  currency before saving; the save posts one transaction and toasts back. */
 
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
@@ -10,18 +11,29 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { Button, Chip, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import {
+  AmountCard,
+  Button,
+  Chip,
+  DateField,
+  FORM_MAX_WIDTH,
+  resolveDate,
+  Text,
+  TextField,
+  useToast,
+  type DateMode,
+} from '@/components/ui';
 import { createEntry, listAccounts, listCategories } from '@/features/finance/api';
-import { createEntrySchema } from '@/features/finance/schemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import type { AccountRow, CategoryRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
+import { formatAmount } from '@/lib/format';
 import { toMinorUnits } from '@/lib/money';
-import { validate } from '@/lib/validation';
 
 export default function EntryScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const toast = useToast();
   const { active } = useActiveHousehold();
   const params = useLocalSearchParams<{ type?: string }>();
   const kind: 'income' | 'expense' = params.type === 'income' ? 'income' : 'expense';
@@ -36,7 +48,9 @@ export default function EntryScreen() {
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [dateMode, setDateMode] = useState<DateMode>('today');
+  const [customDate, setCustomDate] = useState('');
+  const [amountError, setAmountError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -53,6 +67,7 @@ export default function EntryScreen() {
       setAccounts(accs);
       setCategories(cats);
       setAccountId((prev) => prev ?? accs[0]?.id ?? null);
+      setCategoryId((prev) => prev ?? cats[0]?.id ?? null);
     } catch (err) {
       setFormError(toAppError(err).messageKey);
     } finally {
@@ -74,29 +89,32 @@ export default function EntryScreen() {
   async function onSave() {
     if (!active || !selectedAccount) return;
     setFormError(null);
-    const result = validate(createEntrySchema, {
-      accountId: selectedAccount.id,
-      type: kind,
-      amountMajor: amount,
-      categoryId: categoryId ?? undefined,
-      description: description.trim() || undefined,
-    });
-    if (!result.success) {
-      setFieldErrors(result.fieldErrors);
+    const parsed = Number(amount);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      setAmountError('finance.form.amountPositive');
       return;
     }
-    setFieldErrors({});
+    setAmountError(null);
     setSubmitting(true);
     try {
+      const amountMinor = toMinorUnits(parsed, selectedAccount.currency_code);
       await createEntry({
         householdId: active.id,
         accountId: selectedAccount.id,
         type: kind,
-        amountMinor: toMinorUnits(result.data.amountMajor, selectedAccount.currency_code),
+        amountMinor,
         currencyCode: selectedAccount.currency_code,
-        categoryId: result.data.categoryId,
-        description: result.data.description,
+        categoryId: categoryId ?? undefined,
+        description: description.trim() || undefined,
+        occurredAt: new Date(`${resolveDate(dateMode, customDate)}T12:00:00`).toISOString(),
       });
+      const money = formatAmount(amountMinor, selectedAccount.currency_code);
+      toast.show(
+        kind === 'income'
+          ? t('finance.toast.incomeSaved', { amount: money, account: selectedAccount.name })
+          : t('finance.toast.expenseSaved', { amount: money, account: selectedAccount.name }),
+        { tone: 'success', money: true },
+      );
       router.back();
     } catch (err) {
       setFormError(toAppError(err).messageKey);
@@ -105,7 +123,7 @@ export default function EntryScreen() {
     }
   }
 
-  if (loading) {
+  if (loading || !active) {
     return (
       <SafeAreaView style={styles.centered} edges={['left', 'right', 'bottom']}>
         <ActivityIndicator color={palette.brand} />
@@ -124,14 +142,25 @@ export default function EntryScreen() {
           <Text muted>{t('finance.entry.noAccounts')}</Text>
         ) : (
           <View style={styles.form}>
+            <AmountCard
+              currencyCode={selectedAccount?.currency_code ?? active.reporting_currency_code}
+              value={amount}
+              onChangeValue={setAmount}
+            />
+            {amountError ? (
+              <Text variant="caption" style={{ color: palette.danger }}>
+                {t(amountError)}
+              </Text>
+            ) : null}
+
             <Text variant="caption" muted>
-              {t('finance.entry.accountLabel')}
+              {kind === 'income' ? t('finance.form.toAccount') : t('finance.form.fromAccount')}
             </Text>
             <View style={styles.chips}>
               {accounts.map((a) => (
                 <Chip
                   key={a.id}
-                  label={`${a.name} (${a.currency_code})`}
+                  label={a.name}
                   selected={a.id === accountId}
                   role="radio"
                   onPress={() => setAccountId(a.id)}
@@ -139,28 +168,12 @@ export default function EntryScreen() {
               ))}
             </View>
 
-            <TextField
-              label={`${t('finance.entry.amountLabel')}${
-                selectedAccount ? ` (${selectedAccount.currency_code})` : ''
-              }`}
-              value={amount}
-              onChangeText={setAmount}
-              keyboardType="numeric"
-              error={fieldErrors.amountMajor ? t('errors.validation') : undefined}
-            />
-
             {categories.length > 0 ? (
               <>
                 <Text variant="caption" muted>
-                  {t('finance.entry.categoryLabel')}
+                  {t('finance.form.category')}
                 </Text>
                 <View style={styles.chips}>
-                  <Chip
-                    label={t('finance.categories.none')}
-                    selected={categoryId === null}
-                    role="radio"
-                    onPress={() => setCategoryId(null)}
-                  />
                   {categories.map((c) => (
                     <Chip
                       key={c.id}
@@ -174,10 +187,18 @@ export default function EntryScreen() {
               </>
             ) : null}
 
+            <DateField
+              mode={dateMode}
+              customDate={customDate}
+              onModeChange={setDateMode}
+              onCustomChange={setCustomDate}
+            />
+
             <TextField
-              label={t('finance.entry.descriptionLabel')}
+              label={t('finance.form.noteLabel')}
               value={description}
               onChangeText={setDescription}
+              placeholder={t('finance.form.notePlaceholder')}
               autoCapitalize="sentences"
             />
 
@@ -188,7 +209,8 @@ export default function EntryScreen() {
             ) : null}
 
             <Button
-              label={submitting ? t('auth.processing') : t('finance.entry.saveCta')}
+              label={kind === 'income' ? t('finance.entry.saveIncome') : t('finance.entry.saveExpense')}
+              variant={kind === 'income' ? 'success' : 'primary'}
               onPress={onSave}
               loading={submitting}
             />
@@ -205,11 +227,10 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   content: {
     padding: spacing.lg,
     gap: spacing.md,
-    // Cap + centre so the screen does not stretch edge to edge on a monitor.
     width: '100%',
     maxWidth: FORM_MAX_WIDTH,
     alignSelf: 'center',
   },
-  form: { gap: spacing.sm },
+  form: { gap: spacing.md },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
 });
