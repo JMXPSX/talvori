@@ -21,6 +21,7 @@ import {
   ErrorNotice,
   ProgressBar,
   ProgressRing,
+  Select,
   Text,
 } from '@/components/ui';
 import { listAccounts, listCategories } from '@/features/finance/api';
@@ -55,8 +56,25 @@ import type {
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
 
+type FeatherName = keyof typeof Feather.glyphMap;
+
+/** Best-effort Feather icon for a category by name (§6.7 icon tiles). No icon
+ *  field in the data model, so match common seed names; fall back to a tag. */
+function categoryIcon(name: string): FeatherName {
+  const n = name.toLowerCase();
+  if (/groc|market|food/.test(n)) return 'shopping-cart';
+  if (/din|restaur|coffee|eat/.test(n)) return 'coffee';
+  if (/transp|fuel|gas|car|commut/.test(n)) return 'truck';
+  if (/util|electric|water|power|bill/.test(n)) return 'zap';
+  if (/remit|send|transfer/.test(n)) return 'send';
+  if (/rent|hous|home|mortg/.test(n)) return 'home';
+  if (/health|medic|pharm/.test(n)) return 'heart';
+  if (/fun|entertain|leisure/.test(n)) return 'film';
+  return 'tag';
+}
+
 export default function PlanScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const { active } = useActiveHousehold();
   const styles = useThemedStyles(makeStyles);
@@ -72,6 +90,9 @@ export default function PlanScreen() {
   const [debtStatus, setDebtStatus] = useState<Record<string, DebtStatusRow>>({});
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
+  // Account scope for the category list (§5.2) — 'all' or an account id. Stays in
+  // sync conceptually with Home's hero scope; filters the category rows below.
+  const [scope, setScope] = useState<string>('all');
 
   const load = useCallback(async () => {
     if (!active) {
@@ -136,11 +157,35 @@ export default function PlanScreen() {
   const days = budget ? daysRemaining(budget.period_end, new Date().toISOString()) : 0;
   const safePerDay = safeToSpendPerDayMinor(agg.remainingMinor, days);
 
+  // Month label for the title pill + monthly-card caption (from the budget's
+  // period, else this month).
+  const monthLabel = new Intl.DateTimeFormat(i18n.language, { month: 'long' }).format(
+    budget ? new Date(budget.period_start) : new Date(),
+  );
+
+  // §5.2 scope: filter category rows by their funding account.
+  const scopedStatus = scope === 'all' ? status : status.filter((r) => r.account_id === scope);
+  const scopeOptions = [
+    { value: 'all', label: t('planning.budgets.scopeAll') },
+    ...accounts.map((a) => ({ value: a.id, label: a.name })),
+  ];
+  const scopeCaption =
+    scope === 'all'
+      ? `${t('planning.budgets.scopeAll')} · ${t('planning.budgets.tapHint')}`
+      : t('planning.budgets.scopeFrom', { account: accountName(scope) });
+
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <ScrollView>
         <BentoPage>
-          <Text variant="title">{t('planning.hubTitle')}</Text>
+          <View style={styles.titleRow}>
+            <Text variant="title">{t('planning.hubTitle')}</Text>
+            {budget ? (
+              <View style={styles.monthPill}>
+                <Text variant="button">{monthLabel}</Text>
+              </View>
+            ) : null}
+          </View>
 
           {!active ? (
             <Text muted>{t('finance.noHousehold')}</Text>
@@ -160,6 +205,7 @@ export default function PlanScreen() {
                       </Text>
                     </ProgressRing>
                     <View style={styles.ringMain}>
+                      <Text variant="caption" muted>{t('planning.plan.monthBudget', { month: monthLabel })}</Text>
                       <Text variant="title">{formatAmount(Math.abs(agg.remainingMinor), ccy)}</Text>
                       {agg.remainingMinor < 0 ? (
                         <Text variant="moneyMin" style={styles.over}>
@@ -185,47 +231,70 @@ export default function PlanScreen() {
                     <Card style={styles.budgetsTile}>
                       <View style={styles.cardHeader}>
                         <Text variant="subheading">{t('planning.budgets.title')}</Text>
-                        <Pressable accessibilityRole="button" onPress={() => router.push('/finance/budgets')}>
-                          <Text variant="caption" style={styles.manage}>
-                            {t('planning.plan.manage')}
-                          </Text>
-                        </Pressable>
+                        {accounts.length > 1 ? (
+                          <Select
+                            accessibilityLabel={t('planning.budgets.title')}
+                            options={scopeOptions}
+                            value={scope}
+                            onChange={setScope}
+                            style={styles.scopeSelect}
+                          />
+                        ) : null}
                       </View>
-                      {status.map((row) => {
-                        const remaining = budgetRemainingMinor(row.limit_minor, row.spent_minor);
-                        return (
-                          <Pressable
-                            key={row.allocation_id}
-                            accessibilityRole="button"
-                            accessibilityLabel={categoryName(row.category_id)}
-                            onPress={() => router.push('/finance/budgets')}
-                            style={({ pressed }) => [styles.allocRow, pressed ? styles.pressed : null]}
-                          >
-                            <View style={styles.allocHeader}>
-                              <Text variant="button" numberOfLines={1} style={styles.allocName}>
-                                {categoryName(row.category_id)}
+                      <Text variant="caption" muted>{scopeCaption}</Text>
+
+                      {scopedStatus.length === 0 ? (
+                        <Text variant="caption" muted style={styles.scopeEmpty}>
+                          {t('planning.budgets.noneInScope', { account: accountName(scope) })}
+                        </Text>
+                      ) : (
+                        scopedStatus.map((row) => {
+                          const remaining = budgetRemainingMinor(row.limit_minor, row.spent_minor);
+                          return (
+                            <Pressable
+                              key={row.allocation_id}
+                              accessibilityRole="button"
+                              accessibilityLabel={categoryName(row.category_id)}
+                              onPress={() => router.push('/finance/budgets')}
+                              style={({ pressed }) => [styles.allocRow, pressed ? styles.pressed : null]}
+                            >
+                              <View style={styles.allocHeader}>
+                                <View style={styles.catIcon}>
+                                  <Feather name={categoryIcon(categoryName(row.category_id))} size={16} color={palette.primary} />
+                                </View>
+                                <Text variant="button" numberOfLines={1} style={styles.allocName}>
+                                  {categoryName(row.category_id)}
+                                </Text>
+                                <Text variant="moneyMin" style={remaining < 0 ? styles.over : styles.left}>
+                                  {remaining < 0
+                                    ? t('planning.budgets.overBy', { amount: formatAmount(-remaining, row.currency_code) })
+                                    : t('planning.budgets.left', { amount: formatAmount(remaining, row.currency_code) })}
+                                </Text>
+                                <Feather name="edit-2" size={14} color={palette.textMuted} />
+                              </View>
+                              <ProgressBar
+                                fraction={spentFraction(row.limit_minor, row.spent_minor)}
+                                state={meterState(row.limit_minor, row.spent_minor)}
+                              />
+                              <Text variant="caption" muted style={styles.allocCaption}>
+                                {t('planning.budgets.spentOf', {
+                                  spent: formatAmount(row.spent_minor, row.currency_code),
+                                  limit: formatAmount(row.limit_minor, row.currency_code),
+                                })}{' · '}
+                                {t('planning.budgets.paidFrom', { account: accountName(row.account_id) })}
                               </Text>
-                              <Text variant="moneyMin" style={remaining < 0 ? styles.over : styles.left}>
-                                {remaining < 0
-                                  ? t('planning.budgets.overBy', { amount: formatAmount(-remaining, row.currency_code) })
-                                  : t('planning.budgets.left', { amount: formatAmount(remaining, row.currency_code) })}
-                              </Text>
-                              <Feather name="edit-2" size={14} color={palette.textMuted} />
-                            </View>
-                            <ProgressBar
-                              fraction={spentFraction(row.limit_minor, row.spent_minor)}
-                              state={meterState(row.limit_minor, row.spent_minor)}
-                            />
-                            <Text variant="caption" muted>
-                              {t('planning.budgets.spentOf', {
-                                spent: formatAmount(row.spent_minor, row.currency_code),
-                                limit: formatAmount(row.limit_minor, row.currency_code),
-                              })}{' · '}
-                              {t('planning.budgets.paidFrom', { account: accountName(row.account_id) })}
-                            </Text>
-                          </Pressable>
-                        );
-                      })}
+                            </Pressable>
+                          );
+                        })
+                      )}
+
+                      <Pressable
+                        accessibilityRole="button"
+                        onPress={() => router.push('/finance/budgets')}
+                        style={({ pressed }) => [styles.addRow, pressed ? styles.pressed : null]}
+                      >
+                        <Text variant="button" style={styles.addRowText}>{t('planning.budgets.addCategory')}</Text>
+                      </Pressable>
                     </Card>
                   ) : null}
                 </BentoRow>
@@ -241,29 +310,24 @@ export default function PlanScreen() {
               <BentoRow>
                 {/* Savings goals — inline progress + Contribute (opens the Goals screen). */}
                 <Card style={styles.tile}>
-                  <View style={styles.cardHeader}>
-                    <Text variant="subheading">{t('planning.goals.title')}</Text>
-                    <Pressable accessibilityRole="button" onPress={() => router.push('/finance/goals')}>
-                      <Text variant="caption" style={styles.manage}>{t('planning.plan.manage')}</Text>
-                    </Pressable>
-                  </View>
+                  <Text variant="subheading">{t('planning.goals.title')}</Text>
                   {goalRows.length === 0 ? (
-                    <Pressable accessibilityRole="button" onPress={() => router.push('/finance/goals')}>
-                      <Text variant="caption" style={styles.addLink}>{t('planning.goals.addTitle')}</Text>
-                    </Pressable>
+                    <Text variant="caption" muted style={styles.scopeEmpty}>{t('planning.goals.empty')}</Text>
                   ) : (
                     goalRows.map((g) => {
                       const saved = goalStatus[g.id]?.saved_minor ?? 0;
                       const ratio = progressRatio(saved, g.target_minor);
+                      const reached = ratio >= 1;
                       return (
                         <View key={g.id} style={styles.planItem}>
                           <View style={styles.allocHeader}>
                             <Text variant="button" numberOfLines={1} style={styles.allocName}>{g.name}</Text>
-                            <Text variant="caption" style={styles.pct}>
-                              {t('planning.plan.usedPct', { pct: Math.round(ratio * 100) })}
+                            <Text variant="caption" style={reached ? styles.reached : styles.pct}>
+                              {reached ? t('planning.goals.reached') : t('planning.plan.usedPct', { pct: Math.round(ratio * 100) })}
                             </Text>
                           </View>
-                          <ProgressBar fraction={ratio} />
+                          {/* Warn (amber) while progressing; positive (green) when reached (§2.2). */}
+                          <ProgressBar fraction={ratio} state={reached ? 'normal' : 'full'} />
                           <View style={styles.allocHeader}>
                             <Text variant="caption" muted>
                               {formatAmount(saved, g.currency_code)} / {formatAmount(g.target_minor, g.currency_code)}
@@ -279,6 +343,13 @@ export default function PlanScreen() {
                       );
                     })
                   )}
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => router.push('/finance/goals')}
+                    style={({ pressed }) => [styles.addRow, pressed ? styles.pressed : null]}
+                  >
+                    <Text variant="button" style={styles.addRowText}>{t('planning.goals.addGoal')}</Text>
+                  </Pressable>
                 </Card>
 
                 {/* Debts — inline balance + Record payment (opens the Debts screen). */}
@@ -292,9 +363,7 @@ export default function PlanScreen() {
                     ) : null}
                   </View>
                   {debtRows.length === 0 ? (
-                    <Pressable accessibilityRole="button" onPress={() => router.push('/finance/debts')}>
-                      <Text variant="caption" style={styles.addLink}>{t('planning.debts.addTitle')}</Text>
-                    </Pressable>
+                    <Text variant="caption" muted style={styles.scopeEmpty}>{t('planning.debts.empty')}</Text>
                   ) : (
                     debtRows.map((d) => {
                       const bal = debtStatus[d.id]?.balance_minor ?? d.principal_minor;
@@ -323,6 +392,13 @@ export default function PlanScreen() {
                       );
                     })
                   )}
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => router.push('/finance/debts')}
+                    style={({ pressed }) => [styles.addRow, pressed ? styles.pressed : null]}
+                  >
+                    <Text variant="button" style={styles.addRowText}>{t('planning.debts.addDebt')}</Text>
+                  </Pressable>
                 </Card>
               </BentoRow>
             </>
@@ -335,6 +411,38 @@ export default function PlanScreen() {
 
 const makeStyles = (c: Palette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: c.background },
+  titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  monthPill: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.pill,
+    backgroundColor: c.surface,
+    borderWidth: 1,
+    borderColor: c.border,
+  },
+  scopeSelect: { minWidth: 150 },
+  scopeEmpty: { paddingVertical: spacing.sm },
+  catIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: radius.md,
+    backgroundColor: c.primaryTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  allocCaption: { marginStart: 34 + spacing.md },
+  reached: { color: c.positiveStrong },
+  addRow: {
+    minHeight: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: c.border,
+    marginTop: spacing.sm,
+  },
+  addRowText: { color: c.primary },
   ringRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg },
   ringCenter: { textAlign: 'center' },
   ringMain: { flex: 1, gap: 2 },
@@ -342,7 +450,6 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   over: { color: c.danger },
   safeSpend: { color: c.brand },
   cardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  manage: { color: c.brand },
   allocRow: { gap: spacing.xs, paddingVertical: spacing.xs },
   allocHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   allocName: { flex: 1 },
@@ -350,7 +457,6 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   tile: { flex: 1 },
   planItem: { gap: spacing.xs, paddingVertical: spacing.sm },
   pct: { color: c.accent },
-  addLink: { color: c.brand },
   recordLink: { color: c.tertiary },
   smallBtn: { minHeight: 34, paddingHorizontal: spacing.md, borderRadius: radius.pill },
   // 2a desktop: ring beside the budget meters (weights collapse to a stack on mobile).
