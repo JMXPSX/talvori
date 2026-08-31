@@ -26,8 +26,12 @@
 
 - [ ] **Talvori money-model alignment (Step 3)** — sliced, safest-first:
   - **Slice A** ✅ (pure UI/API, no migration): #1 account rename · #7 quick actions · #8 transfer
-    edit destructive-safe · #4 dashboard account-scope pills (hero/donut/activity scope by account;
-    the full spend-vs-budget-ratio hero scoping awaits the spent-vs-budget hero + #3).
+    edit destructive-safe · #4 account-scoped dashboard ✅ **complete** — pills scope donut/activity
+    **and** the hero, which is now the current month's **spend-vs-budget ratio** (spent / limit,
+    % used, remaining, progress track). Both halves scope by funding account (`budget_status`
+    filtered by `account_id`; spend follows the category, which maps to one account per #3).
+    Premium's consolidated total is preserved as a quiet caption. No budget → falls back to the
+    balance hero (premium consolidated / free per-currency). No migration.
     **→ CHECKPOINT: Slice B starts with a hand-applied migration (#2).**
   - **Slice B** (data + ledger): #2 payroll ✅ (NO-OP — live data already has a `Salary` category +
     no payroll account; a flag would contradict the decision) · #5 By-account ledger ✅ (pure

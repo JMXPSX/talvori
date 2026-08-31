@@ -216,6 +216,10 @@
       "deleteFailed": "Couldn't delete that."
     },
     "spendingByCategory": "Spending by category",
+    "hero": {
+      "ofBudget": "of {{amount}} budgeted",
+      "balance": "Balance {{amount}}"
+    },
     "byAccount": {
       "title": "By account"
     },

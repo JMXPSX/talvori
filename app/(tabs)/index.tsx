@@ -26,7 +26,15 @@ import { sumByCurrency, sumInReporting } from '@/features/finance/fx';
 import { monthKeyOf } from '@/features/finance/insights';
 import { accountLedger } from '@/features/finance/ledger';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
-import type { AccountBalanceRow, AccountRow, LatestFxRateRow } from '@/lib/database.types';
+import { aggregateBudget, pickCurrentBudget } from '@/features/finance/plan';
+import { listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
+import type {
+  AccountBalanceRow,
+  AccountRow,
+  BudgetRow,
+  BudgetStatusRow,
+  LatestFxRateRow,
+} from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
 
@@ -49,6 +57,8 @@ export default function HomeScreen() {
   const [balances, setBalances] = useState<Record<string, AccountBalanceRow>>({});
   const [rates, setRates] = useState<LatestFxRateRow[]>([]);
   const [txns, setTxns] = useState<TransactionWithRefs[]>([]);
+  const [budget, setBudget] = useState<BudgetRow | null>(null);
+  const [budgetStatus, setBudgetStatus] = useState<BudgetStatusRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
@@ -61,16 +71,23 @@ export default function HomeScreen() {
     setErrorKey(null);
     setLoading(true);
     try {
-      const [accs, bals, fx, tx] = await Promise.all([
+      const [accs, bals, fx, tx, budgets] = await Promise.all([
         listAccounts(active.id),
         listAccountBalances(active.id),
         listLatestRates(active.id),
         listTransactions(active.id),
+        listBudgets(active.id),
       ]);
       setAccounts(accs);
       setBalances(Object.fromEntries(bals.map((b) => [b.account_id, b])));
       setRates(fx);
       setTxns(tx);
+      // Money-model decision #4: the hero is the current month's spend-vs-budget
+      // ratio. Load the active budget + its per-allocation status (each allocation
+      // names a funding account, so the pills can scope both halves of the ratio).
+      const current = pickCurrentBudget(budgets, new Date().toISOString());
+      setBudget(current);
+      setBudgetStatus(current ? await listBudgetStatus(current.id) : []);
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -123,6 +140,14 @@ export default function HomeScreen() {
   const consolidated = has('multi_currency_dashboard')
     ? sumInReporting(items, reporting, makeRateLookup(rates))
     : null;
+  // Spend-vs-budget hero (#4): scope both halves by the funding account. Each
+  // allocation names its account, so filtering the status rows partitions the
+  // ratio per account (spend follows the category, which maps to one account).
+  const scopedStatus = scope ? budgetStatus.filter((r) => r.account_id === scope) : budgetStatus;
+  const budgetAgg = aggregateBudget(scopedStatus);
+  const budgetCcy = budget?.currency_code ?? reporting;
+  const budgetPct = Math.round(budgetAgg.fraction * 100);
+  const heroFillPct = `${Math.min(100, Math.max(0, budgetPct))}%` as const;
   // Free tier: honest per-currency subtotals (no locked hero — F05).
   const perCurrency = sumByCurrency(items);
   const multiCurrency = perCurrency.length > 1;
@@ -191,7 +216,46 @@ export default function HomeScreen() {
           {/* Row 1 — the balance hero leads; quick actions ride beside it on wide. */}
           <BentoRow>
             <View style={styles.heroSlot}>
-              {has('multi_currency_dashboard') ? (
+              {budget ? (
+                <View style={styles.hero}>
+                  <Text variant="eyebrow" style={styles.heroLabel}>{budget.name}</Text>
+                  <Text variant="title" style={styles.heroAmount}>
+                    {formatAmount(budgetAgg.spentMinor, budgetCcy)}
+                  </Text>
+                  <Text variant="caption" style={styles.heroHint}>
+                    {t('finance.hero.ofBudget', { amount: formatAmount(budgetAgg.limitMinor, budgetCcy) })}
+                    {' · '}
+                    {t('planning.plan.usedPct', { pct: budgetPct })}
+                  </Text>
+                  <View style={styles.heroTrack}>
+                    <View
+                      style={[
+                        styles.heroFill,
+                        { width: heroFillPct },
+                        budgetAgg.state === 'over' ? styles.heroFillOver : null,
+                      ]}
+                    />
+                  </View>
+                  <Text
+                    variant="caption"
+                    style={budgetAgg.remainingMinor < 0 ? styles.heroOver : styles.heroHint}
+                  >
+                    {budgetAgg.remainingMinor < 0
+                      ? t('planning.budgets.overBy', {
+                          amount: formatAmount(-budgetAgg.remainingMinor, budgetCcy),
+                        })
+                      : t('planning.budgets.left', {
+                          amount: formatAmount(budgetAgg.remainingMinor, budgetCcy),
+                        })}
+                  </Text>
+                  {/* Premium keeps its consolidated total, now a quiet caption. */}
+                  {has('multi_currency_dashboard') && consolidated ? (
+                    <Text variant="caption" style={styles.heroBalance}>
+                      {t('finance.hero.balance', { amount: formatAmount(consolidated.totalMinor, reporting) })}
+                    </Text>
+                  ) : null}
+                </View>
+              ) : has('multi_currency_dashboard') ? (
                 <View style={styles.hero}>
                   <Text variant="eyebrow" style={styles.heroLabel}>
                     {t('fx.reportingTotal', { currency: reporting })}
@@ -449,6 +513,17 @@ const styles = StyleSheet.create({
   heroLabel: { color: palette.white, opacity: 0.85 },
   heroAmount: { color: palette.white, fontSize: 36 },
   heroHint: { color: palette.white, opacity: 0.9 },
+  heroTrack: {
+    height: 6,
+    borderRadius: radius.pill,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    overflow: 'hidden',
+    marginTop: spacing.xs,
+  },
+  heroFill: { height: '100%', borderRadius: radius.pill, backgroundColor: palette.white },
+  heroFillOver: { backgroundColor: palette.accent },
+  heroOver: { color: palette.accent },
+  heroBalance: { color: palette.white, opacity: 0.85, marginTop: spacing.xs },
   heroRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   heroRowLabel: { color: palette.white, opacity: 0.9, flex: 1 },
   heroRowValue: { color: palette.white },

@@ -216,6 +216,10 @@
       "deleteFailed": "Hindi nabura iyon."
     },
     "spendingByCategory": "Gastos ayon sa kategorya",
+    "hero": {
+      "ofBudget": "sa {{amount}} na budget",
+      "balance": "Balanse {{amount}}"
+    },
     "byAccount": {
       "title": "Ayon sa account"
     },

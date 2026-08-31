@@ -216,6 +216,10 @@
       "deleteFailed": "تعذّر حذف ذلك."
     },
     "spendingByCategory": "الإنفاق حسب الفئة",
+    "hero": {
+      "ofBudget": "من {{amount}} مخصّصة",
+      "balance": "الرصيد {{amount}}"
+    },
     "byAccount": {
       "title": "حسب الحساب"
     },
