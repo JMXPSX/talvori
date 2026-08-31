@@ -164,19 +164,53 @@ export async function deleteList(id: string): Promise<void> {
   if (error) fail('grocery.errors.deleteFailed', error);
 }
 
-/** Complete a trip: sums purchased items into one expense; returns its tx id. */
+/**
+ * Complete a trip → ONE expense; returns its tx id (§6.8 Record purchase).
+ * `store` names the expense; `actualTotalMinor` overrides the item sum when the
+ * shopper enters a different total actually paid (migration 16).
+ */
 export async function completeList(
   listId: string,
   accountId: string,
   categoryId?: string,
+  store?: string,
+  actualTotalMinor?: number,
+  /** false = post the expense but keep the list active (Shop's evergreen list). */
+  complete = true,
 ): Promise<string> {
   const { data, error } = await getSupabase().rpc('complete_grocery_list', {
     _list_id: listId,
     _account_id: accountId,
     _category_id: categoryId ?? null,
+    _store: store?.trim() || null,
+    _actual_total_minor: actualTotalMinor ?? null,
+    _complete: complete,
   });
   if (error) fail('grocery.errors.checkoutFailed', error);
   return data as string;
+}
+
+/** Last unit price paid per item name — seeds Buy-again + estimates (§6.8). */
+export interface PriceHistoryEntry {
+  name: string;
+  unit_price_minor: number;
+  currency_code: string;
+}
+export async function listPriceHistory(householdId: string): Promise<PriceHistoryEntry[]> {
+  const { data, error } = await getSupabase().rpc('grocery_price_history', {
+    _household_id: householdId,
+  });
+  if (error) fail('grocery.errors.loadFailed', error);
+  return (data ?? []) as PriceHistoryEntry[];
+}
+
+/** Recent store names for the finish-trip store chips (§6.8). */
+export async function listRecentStores(householdId: string): Promise<string[]> {
+  const { data, error } = await getSupabase().rpc('grocery_recent_stores', {
+    _household_id: householdId,
+  });
+  if (error) fail('grocery.errors.loadFailed', error);
+  return ((data ?? []) as { store: string }[]).map((r) => r.store);
 }
 
 /** Link (or clear) the catalog product a list item refers to. */
