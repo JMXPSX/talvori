@@ -28,14 +28,20 @@ export function ActiveHouseholdProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
   const [households, setHouseholds] = useState<HouseholdRow[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  // The user id whose households are currently loaded. `loading` is DERIVED from
+  // this in render (below), not stored as its own state — so the instant the
+  // session changes (e.g. right after login) we report loading=true synchronously,
+  // before the async fetch runs. Storing loading as state instead let the auth gate
+  // observe a stale "not-loading + empty households" frame right after login and
+  // wrongly bounce existing members to onboarding.
+  const [loadedUserId, setLoadedUserId] = useState<string | null>(null);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     if (!session) {
       setHouseholds([]);
       setActiveId(null);
-      setLoading(false);
+      setLoadedUserId(null);
       return;
     }
     setErrorKey(null);
@@ -46,13 +52,18 @@ export function ActiveHouseholdProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
-      setLoading(false);
+      setLoadedUserId(session.user.id);
     }
   }, [session]);
 
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  // Derived, not stored (see the note on `loadedUserId`): we're "loading" whenever
+  // there is a session whose households haven't been fetched yet. This is stable
+  // within a render, so the auth gate never acts on a stale post-login frame.
+  const loading = session ? loadedUserId !== session.user.id : false;
 
   const value = useMemo<ActiveHouseholdValue>(() => {
     const active = households.find((h) => h.id === activeId) ?? households[0] ?? null;
