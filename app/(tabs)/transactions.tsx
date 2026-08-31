@@ -10,13 +10,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { BentoPage, Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
-import { listTransactions, type TransactionWithRefs } from '@/features/finance/api';
+import { BentoPage, Card, Chip, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
+import { listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { monthFlow } from '@/features/finance/flow';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
 import { monthKeyOf } from '@/features/finance/insights';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
-import type { LatestFxRateRow } from '@/lib/database.types';
+import type { AccountRow, LatestFxRateRow } from '@/lib/database.types';
 import { useIsWideLayout } from '@/lib/breakpoints';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
@@ -97,6 +97,8 @@ export default function TransactionsScreen() {
     new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric' }).format(new Date(iso));
 
   const [items, setItems] = useState<TransactionWithRefs[]>([]);
+  const [accounts, setAccounts] = useState<AccountRow[]>([]);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
   const [rates, setRates] = useState<LatestFxRateRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
@@ -108,9 +110,14 @@ export default function TransactionsScreen() {
     }
     setErrorKey(null);
     try {
-      const [tx, fx] = await Promise.all([listTransactions(active.id), listLatestRates(active.id)]);
+      const [tx, fx, accs] = await Promise.all([
+        listTransactions(active.id),
+        listLatestRates(active.id),
+        listAccounts(active.id),
+      ]);
       setItems(tx);
       setRates(fx);
+      setAccounts(accs);
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -163,11 +170,16 @@ export default function TransactionsScreen() {
     );
   }
 
-  const groups = groupByDay(items, i18n.language, t);
+  // Account filter (same scope model as Home): null → all accounts.
+  const scope =
+    selectedAccountId && accounts.some((a) => a.id === selectedAccountId) ? selectedAccountId : null;
+  const visible = scope ? items.filter((tx) => tx.account_id === scope) : items;
+  const scopedName = accounts.find((a) => a.id === scope)?.name ?? '';
+  const groups = groupByDay(visible, i18n.language, t);
   // In / Out / Net for the month, consolidated into the reporting currency
-  // (transfers excluded) — the prototype's Activity summary header.
+  // (transfers excluded) — the prototype's Activity summary header. Scoped too.
   const reporting = active.reporting_currency_code;
-  const flow = monthFlow(items, monthKeyOf(new Date().toISOString()), reporting, makeRateLookup(rates));
+  const flow = monthFlow(visible, monthKeyOf(new Date().toISOString()), reporting, makeRateLookup(rates));
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
@@ -185,7 +197,31 @@ export default function TransactionsScreen() {
           </Pressable>
         </View>
 
-        {items.length > 0 ? (
+        {accounts.length > 1 ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scopePills}
+          >
+            <Chip
+              label={t('finance.allAccounts')}
+              selected={scope === null}
+              role="radio"
+              onPress={() => setSelectedAccountId(null)}
+            />
+            {accounts.map((a) => (
+              <Chip
+                key={a.id}
+                label={a.name}
+                selected={scope === a.id}
+                role="radio"
+                onPress={() => setSelectedAccountId(a.id)}
+              />
+            ))}
+          </ScrollView>
+        ) : null}
+
+        {visible.length > 0 ? (
           <Card style={styles.summary}>
             <View style={styles.summaryCol}>
               <Text variant="caption" muted>{t('finance.ledger.in')}</Text>
@@ -220,6 +256,10 @@ export default function TransactionsScreen() {
             ctaLabel={t('finance.addExpense')}
             onCta={() => router.push('/finance/entry?type=expense')}
           />
+        ) : visible.length === 0 ? (
+          <Text muted style={styles.scopeEmpty}>
+            {t('finance.activity.noneForAccount', { account: scopedName })}
+          </Text>
         ) : isWide ? (
           <Card style={styles.table}>
             <View style={[styles.trow, styles.thead]}>
@@ -230,7 +270,7 @@ export default function TransactionsScreen() {
               <Text variant="caption" muted style={[styles.th, styles.cAmt]}>{t('finance.cols.amount')}</Text>
               <View style={styles.cEdit} />
             </View>
-            {items.map((tx, index) => {
+            {visible.map((tx, index) => {
               const positive = tx.direction === 'in';
               const tint = catTint(palette, tx.type);
               // Money-model #8/#6: only income/expense rows are editable; transfers and the
@@ -339,7 +379,7 @@ export default function TransactionsScreen() {
         )}
 
         {/* §6.6 footer hint — how to fix a wrong entry. */}
-        {items.length > 0 ? (
+        {visible.length > 0 ? (
           <Text variant="caption" muted style={styles.footerHint}>
             {t('finance.activity.footerHint')}
           </Text>
@@ -363,6 +403,8 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     alignSelf: 'center',
   },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  scopePills: { gap: spacing.sm, paddingVertical: spacing.xs },
+  scopeEmpty: { paddingVertical: spacing.lg, textAlign: 'center' },
   summary: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   summaryCol: { flex: 1, gap: 2, alignItems: 'center' },
   inAmt: { color: c.positiveStrong },

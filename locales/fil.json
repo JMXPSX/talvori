@@ -294,7 +294,8 @@
     },
     "activity": {
       "footerHint": "I-tap ang ✎ para itama ang maling entry — halaga, account, kategorya, petsa — o burahin ito sa loob.",
-      "empty": "Wala pa rito. Lilitaw dito ang kita at gastos na idadagdag mo."
+      "empty": "Wala pa rito. Lilitaw dito ang kita at gastos na idadagdag mo.",
+      "noneForAccount": "Wala pang transaksyon para sa {{account}}."
     }
   },
   "planning": {
