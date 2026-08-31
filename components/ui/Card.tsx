@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 
 import { elevation, radius, spacing, webFocusRing } from '@/components/theme';
-import { useThemedStyles, type Palette } from '@/components/ThemeProvider';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 
 export interface CardProps {
   children: ReactNode;
@@ -36,7 +36,10 @@ type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focus
 
 export function Card({ children, accented = false, onPress, accessibilityLabel, style }: CardProps) {
   const styles = useThemedStyles(makeStyles);
-  const base = [styles.card, accented ? styles.accented : null, style];
+  const { isDark } = useTheme();
+  // The tile's depth comes from an ambient shadow — invisible on the dark canvas,
+  // so a hairline substitutes to keep the tile boundary crisp there.
+  const base = [styles.card, isDark ? styles.bordered : null, accented ? styles.accented : null, style];
 
   if (!onPress) {
     return <View style={base}>{children}</View>;
@@ -73,6 +76,7 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   accented: {
     backgroundColor: c.accentMuted,
   },
+  bordered: { borderWidth: 1, borderColor: c.border },
   hovered: { backgroundColor: c.field },
   pressed: { opacity: 0.9 },
 });

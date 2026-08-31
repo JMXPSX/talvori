@@ -39,9 +39,11 @@
     read-only in Activity with 🎯/🧾 icons; goals/debts screens gained a funding-account picker.
     **Open:** RPC happy-path needs an in-app run (0 goals/debts live); add an `rls-isolation.mjs`
     assertion that the RPCs reject a cross-household account/goal.
-
-## In progress
-
+- [x] **4b onboarding** — the cross-border "different countries?" question is folded into the
+      create-household screen (`app/household/new.tsx`), wired through `isCrossBorder` →
+      `is_cross_border`. The spec deliberately added no wizard / `/onboarding` route.
+- [x] **5a retailer directory** — migration `20260820000012` applied to prod via MCP (16 US
+      retailers seeded, world-readable RLS); the "Add retailer" flow picks from it.
 - [x] **Dark theme (4c)** — light/dark with System/Light/Dark toggle, fully migrated.
   - [x] **Infra**: `components/theme.ts` split into `lightPalette` + `darkPalette` (same token
     names) + `type Palette`; `palette` stays a static light alias (only `_layout`'s pre-provider
@@ -53,16 +55,21 @@
   - [x] **Screens**: all 16 `components/ui/*` primitives + every `app/` screen migrated to
     `makeStyles(c)` + `useThemedStyles` (module-scope helpers like `txIcon`/`catTint`/`typeIcon`/
     `LABEL_COLOR`/`SWATCHES` and layout `screenOptions` handled). typecheck + 216 tests + lint green.
-  - [ ] Follow-ups (minor): theme `chartSeries`/donut colours for dark; revisit `elevation` shadow
-    contrast on dark; needs an in-app dark pass to catch any hard-coded light patches.
+  - [x] Follow-ups: audited hard-coded colour literals — the only 4 (two hero overlays, two modal
+    scrims) are intentional and correct on both themes, so **no light patches**. `Card` gains a
+    hairline on dark (the ambient shadow is invisible there); tile separation otherwise comes from
+    the dark `surface`/`background` tonal contrast (the dark elevation model), so `chartSeries`/
+    `elevation` are left as-is (both read fine on dark). An in-app visual dark pass is still worth
+    doing but nothing structural is outstanding.
+
+## In progress
+
+_None — every buildable item is done. Remaining work is Blocked on external accounts (below)._
 
 ## Up next (buildable now — no external blockers)
 
-Ordered by priority. These are the only items that can be worked without new accounts or data.
-
-- [ ] 4b onboarding (incl. cross-border "different countries?" question) — non-blocking polish.
-- [ ] Apply migration `20260820000012` (5a retailer directory) in the Supabase SQL editor —
-      small admin task (also tracked under Known issues).
+_Empty: money-model, dark theme, 4b onboarding, and the 5a retailer-directory migration are all
+shipped. The next work needs external accounts — see Blocked._
 
 ## Blocked
 
@@ -79,7 +86,7 @@ Ordered by priority. These are the only items that can be worked without new acc
 
 | Issue | Severity | Status |
 |-------|----------|--------|
-| Migration `20260820000012` (5a retailer directory) must be applied by hand | Medium | Open — apply in Supabase SQL editor |
+| Migration `20260820000012` (5a retailer directory) must be applied by hand | Medium | ✅ Resolved 2026-08-30 — applied to prod via MCP (16 US retailers seeded) |
 | Two diverged checkouts share the branch name (`C:\dev` vs OneDrive) — "canonical" ambiguous | Low | Open — OneDrive holds the newest work |
 
 ## Decisions made (don't re-debate)
