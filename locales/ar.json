@@ -13,8 +13,8 @@
   "nav": {
     "home": "الرئيسية",
     "budget": "الميزانية",
-    "transactions": "المعاملات",
-    "grocery": "البقالة",
+    "transactions": "النشاط",
+    "grocery": "تسوّق",
     "more": "المزيد"
   },
   "auth": {
@@ -63,9 +63,9 @@
     "homeBody": "ستظهر هنا الصورة المالية لأسرتك.",
     "budgetTitle": "الميزانية",
     "budgetBody": "ستظهر هنا الميزانيات والمخصصات.",
-    "transactionsTitle": "المعاملات",
+    "transactionsTitle": "النشاط",
     "transactionsBody": "ستظهر هنا الإيرادات والمصروفات والتحويلات.",
-    "groceryTitle": "البقالة",
+    "groceryTitle": "تسوّق",
     "groceryBody": "ستظهر هنا قوائم التسوق المشتركة.",
     "moreTitle": "المزيد",
     "moreBody": "ستظهر هنا الأسرة والأهداف والأمان والإعدادات."
@@ -235,7 +235,7 @@
     }
   },
   "planning": {
-    "hubTitle": "التخطيط",
+    "hubTitle": "الخطة",
     "plan": {
       "usedPct": "{{pct}}% مُستخدَم",
       "safePerDay": "آمن للإنفاق {{amount}}/يوم",

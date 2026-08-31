@@ -13,8 +13,8 @@
   "nav": {
     "home": "Home",
     "budget": "Badyet",
-    "transactions": "Mga Transaksyon",
-    "grocery": "Grocery",
+    "transactions": "Aktibidad",
+    "grocery": "Shop",
     "more": "Iba pa"
   },
   "auth": {
@@ -63,9 +63,9 @@
     "homeBody": "Dito lalabas ang larawan ng pananalapi ng inyong sambahayan.",
     "budgetTitle": "Badyet",
     "budgetBody": "Dito lalabas ang mga badyet at alokasyon.",
-    "transactionsTitle": "Mga Transaksyon",
+    "transactionsTitle": "Aktibidad",
     "transactionsBody": "Dito lalabas ang kita, gastos at mga transfer.",
-    "groceryTitle": "Grocery",
+    "groceryTitle": "Shop",
     "groceryBody": "Dito lalabas ang mga shared na listahan ng pamimili.",
     "moreTitle": "Iba pa",
     "moreBody": "Dito lalabas ang sambahayan, mga layunin, seguridad at settings."
@@ -235,7 +235,7 @@
     }
   },
   "planning": {
-    "hubTitle": "Pagpaplano",
+    "hubTitle": "Plano",
     "plan": {
       "usedPct": "{{pct}}% nagamit",
       "safePerDay": "Ligtas gastusin {{amount}}/araw",

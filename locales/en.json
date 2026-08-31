@@ -13,8 +13,8 @@
   "nav": {
     "home": "Home",
     "budget": "Budget",
-    "transactions": "Transactions",
-    "grocery": "Grocery",
+    "transactions": "Activity",
+    "grocery": "Shop",
     "more": "More"
   },
   "auth": {
@@ -63,9 +63,9 @@
     "homeBody": "Your household's financial picture will appear here.",
     "budgetTitle": "Budget",
     "budgetBody": "Budgets and allocations will appear here.",
-    "transactionsTitle": "Transactions",
+    "transactionsTitle": "Activity",
     "transactionsBody": "Income, expenses and transfers will appear here.",
-    "groceryTitle": "Grocery",
+    "groceryTitle": "Shop",
     "groceryBody": "Shared shopping lists will appear here.",
     "moreTitle": "More",
     "moreBody": "Household, goals, security and settings will appear here."
@@ -235,7 +235,7 @@
     }
   },
   "planning": {
-    "hubTitle": "Planning",
+    "hubTitle": "Plan",
     "plan": {
       "usedPct": "{{pct}}% used",
       "safePerDay": "Safe to spend {{amount}}/day",
