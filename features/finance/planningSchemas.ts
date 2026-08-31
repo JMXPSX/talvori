@@ -33,6 +33,8 @@ export type CreateBudgetInput = z.infer<typeof createBudgetSchema>;
 export const addAllocationSchema = z.object({
   categoryId: z.string().uuid().optional(),
   limitMajor: z.coerce.number().nonnegative(),
+  // Money-model #3: every allocation names its funding account.
+  accountId: z.string().uuid(),
 });
 export type AddAllocationInput = z.infer<typeof addAllocationSchema>;
 

@@ -18,6 +18,7 @@ const row = (limit: number, spent: number): BudgetStatusRow => ({
   currency_code: 'PHP',
   limit_minor: limit,
   spent_minor: spent,
+  account_id: null,
 });
 
 describe('meterState / spentFraction', () => {

@@ -88,6 +88,7 @@ export async function addAllocation(input: {
   householdId: string;
   categoryId?: string;
   limitMinor: number;
+  accountId: string;
 }): Promise<BudgetAllocationRow> {
   const { data, error } = await getSupabase()
     .from('budget_allocations')
@@ -96,6 +97,7 @@ export async function addAllocation(input: {
       household_id: input.householdId,
       category_id: input.categoryId ?? null,
       limit_minor: input.limitMinor,
+      account_id: input.accountId,
     })
     .select('*')
     .single();

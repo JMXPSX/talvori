@@ -22,7 +22,7 @@ import {
   TextField,
   useActionSheet,
 } from '@/components/ui';
-import { listCategories } from '@/features/finance/api';
+import { listAccounts, listCategories } from '@/features/finance/api';
 import {
   addAllocation,
   deleteAllocation,
@@ -33,7 +33,7 @@ import {
 import { addAllocationSchema } from '@/features/finance/planningSchemas';
 import { budgetRemainingMinor } from '@/features/finance/progress';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
-import type { BudgetRow, BudgetStatusRow, CategoryRow } from '@/lib/database.types';
+import type { AccountRow, BudgetRow, BudgetStatusRow, CategoryRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount, formatDateRange, localeTag } from '@/lib/format';
 import { toMinorUnits } from '@/lib/money';
@@ -47,6 +47,7 @@ export default function BudgetsScreen() {
 
   const [budgets, setBudgets] = useState<BudgetRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
+  const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [selected, setSelected] = useState<BudgetRow | null>(null);
   const [statusRows, setStatusRows] = useState<BudgetStatusRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +56,7 @@ export default function BudgetsScreen() {
   // allocation form (contextual to the selected budget)
   const [allocCategory, setAllocCategory] = useState<string | null>(null);
   const [allocLimit, setAllocLimit] = useState('');
+  const [allocAccount, setAllocAccount] = useState<string | null>(null);
   const [allocError, setAllocError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -64,9 +66,15 @@ export default function BudgetsScreen() {
     }
     setErrorKey(null);
     try {
-      const [b, cats] = await Promise.all([listBudgets(active.id), listCategories(active.id, 'expense')]);
+      const [b, cats, accs] = await Promise.all([
+        listBudgets(active.id),
+        listCategories(active.id, 'expense'),
+        listAccounts(active.id),
+      ]);
       setBudgets(b);
       setCategories(cats);
+      setAccounts(accs);
+      setAllocAccount((prev) => prev ?? accs[0]?.id ?? null);
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -150,6 +158,7 @@ export default function BudgetsScreen() {
     const result = validate(addAllocationSchema, {
       categoryId: allocCategory ?? undefined,
       limitMajor: allocLimit === '' ? 0 : allocLimit,
+      accountId: allocAccount ?? undefined,
     });
     if (!result.success) {
       setAllocError('errors.validation');
@@ -161,6 +170,7 @@ export default function BudgetsScreen() {
         householdId: active.id,
         categoryId: result.data.categoryId,
         limitMinor: toMinorUnits(result.data.limitMajor, selected.currency_code),
+        accountId: result.data.accountId,
       });
       setAllocLimit('');
       setStatusRows(await listBudgetStatus(selected.id));
@@ -172,6 +182,11 @@ export default function BudgetsScreen() {
   function categoryName(id: string | null): string {
     if (!id) return t('planning.budgets.uncategorized');
     return categories.find((c) => c.id === id)?.name ?? t('planning.budgets.uncategorized');
+  }
+
+  function accountName(id: string | null): string {
+    if (!id) return t('planning.budgets.unassigned');
+    return accounts.find((a) => a.id === id)?.name ?? t('planning.budgets.unassigned');
   }
 
   return (
@@ -257,6 +272,9 @@ export default function BudgetsScreen() {
                           {formatAmount(row.spent_minor, row.currency_code)} /{' '}
                           {formatAmount(row.limit_minor, row.currency_code)}
                         </Text>
+                        <Text variant="caption" muted>
+                          {t('planning.budgets.paidFrom', { account: accountName(row.account_id) })}
+                        </Text>
                       </View>
 
                       <Pressable
@@ -291,6 +309,20 @@ export default function BudgetsScreen() {
                     selected={c.id === allocCategory}
                     role="radio"
                     onPress={() => setAllocCategory(c.id)}
+                  />
+                ))}
+              </View>
+              <Text variant="caption" muted>
+                {t('planning.budgets.accountLabel')}
+              </Text>
+              <View style={styles.chips}>
+                {accounts.map((a) => (
+                  <Chip
+                    key={a.id}
+                    label={a.name}
+                    selected={a.id === allocAccount}
+                    role="radio"
+                    onPress={() => setAllocAccount(a.id)}
                   />
                 ))}
               </View>

@@ -129,6 +129,7 @@ export interface BudgetAllocationRow {
   household_id: string;
   category_id: string | null;
   limit_minor: number;
+  account_id: string | null; // funding account (money-model #3); null = unassigned
   created_at: string;
 }
 
@@ -140,6 +141,7 @@ export interface BudgetStatusRow {
   currency_code: string;
   limit_minor: number;
   spent_minor: number;
+  account_id: string | null;
 }
 
 export interface SavingsGoalRow {
