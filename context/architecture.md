@@ -172,15 +172,18 @@ fake coupon clipping or bypass retailer account protections.
    read as `{limit, account: 'Checking'}`.
 4. **Dashboard hero is account-scoped** — pills `All · <each account>` filter both halves of the
    spend/budget ratio; Checking and Savings are never silently combined.
-5. **Dashboard "By account"** is the account-ledger surface — one row per account with In/Out/Net
-   for the month (transfers count both legs; goal contributions + debt payments count as Out).
-   Two-way synced with the hero scope; each row carries a ✎ (rename/delete/add).
+5. **Dashboard "By account"** shows one row per account with its **balance** (opening + this
+   month's flows), matching the Flow Prototype's caption "balance · opening + this month". Two-way
+   synced with the hero scope; each row carries a ✎ (rename/delete/add). *(Superseded 2026-08-30:
+   an earlier reading of this decision rendered In/Out/Net per account; reverted to per-account
+   balance to match the prototype — see the dated decision log below.)*
 6. **Goals & debts write to the ledger** — a contribution/payment posts a **read-only** transaction
    (🎯 goal contribution · Goal / 🧾 debt payment · Debt payment) and appends to that goal/debt's
    history. Excluded from budget "Spent"; not editable from Activity (would desync the balance).
-7. **Transfers**: kept in the data model (neutral sign; excluded from In/Out/Net and budget spend;
-   both legs credited in By-account; same-account guard) but **not** in quick actions — the
-   quick-action row is three tiles: **Income · Expense · Compare**.
+7. **Transfers**: kept in the data model (neutral sign; excluded from budget spend; same-account
+   guard). The quick-action row is three tiles: **Income · Expense · Transfer**, matching the Flow
+   Prototype. *(Superseded 2026-08-30: an earlier reading had the third tile as "Compare" with
+   transfers created only from Activity; reverted to Transfer to match the prototype.)*
 8. **Transaction edit is destructive-safe** — ✎ on income/expense rows only, same sheet as
    creation, with a two-tap-confirm delete.
 

@@ -24,8 +24,6 @@ import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { categoryBreakdown, donutArcs } from '@/features/finance/donut';
 import { sumByCurrency, sumInReporting } from '@/features/finance/fx';
-import { monthKeyOf } from '@/features/finance/insights';
-import { accountLedger } from '@/features/finance/ledger';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
 import { aggregateBudget, pickCurrentBudget } from '@/features/finance/plan';
 import { listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
@@ -166,11 +164,6 @@ export default function HomeScreen() {
   // Free tier: honest per-currency subtotals (no locked hero — F05).
   const perCurrency = sumByCurrency(items);
   const multiCurrency = perCurrency.length > 1;
-  // Money-model decision #5: the "By account" ledger — In/Out/Net for the month,
-  // per account, each in its own currency (transfers count both legs). Always over
-  // the full account list, not the current scope (the surface lists every account).
-  const ledger = accountLedger(accounts, txns, monthKeyOf(new Date().toISOString()));
-  const ledgerByAccount = Object.fromEntries(ledger.map((r) => [r.accountId, r]));
   // Two-way sync with the hero scope: tapping a row scopes the dashboard; tapping
   // the account already in scope clears back to All.
   const toggleScope = (id: string) => setSelectedAccountId((cur) => (cur === id ? null : id));
@@ -181,13 +174,11 @@ export default function HomeScreen() {
     color: breakdown.slices[i]?.color ?? palette.border,
   }));
 
-  // Money-model decision #7: three quick actions — Income · Expense · Compare.
-  // Transfer stays a transaction kind (created from Activity's "+"), not a quick action;
-  // Accounts are reached from the accounts section below and rates from the hero caption.
+  // Quick actions — Income · Expense · Transfer (matches the Flow Prototype).
   const actions: { icon: FeatherName; label: string; href: string }[] = [
     { icon: 'arrow-down-left', label: t('finance.addIncome'), href: '/finance/entry?type=income' },
     { icon: 'arrow-up-right', label: t('finance.addExpense'), href: '/finance/entry?type=expense' },
-    { icon: 'shopping-bag', label: t('finance.compare'), href: '/retail' },
+    { icon: 'repeat', label: t('finance.addTransfer'), href: '/finance/transfer' },
   ];
 
   return (
@@ -355,9 +346,13 @@ export default function HomeScreen() {
               </Card>
             ) : null}
 
-            {/* One tile holding the by-account ledger (#5), not one tile per account. */}
+            {/* One tile holding the account rows (balance per account, matching the
+                Flow Prototype), not one tile per account. */}
             <Card style={styles.accountsSlot}>
-              <Text variant="heading">{t('finance.byAccount.title')}</Text>
+              <View style={styles.byAcctHeader}>
+                <Text variant="heading">{t('finance.byAccount.title')}</Text>
+                <Text variant="caption" muted>{t('finance.byAccount.caption')}</Text>
+              </View>
               {loading ? (
                 <ActivityIndicator color={palette.brand} />
               ) : errorKey ? (
@@ -373,7 +368,6 @@ export default function HomeScreen() {
                 <View style={styles.list}>
                   {accounts.map((a) => {
                     const bal = balances[a.id];
-                    const led = ledgerByAccount[a.id];
                     const selected = scope === a.id;
                     return (
                       <View
@@ -388,23 +382,9 @@ export default function HomeScreen() {
                           onPress={() => toggleScope(a.id)}
                         >
                           <Text variant="button" numberOfLines={1}>{a.name}</Text>
-                          {led ? (
-                            <View style={styles.ledgerRow}>
-                              <Text variant="caption" muted>
-                                {t('finance.ledger.in')} +{formatAmount(led.inMinor, a.currency_code)}
-                              </Text>
-                              <Text variant="caption" muted>
-                                {t('finance.ledger.out')} −{formatAmount(led.outMinor, a.currency_code)}
-                              </Text>
-                              <Text
-                                variant="caption"
-                                style={led.netMinor >= 0 ? styles.netUp : styles.netDown}
-                              >
-                                {t('finance.ledger.net')} {led.netMinor >= 0 ? '+' : '−'}
-                                {formatAmount(Math.abs(led.netMinor), a.currency_code)}
-                              </Text>
-                            </View>
-                          ) : null}
+                          <Text variant="caption" muted>
+                            {t(`finance.accounts.types.${a.type}`)} · {a.currency_code}
+                          </Text>
                         </Pressable>
                         <View style={styles.accountTrailing}>
                           <Text variant="button">
@@ -506,11 +486,15 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   // In-scope row echoes the selected pill (two-way sync, #5).
   accountRowSelected: { backgroundColor: c.brandMuted },
-  accountMain: { flex: 1, gap: 4 },
+  accountMain: { flex: 1, gap: 2 },
   accountTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  ledgerRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.sm },
-  netUp: { color: c.success },
-  netDown: { color: c.danger },
+  byAcctHeader: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+    flexWrap: 'wrap',
+  },
   rowPressed: { opacity: 0.6 },
   hero: {
     flex: 1,

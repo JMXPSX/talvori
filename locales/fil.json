@@ -223,7 +223,8 @@
       "balance": "Balanse {{amount}}"
     },
     "byAccount": {
-      "title": "Ayon sa account"
+      "title": "Ayon sa account",
+      "caption": "balanse · pambukas + ngayong buwan"
     },
     "ledger": {
       "in": "Papasok",

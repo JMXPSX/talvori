@@ -5,6 +5,7 @@ const expoConfig = require("eslint-config-expo/flat");
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ["dist/*"],
+    // Design-export reference material (incl. a stale nested app copy) — not source.
+    ignores: ["dist/*", "context/Budget app analysis (3)/**"],
   }
 ]);

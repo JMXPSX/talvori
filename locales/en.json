@@ -223,7 +223,8 @@
       "balance": "Balance {{amount}}"
     },
     "byAccount": {
-      "title": "By account"
+      "title": "By account",
+      "caption": "balance · opening + this month"
     },
     "ledger": {
       "in": "In",
