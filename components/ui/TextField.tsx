@@ -21,7 +21,8 @@ import {
   type TextStyle,
 } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Text } from '@/components/ui/Text';
 import { fontFamilyFor, isArabicLanguage } from '@/lib/fonts';
 import { direction } from '@/lib/rtl';
@@ -68,6 +69,8 @@ export function TextField({
 }: TextFieldProps) {
   const [hidden, setHidden] = useState(true);
   const { i18n } = useTranslation();
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const fontFamily = fontFamilyFor('body', isArabicLanguage(i18n.language));
 
   return (
@@ -113,7 +116,7 @@ export function TextField({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   wrapper: {
     gap: spacing.xs,
   },
@@ -129,20 +132,20 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     borderRadius: radius.control,
     paddingHorizontal: spacing.md,
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
   },
   input: {
     flex: 1,
     paddingVertical: 0,
-    color: palette.text,
+    color: c.text,
   },
   inputError: {
-    borderColor: palette.danger,
+    borderColor: c.danger,
   },
   eye: {
     paddingStart: spacing.sm,
   },
   errorText: {
-    color: palette.danger,
+    color: c.danger,
   },
 });

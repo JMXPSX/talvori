@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, radius, spacing, webFocusRing } from '@/components/theme';
+import { radius, spacing, webFocusRing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Text } from '@/components/ui/Text';
 import { TextField } from '@/components/ui/TextField';
 import { filterCurrencies, listCurrencies, currencyName } from '@/lib/currencies';
@@ -28,6 +29,8 @@ export interface CurrencyFieldProps {
 
 export function CurrencyField({ label, value, onChange, suggested = [], error }: CurrencyFieldProps) {
   const { t } = useTranslation();
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const locale = localeTag();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -151,7 +154,7 @@ export function CurrencyField({ label, value, onChange, suggested = [], error }:
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   field: { gap: spacing.xs },
   trigger: {
     minHeight: 48,
@@ -161,11 +164,11 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     paddingHorizontal: spacing.md,
     borderRadius: radius.md,
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
   },
-  placeholder: { color: palette.textMuted },
-  error: { color: palette.danger },
-  sheet: { flex: 1, backgroundColor: palette.background, padding: spacing.lg, gap: spacing.md },
+  placeholder: { color: c.textMuted },
+  error: { color: c.danger },
+  sheet: { flex: 1, backgroundColor: c.background, padding: spacing.lg, gap: spacing.md },
   sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   explainer: {},
   list: { gap: spacing.xs, paddingBottom: spacing.xl },
@@ -178,16 +181,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.md,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
   },
-  rowSelected: { backgroundColor: palette.brandMuted },
-  rowHovered: { backgroundColor: palette.field },
+  rowSelected: { backgroundColor: c.brandMuted },
+  rowHovered: { backgroundColor: c.field },
   rowPressed: { opacity: 0.85 },
   symbolTile: {
     width: 38,
     height: 38,
     borderRadius: radius.md,
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
     alignItems: 'center',
     justifyContent: 'center',
   },

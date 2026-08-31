@@ -5,7 +5,8 @@
 
 import { StyleSheet, View } from 'react-native';
 
-import { palette, radius } from '@/components/theme';
+import { radius } from '@/components/theme';
+import { useTheme } from '@/components/ThemeProvider';
 
 export type ProgressState = 'normal' | 'full' | 'over';
 
@@ -16,6 +17,7 @@ export interface ProgressBarProps {
 }
 
 export function ProgressBar({ fraction, state = 'normal', height = 8 }: ProgressBarProps) {
+  const { palette } = useTheme();
   const f = Math.max(0, Math.min(1, fraction));
   const track = state === 'over' ? palette.dangerMuted : palette.brandMuted;
   const fill = state === 'over' ? palette.danger : state === 'full' ? palette.accent : palette.brand;

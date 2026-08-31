@@ -611,5 +611,14 @@
     "validation": "Pakisuri ang mga naka-highlight na field.",
     "rate_limited": "Masyadong maraming pagsubok. Maghintay at subukang muli.",
     "config": "Hindi pa ganap na na-configure ang app."
+  },
+  "settings": {
+    "appearance": {
+      "title": "Hitsura",
+      "system": "Sistema",
+      "light": "Maliwanag",
+      "dark": "Madilim",
+      "hint": "Piliin kung paano magmukha ang Talvori. Sinusunod ng Sistema ang iyong device."
+    }
   }
 }

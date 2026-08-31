@@ -16,7 +16,8 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { palette, radius, spacing, typography, webFocusRing } from '@/components/theme';
+import { radius, spacing, typography, webFocusRing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Text } from '@/components/ui/Text';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'danger' | 'dangerQuiet';
@@ -33,14 +34,6 @@ export interface ButtonProps {
 /** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
 type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
 
-const LABEL_COLOR: Record<ButtonVariant, string> = {
-  primary: palette.white,
-  secondary: palette.brand,
-  accent: palette.white, // white on burnt orange clears 4.5:1
-  danger: palette.white, // white on red clears 4.5:1
-  dangerQuiet: palette.danger,
-};
-
 export function Button({
   label,
   onPress,
@@ -49,6 +42,15 @@ export function Button({
   loading = false,
   style,
 }: ButtonProps) {
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const labelColor: Record<ButtonVariant, string> = {
+    primary: palette.white,
+    secondary: palette.brand,
+    accent: palette.white, // white on burnt orange clears 4.5:1
+    danger: palette.white, // white on red clears 4.5:1
+    dangerQuiet: palette.danger,
+  };
   const isDisabled = disabled || loading;
 
   return (
@@ -71,9 +73,9 @@ export function Button({
       }}
     >
       {loading ? (
-        <ActivityIndicator color={LABEL_COLOR[variant]} />
+        <ActivityIndicator color={labelColor[variant]} />
       ) : (
-        <Text variant="button" style={[styles.label, { color: LABEL_COLOR[variant] }]}>
+        <Text variant="button" style={[styles.label, { color: labelColor[variant] }]}>
           {label}
         </Text>
       )}
@@ -81,7 +83,7 @@ export function Button({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   base: {
     minHeight: 48,
     paddingHorizontal: spacing.lg,
@@ -90,20 +92,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   primary: {
-    backgroundColor: palette.brand,
+    backgroundColor: c.brand,
   },
   // Ghost: a soft hairline rather than a brand-coloured outline, so it recedes
   // against the white tile it usually sits on.
   secondary: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: palette.border,
+    borderColor: c.border,
   },
   accent: {
-    backgroundColor: palette.accent,
+    backgroundColor: c.accent,
   },
   danger: {
-    backgroundColor: palette.danger,
+    backgroundColor: c.danger,
   },
   // Text-only: no fill, so it reads as a link-weight destructive affordance.
   dangerQuiet: {

@@ -15,6 +15,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { palette } from '@/components/theme';
+import { ThemeProvider, useTheme } from '@/components/ThemeProvider';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 import { EntitlementsProvider } from '@/features/billing/EntitlementsProvider';
 import { ActiveHouseholdProvider } from '@/features/household/ActiveHouseholdProvider';
@@ -47,22 +48,25 @@ function useAuthGate() {
 function RootNavigator() {
   const { t } = useTranslation();
   const { initializing } = useAuth();
+  const { palette: c, isDark } = useTheme();
   useAuthGate();
 
   if (initializing) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.background }}>
-        <ActivityIndicator color={palette.brand} />
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.background }}>
+        <ActivityIndicator color={c.brand} />
       </View>
     );
   }
 
   return (
+    <>
+    <StatusBar style={isDark ? 'light' : 'dark'} />
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: palette.background },
-        headerTintColor: palette.text,
-        contentStyle: { backgroundColor: palette.background },
+        headerStyle: { backgroundColor: c.background },
+        headerTintColor: c.text,
+        contentStyle: { backgroundColor: c.background },
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -76,6 +80,7 @@ function RootNavigator() {
       <Stack.Screen name="subscription" options={{ title: t('billing.title') }} />
       <Stack.Screen name="account" options={{ title: t('account.title') }} />
     </Stack>
+    </>
   );
 }
 
@@ -94,14 +99,15 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="auto" />
-      <AuthProvider>
-        <ActiveHouseholdProvider>
-          <EntitlementsProvider>
-            <RootNavigator />
-          </EntitlementsProvider>
-        </ActiveHouseholdProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ActiveHouseholdProvider>
+            <EntitlementsProvider>
+              <RootNavigator />
+            </EntitlementsProvider>
+          </ActiveHouseholdProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

@@ -10,7 +10,8 @@
 import { Feather } from '@expo/vector-icons';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Text } from '@/components/ui/Text';
 
 export interface SideNavItem {
@@ -34,6 +35,8 @@ export interface SideNavProps {
 export const SIDEBAR_WIDTH = 260;
 
 export function SideNav({ brand, title, subtitle, items }: SideNavProps) {
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.sidebar}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -87,17 +90,17 @@ export function SideNav({ brand, title, subtitle, items }: SideNavProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   sidebar: {
     width: SIDEBAR_WIDTH,
-    backgroundColor: palette.surfaceMuted,
+    backgroundColor: c.surfaceMuted,
   },
   content: {
     padding: spacing.md,
     gap: spacing.lg,
   },
   brand: {
-    color: palette.brand,
+    color: c.brand,
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.sm,
   },
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   subtitle: {
-    color: palette.brand,
+    color: c.brand,
   },
   items: {
     gap: spacing.xs,
@@ -120,15 +123,15 @@ const styles = StyleSheet.create({
     borderRadius: radius.control,
   },
   itemActive: {
-    backgroundColor: palette.brandMuted,
+    backgroundColor: c.brandMuted,
   },
   itemPressed: {
-    backgroundColor: palette.field,
+    backgroundColor: c.field,
   },
   label: {
-    color: palette.textMuted,
+    color: c.textMuted,
   },
   labelActive: {
-    color: palette.brand,
+    color: c.brand,
   },
 });

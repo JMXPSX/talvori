@@ -24,7 +24,8 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { palette, radius, spacing, webFocusRing } from '@/components/theme';
+import { radius, spacing, webFocusRing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Text } from '@/components/ui/Text';
 import { direction } from '@/lib/rtl';
 
@@ -43,6 +44,8 @@ export interface ChipProps {
 type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
 
 export function Chip({ label, selected = false, onPress, role, tint, style }: ChipProps) {
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable
       accessibilityRole={role ?? 'button'}
@@ -72,7 +75,7 @@ export function Chip({ label, selected = false, onPress, role, tint, style }: Ch
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   chip: {
     minHeight: 44,
     justifyContent: 'center',
@@ -88,6 +91,6 @@ const styles = StyleSheet.create({
   check: { marginTop: 1 },
   hovered: { opacity: 0.92 },
   pressed: { opacity: 0.8 },
-  labelOn: { color: palette.white },
-  labelOff: { color: palette.text },
+  labelOn: { color: c.white },
+  labelOff: { color: c.text },
 });

@@ -6,7 +6,8 @@
 import { Feather } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useTheme } from '@/components/ThemeProvider';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 
@@ -18,6 +19,7 @@ export interface EmptyStateProps {
 }
 
 export function EmptyState({ icon = 'inbox', message, ctaLabel, onCta }: EmptyStateProps) {
+  const { palette } = useTheme();
   return (
     <View style={styles.wrap}>
       <Feather name={icon} size={40} color={palette.textMuted} />

@@ -13,7 +13,8 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import { palette, typography, type TypographyVariant } from '@/components/theme';
+import { typography, type TypographyVariant } from '@/components/theme';
+import { useTheme } from '@/components/ThemeProvider';
 import { fontFamilyFor, isArabicLanguage } from '@/lib/fonts';
 import { direction } from '@/lib/rtl';
 
@@ -24,6 +25,7 @@ export interface TextProps extends RNTextProps {
 
 export function Text({ variant = 'body', muted = false, style, ...rest }: TextProps) {
   const { i18n } = useTranslation();
+  const { palette } = useTheme();
   const fontFamily = fontFamilyFor(variant, isArabicLanguage(i18n.language));
   return (
     <RNText

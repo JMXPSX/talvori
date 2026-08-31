@@ -12,7 +12,8 @@ import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { palette, spacing } from '@/components/theme';
+import { spacing } from '@/components/theme';
+import { useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { CONTENT_MAX_WIDTH } from '@/components/ui/Bento';
 import { Text } from '@/components/ui/Text';
 import { useIsWideLayout } from '@/lib/breakpoints';
@@ -29,6 +30,7 @@ const DESKTOP_MARGIN = 40;
 
 export function Screen({ title, children, centered = false }: ScreenProps) {
   const isWide = useIsWideLayout();
+  const styles = useThemedStyles(makeStyles);
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <View
@@ -51,10 +53,10 @@ export function Screen({ title, children, centered = false }: ScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: palette.background,
+    backgroundColor: c.background,
   },
   container: {
     flex: 1,

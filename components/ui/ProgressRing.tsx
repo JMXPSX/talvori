@@ -14,7 +14,7 @@ import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
-import { palette } from '@/components/theme';
+import { useTheme } from '@/components/ThemeProvider';
 import type { ProgressState } from '@/components/ui/ProgressBar';
 
 export interface ProgressRingProps {
@@ -32,6 +32,7 @@ export function ProgressRing({
   stroke = 5,
   children,
 }: ProgressRingProps) {
+  const { palette } = useTheme();
   const f = Math.max(0, Math.min(1, fraction));
   const track = state === 'over' ? palette.dangerMuted : palette.brandMuted;
   const fill = state === 'over' ? palette.danger : state === 'full' ? palette.accent : palette.brand;

@@ -16,13 +16,23 @@
 
 import { Platform, type ViewStyle } from 'react-native';
 
-export const palette = {
+/**
+ * The Talvori LIGHT palette. Token NAMES are the public API; light and dark share
+ * the same keys so screens reskin by swapping the object (via `useTheme()` — see
+ * `components/ThemeProvider`). `palette` below aliases this so any module still
+ * importing the static token set keeps rendering the light theme until migrated.
+ *
+ * `white` is intentionally fixed in BOTH themes — it means "white", used for text
+ * and glyphs on the always-purple brand surfaces (hero, primary buttons), which
+ * stay readable in dark mode.
+ */
+export const lightPalette = {
   brand: '#6D4CFF', // purple — primary actions, active nav, hero
   brandDeep: '#5A38E8', // pressed / emphasis
   brandMuted: '#EDE7FF', // meters, chips, muted fills (purple tint)
   accent: '#F59E0B', // warm orange — shopping + goal accents
   accentMuted: '#FEF3C7', // tinted accent fills (amber)
-  text: '#0F172A', // navy ink / dark surfaces
+  text: '#0F172A', // navy ink
   textMuted: '#475569', // secondary text
   background: '#F6F7FB', // near-white app canvas
   surface: '#FFFFFF', // tiles sit brighter than the canvas
@@ -37,6 +47,38 @@ export const palette = {
   dangerMuted: '#FEE2E2', // error container fill
   successMuted: '#CCFBF1', // teal container fill (income tiles)
 } as const;
+
+/** The public shape every screen consumes. Dark must supply the same keys. */
+export type Palette = { [K in keyof typeof lightPalette]: string };
+
+/**
+ * The Talvori DARK palette — same purple brand on a deep-navy canvas. Muted fills
+ * become dark tints of their hue; ink inverts to near-white; `white` stays white.
+ * Accent/brand/semantic hues are nudged brighter where needed for contrast on dark.
+ */
+export const darkPalette: Palette = {
+  brand: '#8B72FF', // lifted for contrast on dark
+  brandDeep: '#7358F0',
+  brandMuted: '#241C46', // dark purple tint
+  accent: '#FBBF24',
+  accentMuted: '#3A2E12',
+  text: '#E6EAF2', // near-white ink
+  textMuted: '#9AA6BC',
+  background: '#0B0F1A', // deep navy canvas
+  surface: '#161C2B', // tiles sit brighter than the canvas
+  border: '#2A3350',
+  danger: '#F87171',
+  success: '#2DD4BF',
+  white: '#FFFFFF', // fixed — glyphs on the brand surfaces
+  field: '#1C2436', // input fills inside dark tiles
+  tertiary: '#60A5FA',
+  surfaceMuted: '#1C2436',
+  dangerMuted: '#3A1E1E',
+  successMuted: '#123A34',
+};
+
+/** Static alias = light. Unmigrated modules import this and stay light-themed. */
+export const palette = lightPalette;
 
 /**
  * Category/series colours for charts. Lives here (not in the chart module) so the

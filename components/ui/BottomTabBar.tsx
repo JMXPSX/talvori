@@ -11,7 +11,8 @@ import { Feather } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import type { SideNavItem } from '@/components/ui/SideNav';
 import { Text } from '@/components/ui/Text';
 
@@ -21,6 +22,8 @@ export interface BottomTabBarProps {
 
 export function BottomTabBar({ items }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, spacing.sm) }]}>
       {items.map((item) => (
@@ -51,10 +54,10 @@ export function BottomTabBar({ items }: BottomTabBarProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   bar: {
     flexDirection: 'row',
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
     paddingTop: spacing.sm,
@@ -76,14 +79,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
   },
   slotActive: {
-    backgroundColor: palette.brand,
+    backgroundColor: c.brand,
   },
   label: {
     fontSize: 11,
-    color: palette.textMuted,
+    color: c.textMuted,
   },
   labelActive: {
     fontSize: 11,
-    color: palette.white,
+    color: c.white,
   },
 });

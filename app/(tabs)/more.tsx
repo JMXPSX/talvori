@@ -5,10 +5,13 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
-import { Button, Card, ListRow, Screen, Text } from '@/components/ui';
+import { radius, spacing, type Palette } from '@/components/theme';
+import { useThemedStyles, useTheme, type ThemeScheme } from '@/components/ThemeProvider';
+import { Button, Card, Chip, ListRow, Screen, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
+
+const SCHEMES: readonly ThemeScheme[] = ['system', 'light', 'dark'];
 
 /** "Maria Santos" → "MS", "Joseph" → "JO", "maria.santos@x" → "MS". */
 function initialsFor(displayName: string | null, email: string): string {
@@ -26,6 +29,8 @@ export default function MoreScreen() {
   const router = useRouter();
   const { user, signOut } = useAuth();
   const { has } = usePlan();
+  const { palette, scheme, setScheme } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [busy, setBusy] = useState(false);
 
   const email = user?.email ?? '';
@@ -78,6 +83,22 @@ export default function MoreScreen() {
         <ListRow icon="user" label={t('account.open')} onPress={() => router.push('/account')} />
       </View>
 
+      <View style={styles.section}>
+        <Text variant="eyebrow" muted>{t('settings.appearance.title')}</Text>
+        <View style={styles.segment}>
+          {SCHEMES.map((s) => (
+            <Chip
+              key={s}
+              label={t(`settings.appearance.${s}`)}
+              selected={scheme === s}
+              role="radio"
+              onPress={() => setScheme(s)}
+            />
+          ))}
+        </View>
+        <Text variant="caption" muted>{t('settings.appearance.hint')}</Text>
+      </View>
+
       <View style={styles.actions}>
         <Button label={t('auth.signOut')} variant="secondary" onPress={onSignOut} loading={busy} />
       </View>
@@ -85,18 +106,21 @@ export default function MoreScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  profileRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: radius.pill,
-    backgroundColor: palette.brand,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: { color: palette.white },
-  profileMid: { flex: 1, gap: 2 },
-  rows: { gap: spacing.sm, marginTop: spacing.sm },
-  actions: { marginTop: spacing.lg },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    profileRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+    avatar: {
+      width: 52,
+      height: 52,
+      borderRadius: radius.pill,
+      backgroundColor: c.brand,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    avatarText: { color: c.white },
+    profileMid: { flex: 1, gap: 2 },
+    rows: { gap: spacing.sm, marginTop: spacing.sm },
+    section: { gap: spacing.sm, marginTop: spacing.lg },
+    segment: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+    actions: { marginTop: spacing.lg },
+  });

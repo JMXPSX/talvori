@@ -18,7 +18,8 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { elevation, palette, radius, spacing, webFocusRing } from '@/components/theme';
+import { elevation, radius, spacing, webFocusRing } from '@/components/theme';
+import { useThemedStyles, type Palette } from '@/components/ThemeProvider';
 
 export interface CardProps {
   children: ReactNode;
@@ -34,6 +35,7 @@ export interface CardProps {
 type WebPressableState = PressableStateCallbackType & { hovered?: boolean; focused?: boolean };
 
 export function Card({ children, accented = false, onPress, accessibilityLabel, style }: CardProps) {
+  const styles = useThemedStyles(makeStyles);
   const base = [styles.card, accented ? styles.accented : null, style];
 
   if (!onPress) {
@@ -60,17 +62,17 @@ export function Card({ children, accented = false, onPress, accessibilityLabel, 
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     gap: spacing.sm,
     boxShadow: elevation.tile,
   },
   accented: {
-    backgroundColor: palette.accentMuted,
+    backgroundColor: c.accentMuted,
   },
-  hovered: { backgroundColor: palette.field },
+  hovered: { backgroundColor: c.field },
   pressed: { opacity: 0.9 },
 });

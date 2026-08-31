@@ -6,7 +6,8 @@
 import { Feather } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 
-import { palette, radius, spacing } from '@/components/theme';
+import { radius, spacing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
 
@@ -17,6 +18,8 @@ export interface ErrorNoticeProps {
 }
 
 export function ErrorNotice({ message, retryLabel, onRetry }: ErrorNoticeProps) {
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.card}>
       <View style={styles.row}>
@@ -30,13 +33,13 @@ export function ErrorNotice({ message, retryLabel, onRetry }: ErrorNoticeProps) 
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   // Tonal container rather than a bordered card: the error reads as a tinted
   // surface, consistent with the system's "no harsh borders" rule.
   card: {
     padding: spacing.lg,
     borderRadius: radius.lg,
-    backgroundColor: palette.dangerMuted,
+    backgroundColor: c.dangerMuted,
     gap: spacing.md,
   },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
@@ -44,7 +47,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: radius.pill,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },

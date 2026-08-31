@@ -12,7 +12,8 @@ import {
   View,
 } from 'react-native';
 
-import { elevation, palette, radius, spacing, webFocusRing } from '@/components/theme';
+import { elevation, radius, spacing, webFocusRing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Text } from '@/components/ui/Text';
 
 /** react-native-web adds `hovered`/`focused` to the Pressable state callback. */
@@ -34,9 +35,13 @@ export function ListRow({
   sublabel,
   detail,
   onPress,
-  iconColor = palette.brand,
-  iconBg = palette.brandMuted,
+  iconColor,
+  iconBg,
 }: ListRowProps) {
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const resolvedIconColor = iconColor ?? palette.brand;
+  const resolvedIconBg = iconBg ?? palette.brandMuted;
   return (
     <Pressable
       accessibilityRole="button"
@@ -51,8 +56,8 @@ export function ListRow({
         ];
       }}
     >
-      <View style={[styles.iconTile, { backgroundColor: iconBg }]}>
-        <Feather name={icon} size={20} color={iconColor} />
+      <View style={[styles.iconTile, { backgroundColor: resolvedIconBg }]}>
+        <Feather name={icon} size={20} color={resolvedIconColor} />
       </View>
       <View style={styles.mid}>
         {/* `button` is the 16/600 role — `heading` is 24px and overpowers a row. */}
@@ -77,7 +82,7 @@ export function ListRow({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -85,10 +90,10 @@ const styles = StyleSheet.create({
     minHeight: 56,
     padding: spacing.md,
     borderRadius: radius.lg,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     boxShadow: elevation.tile,
   },
-  hovered: { backgroundColor: palette.field },
+  hovered: { backgroundColor: c.field },
   pressed: { opacity: 0.9 },
   iconTile: {
     width: 44,

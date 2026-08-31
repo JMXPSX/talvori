@@ -42,7 +42,21 @@
 
 ## In progress
 
-- [ ] Dark theme — initiated (needs a provider refactor; see "Up next" 4c).
+- [ ] **Dark theme (4c)** — infra done, screen migration remaining.
+  - [x] **Infra**: `components/theme.ts` split into `lightPalette` + `darkPalette` (same token
+    names) + `type Palette`; `palette` stays a static light alias so unmigrated modules compile.
+    New `components/ThemeProvider` (`useTheme()` + `useThemedStyles(factory)`), scheme persisted to
+    AsyncStorage, follows OS via `Appearance`, resolves System/Light/Dark. Wired at the root in
+    `_layout` (themed nav + `StatusBar`). Appearance control (System/Light/Dark chips) added to the
+    **More** tab (that screen migrated as the reference). All 16 `components/ui/*` primitives
+    migrated to the hook. `useTheme()` falls back to light outside a provider (component tests);
+    jest gets the AsyncStorage mock. `settings.appearance.*` keys in en/fil/ar. typecheck + 216
+    tests + lint green.
+  - [ ] **Screens** (~40 under `app/`) still import the static light `palette`, so in dark mode
+    their screen-local surfaces stay light while primitives flip — **dark mode isn't visually
+    complete until these are migrated** (same mechanical `makeStyles(c)` + `useThemedStyles`
+    pattern). Toggle works today but judge dark only after this batch.
+  - [ ] Follow-ups: theme `chartSeries`/donut colours for dark; revisit `elevation` shadows on dark.
 
 ## Up next (buildable now — no external blockers)
 

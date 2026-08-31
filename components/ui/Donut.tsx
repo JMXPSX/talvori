@@ -6,7 +6,7 @@
 
 import Svg, { Circle } from 'react-native-svg';
 
-import { palette } from '@/components/theme';
+import { useTheme } from '@/components/ThemeProvider';
 
 export interface DonutSegment {
   fraction: number;
@@ -21,6 +21,7 @@ export interface DonutProps {
 }
 
 export function Donut({ segments, size = 160, stroke = 22 }: DonutProps) {
+  const { palette } = useTheme();
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const center = size / 2;

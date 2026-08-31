@@ -611,5 +611,14 @@
     "validation": "Please check the highlighted fields.",
     "rate_limited": "Too many attempts. Please wait and try again.",
     "config": "The app isn't fully configured yet."
+  },
+  "settings": {
+    "appearance": {
+      "title": "Appearance",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "hint": "Choose how Talvori looks. System follows your device."
+    }
   }
 }

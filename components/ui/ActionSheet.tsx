@@ -10,7 +10,8 @@
 import { useCallback, useState, type ReactElement } from 'react';
 import { Alert, Modal, Platform, Pressable, StyleSheet, View } from 'react-native';
 
-import { elevation, palette, radius, spacing } from '@/components/theme';
+import { elevation, radius, spacing } from '@/components/theme';
+import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Text } from '@/components/ui/Text';
 
 export interface ActionSheetAction {
@@ -39,6 +40,8 @@ export function ActionSheetDialog({
   cancelLabel,
   onClose,
 }: ActionSheetDialogProps) {
+  const { palette } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Modal transparent animationType="fade" visible onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose}>
@@ -117,7 +120,7 @@ export function useActionSheet(): {
   return { show, element };
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) => StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: BACKDROP,
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 360,
     borderRadius: radius.xl,
-    backgroundColor: palette.surface,
+    backgroundColor: c.surface,
     paddingVertical: spacing.sm,
     boxShadow: elevation.raised,
   },
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: palette.border,
+    borderTopColor: c.border,
   },
-  pressed: { opacity: 0.9, backgroundColor: palette.field },
+  pressed: { opacity: 0.9, backgroundColor: c.field },
 });
