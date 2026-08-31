@@ -12,7 +12,11 @@ import { radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { BentoPage, Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
 import { listTransactions, type TransactionWithRefs } from '@/features/finance/api';
+import { monthFlow } from '@/features/finance/flow';
+import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
+import { monthKeyOf } from '@/features/finance/insights';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
+import type { LatestFxRateRow } from '@/lib/database.types';
 import { useIsWideLayout } from '@/lib/breakpoints';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
@@ -92,6 +96,7 @@ export default function TransactionsScreen() {
     new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric' }).format(new Date(iso));
 
   const [items, setItems] = useState<TransactionWithRefs[]>([]);
+  const [rates, setRates] = useState<LatestFxRateRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
@@ -102,7 +107,9 @@ export default function TransactionsScreen() {
     }
     setErrorKey(null);
     try {
-      setItems(await listTransactions(active.id));
+      const [tx, fx] = await Promise.all([listTransactions(active.id), listLatestRates(active.id)]);
+      setItems(tx);
+      setRates(fx);
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -156,6 +163,10 @@ export default function TransactionsScreen() {
   }
 
   const groups = groupByDay(items, i18n.language, t);
+  // In / Out / Net for the month, consolidated into the reporting currency
+  // (transfers excluded) — the prototype's Activity summary header.
+  const reporting = active.reporting_currency_code;
+  const flow = monthFlow(items, monthKeyOf(new Date().toISOString()), reporting, makeRateLookup(rates));
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
@@ -172,6 +183,30 @@ export default function TransactionsScreen() {
             <Feather name="plus" size={22} color={palette.white} />
           </Pressable>
         </View>
+
+        {items.length > 0 ? (
+          <Card style={styles.summary}>
+            <View style={styles.summaryCol}>
+              <Text variant="caption" muted>{t('finance.ledger.in')}</Text>
+              <Text variant="moneyMin" style={styles.inAmt}>+{formatAmount(flow.inMinor, reporting)}</Text>
+            </View>
+            <View style={styles.summaryCol}>
+              <Text variant="caption" muted>{t('finance.ledger.out')}</Text>
+              <Text variant="moneyMin">−{formatAmount(flow.outMinor, reporting)}</Text>
+            </View>
+            <View style={styles.summaryCol}>
+              <Text variant="caption" muted>{t('finance.ledger.net')}</Text>
+              <Text variant="moneyMin" style={styles.netAmt}>
+                {flow.netMinor >= 0 ? '+' : '−'}{formatAmount(Math.abs(flow.netMinor), reporting)}
+              </Text>
+            </View>
+          </Card>
+        ) : null}
+        {flow.missing.length > 0 ? (
+          <Text variant="caption" muted style={styles.missingNote}>
+            {t('fx.missingRates', { currencies: flow.missing.join(', ') })}
+          </Text>
+        ) : null}
 
         {errorKey ? (
           <ErrorNotice message={t(errorKey)} retryLabel={t('common.retry')} onRetry={() => void load()} />
@@ -320,6 +355,11 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     alignSelf: 'center',
   },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  summary: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  summaryCol: { flex: 1, gap: 2, alignItems: 'center' },
+  inAmt: { color: c.success },
+  netAmt: { color: c.brand },
+  missingNote: { marginTop: -spacing.xs },
   addButton: {
     width: 44,
     height: 44,
