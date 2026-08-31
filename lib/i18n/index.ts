@@ -7,6 +7,11 @@
  * hard-coded copy anywhere in the app.
  */
 
+// Hermes on Android ships no Intl.PluralRules; this polyfill patches it so
+// i18next uses ICU plurals instead of falling back to the v3 JSON format. Must
+// come before i18next init (side-effect import, hence first).
+import 'intl-pluralrules';
+
 import { getLocales } from 'expo-localization';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';

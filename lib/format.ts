@@ -77,10 +77,11 @@ export function formatDateRange(
   const start = parse(startISO);
   const end = parse(endISO);
   if (!start || !end) return '';
-  return new Intl.DateTimeFormat(locale, { ...DATE_OPTS, timeZone: 'UTC', ...opts }).formatRange(
-    start,
-    end,
-  );
+  const fmt = new Intl.DateTimeFormat(locale, { ...DATE_OPTS, timeZone: 'UTC', ...opts });
+  // Hermes' Intl.DateTimeFormat (Android) has no formatRange — calling it crashes.
+  // Use it where present (nicer collapsed ranges), else join two formatted dates.
+  if (typeof fmt.formatRange === 'function') return fmt.formatRange(start, end);
+  return `${fmt.format(start)} – ${fmt.format(end)}`;
 }
 
 /** Device-locale date. */
