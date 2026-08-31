@@ -27,6 +27,12 @@ describe('currencyName / currencySymbol', () => {
   it('localizes the name', () => {
     expect(currencyName('USD', 'en').toLowerCase()).toContain('dollar');
   });
+  it('resolves a real name, never the bare code, for the common set', () => {
+    // Guards the "PHP — PHP" native regression: on Hermes Intl returns the code,
+    // so the static fallback must carry a real name.
+    expect(currencyName('PHP', 'en').toLowerCase()).toContain('peso');
+    expect(currencyName('PHP', 'en')).not.toBe('PHP');
+  });
   it('resolves a symbol, falling back to the code', () => {
     expect(currencySymbol('USD', 'en-US')).toContain('$');
     expect(currencySymbol('ZZZ', 'en')).toBe('ZZZ');

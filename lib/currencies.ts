@@ -29,13 +29,34 @@ function supportedCurrencyCodes(): string[] {
   return FALLBACK_CODES;
 }
 
-/** Localized display name for a currency code, falling back to the code. */
+/** English names for the common set — used when `Intl.DisplayNames` can't resolve
+ *  a real name (native Hermes lacks `type: 'currency'` and returns the code, so the
+ *  picker showed "PHP — PHP"). Covers exactly the FALLBACK_CODES list native renders. */
+const CURRENCY_NAMES: Record<string, string> = {
+  USD: 'US Dollar', EUR: 'Euro', GBP: 'British Pound', JPY: 'Japanese Yen',
+  PHP: 'Philippine Peso', SAR: 'Saudi Riyal', AED: 'UAE Dirham', INR: 'Indian Rupee',
+  CNY: 'Chinese Yuan', KRW: 'South Korean Won', AUD: 'Australian Dollar',
+  CAD: 'Canadian Dollar', CHF: 'Swiss Franc', HKD: 'Hong Kong Dollar',
+  SGD: 'Singapore Dollar', MYR: 'Malaysian Ringgit', THB: 'Thai Baht',
+  IDR: 'Indonesian Rupiah', VND: 'Vietnamese Dong', KWD: 'Kuwaiti Dinar',
+  BHD: 'Bahraini Dinar', OMR: 'Omani Rial', QAR: 'Qatari Riyal',
+  MXN: 'Mexican Peso', BRL: 'Brazilian Real', ZAR: 'South African Rand',
+  NGN: 'Nigerian Naira', EGP: 'Egyptian Pound', TRY: 'Turkish Lira',
+  NZD: 'New Zealand Dollar',
+};
+
+/** Localized display name for a currency code, falling back to a static name then the code. */
 export function currencyName(code: string, locale: string): string {
+  const upper = code.toUpperCase();
   try {
-    return new Intl.DisplayNames([locale], { type: 'currency' }).of(code) ?? code;
+    // Intl.DisplayNames returns the code itself when it can't resolve a name
+    // (native Hermes), so treat "name === code" as unresolved and fall through.
+    const name = new Intl.DisplayNames([locale], { type: 'currency' }).of(code);
+    if (name && name.toUpperCase() !== upper) return name;
   } catch {
-    return code;
+    // fall through to the static map
   }
+  return CURRENCY_NAMES[upper] ?? code;
 }
 
 /** Narrow symbol for a currency code (e.g. "$", "₱"), falling back to the code. */
