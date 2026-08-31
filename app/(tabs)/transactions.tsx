@@ -16,10 +16,16 @@ import { useIsWideLayout } from '@/lib/breakpoints';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
 
+/** Only plain income/expense are editable; transfers and the read-only goal/debt
+ *  ledger mirrors (#6) are shown but not editable from Activity. */
+function isEditable(type: TransactionWithRefs['type']): boolean {
+  return type === 'income' || type === 'expense';
+}
+
 /** Category pill tint by transaction type (2b table). */
 function catTint(type: TransactionWithRefs['type']): { bg: string; fg: string } {
   if (type === 'income') return { bg: palette.successMuted, fg: palette.success };
-  if (type === 'transfer') return { bg: palette.accentMuted, fg: palette.accent };
+  if (type === 'transfer' || type === 'debt_payment') return { bg: palette.accentMuted, fg: palette.accent };
   return { bg: palette.brandMuted, fg: palette.brand };
 }
 
@@ -67,6 +73,8 @@ function typeIcon(type: TransactionWithRefs['type']): {
 } {
   if (type === 'income') return { name: 'arrow-down-left', color: palette.success, bg: palette.successMuted };
   if (type === 'transfer') return { name: 'repeat', color: palette.brand, bg: palette.brandMuted };
+  if (type === 'goal_contribution') return { name: 'target', color: palette.brand, bg: palette.brandMuted };
+  if (type === 'debt_payment') return { name: 'file-text', color: palette.accent, bg: palette.accentMuted };
   return { name: 'arrow-up-right', color: palette.brand, bg: palette.brandMuted };
 }
 
@@ -120,6 +128,8 @@ export default function TransactionsScreen() {
   function typeLabel(type: TransactionWithRefs['type']): string {
     if (type === 'income') return t('finance.categories.income');
     if (type === 'transfer') return t('finance.transfer.title');
+    if (type === 'goal_contribution') return t('finance.ledger.goalContribution');
+    if (type === 'debt_payment') return t('finance.ledger.debtPayment');
     return t('finance.categories.expense');
   }
 
@@ -184,9 +194,9 @@ export default function TransactionsScreen() {
             {items.map((tx, index) => {
               const positive = tx.direction === 'in';
               const tint = catTint(tx.type);
-              // Money-model decision #8: only income/expense rows are editable; transfers are
-              // read-only in Activity (editing a leg would desync the paired account).
-              const editable = tx.type !== 'transfer';
+              // Money-model #8/#6: only income/expense rows are editable; transfers and the
+              // goal/debt ledger mirrors are read-only (editing would desync a paired balance).
+              const editable = isEditable(tx.type);
               return (
                 <Pressable
                   key={tx.id}
@@ -240,17 +250,19 @@ export default function TransactionsScreen() {
                   {group.items.map((tx, index) => {
                     const positive = tx.direction === 'in';
                     const icon = typeIcon(tx.type);
+                    const editable = isEditable(tx.type);
                     const caption = [tx.category?.name, tx.account?.name].filter(Boolean).join(' · ');
                     return (
                       <Pressable
                         key={tx.id}
-                        accessibilityRole="button"
-                        accessibilityLabel={t('finance.edit.title')}
-                        onPress={() => router.push(`/finance/edit/${tx.id}`)}
+                        accessibilityRole={editable ? 'button' : undefined}
+                        accessibilityLabel={editable ? t('finance.edit.title') : undefined}
+                        disabled={!editable}
+                        onPress={editable ? () => router.push(`/finance/edit/${tx.id}`) : undefined}
                         style={({ pressed }) => [
                           styles.row,
                           index > 0 ? styles.rowDivider : null,
-                          pressed ? styles.pressed : null,
+                          editable && pressed ? styles.pressed : null,
                         ]}
                       >
                         <View style={[styles.iconTile, { backgroundColor: icon.bg }]}>
@@ -271,11 +283,13 @@ export default function TransactionsScreen() {
                           {positive ? '+' : '−'}
                           {formatAmount(tx.amount_minor, tx.currency_code)}
                         </Text>
-                        <Feather
-                          name={I18nManager.isRTL ? 'chevron-left' : 'chevron-right'}
-                          size={20}
-                          color={palette.textMuted}
-                        />
+                        {editable ? (
+                          <Feather
+                            name={I18nManager.isRTL ? 'chevron-left' : 'chevron-right'}
+                            size={20}
+                            color={palette.textMuted}
+                          />
+                        ) : null}
                       </Pressable>
                     );
                   })}

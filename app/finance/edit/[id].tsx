@@ -63,7 +63,9 @@ export default function EditTransactionScreen() {
       setDescription(row.description ?? '');
       setDateStr(isoDatePart(row.occurred_at));
       setAmount(String(toMajorUnits(money(row.amount_minor, row.currency_code))));
-      if (row.type !== 'transfer') {
+      // Only plain income/expense are editable; transfers and the read-only
+      // goal/debt ledger mirrors (#6) load no editable fields.
+      if (row.type === 'income' || row.type === 'expense') {
         const [accs, cats] = await Promise.all([
           listAccounts(row.household_id),
           listCategories(row.household_id, row.type),
@@ -170,7 +172,15 @@ export default function EditTransactionScreen() {
     );
   }
 
-  const isTransfer = tx?.type === 'transfer';
+  // Transfers and goal/debt ledger mirrors (#6) are read-only from Activity —
+  // editing them would desync the paired account / goal / debt balance.
+  const isReadOnly = tx ? tx.type !== 'income' && tx.type !== 'expense' : false;
+  const readOnlyNote =
+    tx?.type === 'goal_contribution'
+      ? t('finance.edit.goalNote')
+      : tx?.type === 'debt_payment'
+        ? t('finance.edit.debtNote')
+        : t('finance.edit.transferNote');
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
@@ -183,7 +193,7 @@ export default function EditTransactionScreen() {
           </Text>
         ) : null}
 
-        {isTransfer ? (
+        {isReadOnly ? (
           <View style={styles.form}>
             <Text variant="moneyMin">
               {tx ? formatAmountFor(tx) : ''}
@@ -191,7 +201,7 @@ export default function EditTransactionScreen() {
             <Text variant="caption" muted>
               {tx?.account?.name ?? ''}
             </Text>
-            <Text muted>{t('finance.edit.transferNote')}</Text>
+            <Text muted>{readOnlyNote}</Text>
           </View>
         ) : (
           <View style={styles.form}>
@@ -268,7 +278,7 @@ export default function EditTransactionScreen() {
           </View>
         )}
 
-        {isTransfer ? null : (
+        {isReadOnly ? null : (
           <Button label={t('finance.edit.deleteCta')} variant="dangerQuiet" onPress={onDelete} />
         )}
       </ScrollView>

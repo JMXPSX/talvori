@@ -181,7 +181,9 @@
       "saveCta": "حفظ التغييرات",
       "deleteCta": "حذف المعاملة",
       "transferNote": "تُعدَّل التحويلات من شاشة التحويل.",
-      "notFound": "لم تعد هذه المعاملة موجودة."
+      "notFound": "لم تعد هذه المعاملة موجودة.",
+      "goalNote": "تُدار مساهمات الأهداف من شاشة الأهداف.",
+      "debtNote": "تُدار مدفوعات الديون من شاشة الديون."
     },
     "transfer": {
       "title": "تحويل",
@@ -226,7 +228,9 @@
     "ledger": {
       "in": "وارد",
       "out": "صادر",
-      "net": "صافي"
+      "net": "صافي",
+      "goalContribution": "مساهمة في الهدف",
+      "debtPayment": "سداد دين"
     }
   },
   "planning": {
@@ -281,7 +285,9 @@
       "amountLabel": "المبلغ",
       "noteLabel": "ملاحظة (اختياري)",
       "confirmDeleteTitle": "حذف هذا الهدف؟",
-      "confirmDeleteBody": "سيُزال سجل مساهماته أيضًا."
+      "confirmDeleteBody": "سيُزال سجل مساهماته أيضًا.",
+      "noFundingAccount": "أضف حساباً بعملة {{currency}} للمساهمة.",
+      "fundedFrom": "مدفوع من {{name}}"
     },
     "debts": {
       "title": "الديون",
@@ -299,7 +305,9 @@
       "amountLabel": "المبلغ",
       "noteLabel": "ملاحظة (اختياري)",
       "confirmDeleteTitle": "حذف هذا الدين؟",
-      "confirmDeleteBody": "سيُزال سجل مدفوعاته أيضًا."
+      "confirmDeleteBody": "سيُزال سجل مدفوعاته أيضًا.",
+      "noFundingAccount": "أضف حساباً بعملة {{currency}} للسداد.",
+      "fundedFrom": "مدفوع من {{name}}"
     },
     "errors": {
       "loadFailed": "تعذّر تحميل بيانات التخطيط.",
@@ -308,7 +316,8 @@
       "goalFailed": "تعذّر حفظ الهدف.",
       "contributeFailed": "تعذّر حفظ المساهمة.",
       "debtFailed": "تعذّر حفظ الدين.",
-      "payFailed": "تعذّر تسجيل الدفعة."
+      "payFailed": "تعذّر تسجيل الدفعة.",
+      "noFundingAccount": "اختر حساب التمويل أولاً."
     }
   },
   "fx": {
@@ -407,7 +416,7 @@
     "priceCount": "{{count}} سعر",
     "priceCount_other": "{{count}} أسعار",
     "updated": "تم التحديث {{date}}",
-    "stale": "قديم — {{date}}",
+    "stale": "قد يكون قديمًا",
     "noPricesYet": "لا أسعار بعد",
     "retailers": "المتاجر",
     "addRetailer": "إضافة متجر",
@@ -449,7 +458,6 @@
     "onlinePrice": "عبر الإنترنت",
     "fresh": "محدّث للتو",
     "recent": "محدّث مؤخرًا",
-    "stale": "قد يكون قديمًا",
     "distanceKm": "على بُعد {{km}} كم",
     "linkRetailer": "يُباع في متجر",
     "chooseRetailer": "اختر متجرًا",
@@ -595,7 +603,7 @@
     "explainer": "اختر العملة المستخدمة هنا. يمكنك تغييرها لاحقًا."
   },
   "errors": {
-    "unknown":"حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "network": "مشكلة في الشبكة. تحقق من اتصالك وأعد المحاولة.",
     "unauthorized": "يرجى تسجيل الدخول للمتابعة.",
     "forbidden": "ليس لديك صلاحية الوصول إلى هذا.",

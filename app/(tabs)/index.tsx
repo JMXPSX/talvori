@@ -34,6 +34,7 @@ import type {
   BudgetRow,
   BudgetStatusRow,
   LatestFxRateRow,
+  TransactionType,
 } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
@@ -41,10 +42,21 @@ import { formatAmount } from '@/lib/format';
 type FeatherName = keyof typeof Feather.glyphMap;
 
 /** Icon + tint for a transaction type (recent-activity rows). */
-function txIcon(type: 'income' | 'expense' | 'transfer'): { name: FeatherName; color: string; bg: string } {
+function txIcon(type: TransactionType): { name: FeatherName; color: string; bg: string } {
   if (type === 'income') return { name: 'arrow-down-left', color: palette.success, bg: palette.successMuted };
   if (type === 'transfer') return { name: 'repeat', color: palette.brand, bg: palette.brandMuted };
+  if (type === 'goal_contribution') return { name: 'target', color: palette.brand, bg: palette.brandMuted };
+  if (type === 'debt_payment') return { name: 'file-text', color: palette.accent, bg: palette.accentMuted };
   return { name: 'arrow-up-right', color: palette.brand, bg: palette.brandMuted };
+}
+
+/** Fallback description for a transaction row that has no note. */
+function txFallbackLabel(t: (k: string) => string, type: TransactionType): string {
+  if (type === 'income') return t('finance.categories.income');
+  if (type === 'transfer') return t('finance.transfer.title');
+  if (type === 'goal_contribution') return t('finance.ledger.goalContribution');
+  if (type === 'debt_payment') return t('finance.ledger.debtPayment');
+  return t('finance.categories.expense');
 }
 
 export default function HomeScreen() {
@@ -443,12 +455,7 @@ export default function HomeScreen() {
                       </View>
                       <View style={styles.recentMid}>
                         <Text numberOfLines={1}>
-                          {tx.description ||
-                            (tx.type === 'income'
-                              ? t('finance.categories.income')
-                              : tx.type === 'transfer'
-                                ? t('finance.transfer.title')
-                                : t('finance.categories.expense'))}
+                          {tx.description || txFallbackLabel(t, tx.type)}
                         </Text>
                         {caption ? (
                           <Text variant="caption" muted numberOfLines={1}>

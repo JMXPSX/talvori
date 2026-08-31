@@ -181,7 +181,9 @@
       "saveCta": "I-save ang mga pagbabago",
       "deleteCta": "Burahin ang transaksyon",
       "transferNote": "Ang mga transfer ay ine-edit mula sa screen ng transfer.",
-      "notFound": "Wala na ang transaksyong ito."
+      "notFound": "Wala na ang transaksyong ito.",
+      "goalNote": "Pinamamahalaan ang mga kontribusyon mula sa screen ng Mga Layunin.",
+      "debtNote": "Pinamamahalaan ang mga bayad mula sa screen ng Mga Utang."
     },
     "transfer": {
       "title": "Ilipat",
@@ -226,7 +228,9 @@
     "ledger": {
       "in": "Papasok",
       "out": "Palabas",
-      "net": "Neto"
+      "net": "Neto",
+      "goalContribution": "Kontribusyon sa layunin",
+      "debtPayment": "Bayad sa utang"
     }
   },
   "planning": {
@@ -281,7 +285,9 @@
       "amountLabel": "Halaga",
       "noteLabel": "Tala (opsyonal)",
       "confirmDeleteTitle": "Burahin ang layuning ito?",
-      "confirmDeleteBody": "Aalisin din ang kasaysayan ng mga kontribusyon nito."
+      "confirmDeleteBody": "Aalisin din ang kasaysayan ng mga kontribusyon nito.",
+      "noFundingAccount": "Magdagdag ng account na {{currency}} para makapag-ambag.",
+      "fundedFrom": "Binayad mula sa {{name}}"
     },
     "debts": {
       "title": "Mga Utang",
@@ -299,7 +305,9 @@
       "amountLabel": "Halaga",
       "noteLabel": "Tala (opsyonal)",
       "confirmDeleteTitle": "Burahin ang utang na ito?",
-      "confirmDeleteBody": "Aalisin din ang kasaysayan ng mga bayad nito."
+      "confirmDeleteBody": "Aalisin din ang kasaysayan ng mga bayad nito.",
+      "noFundingAccount": "Magdagdag ng account na {{currency}} para makabayad.",
+      "fundedFrom": "Binayad mula sa {{name}}"
     },
     "errors": {
       "loadFailed": "Hindi ma-load ang datos ng pagpaplano.",
@@ -308,7 +316,8 @@
       "goalFailed": "Hindi na-save ang layunin.",
       "contributeFailed": "Hindi na-save ang kontribusyon.",
       "debtFailed": "Hindi na-save ang utang.",
-      "payFailed": "Hindi naitala ang bayad."
+      "payFailed": "Hindi naitala ang bayad.",
+      "noFundingAccount": "Pumili muna ng account na pagkukunan."
     }
   },
   "fx": {
@@ -407,7 +416,7 @@
     "priceCount": "{{count}} presyo",
     "priceCount_other": "{{count}} na presyo",
     "updated": "Na-update {{date}}",
-    "stale": "Luma na — {{date}}",
+    "stale": "Maaaring luma na",
     "noPricesYet": "Wala pang presyo",
     "retailers": "Mga tindahan",
     "addRetailer": "Magdagdag ng tindahan",
@@ -449,7 +458,6 @@
     "onlinePrice": "Online",
     "fresh": "Kaka-update lang",
     "recent": "Na-update kamakailan",
-    "stale": "Maaaring luma na",
     "distanceKm": "{{km}} km ang layo",
     "linkRetailer": "Ibinebenta sa tindahan",
     "chooseRetailer": "Pumili ng tindahan",
@@ -595,7 +603,7 @@
     "explainer": "Piliin ang perang gagamitin nito. Mababago mo ito mamaya."
   },
   "errors": {
-    "unknown":"May naganap na mali. Pakisubukang muli.",
+    "unknown": "May naganap na mali. Pakisubukang muli.",
     "network": "May problema sa network. Suriin ang koneksyon at subukang muli.",
     "unauthorized": "Mangyaring mag-sign in upang magpatuloy.",
     "forbidden": "Wala kang access dito.",

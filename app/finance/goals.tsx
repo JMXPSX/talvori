@@ -10,7 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 
 import { elevation, palette, radius, spacing } from '@/components/theme';
-import { Button, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
+import { Button, Chip, CONTENT_MAX_WIDTH, Text, TextField, useActionSheet } from '@/components/ui';
+import { listAccounts } from '@/features/finance/api';
 import {
   addContribution,
   createGoal,
@@ -21,7 +22,7 @@ import {
 import { createGoalSchema } from '@/features/finance/planningSchemas';
 import { goalRemainingMinor, progressRatio } from '@/features/finance/progress';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
-import type { SavingsGoalRow, SavingsGoalStatusRow } from '@/lib/database.types';
+import type { AccountRow, SavingsGoalRow, SavingsGoalStatusRow } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
 import { toMinorUnits } from '@/lib/money';
@@ -42,10 +43,14 @@ export default function GoalsScreen() {
 
   const [goals, setGoals] = useState<SavingsGoalRow[]>([]);
   const [status, setStatus] = useState<Record<string, SavingsGoalStatusRow>>({});
+  const [accounts, setAccounts] = useState<AccountRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
 
   const [contribInputs, setContribInputs] = useState<Record<string, string>>({});
+  // Money-model #6: a contribution posts an 'out' transaction, so it needs a
+  // funding account whose currency matches the goal. Selection is per goal.
+  const [contribAccount, setContribAccount] = useState<Record<string, string>>({});
   const [name, setName] = useState('');
   const [currency, setCurrency] = useState(deviceCurrency());
   const [target, setTarget] = useState('');
@@ -60,9 +65,14 @@ export default function GoalsScreen() {
     }
     setErrorKey(null);
     try {
-      const [g, s] = await Promise.all([listGoals(active.id), listGoalStatus(active.id)]);
+      const [g, s, accs] = await Promise.all([
+        listGoals(active.id),
+        listGoalStatus(active.id),
+        listAccounts(active.id),
+      ]);
       setGoals(g);
       setStatus(Object.fromEntries(s.map((row) => [row.goal_id, row])));
+      setAccounts(accs);
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -76,15 +86,25 @@ export default function GoalsScreen() {
     }, [load]),
   );
 
+  function eligibleAccountsFor(goal: SavingsGoalRow): AccountRow[] {
+    return accounts.filter((a) => a.currency_code === goal.currency_code);
+  }
+
   async function onContribute(goal: SavingsGoalRow) {
     if (!active) return;
     const raw = contribInputs[goal.id] ?? '';
     const amount = Number(raw);
     if (!raw || !Number.isFinite(amount) || amount <= 0) return;
+    const eligible = eligibleAccountsFor(goal);
+    const accountId = contribAccount[goal.id] ?? eligible[0]?.id;
+    if (!accountId) {
+      setErrorKey('planning.errors.noFundingAccount');
+      return;
+    }
     try {
       await addContribution({
         goalId: goal.id,
-        householdId: active.id,
+        accountId,
         amountMinor: toMinorUnits(amount, goal.currency_code),
       });
       setContribInputs((prev) => ({ ...prev, [goal.id]: '' }));
@@ -185,17 +205,50 @@ export default function GoalsScreen() {
                   <Text variant="caption" muted>
                     {t('planning.goals.remaining')}: {formatAmount(remaining, g.currency_code)}
                   </Text>
-                  <View style={styles.inlineRow}>
-                    <View style={styles.inlineField}>
-                      <TextField
-                        label={t('planning.goals.amountLabel')}
-                        value={contribInputs[g.id] ?? ''}
-                        onChangeText={(v) => setContribInputs((prev) => ({ ...prev, [g.id]: v }))}
-                        keyboardType="numeric"
-                      />
-                    </View>
-                    <Button label={t('planning.goals.contributeCta')} onPress={() => onContribute(g)} />
-                  </View>
+                  {(() => {
+                    const eligible = eligibleAccountsFor(g);
+                    if (eligible.length === 0) {
+                      return (
+                        <Text variant="caption" muted>
+                          {t('planning.goals.noFundingAccount', { currency: g.currency_code })}
+                        </Text>
+                      );
+                    }
+                    const selected = contribAccount[g.id] ?? eligible[0]?.id ?? null;
+                    return (
+                      <>
+                        {eligible.length > 1 ? (
+                          <View style={styles.accountChips}>
+                            {eligible.map((a) => (
+                              <Chip
+                                key={a.id}
+                                label={a.name}
+                                selected={selected === a.id}
+                                role="radio"
+                                onPress={() => setContribAccount((p) => ({ ...p, [g.id]: a.id }))}
+                              />
+                            ))}
+                          </View>
+                        ) : null}
+                        <View style={styles.inlineRow}>
+                          <View style={styles.inlineField}>
+                            <TextField
+                              label={t('planning.goals.amountLabel')}
+                              value={contribInputs[g.id] ?? ''}
+                              onChangeText={(v) => setContribInputs((prev) => ({ ...prev, [g.id]: v }))}
+                              keyboardType="numeric"
+                            />
+                          </View>
+                          <Button label={t('planning.goals.contributeCta')} onPress={() => onContribute(g)} />
+                        </View>
+                        <Text variant="caption" muted>
+                          {t('planning.goals.fundedFrom', {
+                            name: eligible.find((a) => a.id === selected)?.name ?? '',
+                          })}
+                        </Text>
+                      </>
+                    );
+                  })()}
                 </View>
               );
             })}
@@ -268,6 +321,7 @@ const styles = StyleSheet.create({
   cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   bar: { height: 8, borderRadius: radius.pill, backgroundColor: palette.brandMuted, overflow: 'hidden' },
   barFill: { height: 8, backgroundColor: palette.brand },
+  accountChips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.xs },
   inlineRow: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm, marginTop: spacing.xs },
   inlineField: { flex: 1 },
   divider: { height: 1, backgroundColor: palette.border, marginVertical: spacing.sm },

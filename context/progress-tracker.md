@@ -21,33 +21,27 @@
 - [x] **Talvori rebrand — rename + repalette.** App renamed → Talvori (config/locales/brand
       strings); `components/theme.ts` repaletted to the Talvori tokens (purple/navy/teal/orange);
       zero ibilly strings in code. typecheck + 211 tests + i18n parity green.
+- [x] **Talvori money-model alignment (Step 3)** — all 8 decided behaviors shipped (migrations
+      `20260830000013`/`20260830000014` applied to prod via MCP; typecheck + 216 tests + i18n +
+      lint green). Detail:
+  - [x] **Slice A** (pure UI/API): #1 account rename · #7 quick actions · #8 transfer edit
+    destructive-safe · #4 account-scoped dashboard — pills scope donut/activity **and** the hero,
+    now the month's **spend-vs-budget ratio** (spent/limit, % used, remaining, progress track);
+    both halves scope by funding account. Premium's consolidated total kept as a quiet caption.
+  - [x] **Slice C**: #3 budget funding account `{limit, account}` (`20260830000013`; backfill
+    verified) — types/schema/API/`budgets.tsx` picker + "paid from" caption.
+  - [x] **Slice B**: #2 payroll (NO-OP) · #5 By-account ledger (pure `accountLedger()` + tests;
+    "By account" surface shows In/Out/Net per account, transfers count both legs, rows two-way sync
+    with the hero scope + a ✎) · #6 goals/debts → ledger (`20260830000014`: `goal_contribution`/
+    `debt_payment` kinds, atomic `contribute_to_goal`/`pay_debt` RPCs, `transactions.goal_id/debt_id`
+    cascade FKs). A contribution/payment posts a read-only `out` transaction on a currency-matched
+    funding account (reduces its balance, lands in ledger Out, excluded from budget "Spent"), shown
+    read-only in Activity with 🎯/🧾 icons; goals/debts screens gained a funding-account picker.
+    **Open:** RPC happy-path needs an in-app run (0 goals/debts live); add an `rls-isolation.mjs`
+    assertion that the RPCs reject a cross-household account/goal.
 
 ## In progress
 
-- [ ] **Talvori money-model alignment (Step 3)** — sliced, safest-first:
-  - **Slice A** ✅ (pure UI/API, no migration): #1 account rename · #7 quick actions · #8 transfer
-    edit destructive-safe · #4 account-scoped dashboard ✅ **complete** — pills scope donut/activity
-    **and** the hero, which is now the current month's **spend-vs-budget ratio** (spent / limit,
-    % used, remaining, progress track). Both halves scope by funding account (`budget_status`
-    filtered by `account_id`; spend follows the category, which maps to one account per #3).
-    Premium's consolidated total is preserved as a quiet caption. No budget → falls back to the
-    balance hero (premium consolidated / free per-currency). No migration.
-    **→ CHECKPOINT: Slice B starts with a hand-applied migration (#2).**
-  - **Slice B** (data + ledger): #2 payroll ✅ (NO-OP — live data already has a `Salary` category +
-    no payroll account; a flag would contradict the decision) · #5 By-account ledger ✅ (pure
-    `accountLedger()` helper + unit tests; dashboard "By account" surface shows In/Out/Net per
-    account for the month in each account's own currency, transfers count both legs, rows two-way
-    sync with the hero scope + carry a ✎ to manage accounts) · #6 goals/debts → ledger (NOT
-    built — contributions/payments currently write only to `goal_contributions`/`debt_payments`,
-    they do **not** post transactions; #6 needs them to post a read-only `out` transaction, be
-    excluded from budget "Spent", get 🎯/🧾 Activity icons, and be non-editable. The
-    `accountLedger()` helper already counts any `out` row, so once posting lands it flows in
-    automatically. 0 goals/debts live today, so no user-visible gap yet).
-  - **Slice C** ✅: #3 budget funding account `{limit, account}` — migration `20260830000013`
-    applied to production via MCP + backfill verified (6 → Everyday Checking, 1 orphan → null);
-    types/schema/API/`budgets.tsx` account picker + "paid from" caption done.
-  - **MCP fixed** (reconnected as `Jsombo5q`); migrations now applied via MCP `apply_migration`,
-    repo keeps the migration file as source of truth. `lib/database.types.ts` synced by hand.
 - [ ] Dark theme — initiated (needs a provider refactor; see "Up next" 4c).
 
 ## Up next (buildable now — no external blockers)

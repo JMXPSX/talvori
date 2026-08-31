@@ -7,10 +7,8 @@ import type {
   BudgetAllocationRow,
   BudgetRow,
   BudgetStatusRow,
-  DebtPaymentRow,
   DebtRow,
   DebtStatusRow,
-  GoalContributionRow,
   SavingsGoalRow,
   SavingsGoalStatusRow,
 } from '@/lib/database.types';
@@ -156,26 +154,29 @@ export async function createGoal(
   return data as SavingsGoalRow;
 }
 
+/**
+ * Contribute to a savings goal (money-model #6). Atomically posts a read-only
+ * `goal_contribution` transaction on the funding account (so it reduces that
+ * account's balance and shows in the ledger) alongside the history row. The
+ * funding account's currency must match the goal's; RLS re-checks membership.
+ * Returns the new goal_contributions id.
+ */
 export async function addContribution(input: {
   goalId: string;
-  householdId: string;
+  accountId: string;
   amountMinor: number;
   note?: string;
-}): Promise<GoalContributionRow> {
-  const createdBy = await currentUserId();
-  const { data, error } = await getSupabase()
-    .from('goal_contributions')
-    .insert({
-      goal_id: input.goalId,
-      household_id: input.householdId,
-      amount_minor: input.amountMinor,
-      note: input.note ?? null,
-      created_by: createdBy,
-    })
-    .select('*')
-    .single();
+  occurredAt?: string;
+}): Promise<string> {
+  const { data, error } = await getSupabase().rpc('contribute_to_goal', {
+    _goal_id: input.goalId,
+    _account_id: input.accountId,
+    _amount_minor: input.amountMinor,
+    _note: input.note ?? null,
+    _occurred_at: input.occurredAt ?? new Date().toISOString(),
+  });
   if (error) fail('planning.errors.contributeFailed', error);
-  return data as GoalContributionRow;
+  return data as string;
 }
 
 // --- debts -----------------------------------------------------------------
@@ -227,24 +228,26 @@ export async function createDebt(
   return data as DebtRow;
 }
 
+/**
+ * Record a debt payment (money-model #6). Atomically posts a read-only
+ * `debt_payment` transaction on the funding account (reducing its balance and
+ * showing in the ledger) alongside the history row. The funding account's
+ * currency must match the debt's. Returns the new debt_payments id.
+ */
 export async function addPayment(input: {
   debtId: string;
-  householdId: string;
+  accountId: string;
   amountMinor: number;
   note?: string;
-}): Promise<DebtPaymentRow> {
-  const createdBy = await currentUserId();
-  const { data, error } = await getSupabase()
-    .from('debt_payments')
-    .insert({
-      debt_id: input.debtId,
-      household_id: input.householdId,
-      amount_minor: input.amountMinor,
-      note: input.note ?? null,
-      created_by: createdBy,
-    })
-    .select('*')
-    .single();
+  occurredAt?: string;
+}): Promise<string> {
+  const { data, error } = await getSupabase().rpc('pay_debt', {
+    _debt_id: input.debtId,
+    _account_id: input.accountId,
+    _amount_minor: input.amountMinor,
+    _note: input.note ?? null,
+    _occurred_at: input.occurredAt ?? new Date().toISOString(),
+  });
   if (error) fail('planning.errors.payFailed', error);
-  return data as DebtPaymentRow;
+  return data as string;
 }

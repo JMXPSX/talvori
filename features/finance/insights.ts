@@ -7,9 +7,10 @@
  */
 
 import { convertMinor } from '@/features/finance/fx';
+import type { TransactionType } from '@/lib/database.types';
 
 export interface InsightTxn {
-  type: 'income' | 'expense' | 'transfer';
+  type: TransactionType;
   amount_minor: number;
   currency_code: string;
   occurred_at: string;

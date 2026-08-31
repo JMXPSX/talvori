@@ -181,7 +181,9 @@
       "saveCta": "Save changes",
       "deleteCta": "Delete transaction",
       "transferNote": "Transfers are edited from the transfer screen.",
-      "notFound": "This transaction no longer exists."
+      "notFound": "This transaction no longer exists.",
+      "goalNote": "Goal contributions are managed from the Goals screen.",
+      "debtNote": "Debt payments are managed from the Debts screen."
     },
     "transfer": {
       "title": "Transfer",
@@ -226,7 +228,9 @@
     "ledger": {
       "in": "In",
       "out": "Out",
-      "net": "Net"
+      "net": "Net",
+      "goalContribution": "Goal contribution",
+      "debtPayment": "Debt payment"
     }
   },
   "planning": {
@@ -281,7 +285,9 @@
       "amountLabel": "Amount",
       "noteLabel": "Note (optional)",
       "confirmDeleteTitle": "Delete this goal?",
-      "confirmDeleteBody": "Its contribution history is removed too."
+      "confirmDeleteBody": "Its contribution history is removed too.",
+      "noFundingAccount": "Add a {{currency}} account to contribute.",
+      "fundedFrom": "Paid from {{name}}"
     },
     "debts": {
       "title": "Debts",
@@ -299,7 +305,9 @@
       "amountLabel": "Amount",
       "noteLabel": "Note (optional)",
       "confirmDeleteTitle": "Delete this debt?",
-      "confirmDeleteBody": "Its payment history is removed too."
+      "confirmDeleteBody": "Its payment history is removed too.",
+      "noFundingAccount": "Add a {{currency}} account to make a payment.",
+      "fundedFrom": "Paid from {{name}}"
     },
     "errors": {
       "loadFailed": "Couldn't load planning data.",
@@ -308,7 +316,8 @@
       "goalFailed": "Couldn't save the goal.",
       "contributeFailed": "Couldn't save the contribution.",
       "debtFailed": "Couldn't save the debt.",
-      "payFailed": "Couldn't record the payment."
+      "payFailed": "Couldn't record the payment.",
+      "noFundingAccount": "Choose a funding account first."
     }
   },
   "fx": {
@@ -407,7 +416,7 @@
     "priceCount": "{{count}} price",
     "priceCount_other": "{{count}} prices",
     "updated": "Updated {{date}}",
-    "stale": "Stale — {{date}}",
+    "stale": "May be outdated",
     "noPricesYet": "No prices yet",
     "retailers": "Retailers",
     "addRetailer": "Add retailer",
@@ -449,7 +458,6 @@
     "onlinePrice": "Online",
     "fresh": "Just updated",
     "recent": "Updated recently",
-    "stale": "May be outdated",
     "distanceKm": "{{km}} km away",
     "linkRetailer": "Sell at retailer",
     "chooseRetailer": "Choose retailer",

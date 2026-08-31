@@ -57,7 +57,14 @@ export interface HouseholdInvitationRow {
 
 // --- Phase 3: finance core -------------------------------------------------
 export type AccountType = 'cash' | 'bank' | 'card' | 'wallet' | 'other';
-export type TransactionType = 'income' | 'expense' | 'transfer';
+export type TransactionType =
+  | 'income'
+  | 'expense'
+  | 'transfer'
+  // Money-model #6: read-only ledger mirrors of a goal contribution / debt
+  // payment. Direction is always 'out'; excluded from budget "Spent".
+  | 'goal_contribution'
+  | 'debt_payment';
 export type FlowDirection = 'in' | 'out';
 export type CategoryKind = 'income' | 'expense';
 
@@ -96,6 +103,9 @@ export interface TransactionRow {
   description: string | null;
   occurred_at: string;
   transfer_group_id: string | null;
+  // Money-model #6: set when this row mirrors a goal contribution / debt payment.
+  goal_id: string | null;
+  debt_id: string | null;
   fx_rate: number | null;
   created_by: string | null;
   created_at: string;
