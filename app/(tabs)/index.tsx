@@ -25,7 +25,7 @@ import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider
 import { HouseholdSwitcher } from '@/features/household/HouseholdSwitcher';
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { categoryBreakdown, donutArcs } from '@/features/finance/donut';
-import { sumByCurrency, sumInReporting } from '@/features/finance/fx';
+import { convertMinor, sumByCurrency, sumInReporting } from '@/features/finance/fx';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
 import { aggregateBudget, pickCurrentBudget } from '@/features/finance/plan';
 import { listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
@@ -158,9 +158,18 @@ export default function HomeScreen() {
     balanceMinor: balances[a.id]?.balance_minor ?? a.opening_balance_minor,
     currency: a.currency_code,
   }));
-  const consolidated = has('multi_currency_dashboard')
-    ? sumInReporting(items, reporting, makeRateLookup(rates))
-    : null;
+  const rateFor = makeRateLookup(rates);
+  const showConverted = has('multi_currency_dashboard');
+  const consolidated = showConverted ? sumInReporting(items, reporting, rateFor) : null;
+  // The "By account" list always shows every account (unlike the scoped hero), so
+  // its footer total consolidates ALL accounts into the reporting currency — the
+  // per-row converted values below sum to exactly this.
+  const allItems = accounts.map((a) => ({
+    balanceMinor: balances[a.id]?.balance_minor ?? a.opening_balance_minor,
+    currency: a.currency_code,
+  }));
+  const allConsolidated = showConverted ? sumInReporting(allItems, reporting, rateFor) : null;
+  const currencyKinds = new Set(allItems.map((i) => i.currency.toUpperCase())).size;
   // Spend-vs-budget hero (#4): scope both halves by the funding account. Each
   // allocation names its account, so filtering the status rows partitions the
   // ratio per account (spend follows the category, which maps to one account).
@@ -176,7 +185,7 @@ export default function HomeScreen() {
   // the account already in scope clears back to All.
   const toggleScope = (id: string) => setSelectedAccountId((cur) => (cur === id ? null : id));
 
-  const breakdown = categoryBreakdown(visibleTxns, reporting, makeRateLookup(rates), t('finance.categories.none'));
+  const breakdown = categoryBreakdown(visibleTxns, reporting, rateFor, t('finance.categories.none'));
   const segments = donutArcs(breakdown.slices.map((s) => s.amountMinor)).map((a, i) => ({
     ...a,
     color: breakdown.slices[i]?.color ?? palette.border,
@@ -378,8 +387,19 @@ export default function HomeScreen() {
                 Flow Prototype), not one tile per account. */}
             <Card style={styles.accountsSlot}>
               <View style={styles.byAcctHeader}>
-                <Text variant="heading">{t('finance.byAccount.title')}</Text>
-                <Text variant="caption" muted>{t('finance.byAccount.caption')}</Text>
+                <View style={styles.byAcctHeadText}>
+                  <Text variant="heading">{t('finance.byAccount.title')}</Text>
+                  <Text variant="caption" muted>{t('finance.byAccount.caption')}</Text>
+                </View>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('finance.manageAccounts')}
+                  hitSlop={12}
+                  onPress={() => router.push('/finance/accounts')}
+                  style={({ pressed }) => [styles.byAcctManage, pressed ? styles.rowPressed : null]}
+                >
+                  <Feather name="edit-2" size={18} color={palette.textMuted} />
+                </Pressable>
               </View>
               {loading ? (
                 <ActivityIndicator color={palette.brand} />
@@ -397,6 +417,14 @@ export default function HomeScreen() {
                   {accounts.map((a) => {
                     const bal = balances[a.id];
                     const selected = scope === a.id;
+                    const nativeMinor = bal ? bal.balance_minor : a.opening_balance_minor;
+                    const nativeCcy = bal ? bal.currency_code : a.currency_code;
+                    const foreign = nativeCcy.toUpperCase() !== reporting.toUpperCase();
+                    // Convert this account into the household reporting currency so the
+                    // consolidated total (footer) is transparent. Null rate → prompt to add one.
+                    const rate = showConverted && foreign ? rateFor(nativeCcy, reporting) : null;
+                    const convertedMinor =
+                      rate != null ? convertMinor(nativeMinor, nativeCcy, reporting, rate) : null;
                     return (
                       <View
                         key={a.id}
@@ -414,24 +442,45 @@ export default function HomeScreen() {
                             {t(`finance.accounts.types.${a.type}`)} · {a.currency_code}
                           </Text>
                         </Pressable>
-                        <View style={styles.accountTrailing}>
-                          <Text variant="button">
-                            {bal
-                              ? formatAmount(bal.balance_minor, bal.currency_code)
-                              : formatAmount(a.opening_balance_minor, a.currency_code)}
-                          </Text>
-                          <Pressable
-                            accessibilityRole="button"
-                            accessibilityLabel={t('finance.manageAccounts')}
-                            hitSlop={12}
-                            onPress={() => router.push('/finance/accounts')}
-                          >
-                            <Feather name="edit-2" size={16} color={palette.textMuted} />
-                          </Pressable>
+                        <View style={styles.accountAmounts}>
+                          <Text variant="button">{formatAmount(nativeMinor, nativeCcy)}</Text>
+                          {showConverted && foreign ? (
+                            convertedMinor != null ? (
+                              <Text variant="caption" muted style={styles.accountConverted}>
+                                {t('finance.byAccount.converted', {
+                                  amount: formatAmount(convertedMinor, reporting),
+                                })}
+                              </Text>
+                            ) : (
+                              <Link href="/finance/rates">
+                                <Text variant="caption" style={styles.accountNoRate}>
+                                  {t('finance.byAccount.noRate', { currency: nativeCcy })}
+                                </Text>
+                              </Link>
+                            )
+                          ) : null}
                         </View>
                       </View>
                     );
                   })}
+                  {/* Footer: the reporting-currency total the converted rows sum to. */}
+                  {showConverted && allConsolidated && currencyKinds > 1 ? (
+                    <View style={styles.acctTotalRow}>
+                      <Text variant="caption" muted>
+                        {t('finance.byAccount.total', { currency: reporting })}
+                      </Text>
+                      <Text variant="button">
+                        {formatAmount(allConsolidated.totalMinor, reporting)}
+                      </Text>
+                    </View>
+                  ) : null}
+                  {showConverted && allConsolidated && allConsolidated.missing.length > 0 ? (
+                    <Link href="/finance/rates">
+                      <Text variant="caption" style={styles.accountNoRate}>
+                        {t('fx.missingRates', { currencies: allConsolidated.missing.join(', ') })}
+                      </Text>
+                    </Link>
+                  ) : null}
                 </View>
               )}
             </Card>
@@ -530,13 +579,34 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   // In-scope row echoes the selected pill (two-way sync, #5).
   accountRowSelected: { backgroundColor: c.brandMuted },
   accountMain: { flex: 1, gap: 2 },
-  accountTrailing: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  accountAmounts: { alignItems: 'flex-end', gap: 2 },
+  accountConverted: { color: c.textSecondary },
+  accountNoRate: { color: c.tertiary },
+  acctTotalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+    marginTop: spacing.sm,
+    paddingTop: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: c.border,
+  },
   byAcctHeader: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: spacing.sm,
-    flexWrap: 'wrap',
+  },
+  byAcctHeadText: { flex: 1, gap: 2 },
+  byAcctManage: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: c.field,
   },
   rowPressed: { opacity: 0.6 },
   hero: {

@@ -264,7 +264,10 @@
     },
     "byAccount": {
       "title": "Ayon sa account",
-      "caption": "balanse · pambukas + ngayong buwan"
+      "caption": "balanse · pambukas + ngayong buwan",
+      "converted": "≈ {{amount}}",
+      "noRate": "Walang rate ng {{currency}} — magdagdag",
+      "total": "Kabuuan sa {{currency}}"
     },
     "ledger": {
       "in": "Papasok",

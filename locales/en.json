@@ -264,7 +264,10 @@
     },
     "byAccount": {
       "title": "By account",
-      "caption": "balance · opening + this month"
+      "caption": "balance · opening + this month",
+      "converted": "≈ {{amount}}",
+      "noRate": "No {{currency}} rate — add one",
+      "total": "Total in {{currency}}"
     },
     "ledger": {
       "in": "In",
