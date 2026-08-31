@@ -18,11 +18,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { elevation, radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { Avatar, BentoPage, BentoRow, Card, Chip, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
+import { Avatar, BentoPage, BentoRow, Card, Donut, EmptyState, ErrorNotice, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { HouseholdSwitcher } from '@/features/household/HouseholdSwitcher';
+import { AccountScopePicker } from '@/features/finance/AccountScopePicker';
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { categoryBreakdown, donutArcs } from '@/features/finance/donut';
 import { convertMinor, sumByCurrency, sumInReporting } from '@/features/finance/fx';
@@ -224,30 +225,10 @@ export default function HomeScreen() {
           </View>
           <HouseholdSwitcher visible={switcherOpen} onClose={() => setSwitcherOpen(false)} />
 
-          {/* Account-scope pills (#4) — only when there's more than one account to scope. */}
+          {/* Account-scope filter (#4) — pills, collapsing to a dropdown as accounts grow. */}
           {accounts.length > 1 ? (
             <View style={styles.scope}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.scopePills}
-              >
-                <Chip
-                  label={t('finance.allAccounts')}
-                  selected={scope === null}
-                  role="radio"
-                  onPress={() => setSelectedAccountId(null)}
-                />
-                {accounts.map((a) => (
-                  <Chip
-                    key={a.id}
-                    label={a.name}
-                    selected={scope === a.id}
-                    role="radio"
-                    onPress={() => setSelectedAccountId(a.id)}
-                  />
-                ))}
-              </ScrollView>
+              <AccountScopePicker accounts={accounts} value={scope} onChange={setSelectedAccountId} />
               <Text variant="caption" muted>
                 {scope
                   ? t('finance.showing', { name: accounts.find((a) => a.id === scope)?.name ?? '' })
@@ -559,7 +540,6 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     borderColor: c.border,
   },
   scope: { gap: spacing.xs },
-  scopePills: { flexDirection: 'row', gap: spacing.sm, paddingVertical: spacing.xs },
   // Flex weights: on wide viewports the hero takes two thirds beside the
   // actions; BentoRow collapses both to full width on narrow.
   heroSlot: { flex: 2 },

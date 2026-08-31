@@ -296,7 +296,8 @@
       "footerHint": "Tap ✎ to fix a wrong entry — amount, account, category, date — or delete it inside.",
       "empty": "Nothing here yet. Income and expenses you add will appear in this list.",
       "noneForAccount": "No transactions for {{account}} yet."
-    }
+    },
+    "filterByAccount": "Filter by account"
   },
   "planning": {
     "hubTitle": "Plan",

@@ -10,7 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { BentoPage, Card, Chip, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
+import { BentoPage, Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
+import { AccountScopePicker } from '@/features/finance/AccountScopePicker';
 import { listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { monthFlow } from '@/features/finance/flow';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
@@ -197,29 +198,7 @@ export default function TransactionsScreen() {
           </Pressable>
         </View>
 
-        {accounts.length > 1 ? (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scopePills}
-          >
-            <Chip
-              label={t('finance.allAccounts')}
-              selected={scope === null}
-              role="radio"
-              onPress={() => setSelectedAccountId(null)}
-            />
-            {accounts.map((a) => (
-              <Chip
-                key={a.id}
-                label={a.name}
-                selected={scope === a.id}
-                role="radio"
-                onPress={() => setSelectedAccountId(a.id)}
-              />
-            ))}
-          </ScrollView>
-        ) : null}
+        <AccountScopePicker accounts={accounts} value={scope} onChange={setSelectedAccountId} />
 
         {visible.length > 0 ? (
           <Card style={styles.summary}>
@@ -403,7 +382,6 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     alignSelf: 'center',
   },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  scopePills: { gap: spacing.sm, paddingVertical: spacing.xs },
   scopeEmpty: { paddingVertical: spacing.lg, textAlign: 'center' },
   summary: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   summaryCol: { flex: 1, gap: 2, alignItems: 'center' },
