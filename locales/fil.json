@@ -215,7 +215,15 @@
       "transferFailed": "Hindi nakumpleto ang paglipat.",
       "deleteFailed": "Hindi nabura iyon."
     },
-    "spendingByCategory": "Gastos ayon sa kategorya"
+    "spendingByCategory": "Gastos ayon sa kategorya",
+    "byAccount": {
+      "title": "Ayon sa account"
+    },
+    "ledger": {
+      "in": "Papasok",
+      "out": "Palabas",
+      "net": "Neto"
+    }
   },
   "planning": {
     "hubTitle": "Pagpaplano",

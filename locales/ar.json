@@ -215,7 +215,15 @@
       "transferFailed": "تعذّر إكمال التحويل.",
       "deleteFailed": "تعذّر حذف ذلك."
     },
-    "spendingByCategory": "الإنفاق حسب الفئة"
+    "spendingByCategory": "الإنفاق حسب الفئة",
+    "byAccount": {
+      "title": "حسب الحساب"
+    },
+    "ledger": {
+      "in": "وارد",
+      "out": "صادر",
+      "net": "صافي"
+    }
   },
   "planning": {
     "hubTitle": "التخطيط",

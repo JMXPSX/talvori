@@ -30,8 +30,11 @@
     the full spend-vs-budget-ratio hero scoping awaits the spent-vs-budget hero + #3).
     **→ CHECKPOINT: Slice B starts with a hand-applied migration (#2).**
   - **Slice B** (data + ledger): #2 payroll ✅ (NO-OP — live data already has a `Salary` category +
-    no payroll account; a flag would contradict the decision) · #5 By-account ledger (next) · #6
-    extend (trivial; 0 goals/debts).
+    no payroll account; a flag would contradict the decision) · #5 By-account ledger ✅ (pure
+    `accountLedger()` helper + unit tests; dashboard "By account" surface shows In/Out/Net per
+    account for the month in each account's own currency, transfers count both legs, rows two-way
+    sync with the hero scope + carry a ✎ to manage accounts) · #6 extend (trivial; 0 goals/debts —
+    goal/debt payments already post `out` transactions, so they fall into Out with no join needed).
   - **Slice C** ✅: #3 budget funding account `{limit, account}` — migration `20260830000013`
     applied to production via MCP + backfill verified (6 → Everyday Checking, 1 orphan → null);
     types/schema/API/`budgets.tsx` account picker + "paid from" caption done.

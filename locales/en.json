@@ -215,7 +215,15 @@
       "transferFailed": "Couldn't complete the transfer.",
       "deleteFailed": "Couldn't delete that."
     },
-    "spendingByCategory": "Spending by category"
+    "spendingByCategory": "Spending by category",
+    "byAccount": {
+      "title": "By account"
+    },
+    "ledger": {
+      "in": "In",
+      "out": "Out",
+      "net": "Net"
+    }
   },
   "planning": {
     "hubTitle": "Planning",
