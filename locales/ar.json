@@ -8,7 +8,8 @@
     "comingSoon": "قريبًا",
     "today": "اليوم",
     "yesterday": "أمس",
-    "retry": "إعادة المحاولة"
+    "retry": "إعادة المحاولة",
+    "custom": "مخصّص"
   },
   "nav": {
     "home": "الرئيسية",
@@ -56,7 +57,10 @@
       "emailInUse": "هذا البريد الإلكتروني مسجّل بالفعل. حاول تسجيل الدخول.",
       "weakPassword": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
       "generic": "تعذّر إكمال ذلك. يرجى المحاولة مرة أخرى."
-    }
+    },
+    "signingIn": "جارٍ تسجيل الدخول…",
+    "emailInvalidBanner": "يبدو أن البريد الإلكتروني غير صحيح — جرّب name@example.com",
+    "requireBoth": "أدخل بريدك الإلكتروني وكلمة المرور."
   },
   "screens": {
     "homeTitle": "الرئيسية",
@@ -113,8 +117,23 @@
       "loadFailed": "تعذّر تحميل بيانات الأسرة.",
       "inviteFailed": "تعذّر إرسال الدعوة.",
       "revokeFailed": "تعذّر إلغاء الدعوة.",
-      "acceptFailed": "هذه الدعوة غير صالحة أو منتهية أو لبريد مختلف."
-    }
+      "acceptFailed": "هذه الدعوة غير صالحة أو منتهية أو لبريد مختلف.",
+      "codeNotFound": "لا يوجد منزل للرمز {{code}}. تحقّق من الرمز مع من دعاك.",
+      "alreadyMember": "أنت عضو بالفعل في ذلك المنزل.",
+      "joinFailed": "تعذّر الانضمام إلى ذلك المنزل. حاول مرة أخرى.",
+      "saveFailed": "تعذّر حفظ التغيير."
+    },
+    "detailSub": "من يشاركون هذه الميزانية.",
+    "activeMembers_one": "عضو {{count}} نشِط",
+    "activeMembers_other": "{{count}} أعضاء نشِطون",
+    "invite": "دعوة",
+    "close": "إغلاق",
+    "rolesTitle": "ما الذي يمكن لكل دور فعله",
+    "ownerCan": "إدارة المنزل ودعوة الأعضاء أو إزالتهم وتعديل الميزانيات والإعدادات المشتركة.",
+    "memberCan": "إضافة الدخل والمصروفات وعرض الميزانيات المشتركة واستخدام قائمة البقالة ورؤية نشاط المنزل.",
+    "ownerAccess": "وصول كامل",
+    "memberAccess": "ميزانية مشتركة",
+    "crossBorderToggle": "هل لديك أعضاء في بلد آخر؟"
   },
   "finance": {
     "overviewTitle": "الحسابات",
@@ -173,7 +192,9 @@
       "categoryLabel": "الفئة (اختياري)",
       "descriptionLabel": "ملاحظة (اختياري)",
       "saveCta": "حفظ",
-      "noAccounts": "أضف حسابًا أولًا."
+      "noAccounts": "أضف حسابًا أولًا.",
+      "saveIncome": "حفظ الدخل",
+      "saveExpense": "حفظ المصروف"
     },
     "edit": {
       "title": "تعديل المعاملة",
@@ -193,7 +214,11 @@
       "toAmountLabel": "المبلغ المُستَلَم",
       "saveCta": "تحويل",
       "needTwo": "تحتاج إلى حسابين على الأقل لإجراء تحويل.",
-      "crossCurrencyHint": "عملتان مختلفتان — أدخل المبلغ بعملة كل حساب."
+      "crossCurrencyHint": "عملتان مختلفتان — أدخل المبلغ بعملة كل حساب.",
+      "moneyTitle": "تحويل الأموال",
+      "saveTransfer": "حفظ التحويل",
+      "sameAccounts": "اختر حسابين مختلفين.",
+      "notePlaceholderExample": "مثال: راتب أغسطس"
     },
     "categories": {
       "title": "الفئات",
@@ -232,6 +257,26 @@
       "net": "صافي",
       "goalContribution": "مساهمة في الهدف",
       "debtPayment": "سداد دين"
+    },
+    "form": {
+      "toAccount": "إلى حساب",
+      "fromAccount": "من حساب",
+      "category": "الفئة",
+      "dateLabel": "التاريخ",
+      "noteLabel": "ملاحظة",
+      "notePlaceholder": "ملاحظة اختيارية",
+      "customDatePlaceholder": "YYYY-MM-DD",
+      "amountPositive": "أدخل مبلغًا أكبر من صفر."
+    },
+    "toast": {
+      "incomeSaved": "✓ تم حفظ الدخل — +{{amount}} إلى {{account}}",
+      "expenseSaved": "✓ تم حفظ المصروف — −{{amount}} من {{account}}",
+      "transferSaved": "✓ تم حفظ التحويل — {{amount}} من {{from}} إلى {{to}}",
+      "changesSaved": "✓ تم حفظ التغييرات — {{amount}}"
+    },
+    "activity": {
+      "footerHint": "انقر ✎ لتصحيح إدخال خاطئ — المبلغ، الحساب، الفئة، التاريخ — أو احذفه من الداخل.",
+      "empty": "لا شيء هنا بعد. سيظهر الدخل والمصروفات التي تضيفها في هذه القائمة."
     }
   },
   "planning": {
@@ -239,7 +284,8 @@
     "plan": {
       "usedPct": "{{pct}}% مُستخدَم",
       "safePerDay": "آمن للإنفاق {{amount}}/يوم",
-      "manage": "إدارة"
+      "manage": "إدارة",
+      "monthBudget": "ميزانية {{month}}"
     },
     "budgets": {
       "title": "الميزانيات",
@@ -270,7 +316,12 @@
       "confirmDeleteAllocationTitle": "إزالة هذا الحد؟",
       "confirmDeleteAllocationBody": "لن يتأثر سجل الإنفاق.",
       "spentOf": "أُنفق {{spent}} من {{limit}}",
-      "unassignedAccount": "غير مخصّص"
+      "unassignedAccount": "غير مخصّص",
+      "scopeAll": "كل الحسابات",
+      "scopeFrom": "عرض الفئات المدفوعة من {{account}}",
+      "tapHint": "انقر ✎ لتغيير الفئة",
+      "addCategory": "＋ إضافة فئة",
+      "noneInScope": "لا توجد فئات مدفوعة من {{account}} بعد."
     },
     "goals": {
       "title": "أهداف الادخار",
@@ -290,7 +341,9 @@
       "confirmDeleteTitle": "حذف هذا الهدف؟",
       "confirmDeleteBody": "سيُزال سجل مساهماته أيضًا.",
       "noFundingAccount": "أضف حساباً بعملة {{currency}} للمساهمة.",
-      "fundedFrom": "مدفوع من {{name}}"
+      "fundedFrom": "مدفوع من {{name}}",
+      "addGoal": "＋ إضافة هدف",
+      "reached": "تحقّق 🎉"
     },
     "debts": {
       "title": "الديون",
@@ -313,7 +366,8 @@
       "fundedFrom": "مدفوع من {{name}}",
       "totalOwed": "إجمالي المستحق: {{amount}}",
       "overdueOn": "متأخر — كان مستحقًا يوم {{day}}",
-      "dueDay": "مستحق يوم {{day}}"
+      "dueDay": "مستحق يوم {{day}}",
+      "addDebt": "＋ إضافة دَين"
     },
     "errors": {
       "loadFailed": "تعذّر تحميل بيانات التخطيط.",
@@ -598,7 +652,14 @@
     "totalSpent": "إجمالي الإنفاق",
     "avgPerDay": "المتوسط / اليوم",
     "transactions": "المعاملات",
-    "empty": "لا إنفاق هذا الشهر بعد."
+    "empty": "لا إنفاق هذا الشهر بعد.",
+    "income": "الدخل",
+    "expenses": "المصروفات",
+    "netCashFlow": "صافي التدفّق النقدي · {{range}}",
+    "thisMonth": "هذا الشهر",
+    "savingsRate": "تحتفظ بنسبة {{pct}}% من الدخل في هذه الفترة ({{range}}).",
+    "spentMore": "أنفقت {{amount}} أكثر مما كسبت في هذه الفترة ({{range}}).",
+    "noIncome": "لا دخل مُسجّل في هذه الفترة — أضف واحدًا لرؤية معدّل الادّخار."
   },
   "currency": {
     "title": "اختر العملة",
@@ -625,6 +686,188 @@
       "light": "فاتح",
       "dark": "داكن",
       "hint": "اختر شكل تالفوري. يتبع النظام إعداد جهازك."
-    }
+    },
+    "title": "الإعدادات",
+    "sub": "خصّص طريقة عمل التطبيق.",
+    "currencyRegion": "العملة والمنطقة",
+    "currencyRegionSub": "عملة التقارير والدولة والتنسيقات",
+    "language": "اللغة",
+    "languageSub": "مزيد من اللغات قريبًا",
+    "languageValue": "الإنجليزية",
+    "notificationsSection": "الإشعارات",
+    "notifBills": "تذكير الفواتير",
+    "notifBillsSub": "قبل 3 أيام من تاريخ الاستحقاق",
+    "notifBudget": "تنبيهات الميزانية",
+    "notifBudgetSub": "عند تجاوز الفئة 80%",
+    "notifActivity": "نشاط المنزل",
+    "notifActivitySub": "عند إضافة عضو معاملة",
+    "notifGoals": "أهداف الادّخار",
+    "notifGoalsSub": "الإنجازات والمساهمات",
+    "notifShopping": "تحديثات قائمة التسوّق",
+    "notifShoppingSub": "عند تعديل أحدهم للقائمة",
+    "securitySection": "الأمان والخصوصية",
+    "passcode": "رمز مرور التطبيق",
+    "passcodeSub": "اطلب رمزًا عند فتح التطبيق",
+    "passcodeOn": "تم تفعيل رمز المرور — ستحدّد هنا رمزًا من 4 أرقام.",
+    "exportData": "تصدير بياناتي",
+    "exportSub": "ملف CSV للمعاملات والميزانيات",
+    "exportQueued": "تم إدراج التصدير — سيُنزَّل هنا ملف CSV للمعاملات والميزانيات.",
+    "deleteAccount": "حذف الحساب",
+    "deleteAccountSub": "يزيل بياناتك نهائيًا"
+  },
+  "brand": {
+    "wordmark": "talvori",
+    "tagline": "خطة واحدة. الجميع. معًا."
+  },
+  "onboarding": {
+    "stepLabel": "الخطوة {{current}} من {{total}}",
+    "step1Title": "إعداد منزلك",
+    "householdNamePlaceholder": "مثال: عائلة ميلر",
+    "nameRequired": "أطلق اسمًا على منزلك.",
+    "currencySearchPlaceholder": "ابحث في أكثر من 170 عملة",
+    "suggestedLabel": "مقترحة — من جهازك",
+    "step2Title": "ادعُ أفراد منزلك",
+    "step2Sub": "يرى الجميع نفس القوائم والميزانيات مباشرةً. يمكنك أيضًا فعل ذلك لاحقًا.",
+    "inviteCodeLabel": "رمز الدعوة",
+    "copyCode": "نسخ الرمز",
+    "copied": "✓ تم النسخ",
+    "share": "مشاركة…",
+    "createdConfirm": "✓ تم إنشاء {{name}} · {{currency}}",
+    "goToDashboard": "الذهاب إلى لوحتي",
+    "skipForNow": "تخطَّ الآن",
+    "crossBorderHelper": "هل لديك أفراد في بلد آخر؟ فعّل تتبّع عبر الحدود في أي وقت من إعدادات المنزل."
+  },
+  "home": {
+    "greeting": "صباح الخير",
+    "greetingNamed": "صباح الخير، {{name}}",
+    "yourHouseholds": "منازلك",
+    "createHousehold": "＋ إنشاء منزل",
+    "joinWithCode": "انضم برمز",
+    "manageHousehold": "إدارة المنزل",
+    "memberCount_one": "عضو {{count}} · رمز {{code}}",
+    "memberCount_other": "{{count}} أعضاء · رمز {{code}}",
+    "createHelper": "يبدأ فارغًا — بميزانياته ومعاملاته وفواتيره وقائمة بقالته.",
+    "nameRequired": "أطلق اسمًا على المنزل.",
+    "dupName": "لديك منزل بهذا الاسم بالفعل.",
+    "joinPlaceholder": "رمز الدعوة — مثل WVH-5570",
+    "create": "إنشاء",
+    "join": "انضمام",
+    "switched": "✓ تم التبديل إلى {{name}}",
+    "created": "✓ تم إنشاء {{name}}",
+    "joined": "✓ انضممت إلى {{name}}"
+  },
+  "shop": {
+    "title": "قائمة البقالة الخاصة بنا",
+    "shared": "مشتركة",
+    "budgetTitle": "ميزانية {{category}}",
+    "monthlyBudget": "الميزانية الشهرية",
+    "spentThisMonth": "المصروف هذا الشهر",
+    "remaining": "المتبقّي",
+    "thisWeek": "قائمة هذا الأسبوع",
+    "itemsRemaining_one": "عنصر {{count}} متبقٍّ",
+    "itemsRemaining_other": "{{count}} عناصر متبقّية",
+    "estimated": "مُقدّر",
+    "afterTrip": "بعد هذه الرحلة",
+    "leftApprox": "≈ {{amount}} متبقٍّ",
+    "modeList": "القائمة",
+    "modeShopping": "ابدأ التسوّق",
+    "insightHigher": "رحلتك المعتادة للبقالة {{avg}}. قائمة هذا الأسبوع أعلى بنحو {{diff}}.",
+    "insightLower": "رحلتك المعتادة للبقالة {{avg}}. قائمة هذا الأسبوع أقل بنحو {{diff}}.",
+    "insightSame": "رحلتك المعتادة للبقالة {{avg}}. قائمة هذا الأسبوع مماثلة تقريبًا.",
+    "yourList": "قائمتك",
+    "addItem": "＋ إضافة عنصر",
+    "buyAgain": "اشترِ مجددًا",
+    "purchased": "تم الشراء",
+    "clearPurchased": "مسح المُشترى",
+    "clearNote": "يحتفظ المسح بالأسعار التي دفعتها لتقدير القوائم المستقبلية تلقائيًا.",
+    "noEstimate": "لا تقدير",
+    "est": "تقدير {{amount}}",
+    "lastPaid": "آخر دفعة {{amount}}",
+    "useAsEstimate": "استخدمه كتقدير",
+    "itemName": "اسم العنصر",
+    "qty": "الكمية",
+    "unit": "الوحدة",
+    "moreOptions": "خيارات أخرى",
+    "noteOptional": "ملاحظة (اختياري)",
+    "estPrice": "السعر المقدّر",
+    "addToList": "أضف إلى القائمة",
+    "estHelper": "السعر المقدّر اختياري — سنستخدم آخر سعر دفعته عندما نعرفه.",
+    "nameRequired": "أطلق اسمًا على العنصر.",
+    "qtyPositive": "يجب أن تكون الكمية أكبر من صفر.",
+    "pricePositive": "يجب أن يكون السعر المقدّر 0 أو أكثر.",
+    "remove": "🗑 إزالة",
+    "editPricePerUnit": "السعر المقدّر لكل {{unit}} (اختياري)",
+    "tripTitle": "رحلة التسوّق",
+    "itemsLeft": "{{done}} من {{total}} عناصر متبقّية",
+    "groceriesLeft": "المتبقّي للبقالة",
+    "runningTotal": "الإجمالي الجاري",
+    "tripHelper": "الأسعار اختيارية أثناء التسوّق — علّم العناصر وأدخل الإجمالي الحقيقي في النهاية.",
+    "finishShopping": "إنهاء التسوّق",
+    "backToList": "العودة إلى القائمة",
+    "emptyBeforeShop": "أضف شيئًا إلى القائمة قبل التسوّق.",
+    "completeTitle": "اكتمل التسوّق",
+    "store": "المتجر",
+    "storePlaceholder": "أي متجر — مثل SM Supermarket",
+    "estimatedTotal": "الإجمالي المقدّر",
+    "actualTotal": "الإجمالي المدفوع فعليًا",
+    "paidFrom": "مدفوع من",
+    "category": "الفئة",
+    "date": "التاريخ",
+    "recordPurchase": "تسجيل الشراء",
+    "recordHelper": "هذه هي الخطوة الوحيدة التي تنشئ مصروفًا — تُسجّل مرة واحدة في النشاط، وفي ميزانية {{category}}، ورصيد {{account}}.",
+    "actualRequired": "أدخل المبلغ المدفوع فعليًا.",
+    "recordedToast": "✓ تم تسجيل الشراء — −{{amount}} في {{store}} · {{account}}",
+    "emptyList": "لا شيء في القائمة بعد — أضف عنصرًا أو اختر أحدها من اشترِ مجددًا.",
+    "addedByShort": "أضافه {{name}}"
+  },
+  "components": {
+    "tapAgain": "انقر مرة أخرى للتأكيد"
+  },
+  "more": {
+    "sub": "أدِر منزلك والتطبيق.",
+    "moneySection": "المال والمنزل",
+    "appSection": "التطبيق والحساب",
+    "bills": "الفواتير والاشتراكات",
+    "billsSub": "المدفوعات المتكررة وتواريخ الاستحقاق",
+    "household": "المنزل",
+    "householdSub": "الأعضاء والدعوات والأذونات",
+    "reports": "التقارير والرؤى",
+    "reportsSub": "الإنفاق والاتجاهات والتدفّق النقدي",
+    "settings": "الإعدادات",
+    "settingsSub": "العملة والمنطقة والأمان والخصوصية",
+    "help": "المساعدة والدعم",
+    "helpSub": "الأسئلة الشائعة والملاحظات والدعم",
+    "footer": "إصدار التطبيق 1.0 · تبقى بياناتك المالية خاصة",
+    "profileMeta": "{{household}} · {{plan}}",
+    "planFree": "خطة شخصية",
+    "planPremium": "خطة Premium",
+    "planHousehold": "خطة المنزل"
+  },
+  "help": {
+    "title": "المساعدة والدعم",
+    "sub": "احصل على المساعدة عند الحاجة.",
+    "faqTitle": "الأسئلة الشائعة",
+    "q1": "هل تُنفق الإضافة إلى قائمة البقالة أموالًا؟",
+    "a1": "لا — يتحرّك المال فقط عند تسجيل الشراء الذي يُنشئ مصروفًا واحدًا.",
+    "q2": "لماذا تنقسم ميزانيتي حسب الحساب؟",
+    "a2": "كل فئة تحدّد حساب تمويلها؛ ومحدّد النطاق يصفّي الإنفاق والحدود معًا.",
+    "q3": "كيف تظهر الأهداف والديون؟",
+    "a3": "كصفوف للقراءة فقط في النشاط مع سجلّ لكل هدف/دَين، ومستبعدة من إنفاق الفئات.",
+    "q4": "هل يمكنني استخدامه خارج الولايات المتحدة؟",
+    "a4": "نعم — أي عملة تقارير؛ والمتاجر والأسعار خاصة بك.",
+    "feedbackTitle": "إرسال ملاحظات",
+    "feedbackSub": "اقترح تحسينًا — يصل إلى فريق المنتج.",
+    "feedbackPlaceholder": "ما الذي سيجعل هذا التطبيق أفضل؟",
+    "feedbackSend": "إرسال",
+    "feedbackEmpty": "اكتب ملاحظة أولًا.",
+    "feedbackSent": "✓ شكرًا — تم إرسال الملاحظات.",
+    "contactTitle": "التواصل مع الدعم",
+    "contactBody": "راسِل support@example.com وعادةً نردّ خلال يوم. الدردشة المباشرة غير مفعّلة في هذا النموذج."
+  },
+  "bills": {
+    "title": "الفواتير والاشتراكات",
+    "sub": "ابقَ متقدّمًا على المدفوعات المتكررة.",
+    "notWired": "تحتاج الفواتير إلى خلفية المدفوعات المتكررة — غير مُعدّة بعد.",
+    "empty": "لا فواتير بعد — أضف واحدة لمعرفة المستحق."
   }
 }

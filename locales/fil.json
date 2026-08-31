@@ -8,7 +8,8 @@
     "comingSoon": "Malapit nang dumating",
     "today": "Ngayon",
     "yesterday": "Kahapon",
-    "retry": "Subukan muli"
+    "retry": "Subukan muli",
+    "custom": "Custom"
   },
   "nav": {
     "home": "Home",
@@ -56,7 +57,10 @@
       "emailInUse": "Nakarehistro na ang email na iyan. Subukang mag-sign in.",
       "weakPassword": "Ang password ay dapat hindi bababa sa 8 karakter.",
       "generic": "Hindi makumpleto iyon. Pakisubukang muli."
-    }
+    },
+    "signingIn": "Nagsa-sign in…",
+    "emailInvalidBanner": "Mukhang mali ang email — subukan ang name@example.com",
+    "requireBoth": "Ilagay ang iyong email at password."
   },
   "screens": {
     "homeTitle": "Home",
@@ -113,8 +117,23 @@
       "loadFailed": "Hindi ma-load ang datos ng sambahayan.",
       "inviteFailed": "Hindi naipadala ang imbitasyon.",
       "revokeFailed": "Hindi nabawi ang imbitasyon.",
-      "acceptFailed": "Ang imbitasyon ay hindi wasto, expired, o para sa ibang email."
-    }
+      "acceptFailed": "Ang imbitasyon ay hindi wasto, expired, o para sa ibang email.",
+      "codeNotFound": "Walang sambahayan para sa {{code}}. Tingnan ang code sa nag-imbita sa iyo.",
+      "alreadyMember": "Miyembro ka na ng sambahayang iyon.",
+      "joinFailed": "Hindi makasali sa sambahayang iyon. Pakisubukan muli.",
+      "saveFailed": "Hindi na-save ang pagbabago."
+    },
+    "detailSub": "Mga taong naghahati sa budget na ito.",
+    "activeMembers_one": "{{count}} aktibong miyembro",
+    "activeMembers_other": "{{count}} aktibong miyembro",
+    "invite": "Mag-imbita",
+    "close": "Isara",
+    "rolesTitle": "Ano ang magagawa ng bawat role",
+    "ownerCan": "Pamahalaan ang sambahayan, mag-imbita o mag-alis ng miyembro, mag-edit ng badyet at mga shared na setting.",
+    "memberCan": "Magdagdag ng kita at gastos, tingnan ang mga shared na badyet, gamitin ang listahan sa grocery, makita ang aktibidad.",
+    "ownerAccess": "Buong access",
+    "memberAccess": "Shared na badyet",
+    "crossBorderToggle": "May miyembro sa ibang bansa?"
   },
   "finance": {
     "overviewTitle": "Mga Account",
@@ -173,7 +192,9 @@
       "categoryLabel": "Kategorya (opsyonal)",
       "descriptionLabel": "Tala (opsyonal)",
       "saveCta": "I-save",
-      "noAccounts": "Magdagdag muna ng account."
+      "noAccounts": "Magdagdag muna ng account.",
+      "saveIncome": "I-save ang kita",
+      "saveExpense": "I-save ang gastos"
     },
     "edit": {
       "title": "I-edit ang transaksyon",
@@ -193,7 +214,11 @@
       "toAmountLabel": "Halagang natanggap",
       "saveCta": "Ilipat",
       "needTwo": "Kailangan mo ng dalawang account para maglipat.",
-      "crossCurrencyHint": "Magkaibang currency — ilagay ang halaga sa currency ng bawat account."
+      "crossCurrencyHint": "Magkaibang currency — ilagay ang halaga sa currency ng bawat account.",
+      "moneyTitle": "Maglipat ng pera",
+      "saveTransfer": "I-save ang lipat",
+      "sameAccounts": "Pumili ng dalawang magkaibang account.",
+      "notePlaceholderExample": "hal. sahod sa Agosto"
     },
     "categories": {
       "title": "Mga Kategorya",
@@ -232,6 +257,26 @@
       "net": "Neto",
       "goalContribution": "Kontribusyon sa layunin",
       "debtPayment": "Bayad sa utang"
+    },
+    "form": {
+      "toAccount": "Papuntang account",
+      "fromAccount": "Mula sa account",
+      "category": "Kategorya",
+      "dateLabel": "Petsa",
+      "noteLabel": "Tala",
+      "notePlaceholder": "Opsyonal na tala",
+      "customDatePlaceholder": "YYYY-MM-DD",
+      "amountPositive": "Maglagay ng halagang mas malaki sa zero."
+    },
+    "toast": {
+      "incomeSaved": "✓ Na-save ang kita — +{{amount}} papunta sa {{account}}",
+      "expenseSaved": "✓ Na-save ang gastos — −{{amount}} mula sa {{account}}",
+      "transferSaved": "✓ Na-save ang lipat — {{amount}} mula sa {{from}} papuntang {{to}}",
+      "changesSaved": "✓ Na-save ang mga pagbabago — {{amount}}"
+    },
+    "activity": {
+      "footerHint": "I-tap ang ✎ para itama ang maling entry — halaga, account, kategorya, petsa — o burahin ito sa loob.",
+      "empty": "Wala pa rito. Lilitaw dito ang kita at gastos na idadagdag mo."
     }
   },
   "planning": {
@@ -239,7 +284,8 @@
     "plan": {
       "usedPct": "{{pct}}% nagamit",
       "safePerDay": "Ligtas gastusin {{amount}}/araw",
-      "manage": "Pamahalaan"
+      "manage": "Pamahalaan",
+      "monthBudget": "Badyet para sa {{month}}"
     },
     "budgets": {
       "title": "Mga Badyet",
@@ -270,7 +316,12 @@
       "confirmDeleteAllocationTitle": "Alisin ang limitasyong ito?",
       "confirmDeleteAllocationBody": "Hindi maaapektuhan ang kasaysayan ng paggastos.",
       "spentOf": "{{spent}} nagastos sa {{limit}}",
-      "unassignedAccount": "walang account"
+      "unassignedAccount": "walang account",
+      "scopeAll": "Lahat ng account",
+      "scopeFrom": "Ipinapakita ang mga kategoryang binabayaran mula sa {{account}}",
+      "tapHint": "i-tap ang ✎ para baguhin ang kategorya",
+      "addCategory": "＋ Magdagdag ng kategorya",
+      "noneInScope": "Wala pang kategoryang binabayaran mula sa {{account}}."
     },
     "goals": {
       "title": "Mga Layunin sa Ipon",
@@ -290,7 +341,9 @@
       "confirmDeleteTitle": "Burahin ang layuning ito?",
       "confirmDeleteBody": "Aalisin din ang kasaysayan ng mga kontribusyon nito.",
       "noFundingAccount": "Magdagdag ng account na {{currency}} para makapag-ambag.",
-      "fundedFrom": "Binayad mula sa {{name}}"
+      "fundedFrom": "Binayad mula sa {{name}}",
+      "addGoal": "＋ Magdagdag ng layunin",
+      "reached": "Naabot 🎉"
     },
     "debts": {
       "title": "Mga Utang",
@@ -313,7 +366,8 @@
       "fundedFrom": "Binayad mula sa {{name}}",
       "totalOwed": "Kabuuang utang: {{amount}}",
       "overdueOn": "Lampas na — dapat noong araw {{day}}",
-      "dueDay": "Bayaran araw {{day}}"
+      "dueDay": "Bayaran araw {{day}}",
+      "addDebt": "＋ Magdagdag ng utang"
     },
     "errors": {
       "loadFailed": "Hindi ma-load ang datos ng pagpaplano.",
@@ -598,7 +652,14 @@
     "totalSpent": "Kabuuang nagastos",
     "avgPerDay": "Karaniwan / araw",
     "transactions": "Mga transaksyon",
-    "empty": "Wala pang gastos ngayong buwan."
+    "empty": "Wala pang gastos ngayong buwan.",
+    "income": "Kita",
+    "expenses": "Gastos",
+    "netCashFlow": "Net cash flow · {{range}}",
+    "thisMonth": "Ngayong buwan",
+    "savingsRate": "Nagtatabi ka ng {{pct}}% ng kita sa panahong ito ({{range}}).",
+    "spentMore": "Gumastos ka ng {{amount}} nang higit sa kinita mo sa panahong ito ({{range}}).",
+    "noIncome": "Walang naitalang kita sa panahong ito — magdagdag para makita ang savings rate."
   },
   "currency": {
     "title": "Pumili ng pera",
@@ -625,6 +686,188 @@
       "light": "Maliwanag",
       "dark": "Madilim",
       "hint": "Piliin kung paano magmukha ang Talvori. Sinusunod ng Sistema ang iyong device."
-    }
+    },
+    "title": "Mga Setting",
+    "sub": "I-customize kung paano gumagana ang app.",
+    "currencyRegion": "Pera at rehiyon",
+    "currencyRegionSub": "Reporting currency, bansa, format",
+    "language": "Wika",
+    "languageSub": "May paparating pang mga wika",
+    "languageValue": "Ingles",
+    "notificationsSection": "Mga Abiso",
+    "notifBills": "Paalala sa bill",
+    "notifBillsSub": "3 araw bago ang takdang petsa",
+    "notifBudget": "Alerto sa badyet",
+    "notifBudgetSub": "Kapag lumampas sa 80% ang kategorya",
+    "notifActivity": "Aktibidad ng sambahayan",
+    "notifActivitySub": "Kapag may nagdagdag ng transaksyon",
+    "notifGoals": "Mga layunin sa ipon",
+    "notifGoalsSub": "Mga milestone at kontribusyon",
+    "notifShopping": "Update sa listahan",
+    "notifShoppingSub": "Kapag may nag-edit ng listahan",
+    "securitySection": "Seguridad at Privacy",
+    "passcode": "Passcode ng app",
+    "passcodeSub": "Humingi ng code kapag binuksan ang app",
+    "passcodeOn": "Naka-on ang passcode — dito ka maglalagay ng 4-digit na code.",
+    "exportData": "I-export ang datos ko",
+    "exportSub": "CSV ng mga transaksyon at badyet",
+    "exportQueued": "Naka-queue ang export — dito mag-do-download ang CSV ng mga transaksyon at badyet.",
+    "deleteAccount": "Burahin ang account",
+    "deleteAccountSub": "Permanenteng inaalis ang iyong datos"
+  },
+  "brand": {
+    "wordmark": "talvori",
+    "tagline": "Isang plano. Lahat. Sama-sama."
+  },
+  "onboarding": {
+    "stepLabel": "Hakbang {{current}} ng {{total}}",
+    "step1Title": "I-set up ang iyong sambahayan",
+    "householdNamePlaceholder": "hal. Pamilya Miller",
+    "nameRequired": "Pangalanan ang iyong sambahayan.",
+    "currencySearchPlaceholder": "Maghanap ng 170+ na pera",
+    "suggestedLabel": "Iminumungkahi — mula sa iyong device",
+    "step2Title": "Imbitahan ang iyong sambahayan",
+    "step2Sub": "Nakikita ng lahat ang parehong listahan at budget, live. Puwede mo ring gawin ito mamaya.",
+    "inviteCodeLabel": "INVITE CODE",
+    "copyCode": "Kopyahin ang code",
+    "copied": "✓ Nakopya",
+    "share": "Ibahagi…",
+    "createdConfirm": "✓ Nalikha ang {{name}} · {{currency}}",
+    "goToDashboard": "Pumunta sa aking dashboard",
+    "skipForNow": "Laktawan muna",
+    "crossBorderHelper": "May miyembro sa ibang bansa? I-on ang cross-border tracking anumang oras sa Household settings."
+  },
+  "home": {
+    "greeting": "Magandang umaga",
+    "greetingNamed": "Magandang umaga, {{name}}",
+    "yourHouseholds": "Iyong mga sambahayan",
+    "createHousehold": "＋ Gumawa ng sambahayan",
+    "joinWithCode": "Sumali gamit ang code",
+    "manageHousehold": "Pamahalaan ang sambahayan",
+    "memberCount_one": "{{count}} miyembro · code {{code}}",
+    "memberCount_other": "{{count}} miyembro · code {{code}}",
+    "createHelper": "Nagsisimulang walang laman — sariling badyet, transaksyon, bill at listahan sa grocery.",
+    "nameRequired": "Pangalanan ang sambahayan.",
+    "dupName": "May sambahayan ka nang may ganitong pangalan.",
+    "joinPlaceholder": "Invite code — hal. WVH-5570",
+    "create": "Gumawa",
+    "join": "Sumali",
+    "switched": "✓ Lumipat sa {{name}}",
+    "created": "✓ Nalikha ang {{name}}",
+    "joined": "✓ Sumali sa {{name}}"
+  },
+  "shop": {
+    "title": "Aming Listahan sa Grocery",
+    "shared": "Ibinahagi",
+    "budgetTitle": "Badyet sa {{category}}",
+    "monthlyBudget": "Buwanang badyet",
+    "spentThisMonth": "Nagastos ngayong buwan",
+    "remaining": "Natitira",
+    "thisWeek": "Listahan sa linggong ito",
+    "itemsRemaining_one": "{{count}} item na natitira",
+    "itemsRemaining_other": "{{count}} item na natitira",
+    "estimated": "Tinatantiya",
+    "afterTrip": "Pagkatapos ng biyaheng ito",
+    "leftApprox": "≈ {{amount}} natitira",
+    "modeList": "Listahan",
+    "modeShopping": "Magsimulang mamili",
+    "insightHigher": "Ang karaniwang biyahe mo sa grocery ay {{avg}}. Ang listahan sa linggong ito ay mga {{diff}} na mas mataas.",
+    "insightLower": "Ang karaniwang biyahe mo sa grocery ay {{avg}}. Ang listahan sa linggong ito ay mga {{diff}} na mas mababa.",
+    "insightSame": "Ang karaniwang biyahe mo sa grocery ay {{avg}}. Halos pareho ang listahan sa linggong ito.",
+    "yourList": "Iyong listahan",
+    "addItem": "＋ Magdagdag ng item",
+    "buyAgain": "BILHIN ULI",
+    "purchased": "NABILI",
+    "clearPurchased": "I-clear ang nabili",
+    "clearNote": "Pinapanatili ng pag-clear ang mga presyong binayaran mo para sa susunod na tantiya.",
+    "noEstimate": "walang tantiya",
+    "est": "Tantiya {{amount}}",
+    "lastPaid": "Huling bayad {{amount}}",
+    "useAsEstimate": "gamitin bilang tantiya",
+    "itemName": "Pangalan ng item",
+    "qty": "Dami",
+    "unit": "Yunit",
+    "moreOptions": "Higit pang opsyon",
+    "noteOptional": "Tala (opsyonal)",
+    "estPrice": "Tantyang presyo",
+    "addToList": "Idagdag sa listahan",
+    "estHelper": "Opsyonal ang tantyang presyo — gagamitin namin ang huling presyong binayaran mo kapag alam namin.",
+    "nameRequired": "Bigyan ng pangalan ang item.",
+    "qtyPositive": "Ang dami ay dapat mas malaki sa zero.",
+    "pricePositive": "Ang tantyang presyo ay dapat 0 o higit pa.",
+    "remove": "🗑 Alisin",
+    "editPricePerUnit": "Tantyang presyo kada {{unit}} (opsyonal)",
+    "tripTitle": "Biyahe sa pamimili",
+    "itemsLeft": "{{done}} sa {{total}} item ang natitira",
+    "groceriesLeft": "Natitira sa grocery",
+    "runningTotal": "Takbong kabuuan",
+    "tripHelper": "Opsyonal ang presyo habang namimili — i-check ang mga item at ilagay ang tunay na kabuuan sa huli.",
+    "finishShopping": "Tapusin ang pamimili",
+    "backToList": "Bumalik sa listahan",
+    "emptyBeforeShop": "Magdagdag muna sa listahan bago mamili.",
+    "completeTitle": "Tapos na ang pamimili",
+    "store": "Tindahan",
+    "storePlaceholder": "Kahit anong tindahan — hal. SM Supermarket",
+    "estimatedTotal": "Tinatantyang kabuuan",
+    "actualTotal": "Tunay na kabuuang binayaran",
+    "paidFrom": "Binayaran mula sa",
+    "category": "Kategorya",
+    "date": "Petsa",
+    "recordPurchase": "Itala ang pagbili",
+    "recordHelper": "Ito lang ang hakbang na gumagawa ng gastos — minsan itong itinatala sa Activity, sa iyong badyet na {{category}}, at sa balanse ng {{account}}.",
+    "actualRequired": "Ilagay ang halagang aktwal na binayaran.",
+    "recordedToast": "✓ Naitala ang pagbili — −{{amount}} sa {{store}} · {{account}}",
+    "emptyList": "Wala pa sa listahan — magdagdag ng item o pumili sa ilalim ng Bilhin uli.",
+    "addedByShort": "Idinagdag ni {{name}}"
+  },
+  "components": {
+    "tapAgain": "I-tap ulit para kumpirmahin"
+  },
+  "more": {
+    "sub": "Pamahalaan ang iyong sambahayan at app.",
+    "moneySection": "Pera at Sambahayan",
+    "appSection": "App at Account",
+    "bills": "Mga Bill at Subscription",
+    "billsSub": "Mga paulit-ulit na bayad at takdang petsa",
+    "household": "Sambahayan",
+    "householdSub": "Mga miyembro, imbitasyon at pahintulot",
+    "reports": "Mga Ulat at Insight",
+    "reportsSub": "Gastos, trend at daloy ng pera",
+    "settings": "Mga Setting",
+    "settingsSub": "Pera, rehiyon, seguridad at privacy",
+    "help": "Tulong at Suporta",
+    "helpSub": "FAQ, feedback at suporta",
+    "footer": "Bersyon 1.0 ng app · Pribado ang iyong datos sa pananalapi",
+    "profileMeta": "{{household}} · {{plan}}",
+    "planFree": "Personal na plano",
+    "planPremium": "Premium na plano",
+    "planHousehold": "Household na plano"
+  },
+  "help": {
+    "title": "Tulong at Suporta",
+    "sub": "Kumuha ng tulong kapag kailangan mo.",
+    "faqTitle": "Mga madalas itanong",
+    "q1": "Gumagastos ba ng pera ang pagdagdag sa listahan ng grocery?",
+    "a1": "Hindi — gumagalaw lang ang pera sa Itala ang pagbili, na naglalagay ng isang gastos.",
+    "q2": "Bakit hati sa account ang badyet ko?",
+    "a2": "Bawat kategorya ay may pondohang account; magkasabay na sinasala ng scope ang gastos at limitasyon.",
+    "q3": "Paano lumilitaw ang mga layunin at utang?",
+    "a3": "Bilang read-only na row sa Activity kasama ang kasaysayan, hindi kasama sa gastos ng kategorya.",
+    "q4": "Magagamit ko ba ito sa labas ng US?",
+    "a4": "Oo — kahit anong reporting currency; sarili mo ang mga tindahan at presyo.",
+    "feedbackTitle": "Magpadala ng feedback",
+    "feedbackSub": "Magmungkahi ng pagpapabuti — mapupunta ito sa product team.",
+    "feedbackPlaceholder": "Ano ang magpapaganda sa app na ito?",
+    "feedbackSend": "Ipadala",
+    "feedbackEmpty": "Magsulat muna ng tala.",
+    "feedbackSent": "✓ Salamat — naipadala ang feedback.",
+    "contactTitle": "Makipag-ugnayan sa suporta",
+    "contactBody": "Mag-email sa support@example.com at karaniwang tumutugon kami sa loob ng isang araw. Hindi pa naka-wire ang live chat sa prototype na ito."
+  },
+  "bills": {
+    "title": "Mga Bill at Subscription",
+    "sub": "Manatiling nauuna sa mga paulit-ulit na bayad.",
+    "notWired": "Kailangan ng bills ang recurring-payments backend — hindi pa naka-set up.",
+    "empty": "Wala pang bill — magdagdag para makita ang dapat bayaran."
   }
 }

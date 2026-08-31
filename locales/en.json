@@ -8,7 +8,8 @@
     "comingSoon": "Coming soon",
     "today": "Today",
     "yesterday": "Yesterday",
-    "retry": "Retry"
+    "retry": "Retry",
+    "custom": "Custom"
   },
   "nav": {
     "home": "Home",
@@ -56,7 +57,10 @@
       "emailInUse": "That email is already registered. Try signing in.",
       "weakPassword": "Password must be at least 8 characters.",
       "generic": "Couldn't complete that. Please try again."
-    }
+    },
+    "signingIn": "Signing in…",
+    "emailInvalidBanner": "That email doesn't look right — try name@example.com",
+    "requireBoth": "Enter your email and password."
   },
   "screens": {
     "homeTitle": "Home",
@@ -113,8 +117,23 @@
       "loadFailed": "Couldn't load household data.",
       "inviteFailed": "Couldn't send the invitation.",
       "revokeFailed": "Couldn't revoke the invitation.",
-      "acceptFailed": "That invitation is invalid, expired, or for a different email."
-    }
+      "acceptFailed": "That invitation is invalid, expired, or for a different email.",
+      "codeNotFound": "No household found for {{code}}. Check the code with whoever invited you.",
+      "alreadyMember": "You're already in that household.",
+      "joinFailed": "Couldn't join that household. Please try again.",
+      "saveFailed": "Couldn't save the change."
+    },
+    "detailSub": "People who share this budget.",
+    "activeMembers_one": "{{count}} active member",
+    "activeMembers_other": "{{count}} active members",
+    "invite": "Invite",
+    "close": "Close",
+    "rolesTitle": "What each role can do",
+    "ownerCan": "Manage the household, invite or remove members, edit budgets and shared settings.",
+    "memberCan": "Add income and expenses, view shared budgets, use the grocery list, see household activity.",
+    "ownerAccess": "Full access",
+    "memberAccess": "Shared budget",
+    "crossBorderToggle": "Members in another country?"
   },
   "finance": {
     "overviewTitle": "Accounts",
@@ -173,7 +192,9 @@
       "categoryLabel": "Category (optional)",
       "descriptionLabel": "Note (optional)",
       "saveCta": "Save",
-      "noAccounts": "Add an account first."
+      "noAccounts": "Add an account first.",
+      "saveIncome": "Save income",
+      "saveExpense": "Save expense"
     },
     "edit": {
       "title": "Edit transaction",
@@ -193,7 +214,11 @@
       "toAmountLabel": "Amount received",
       "saveCta": "Transfer",
       "needTwo": "You need at least two accounts to transfer.",
-      "crossCurrencyHint": "Different currencies — enter the amount in each account's currency."
+      "crossCurrencyHint": "Different currencies — enter the amount in each account's currency.",
+      "moneyTitle": "Transfer money",
+      "saveTransfer": "Save transfer",
+      "sameAccounts": "Pick two different accounts.",
+      "notePlaceholderExample": "e.g. August salary"
     },
     "categories": {
       "title": "Categories",
@@ -232,6 +257,26 @@
       "net": "Net",
       "goalContribution": "Goal contribution",
       "debtPayment": "Debt payment"
+    },
+    "form": {
+      "toAccount": "To account",
+      "fromAccount": "From account",
+      "category": "Category",
+      "dateLabel": "Date",
+      "noteLabel": "Note",
+      "notePlaceholder": "Optional note",
+      "customDatePlaceholder": "YYYY-MM-DD",
+      "amountPositive": "Enter an amount greater than zero."
+    },
+    "toast": {
+      "incomeSaved": "✓ Income saved — +{{amount}} to {{account}}",
+      "expenseSaved": "✓ Expense saved — −{{amount}} from {{account}}",
+      "transferSaved": "✓ Transfer saved — {{amount}} from {{from}} to {{to}}",
+      "changesSaved": "✓ Changes saved — {{amount}}"
+    },
+    "activity": {
+      "footerHint": "Tap ✎ to fix a wrong entry — amount, account, category, date — or delete it inside.",
+      "empty": "Nothing here yet. Income and expenses you add will appear in this list."
     }
   },
   "planning": {
@@ -239,7 +284,8 @@
     "plan": {
       "usedPct": "{{pct}}% used",
       "safePerDay": "Safe to spend {{amount}}/day",
-      "manage": "Manage"
+      "manage": "Manage",
+      "monthBudget": "{{month}} budget"
     },
     "budgets": {
       "title": "Budgets",
@@ -270,7 +316,12 @@
       "confirmDeleteAllocationTitle": "Remove this limit?",
       "confirmDeleteAllocationBody": "Spending history is not affected.",
       "spentOf": "{{spent}} spent of {{limit}}",
-      "unassignedAccount": "unassigned"
+      "unassignedAccount": "unassigned",
+      "scopeAll": "All accounts",
+      "scopeFrom": "Showing categories paid from {{account}}",
+      "tapHint": "tap ✎ to change a category",
+      "addCategory": "＋ Add category",
+      "noneInScope": "No categories paid from {{account}} yet."
     },
     "goals": {
       "title": "Savings goals",
@@ -290,7 +341,9 @@
       "confirmDeleteTitle": "Delete this goal?",
       "confirmDeleteBody": "Its contribution history is removed too.",
       "noFundingAccount": "Add a {{currency}} account to contribute.",
-      "fundedFrom": "Paid from {{name}}"
+      "fundedFrom": "Paid from {{name}}",
+      "addGoal": "＋ Add goal",
+      "reached": "Reached 🎉"
     },
     "debts": {
       "title": "Debts",
@@ -313,7 +366,8 @@
       "fundedFrom": "Paid from {{name}}",
       "totalOwed": "Total owed: {{amount}}",
       "overdueOn": "Overdue — was due day {{day}}",
-      "dueDay": "Due day {{day}}"
+      "dueDay": "Due day {{day}}",
+      "addDebt": "＋ Add debt"
     },
     "errors": {
       "loadFailed": "Couldn't load planning data.",
@@ -598,7 +652,14 @@
     "totalSpent": "Total spent",
     "avgPerDay": "Avg / day",
     "transactions": "Transactions",
-    "empty": "No spending this month yet."
+    "empty": "No spending this month yet.",
+    "income": "Income",
+    "expenses": "Expenses",
+    "netCashFlow": "Net cash flow · {{range}}",
+    "thisMonth": "This month",
+    "savingsRate": "You're keeping {{pct}}% of income in this period ({{range}}).",
+    "spentMore": "You spent {{amount}} more than you earned in this period ({{range}}).",
+    "noIncome": "No income recorded in this period — add one to see your savings rate."
   },
   "currency": {
     "title": "Choose currency",
@@ -625,6 +686,188 @@
       "light": "Light",
       "dark": "Dark",
       "hint": "Choose how Talvori looks. System follows your device."
-    }
+    },
+    "title": "Settings",
+    "sub": "Customize how the app works.",
+    "currencyRegion": "Currency & region",
+    "currencyRegionSub": "Reporting currency, country, formats",
+    "language": "Language",
+    "languageSub": "More languages coming",
+    "languageValue": "English",
+    "notificationsSection": "Notifications",
+    "notifBills": "Bill reminders",
+    "notifBillsSub": "3 days before a due date",
+    "notifBudget": "Budget alerts",
+    "notifBudgetSub": "When a category passes 80%",
+    "notifActivity": "Household activity",
+    "notifActivitySub": "When a member adds a transaction",
+    "notifGoals": "Savings goals",
+    "notifGoalsSub": "Milestones and contributions",
+    "notifShopping": "Shopping list updates",
+    "notifShoppingSub": "When someone edits the list",
+    "securitySection": "Security & privacy",
+    "passcode": "App passcode",
+    "passcodeSub": "Ask for a code when opening the app",
+    "passcodeOn": "Passcode on — you would set a 4-digit code here.",
+    "exportData": "Export my data",
+    "exportSub": "CSV of transactions and budgets",
+    "exportQueued": "Export queued — a CSV of transactions and budgets would download here.",
+    "deleteAccount": "Delete account",
+    "deleteAccountSub": "Removes your data permanently"
+  },
+  "brand": {
+    "wordmark": "talvori",
+    "tagline": "One plan. Everyone. Together."
+  },
+  "onboarding": {
+    "stepLabel": "Step {{current}} of {{total}}",
+    "step1Title": "Set up your household",
+    "householdNamePlaceholder": "e.g. Miller Family",
+    "nameRequired": "Name your household.",
+    "currencySearchPlaceholder": "Search 170+ currencies",
+    "suggestedLabel": "Suggested — from your device",
+    "step2Title": "Invite your household",
+    "step2Sub": "Everyone sees the same lists and budgets, live. You can also do this later.",
+    "inviteCodeLabel": "INVITE CODE",
+    "copyCode": "Copy code",
+    "copied": "✓ Copied",
+    "share": "Share…",
+    "createdConfirm": "✓ {{name}} created · {{currency}}",
+    "goToDashboard": "Go to my dashboard",
+    "skipForNow": "Skip for now",
+    "crossBorderHelper": "Members in another country? Turn on cross-border tracking any time in Household settings."
+  },
+  "home": {
+    "greeting": "Good morning",
+    "greetingNamed": "Good morning, {{name}}",
+    "yourHouseholds": "Your households",
+    "createHousehold": "＋ Create household",
+    "joinWithCode": "Join with a code",
+    "manageHousehold": "Manage household",
+    "memberCount_one": "{{count}} member · code {{code}}",
+    "memberCount_other": "{{count}} members · code {{code}}",
+    "createHelper": "Starts empty — its own budgets, transactions, bills and grocery list.",
+    "nameRequired": "Name the household.",
+    "dupName": "You already have a household with that name.",
+    "joinPlaceholder": "Invite code — e.g. WVH-5570",
+    "create": "Create",
+    "join": "Join",
+    "switched": "✓ Switched to {{name}}",
+    "created": "✓ {{name}} created",
+    "joined": "✓ Joined {{name}}"
+  },
+  "shop": {
+    "title": "Our Grocery List",
+    "shared": "Shared",
+    "budgetTitle": "{{category}} budget",
+    "monthlyBudget": "Monthly budget",
+    "spentThisMonth": "Spent this month",
+    "remaining": "Remaining",
+    "thisWeek": "This week's list",
+    "itemsRemaining_one": "{{count}} item remaining",
+    "itemsRemaining_other": "{{count}} items remaining",
+    "estimated": "Estimated",
+    "afterTrip": "After this trip",
+    "leftApprox": "≈ {{amount}} left",
+    "modeList": "List",
+    "modeShopping": "Start shopping",
+    "insightHigher": "Your usual grocery trip is {{avg}}. This week's list is about {{diff}} higher.",
+    "insightLower": "Your usual grocery trip is {{avg}}. This week's list is about {{diff}} lower.",
+    "insightSame": "Your usual grocery trip is {{avg}}. This week's list is about the same.",
+    "yourList": "Your list",
+    "addItem": "＋ Add item",
+    "buyAgain": "BUY AGAIN",
+    "purchased": "PURCHASED",
+    "clearPurchased": "Clear purchased",
+    "clearNote": "Clearing keeps the prices you paid, so future lists estimate themselves.",
+    "noEstimate": "no estimate",
+    "est": "Est. {{amount}}",
+    "lastPaid": "Last paid {{amount}}",
+    "useAsEstimate": "use as estimate",
+    "itemName": "Item name",
+    "qty": "Qty",
+    "unit": "Unit",
+    "moreOptions": "More options",
+    "noteOptional": "Note (optional)",
+    "estPrice": "Est. price",
+    "addToList": "Add to list",
+    "estHelper": "Estimated price is optional — we'll use the last price you paid when we know it.",
+    "nameRequired": "Give the item a name.",
+    "qtyPositive": "Quantity must be greater than zero.",
+    "pricePositive": "Estimated price must be 0 or more.",
+    "remove": "🗑 Remove",
+    "editPricePerUnit": "Est. price per {{unit}} (optional)",
+    "tripTitle": "Shopping trip",
+    "itemsLeft": "{{done}} of {{total}} items left",
+    "groceriesLeft": "Groceries left",
+    "runningTotal": "Running total",
+    "tripHelper": "Prices are optional while you shop — check items off and enter the real total at the end.",
+    "finishShopping": "Finish shopping",
+    "backToList": "Back to list",
+    "emptyBeforeShop": "Add something to the list before you shop.",
+    "completeTitle": "Shopping complete",
+    "store": "Store",
+    "storePlaceholder": "Any store — e.g. SM Supermarket",
+    "estimatedTotal": "Estimated total",
+    "actualTotal": "Actual total paid",
+    "paidFrom": "Paid from",
+    "category": "Category",
+    "date": "Date",
+    "recordPurchase": "Record purchase",
+    "recordHelper": "This is the only step that creates an expense — it posts once to Activity, your {{category}} budget, and the {{account}} balance.",
+    "actualRequired": "Enter the amount actually paid.",
+    "recordedToast": "✓ Purchase recorded — −{{amount}} at {{store}} · {{account}}",
+    "emptyList": "Nothing on the list yet — add an item or tap one under Buy again.",
+    "addedByShort": "Added by {{name}}"
+  },
+  "components": {
+    "tapAgain": "Tap again to confirm"
+  },
+  "more": {
+    "sub": "Manage your household and app.",
+    "moneySection": "Money & Household",
+    "appSection": "App & Account",
+    "bills": "Bills & Subscriptions",
+    "billsSub": "Recurring payments and due dates",
+    "household": "Household",
+    "householdSub": "Members, invites and permissions",
+    "reports": "Reports & Insights",
+    "reportsSub": "Spending, trends and cash flow",
+    "settings": "Settings",
+    "settingsSub": "Currency, region, security and privacy",
+    "help": "Help & Support",
+    "helpSub": "FAQ, feedback and support",
+    "footer": "App version 1.0 · Your financial data stays private",
+    "profileMeta": "{{household}} · {{plan}}",
+    "planFree": "Personal plan",
+    "planPremium": "Premium plan",
+    "planHousehold": "Household plan"
+  },
+  "help": {
+    "title": "Help & Support",
+    "sub": "Get help when you need it.",
+    "faqTitle": "Frequently asked questions",
+    "q1": "Does adding to the grocery list spend money?",
+    "a1": "No — money moves only at Record purchase, which posts one expense.",
+    "q2": "Why is my budget split by account?",
+    "a2": "Each category names its funding account; the scope selector filters spend and limits together.",
+    "q3": "How do goals and debts show up?",
+    "a3": "As read-only Activity rows plus per-goal/debt history, excluded from category spending.",
+    "q4": "Can I use this outside the US?",
+    "a4": "Yes — any reporting currency; stores and prices are your own.",
+    "feedbackTitle": "Send feedback",
+    "feedbackSub": "Suggest an improvement — it goes to the product team.",
+    "feedbackPlaceholder": "What would make this app better?",
+    "feedbackSend": "Send",
+    "feedbackEmpty": "Write a note first.",
+    "feedbackSent": "✓ Thanks — feedback sent.",
+    "contactTitle": "Contact support",
+    "contactBody": "Email support@example.com and we usually reply within a day. Live chat is not wired up in this prototype."
+  },
+  "bills": {
+    "title": "Bills & Subscriptions",
+    "sub": "Stay ahead of recurring payments.",
+    "notWired": "Bills need the recurring-payments backend — not set up yet.",
+    "empty": "No bills yet — add one to see what’s due."
   }
 }
