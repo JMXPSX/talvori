@@ -1,0 +1,5 @@
+# Cloudflare Pages / Netlify SPA fallback: serve the app shell for client-side
+# routes (e.g. /finance/edit/123) that have no pre-rendered file. Expo copies
+# everything in public/ into the web export root. Vercel ignores this and uses
+# vercel.json instead.
+/*  /index.html  200
