@@ -16,7 +16,11 @@
     "budget": "Badyet",
     "transactions": "Aktibidad",
     "grocery": "Shop",
-    "more": "Iba pa"
+    "more": "Iba pa",
+    "sectionPlan": "Plano at Gastos",
+    "sectionMoney": "Pera at Sambahayan",
+    "sectionApp": "App at Account",
+    "reports": "Mga Ulat"
   },
   "auth": {
     "loginTitle": "Maligayang pagbabalik",
@@ -297,7 +301,9 @@
       "empty": "Wala pa rito. Lilitaw dito ang kita at gastos na idadagdag mo.",
       "noneForAccount": "Wala pang transaksyon para sa {{account}}."
     },
-    "filterByAccount": "I-filter ayon sa account"
+    "filterByAccount": "I-filter ayon sa account",
+    "income": "Kita",
+    "expense": "Gastos"
   },
   "planning": {
     "hubTitle": "Plano",

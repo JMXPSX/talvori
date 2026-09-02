@@ -16,7 +16,11 @@
     "budget": "الميزانية",
     "transactions": "النشاط",
     "grocery": "تسوّق",
-    "more": "المزيد"
+    "more": "المزيد",
+    "sectionPlan": "التخطيط والإنفاق",
+    "sectionMoney": "المال والأسرة",
+    "sectionApp": "التطبيق والحساب",
+    "reports": "التقارير"
   },
   "auth": {
     "loginTitle": "مرحبًا بعودتك",
@@ -297,7 +301,9 @@
       "empty": "لا شيء هنا بعد. سيظهر الدخل والمصروفات التي تضيفها في هذه القائمة.",
       "noneForAccount": "لا توجد معاملات لـ {{account}} بعد."
     },
-    "filterByAccount": "تصفية حسب الحساب"
+    "filterByAccount": "تصفية حسب الحساب",
+    "income": "دخل",
+    "expense": "مصروف"
   },
   "planning": {
     "hubTitle": "الخطة",

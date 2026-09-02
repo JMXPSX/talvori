@@ -16,7 +16,11 @@
     "budget": "Budget",
     "transactions": "Activity",
     "grocery": "Shop",
-    "more": "More"
+    "more": "More",
+    "sectionPlan": "Plan & Spend",
+    "sectionMoney": "Money & Household",
+    "sectionApp": "App & Account",
+    "reports": "Reports"
   },
   "auth": {
     "loginTitle": "Welcome back",
@@ -297,7 +301,9 @@
       "empty": "Nothing here yet. Income and expenses you add will appear in this list.",
       "noneForAccount": "No transactions for {{account}} yet."
     },
-    "filterByAccount": "Filter by account"
+    "filterByAccount": "Filter by account",
+    "income": "Income",
+    "expense": "Expense"
   },
   "planning": {
     "hubTitle": "Plan",

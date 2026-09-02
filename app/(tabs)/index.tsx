@@ -23,6 +23,7 @@ import { useAuth } from '@/features/auth/AuthProvider';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { HouseholdSwitcher } from '@/features/household/HouseholdSwitcher';
+import { useIsWideLayout } from '@/lib/breakpoints';
 import { AccountScopePicker } from '@/features/finance/AccountScopePicker';
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { categoryBreakdown, donutArcs } from '@/features/finance/donut';
@@ -65,6 +66,7 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { active, loading: hLoading } = useActiveHousehold();
+  const isWide = useIsWideLayout();
   const { user } = useAuth();
   const { has } = usePlan();
   const styles = useThemedStyles(makeStyles);
@@ -205,25 +207,30 @@ export default function HomeScreen() {
       <ScrollView>
         <BentoPage>
           {/* §6.4 header — greeting + household·currency pill (opens the switcher)
-              on the left, the user avatar (→ Profile) on the right. */}
-          <View style={styles.homeHeader}>
-            <View style={styles.homeHeaderLeft}>
-              <Text variant="title" style={styles.greeting}>{t('home.greeting')}</Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={active.name}
-                onPress={() => setSwitcherOpen(true)}
-                style={styles.householdPill}
-              >
-                <Text variant="button">{`${active.name} · ${reporting}`}</Text>
-                <Feather name="chevron-down" size={16} color={palette.textSecondary} />
-              </Pressable>
-            </View>
-            <Pressable accessibilityRole="button" accessibilityLabel={avatarName} onPress={() => router.push('/account')}>
-              <Avatar name={avatarName} size={44} variant="self" />
-            </Pressable>
-          </View>
-          <HouseholdSwitcher visible={switcherOpen} onClose={() => setSwitcherOpen(false)} />
+              on the left, the user avatar (→ Profile) on the right. On wide the
+              desktop top bar owns the pill/avatar/switcher, so this is hidden. */}
+          {!isWide ? (
+            <>
+              <View style={styles.homeHeader}>
+                <View style={styles.homeHeaderLeft}>
+                  <Text variant="title" style={styles.greeting}>{t('home.greeting')}</Text>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={active.name}
+                    onPress={() => setSwitcherOpen(true)}
+                    style={styles.householdPill}
+                  >
+                    <Text variant="button">{`${active.name} · ${reporting}`}</Text>
+                    <Feather name="chevron-down" size={16} color={palette.textSecondary} />
+                  </Pressable>
+                </View>
+                <Pressable accessibilityRole="button" accessibilityLabel={avatarName} onPress={() => router.push('/account')}>
+                  <Avatar name={avatarName} size={44} variant="self" />
+                </Pressable>
+              </View>
+              <HouseholdSwitcher visible={switcherOpen} onClose={() => setSwitcherOpen(false)} />
+            </>
+          ) : null}
 
           {/* Account-scope filter (#4) — pills, collapsing to a dropdown as accounts grow. */}
           {accounts.length > 1 ? (

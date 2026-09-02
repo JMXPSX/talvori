@@ -183,20 +183,22 @@ export default function ThemeGalleryScreen() {
           <View style={styles.navPreview}>
             <SideNav
               brand="Talvori"
-              title="Test 2"
-              subtitle="USD"
-              items={[
-                { key: 'index', label: 'Home', icon: 'home' },
-                { key: 'budget', label: 'Budget', icon: 'pie-chart' },
-                { key: 'transactions', label: 'Transactions', icon: 'list' },
-                { key: 'grocery', label: 'Grocery', icon: 'shopping-cart' },
-                { key: 'more', label: 'More', icon: 'more-horizontal' },
-              ].map((item, i) => ({
-                ...item,
-                icon: item.icon as Parameters<typeof SideNav>[0]['items'][number]['icon'],
-                active: i === navIndex,
-                onPress: () => setNavIndex(i),
-              }))}
+              footer={{ name: 'Jordan Cruz', meta: 'Test 2', onPress: () => {} }}
+              sections={[
+                {
+                  title: 'Plan & Spend',
+                  items: [
+                    { key: 'index', label: 'Home', icon: 'home' as const },
+                    { key: 'budget', label: 'Budget', icon: 'pie-chart' as const },
+                    { key: 'transactions', label: 'Activity', icon: 'list' as const },
+                    { key: 'grocery', label: 'Shop', icon: 'shopping-cart' as const },
+                  ].map((item, i) => ({
+                    ...item,
+                    active: i === navIndex,
+                    onPress: () => setNavIndex(i),
+                  })),
+                },
+              ]}
             />
           </View>
         </Section>
