@@ -672,10 +672,19 @@
     "deleteCta": "Burahin ang aking account",
     "confirmTitle": "Burahin ang iyong account?",
     "confirmBody": "Hindi na ito maibabalik.",
+    "nameLabel": "Pangalan",
+    "emailLabel": "Email",
+    "changePhoto": "Palitan ang larawan",
+    "saveProfile": "I-save ang mga pagbabago",
+    "profileSaved": "Na-update ang profile",
+    "photoSaved": "Na-update ang larawan",
+    "emailChangePending": "Tingnan ang bagong email mo para kumpirmahin ang pagbabago.",
     "errors": {
       "ownerHandoff": "May pagmamay-ari ka pang sambahayan na may ibang miyembro. Ilipat muna ang pagmamay-ari o alisin sila.",
       "deleteFailed": "Hindi mabura ang iyong account. Subukan muli.",
-      "exportFailed": "Hindi mabuo ang export. Subukan muli."
+      "exportFailed": "Hindi mabuo ang export. Subukan muli.",
+      "photoFailed": "Hindi ma-upload ang larawan. Subukan muli.",
+      "photoPermission": "Kailangan ng access sa larawan para pumili ng litrato."
     }
   },
   "reports": {

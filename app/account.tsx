@@ -2,15 +2,16 @@
  *  Deletion is armed by re-typing the account email, then confirmed via the
  *  cross-platform ActionSheet — the interim step-up until MFA lands. */
 
+import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { spacing } from '@/components/theme';
 import { useThemedStyles, type Palette } from '@/components/ThemeProvider';
-import { Avatar, Button, Card, CONTENT_MAX_WIDTH, ErrorNotice, Text, TextField, useActionSheet } from '@/components/ui';
-import { deleteMyAccount } from '@/features/account/api';
+import { Avatar, Button, Card, CONTENT_MAX_WIDTH, ErrorNotice, Text, TextField, useActionSheet, useToast } from '@/components/ui';
+import { deleteMyAccount, uploadAvatar } from '@/features/account/api';
 import { exportFilename } from '@/features/account/export';
 import { assembleExport } from '@/features/account/exportApi';
 import { saveExport } from '@/features/account/saveExport';
@@ -20,9 +21,10 @@ import { toAppError } from '@/lib/errors';
 
 export default function AccountScreen() {
   const { t } = useTranslation();
-  const { user, signOut } = useAuth();
+  const { user, signOut, updateProfile } = useAuth();
   const { plan } = usePlan();
   const sheet = useActionSheet();
+  const { show: showToast } = useToast();
   const styles = useThemedStyles(makeStyles);
 
   const [signingOut, setSigningOut] = useState(false);
@@ -35,7 +37,73 @@ export default function AccountScreen() {
   const email = user?.email ?? '';
   const displayName =
     (typeof user?.user_metadata?.display_name === 'string' && user.user_metadata.display_name) || '';
+  const photoUrl =
+    (typeof user?.user_metadata?.avatar_url === 'string' && user.user_metadata.avatar_url) || null;
   const armed = confirmEmail.trim().toLowerCase() === email.toLowerCase() && email.length > 0;
+
+  // Editable profile fields, seeded from the current user.
+  const [name, setName] = useState(displayName);
+  const [emailInput, setEmailInput] = useState(email);
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [profileErrorKey, setProfileErrorKey] = useState<string | null>(null);
+  const [emailPending, setEmailPending] = useState(false);
+
+  const nextName = name.trim();
+  const nextEmail = emailInput.trim();
+  const emailChanged = nextEmail.toLowerCase() !== email.toLowerCase();
+  const profileDirty = nextName !== displayName || emailChanged;
+
+  async function onPickPhoto() {
+    if (!user) return;
+    setProfileErrorKey(null);
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) {
+      setProfileErrorKey('account.errors.photoPermission');
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+    if (result.canceled) return;
+    const asset = result.assets[0];
+    if (!asset) return;
+    setUploadingPhoto(true);
+    try {
+      const url = await uploadAvatar(user.id, { uri: asset.uri, mimeType: asset.mimeType });
+      await updateProfile({ avatarUrl: url });
+      showToast(t('account.photoSaved'));
+    } catch (err) {
+      setProfileErrorKey(toAppError(err).messageKey);
+    } finally {
+      setUploadingPhoto(false);
+    }
+  }
+
+  async function onSaveProfile() {
+    setProfileErrorKey(null);
+    setEmailPending(false);
+    if (emailChanged && !/.+@.+\..+/.test(nextEmail)) {
+      setProfileErrorKey('errors.validation');
+      return;
+    }
+    setSavingProfile(true);
+    try {
+      const { emailChangePending } = await updateProfile({
+        displayName: nextName,
+        email: emailChanged ? nextEmail : undefined,
+      });
+      if (emailChangePending) setEmailPending(true);
+      showToast(t('account.profileSaved'));
+    } catch (err) {
+      setProfileErrorKey(toAppError(err).messageKey);
+    } finally {
+      setSavingProfile(false);
+    }
+  }
 
   async function onSignOut() {
     setSigningOut(true);
@@ -91,17 +159,52 @@ export default function AccountScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
-        {/* Profile identity (§6.15). Photo upload/crop + name/email save need
-            storage + a profile-update API — deferred; initials + read-only for now. */}
+        {/* Profile identity (§6.15) — photo + editable name/email. */}
         <Card>
           <View style={styles.profileRow}>
-            <Avatar name={displayName || email} size={64} variant="self" />
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('account.changePhoto')}
+              onPress={() => void onPickPhoto()}
+              disabled={uploadingPhoto}
+              style={({ pressed }) => [styles.avatarPress, pressed ? styles.pressed : null]}
+            >
+              <Avatar name={name || email} photoUrl={photoUrl} size={64} variant="self" />
+              <Text variant="caption" style={styles.changePhoto}>
+                {uploadingPhoto ? t('common.loading') : t('account.changePhoto')}
+              </Text>
+            </Pressable>
             <View style={styles.profileMid}>
-              <Text variant="subheading">{displayName || email.split('@')[0]}</Text>
-              <Text variant="caption" muted numberOfLines={1}>{email}</Text>
+              <Text variant="subheading">{name || email.split('@')[0]}</Text>
               <Text variant="caption" muted>{t(plan === 'premium' ? 'more.planPremium' : 'more.planFree')}</Text>
             </View>
           </View>
+
+          <TextField
+            label={t('account.nameLabel')}
+            value={name}
+            onChangeText={(v) => setName(v.slice(0, 80))}
+            autoCapitalize="words"
+          />
+          <TextField
+            label={t('account.emailLabel')}
+            value={emailInput}
+            onChangeText={setEmailInput}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+          {emailPending ? (
+            <Text variant="caption" style={styles.notice}>{t('account.emailChangePending')}</Text>
+          ) : null}
+          {profileErrorKey ? (
+            <ErrorNotice message={t(profileErrorKey)} retryLabel={t('common.retry')} onRetry={() => void onSaveProfile()} />
+          ) : null}
+          <Button
+            label={t('account.saveProfile')}
+            onPress={onSaveProfile}
+            loading={savingProfile}
+            disabled={!profileDirty}
+          />
         </Card>
 
         <Card>
@@ -170,6 +273,10 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   profileRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   profileMid: { flex: 1, gap: 2 },
+  avatarPress: { alignItems: 'center', gap: spacing.xs },
+  changePhoto: { color: c.primary },
+  pressed: { opacity: 0.7 },
+  notice: { color: c.primary },
   // Cards are borderless now; the danger zone reads as a tonal container.
   dangerCard: { backgroundColor: c.dangerMuted },
   dangerTitle: { color: c.danger },

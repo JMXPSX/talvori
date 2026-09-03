@@ -36,6 +36,16 @@ interface AuthContextValue {
   requestPasswordReset: (email: string) => Promise<void>;
   /** Set a new password for the signed-in (or recovery) session. */
   updatePassword: (newPassword: string) => Promise<void>;
+  /**
+   * Update the signed-in user's display name, avatar URL and/or email. An email
+   * change is confirmed via a link sent to the new address (nothing changes until
+   * then) — `emailChangePending` reports that case so the UI can say so.
+   */
+  updateProfile: (changes: {
+    displayName?: string;
+    avatarUrl?: string;
+    email?: string;
+  }) => Promise<{ emailChangePending: boolean }>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -113,6 +123,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw mapAuthError(error.message);
     }
 
+    async function updateProfile(changes: {
+      displayName?: string;
+      avatarUrl?: string;
+      email?: string;
+    }): Promise<{ emailChangePending: boolean }> {
+      if (!supabase) throw new AppError('config', { messageKey: 'errors.config' });
+      const meta: Record<string, unknown> = {};
+      if (changes.displayName !== undefined) meta.display_name = changes.displayName;
+      if (changes.avatarUrl !== undefined) meta.avatar_url = changes.avatarUrl;
+      const payload: { email?: string; data?: Record<string, unknown> } = {};
+      if (Object.keys(meta).length > 0) payload.data = meta;
+      if (changes.email) payload.email = changes.email;
+      const { data, error } = await supabase.auth.updateUser(payload);
+      if (error) throw mapAuthError(error.message);
+      // With email confirmations on, the address only changes after the link is
+      // clicked, so the returned user still shows the old email.
+      const emailChangePending =
+        Boolean(changes.email) && data.user?.email?.toLowerCase() !== changes.email?.toLowerCase();
+      return { emailChangePending };
+    }
+
     return {
       initializing,
       configured: isSupabaseConfigured,
@@ -123,6 +154,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signOut,
       requestPasswordReset,
       updatePassword,
+      updateProfile,
     };
   }, [initializing, session]);
 

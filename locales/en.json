@@ -672,10 +672,19 @@
     "deleteCta": "Delete my account",
     "confirmTitle": "Delete your account?",
     "confirmBody": "This cannot be undone.",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "changePhoto": "Change photo",
+    "saveProfile": "Save changes",
+    "profileSaved": "Profile updated",
+    "photoSaved": "Photo updated",
+    "emailChangePending": "Check your new email to confirm the change.",
     "errors": {
       "ownerHandoff": "You still own a household with other members. Transfer ownership or remove them first.",
       "deleteFailed": "Couldn't delete your account. Please try again.",
-      "exportFailed": "Couldn't build the export. Please try again."
+      "exportFailed": "Couldn't build the export. Please try again.",
+      "photoFailed": "Couldn't upload the photo. Please try again.",
+      "photoPermission": "Photo access is needed to choose a picture."
     }
   },
   "reports": {
