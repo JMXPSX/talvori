@@ -303,7 +303,8 @@
     },
     "filterByAccount": "Filter by account",
     "income": "Income",
-    "expense": "Expense"
+    "expense": "Expense",
+    "thisMonth": "This month"
   },
   "planning": {
     "hubTitle": "Plan",
@@ -934,6 +935,7 @@
       "loadFailed": "Couldnt load bills.",
       "saveFailed": "Couldnt save the bill.",
       "deleteFailed": "Couldnt delete the bill."
-    }
+    },
+    "comingUp": "Coming up"
   }
 }

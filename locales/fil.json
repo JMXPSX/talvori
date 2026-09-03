@@ -303,7 +303,8 @@
     },
     "filterByAccount": "I-filter ayon sa account",
     "income": "Kita",
-    "expense": "Gastos"
+    "expense": "Gastos",
+    "thisMonth": "Ngayong buwan"
   },
   "planning": {
     "hubTitle": "Plano",
@@ -934,6 +935,7 @@
       "loadFailed": "Hindi ma-load ang mga bill.",
       "saveFailed": "Hindi ma-save ang bill.",
       "deleteFailed": "Hindi ma-delete ang bill."
-    }
+    },
+    "comingUp": "Paparating"
   }
 }

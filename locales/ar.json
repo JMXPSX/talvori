@@ -303,7 +303,8 @@
     },
     "filterByAccount": "تصفية حسب الحساب",
     "income": "دخل",
-    "expense": "مصروف"
+    "expense": "مصروف",
+    "thisMonth": "هذا الشهر"
   },
   "planning": {
     "hubTitle": "الخطة",
@@ -934,6 +935,7 @@
       "loadFailed": "تعذّر تحميل الفواتير.",
       "saveFailed": "تعذّر حفظ الفاتورة.",
       "deleteFailed": "تعذّر حذف الفاتورة."
-    }
+    },
+    "comingUp": "القادمة"
   }
 }

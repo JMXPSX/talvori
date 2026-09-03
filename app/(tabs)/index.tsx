@@ -24,23 +24,28 @@ import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { HouseholdSwitcher } from '@/features/household/HouseholdSwitcher';
 import { useIsWideLayout } from '@/lib/breakpoints';
+import { listBills } from '@/features/bills/api';
+import { isOverdue } from '@/features/bills/recurrence';
 import { AccountScopePicker } from '@/features/finance/AccountScopePicker';
 import { listAccountBalances, listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { categoryBreakdown, donutArcs } from '@/features/finance/donut';
+import { monthFlow } from '@/features/finance/flow';
 import { convertMinor, sumByCurrency, sumInReporting } from '@/features/finance/fx';
 import { listLatestRates, makeRateLookup } from '@/features/finance/fxApi';
+import { monthKeyOf } from '@/features/finance/insights';
 import { aggregateBudget, pickCurrentBudget } from '@/features/finance/plan';
 import { listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
 import type {
   AccountBalanceRow,
   AccountRow,
+  BillRow,
   BudgetRow,
   BudgetStatusRow,
   LatestFxRateRow,
   TransactionType,
 } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
-import { formatAmount } from '@/lib/format';
+import { formatAmount, formatDate } from '@/lib/format';
 
 type FeatherName = keyof typeof Feather.glyphMap;
 
@@ -78,6 +83,7 @@ export default function HomeScreen() {
   const [txns, setTxns] = useState<TransactionWithRefs[]>([]);
   const [budget, setBudget] = useState<BudgetRow | null>(null);
   const [budgetStatus, setBudgetStatus] = useState<BudgetStatusRow[]>([]);
+  const [bills, setBills] = useState<BillRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
@@ -91,17 +97,19 @@ export default function HomeScreen() {
     setErrorKey(null);
     setLoading(true);
     try {
-      const [accs, bals, fx, tx, budgets] = await Promise.all([
+      const [accs, bals, fx, tx, budgets, billRows] = await Promise.all([
         listAccounts(active.id),
         listAccountBalances(active.id),
         listLatestRates(active.id),
         listTransactions(active.id),
         listBudgets(active.id),
+        listBills(active.id),
       ]);
       setAccounts(accs);
       setBalances(Object.fromEntries(bals.map((b) => [b.account_id, b])));
       setRates(fx);
       setTxns(tx);
+      setBills(billRows);
       // Money-model decision #4: the hero is the current month's spend-vs-budget
       // ratio. Load the active budget + its per-allocation status (each allocation
       // names a funding account, so the pills can scope both halves of the ratio).
@@ -193,6 +201,14 @@ export default function HomeScreen() {
     ...a,
     color: breakdown.slices[i]?.color ?? palette.border,
   }));
+
+  // This month's In / Out / Net in the reporting currency (transfers excluded),
+  // scoped with the dashboard — the mock's "This month" card.
+  const now = new Date();
+  const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const flow = monthFlow(visibleTxns, monthKeyOf(now.toISOString()), reporting, rateFor);
+  // "Coming up" — the soonest active bills (already due-sorted by the api).
+  const upcomingBills = bills.filter((b) => b.is_active).slice(0, 4);
 
   // Quick actions — Income · Expense · Transfer (§6.4). Income gets the positive
   // (green) circle; Expense and Transfer use the purple tint.
@@ -335,18 +351,22 @@ export default function HomeScreen() {
               )}
             </View>
 
-            <Card style={styles.actionsSlot}>
-              <View style={styles.tiles}>
-                {actions.map((a) => (
-                  <Pressable key={a.href} style={styles.tile} onPress={() => router.push(a.href as never)}>
-                    <View style={[styles.tileIcon, { backgroundColor: a.bg }]}>
-                      <Feather name={a.icon} size={20} color={a.fg} />
-                    </View>
-                    <Text variant="caption" style={styles.tileLabel}>{a.label}</Text>
-                  </Pressable>
-                ))}
-              </View>
-            </Card>
+            {/* Quick actions ride beside the hero on mobile; on wide the desktop
+                top bar already carries Income / Expense / transfer. */}
+            {!isWide ? (
+              <Card style={styles.actionsSlot}>
+                <View style={styles.tiles}>
+                  {actions.map((a) => (
+                    <Pressable key={a.href} style={styles.tile} onPress={() => router.push(a.href as never)}>
+                      <View style={[styles.tileIcon, { backgroundColor: a.bg }]}>
+                        <Feather name={a.icon} size={20} color={a.fg} />
+                      </View>
+                      <Text variant="caption" style={styles.tileLabel}>{a.label}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              </Card>
+            ) : null}
           </BentoRow>
 
           {/* Row 2 — spending breakdown beside the accounts ledger. */}
@@ -521,6 +541,64 @@ export default function HomeScreen() {
               </Card>
             </BentoRow>
           ) : null}
+
+          {/* Row — this month (In/Out/Net) + coming-up bills, per the mock. */}
+          <BentoRow>
+            <Card style={styles.summaryTile}>
+              <Text variant="heading">{t('finance.thisMonth')}</Text>
+              <View style={styles.flowRow}>
+                <Text variant="caption" muted>{t('finance.ledger.in')}</Text>
+                <Text variant="moneyMin" style={styles.flowIn}>+{formatAmount(flow.inMinor, reporting)}</Text>
+              </View>
+              <View style={styles.flowRow}>
+                <Text variant="caption" muted>{t('finance.ledger.out')}</Text>
+                <Text variant="moneyMin">−{formatAmount(flow.outMinor, reporting)}</Text>
+              </View>
+              <View style={[styles.flowRow, styles.flowNet]}>
+                <Text variant="caption" muted>{t('finance.ledger.net')}</Text>
+                <Text variant="moneyMin" style={flow.netMinor >= 0 ? styles.flowIn : styles.flowNeg}>
+                  {flow.netMinor >= 0 ? '+' : '−'}{formatAmount(Math.abs(flow.netMinor), reporting)}
+                </Text>
+              </View>
+              {flow.missing.length > 0 ? (
+                <Text variant="caption" muted>{t('fx.missingRates', { currencies: flow.missing.join(', ') })}</Text>
+              ) : null}
+            </Card>
+
+            <Card style={styles.summaryTile}>
+              <View style={styles.cardHeaderRow}>
+                <Text variant="heading">{t('bills.comingUp')}</Text>
+                <Pressable accessibilityRole="button" onPress={() => router.push('/bills')}>
+                  <Text variant="caption" style={styles.linkText}>{t('bills.title')}</Text>
+                </Pressable>
+              </View>
+              {upcomingBills.length === 0 ? (
+                <Text variant="caption" muted style={styles.emptyLine}>{t('bills.empty')}</Text>
+              ) : (
+                upcomingBills.map((b) => {
+                  const overdue = isOverdue(b.next_due_date, todayISO);
+                  return (
+                    <Pressable
+                      key={b.id}
+                      accessibilityRole="button"
+                      onPress={() => router.push('/bills')}
+                      style={({ pressed }) => [styles.comingRow, pressed ? styles.rowPressed : null]}
+                    >
+                      <View style={styles.comingMain}>
+                        <Text variant="button" numberOfLines={1}>{b.name}</Text>
+                        <Text variant="caption" style={overdue ? styles.flowNeg : undefined} muted={!overdue}>
+                          {overdue
+                            ? t('bills.overdueOn', { date: formatDate(b.next_due_date) })
+                            : t('bills.dueOn', { date: formatDate(b.next_due_date) })}
+                        </Text>
+                      </View>
+                      <Text variant="moneyMin">{formatAmount(b.amount_minor, b.currency_code)}</Text>
+                    </Pressable>
+                  );
+                })
+              )}
+            </Card>
+          </BentoRow>
         </BentoPage>
       </ScrollView>
     </SafeAreaView>
@@ -680,4 +758,15 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   recentMid: { flex: 1, gap: 2 },
   recentIn: { color: c.success },
+  // This month + Coming up cards (Phase B).
+  summaryTile: { flex: 1, gap: spacing.sm },
+  flowRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  flowNet: { borderTopWidth: 1, borderTopColor: c.border, paddingTop: spacing.sm, marginTop: spacing.xs },
+  flowIn: { color: c.success },
+  flowNeg: { color: c.danger },
+  cardHeaderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  linkText: { color: c.brand },
+  emptyLine: { paddingVertical: spacing.sm },
+  comingRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.sm },
+  comingMain: { flex: 1, gap: 2 },
 });
