@@ -896,6 +896,44 @@
     "title": "Bills & Subscriptions",
     "sub": "Stay ahead of recurring payments.",
     "notWired": "Bills need the recurring-payments backend — not set up yet.",
-    "empty": "No bills yet — add one to see what’s due."
+    "empty": "No bills yet — add one to see what’s due.",
+    "activeCount": "{{n}} active",
+    "overdueCount": "{{n}} overdue",
+    "add": "Add bill",
+    "edit": "Edit bill",
+    "nameLabel": "Name",
+    "directionLabel": "Type",
+    "amountLabel": "Amount",
+    "frequencyLabel": "Frequency",
+    "dueLabel": "Next due",
+    "accountLabel": "Paid from",
+    "categoryLabel": "Category (optional)",
+    "categoryNone": "None",
+    "notesLabel": "Note (optional)",
+    "freq": {
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "saveCta": "Save bill",
+    "saved": "Bill saved",
+    "deleted": "Bill deleted",
+    "paidToast": "Recorded and rescheduled",
+    "markPaid": "Mark paid",
+    "markPaidTitle": "Mark {{name}} paid?",
+    "markPaidBody": "Records {{amount}} on {{account}} and moves the due date forward.",
+    "pause": "Pause",
+    "resume": "Resume",
+    "paused": "Paused",
+    "dueOn": "Due {{date}}",
+    "overdueOn": "Overdue · {{date}}",
+    "confirmDeleteTitle": "Delete bill?",
+    "confirmDeleteBody": "Delete {{name}}? Recorded payments stay.",
+    "needAccount": "Add an account first to create a bill.",
+    "errors": {
+      "loadFailed": "Couldnt load bills.",
+      "saveFailed": "Couldnt save the bill.",
+      "deleteFailed": "Couldnt delete the bill."
+    }
   }
 }

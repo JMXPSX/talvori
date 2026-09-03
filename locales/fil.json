@@ -896,6 +896,44 @@
     "title": "Mga Bill at Subscription",
     "sub": "Manatiling nauuna sa mga paulit-ulit na bayad.",
     "notWired": "Kailangan ng bills ang recurring-payments backend — hindi pa naka-set up.",
-    "empty": "Wala pang bill — magdagdag para makita ang dapat bayaran."
+    "empty": "Wala pang bill — magdagdag para makita ang dapat bayaran.",
+    "activeCount": "{{n}} aktibo",
+    "overdueCount": "{{n}} lampas na",
+    "add": "Magdagdag ng bill",
+    "edit": "I-edit ang bill",
+    "nameLabel": "Pangalan",
+    "directionLabel": "Uri",
+    "amountLabel": "Halaga",
+    "frequencyLabel": "Dalas",
+    "dueLabel": "Susunod na takdang araw",
+    "accountLabel": "Babayaran mula sa",
+    "categoryLabel": "Kategorya (opsyonal)",
+    "categoryNone": "Wala",
+    "notesLabel": "Tala (opsyonal)",
+    "freq": {
+      "weekly": "Lingguhan",
+      "monthly": "Buwanan",
+      "yearly": "Taunan"
+    },
+    "saveCta": "I-save ang bill",
+    "saved": "Na-save ang bill",
+    "deleted": "Na-delete ang bill",
+    "paidToast": "Naitala at na-reschedule",
+    "markPaid": "Markahang bayad",
+    "markPaidTitle": "Markahang bayad ang {{name}}?",
+    "markPaidBody": "Itatala ang {{amount}} sa {{account}} at isusulong ang takdang araw.",
+    "pause": "I-pause",
+    "resume": "Ituloy",
+    "paused": "Naka-pause",
+    "dueOn": "Takdang {{date}}",
+    "overdueOn": "Lampas na · {{date}}",
+    "confirmDeleteTitle": "I-delete ang bill?",
+    "confirmDeleteBody": "I-delete ang {{name}}? Mananatili ang mga naitalang bayad.",
+    "needAccount": "Magdagdag muna ng account para makagawa ng bill.",
+    "errors": {
+      "loadFailed": "Hindi ma-load ang mga bill.",
+      "saveFailed": "Hindi ma-save ang bill.",
+      "deleteFailed": "Hindi ma-delete ang bill."
+    }
   }
 }

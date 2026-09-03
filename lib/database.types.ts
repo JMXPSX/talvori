@@ -114,6 +114,27 @@ export interface TransactionRow {
   updated_at: string;
 }
 
+export type BillFrequency = 'weekly' | 'monthly' | 'yearly';
+
+/** A recurring money movement (income or expense). Currency follows the account. */
+export interface BillRow {
+  id: string;
+  household_id: string;
+  name: string;
+  direction: FlowDirection;
+  amount_minor: number;
+  currency_code: string;
+  frequency: BillFrequency;
+  next_due_date: string;
+  account_id: string;
+  category_id: string | null;
+  is_active: boolean;
+  notes: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AccountBalanceRow {
   account_id: string;
   household_id: string;

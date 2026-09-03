@@ -896,6 +896,44 @@
     "title": "الفواتير والاشتراكات",
     "sub": "ابقَ متقدّمًا على المدفوعات المتكررة.",
     "notWired": "تحتاج الفواتير إلى خلفية المدفوعات المتكررة — غير مُعدّة بعد.",
-    "empty": "لا فواتير بعد — أضف واحدة لمعرفة المستحق."
+    "empty": "لا فواتير بعد — أضف واحدة لمعرفة المستحق.",
+    "activeCount": "{{n}} نشط",
+    "overdueCount": "{{n}} متأخر",
+    "add": "إضافة فاتورة",
+    "edit": "تعديل الفاتورة",
+    "nameLabel": "الاسم",
+    "directionLabel": "النوع",
+    "amountLabel": "المبلغ",
+    "frequencyLabel": "التكرار",
+    "dueLabel": "الاستحقاق التالي",
+    "accountLabel": "الدفع من",
+    "categoryLabel": "الفئة (اختياري)",
+    "categoryNone": "لا شيء",
+    "notesLabel": "ملاحظة (اختياري)",
+    "freq": {
+      "weekly": "أسبوعي",
+      "monthly": "شهري",
+      "yearly": "سنوي"
+    },
+    "saveCta": "حفظ الفاتورة",
+    "saved": "تم حفظ الفاتورة",
+    "deleted": "تم حذف الفاتورة",
+    "paidToast": "تم التسجيل وإعادة الجدولة",
+    "markPaid": "تحديد كمدفوع",
+    "markPaidTitle": "تحديد {{name}} كمدفوعة؟",
+    "markPaidBody": "يسجّل {{amount}} على {{account}} ويقدّم تاريخ الاستحقاق.",
+    "pause": "إيقاف مؤقت",
+    "resume": "استئناف",
+    "paused": "متوقف",
+    "dueOn": "الاستحقاق {{date}}",
+    "overdueOn": "متأخر · {{date}}",
+    "confirmDeleteTitle": "حذف الفاتورة؟",
+    "confirmDeleteBody": "حذف {{name}}؟ تبقى المدفوعات المسجّلة.",
+    "needAccount": "أضف حسابًا أولاً لإنشاء فاتورة.",
+    "errors": {
+      "loadFailed": "تعذّر تحميل الفواتير.",
+      "saveFailed": "تعذّر حفظ الفاتورة.",
+      "deleteFailed": "تعذّر حذف الفاتورة."
+    }
   }
 }

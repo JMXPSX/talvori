@@ -18,6 +18,8 @@ export interface CustomDateInputProps {
   value: string;
   onChange: (yyyyMmDd: string) => void;
   error?: string;
+  /** Cap the selectable range at today (default). Bills need future dates → false. */
+  maxToday?: boolean;
 }
 
 /** Local ISO date (yyyy-mm-dd), honoring the device timezone. */
@@ -27,7 +29,7 @@ function localISODate(d: Date): string {
   return `${d.getFullYear()}-${m}-${day}`;
 }
 
-export function CustomDateInput({ value, onChange, error }: CustomDateInputProps) {
+export function CustomDateInput({ value, onChange, error, maxToday = true }: CustomDateInputProps) {
   const { t, i18n } = useTranslation();
   const { palette } = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -61,7 +63,7 @@ export function CustomDateInput({ value, onChange, error }: CustomDateInputProps
           value={selected}
           mode="date"
           display="default"
-          maximumDate={new Date()}
+          maximumDate={maxToday ? new Date() : undefined}
           onChange={onPick}
         />
       ) : null}

@@ -14,6 +14,8 @@ export interface CustomDateInputProps {
   value: string;
   onChange: (yyyyMmDd: string) => void;
   error?: string;
+  /** Cap the selectable range at today (default). Bills need future dates → false. */
+  maxToday?: boolean;
 }
 
 function todayISO(): string {
@@ -23,7 +25,7 @@ function todayISO(): string {
   return `${d.getFullYear()}-${m}-${day}`;
 }
 
-export function CustomDateInput({ value, onChange, error }: CustomDateInputProps) {
+export function CustomDateInput({ value, onChange, error, maxToday = true }: CustomDateInputProps) {
   const { t } = useTranslation();
   const { palette } = useTheme();
   return (
@@ -31,7 +33,7 @@ export function CustomDateInput({ value, onChange, error }: CustomDateInputProps
       <input
         type="date"
         value={value}
-        max={todayISO()}
+        max={maxToday ? todayISO() : undefined}
         onChange={(e) => onChange(e.target.value)}
         aria-label={t('finance.form.dateLabel')}
         style={{

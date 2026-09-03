@@ -157,6 +157,25 @@ async function main() {
     .single();
   ok('account_balances reflects the expense (-10000)', bal?.balance_minor === -10000);
 
+  // --- bills: A creates a recurring bill (currency follows the account) -------
+  const { data: bill, error: billErr } = await a
+    .from('bills')
+    .insert({
+      household_id: hid,
+      name: 'Rent',
+      direction: 'out',
+      amount_minor: 50000,
+      currency_code: 'PHP',
+      frequency: 'monthly',
+      next_due_date: '2026-12-01',
+      account_id: accId,
+      created_by: idA,
+    })
+    .select('*')
+    .single();
+  ok('A can create a bill', !billErr && Boolean(bill?.id));
+  ok('bill currency follows the account (PHP)', bill?.currency_code === 'PHP');
+
   // A creates a second account and transfers 40.00 PHP into it (two legs).
   const { data: acc2 } = await a
     .from('accounts')
@@ -421,6 +440,22 @@ async function main() {
     created_by: idB,
   });
   ok('B cannot write a transaction into A\'s household', Boolean(bTxErr));
+
+  // B CANNOT read or write A's bills (not a member yet).
+  const { data: bBills } = await b.from('bills').select('id').eq('household_id', hid);
+  ok('B cannot read A\'s bills (RLS)', (bBills ?? []).length === 0);
+  const { error: bBillErr } = await b.from('bills').insert({
+    household_id: hid,
+    name: 'Sneaky',
+    direction: 'out',
+    amount_minor: 1,
+    currency_code: 'PHP',
+    frequency: 'monthly',
+    next_due_date: '2026-12-01',
+    account_id: accId,
+    created_by: idB,
+  });
+  ok('B cannot write a bill into A\'s household', Boolean(bBillErr));
 
   // B CANNOT read A's savings goals or debts (not a member yet).
   const { data: bGoals } = await b.from('savings_goals').select('id').eq('household_id', hid);
