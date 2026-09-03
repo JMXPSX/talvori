@@ -678,6 +678,28 @@
       "exportFailed": "Couldn't build the export. Please try again."
     }
   },
+  "reports": {
+    "title": "Reports",
+    "rangeLabel": "Date range",
+    "rangeThisMonth": "This month",
+    "rangeLastMonth": "Last month",
+    "range3Months": "Last 3 months",
+    "rangeYtd": "Year to date",
+    "cashFlow": "Cash flow",
+    "income": "Income",
+    "expenses": "Expenses",
+    "net": "Net",
+    "spendingByCategory": "Spending by category",
+    "empty": "No activity in this range yet.",
+    "budgetVsActual": "Budget vs actual",
+    "selectBudget": "Budget period",
+    "noBudget": "No budget for this period. Create one on the Budget tab to compare.",
+    "category": "Category",
+    "budgeted": "Budgeted",
+    "actual": "Actual",
+    "variance": "Variance",
+    "total": "Total"
+  },
   "insights": {
     "title": "Insights",
     "whereItWent": "Where {{month}} went",

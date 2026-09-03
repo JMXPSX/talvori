@@ -678,6 +678,28 @@
       "exportFailed": "Hindi mabuo ang export. Subukan muli."
     }
   },
+  "reports": {
+    "title": "Mga Ulat",
+    "rangeLabel": "Saklaw ng petsa",
+    "rangeThisMonth": "Ngayong buwan",
+    "rangeLastMonth": "Nakaraang buwan",
+    "range3Months": "Huling 3 buwan",
+    "rangeYtd": "Simula ng taon",
+    "cashFlow": "Daloy ng pera",
+    "income": "Kita",
+    "expenses": "Gastos",
+    "net": "Neto",
+    "spendingByCategory": "Gastos ayon sa kategorya",
+    "empty": "Wala pang aktibidad sa saklaw na ito.",
+    "budgetVsActual": "Badyet vs aktwal",
+    "selectBudget": "Panahon ng badyet",
+    "noBudget": "Walang badyet para sa panahong ito. Gumawa ng isa sa tab na Badyet para ihambing.",
+    "category": "Kategorya",
+    "budgeted": "Nakabadyet",
+    "actual": "Aktwal",
+    "variance": "Pagkakaiba",
+    "total": "Kabuuan"
+  },
   "insights": {
     "title": "Mga insight",
     "whereItWent": "Saan napunta ngayong {{month}}",

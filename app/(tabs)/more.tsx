@@ -38,7 +38,7 @@ export default function MoreScreen() {
   const money: HubItem[] = [
     { icon: 'file-text', label: t('more.bills'), sub: t('more.billsSub'), href: '/bills' },
     { icon: 'users', label: t('more.household'), sub: t('more.householdSub'), href: active ? `/household/${active.id}` : '/household' },
-    { icon: 'bar-chart-2', label: t('more.reports'), sub: t('more.reportsSub'), href: '/finance/insights' },
+    { icon: 'bar-chart-2', label: t('more.reports'), sub: t('more.reportsSub'), href: '/finance/reports' },
   ];
   const app: HubItem[] = [
     { icon: 'settings', label: t('more.settings'), sub: t('more.settingsSub'), href: '/settings' },

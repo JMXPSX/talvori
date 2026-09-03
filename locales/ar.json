@@ -678,6 +678,28 @@
       "exportFailed": "تعذّر إنشاء التصدير. حاول مرة أخرى."
     }
   },
+  "reports": {
+    "title": "التقارير",
+    "rangeLabel": "النطاق الزمني",
+    "rangeThisMonth": "هذا الشهر",
+    "rangeLastMonth": "الشهر الماضي",
+    "range3Months": "آخر 3 أشهر",
+    "rangeYtd": "منذ بداية السنة",
+    "cashFlow": "التدفق النقدي",
+    "income": "الدخل",
+    "expenses": "المصروفات",
+    "net": "الصافي",
+    "spendingByCategory": "الإنفاق حسب الفئة",
+    "empty": "لا يوجد نشاط في هذا النطاق بعد.",
+    "budgetVsActual": "الميزانية مقابل الفعلي",
+    "selectBudget": "فترة الميزانية",
+    "noBudget": "لا توجد ميزانية لهذه الفترة. أنشئ واحدة من تبويب الميزانية للمقارنة.",
+    "category": "الفئة",
+    "budgeted": "المُخطط",
+    "actual": "الفعلي",
+    "variance": "الفرق",
+    "total": "الإجمالي"
+  },
   "insights": {
     "title": "رؤى",
     "whereItWent": "أين ذهب إنفاق {{month}}",
