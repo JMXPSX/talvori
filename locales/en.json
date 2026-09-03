@@ -682,6 +682,7 @@
     "profileSaved": "Profile updated",
     "photoSaved": "Photo updated",
     "emailChangePending": "Check your new email to confirm the change.",
+    "subscriptionPlan": "Subscription plan",
     "errors": {
       "ownerHandoff": "You still own a household with other members. Transfer ownership or remove them first.",
       "deleteFailed": "Couldn't delete your account. Please try again.",

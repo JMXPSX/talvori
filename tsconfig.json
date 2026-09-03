@@ -21,6 +21,7 @@
   ],
   "exclude": [
     "node_modules",
-    "context/Budget app analysis (3)"
+    "context/Budget app analysis (3)",
+    "context/Budget app analysis/uploads"
   ]
 }

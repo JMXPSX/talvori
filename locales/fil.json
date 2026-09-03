@@ -682,6 +682,7 @@
     "profileSaved": "Na-update ang profile",
     "photoSaved": "Na-update ang larawan",
     "emailChangePending": "Tingnan ang bagong email mo para kumpirmahin ang pagbabago.",
+    "subscriptionPlan": "Plano ng subscription",
     "errors": {
       "ownerHandoff": "May pagmamay-ari ka pang sambahayan na may ibang miyembro. Ilipat muna ang pagmamay-ari o alisin sila.",
       "deleteFailed": "Hindi mabura ang iyong account. Subukan muli.",
