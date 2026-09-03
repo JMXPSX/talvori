@@ -103,6 +103,15 @@ export async function addAllocation(input: {
   return data as BudgetAllocationRow;
 }
 
+/** Update a category allocation's monthly limit (inline edit on the Budget tab). */
+export async function updateAllocation(id: string, limitMinor: number): Promise<void> {
+  const { error } = await getSupabase()
+    .from('budget_allocations')
+    .update({ limit_minor: limitMinor })
+    .eq('id', id);
+  if (error) fail('planning.errors.allocationFailed', error);
+}
+
 export async function listBudgetStatus(budgetId: string): Promise<BudgetStatusRow[]> {
   const { data, error } = await getSupabase()
     .from('budget_status')

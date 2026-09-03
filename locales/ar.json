@@ -330,7 +330,7 @@
       "accountLabel": "حساب التمويل",
       "paidFrom": "مدفوع من {{account}}",
       "unassigned": "غير معيّن",
-      "limitLabel": "الحد",
+      "limitLabel": "الحد الشهري",
       "addAllocationCta": "إضافة حد",
       "uncategorized": "بدون فئة",
       "limit": "الحد",
@@ -351,7 +351,9 @@
       "addCategory": "＋ إضافة فئة",
       "noneInScope": "لا توجد فئات مدفوعة من {{account}} بعد.",
       "selectMonth": "اختر الشهر",
-      "newMonth": "+ شهر جديد"
+      "newMonth": "+ شهر جديد",
+      "categoryNameLabel": "اسم الفئة",
+      "saved": "تم تحديث الميزانية"
     },
     "goals": {
       "title": "أهداف الادخار",

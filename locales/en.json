@@ -330,7 +330,7 @@
       "accountLabel": "Funding account",
       "paidFrom": "paid from {{account}}",
       "unassigned": "unassigned",
-      "limitLabel": "Limit",
+      "limitLabel": "Monthly limit",
       "addAllocationCta": "Add limit",
       "uncategorized": "Uncategorized",
       "limit": "Limit",
@@ -351,7 +351,9 @@
       "addCategory": "＋ Add category",
       "noneInScope": "No categories paid from {{account}} yet.",
       "selectMonth": "Select month",
-      "newMonth": "+ New month"
+      "newMonth": "+ New month",
+      "categoryNameLabel": "Category name",
+      "saved": "Budget updated"
     },
     "goals": {
       "title": "Savings goals",

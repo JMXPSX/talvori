@@ -121,6 +121,12 @@ export async function createCategory(
   return data as CategoryRow;
 }
 
+/** Rename a category (inline edit on the Budget tab). */
+export async function renameCategory(id: string, name: string): Promise<void> {
+  const { error } = await getSupabase().from('categories').update({ name }).eq('id', id);
+  if (error) fail('finance.errors.categoryFailed', error);
+}
+
 // --- transactions ----------------------------------------------------------
 export async function listTransactions(
   householdId: string,

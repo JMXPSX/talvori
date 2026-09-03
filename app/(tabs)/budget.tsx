@@ -19,12 +19,15 @@ import {
   Card,
   EmptyState,
   ErrorNotice,
+  InlineEditor,
   ProgressBar,
   ProgressRing,
   Select,
   Text,
+  TextField,
+  useToast,
 } from '@/components/ui';
-import { listAccounts, listCategories } from '@/features/finance/api';
+import { listAccounts, listCategories, renameCategory } from '@/features/finance/api';
 import {
   aggregateBudget,
   daysRemaining,
@@ -40,6 +43,7 @@ import {
   listDebts,
   listGoalStatus,
   listGoals,
+  updateAllocation,
 } from '@/features/finance/planningApi';
 import { budgetRemainingMinor, progressRatio } from '@/features/finance/progress';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -55,6 +59,7 @@ import type {
 } from '@/lib/database.types';
 import { toAppError } from '@/lib/errors';
 import { formatAmount } from '@/lib/format';
+import { money, toMajorUnits, toMinorUnits } from '@/lib/money';
 
 type FeatherName = keyof typeof Feather.glyphMap;
 
@@ -99,6 +104,15 @@ export default function PlanScreen() {
   // Account scope for the category list (§5.2) — 'all' or an account id. Stays in
   // sync conceptually with Home's hero scope; filters the category rows below.
   const [scope, setScope] = useState<string>('all');
+
+  // Inline category edit (limit + rename) opened under a budget row.
+  const { show: showToast } = useToast();
+  const [editAllocId, setEditAllocId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editLimit, setEditLimit] = useState('');
+  const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
+  const [savingAlloc, setSavingAlloc] = useState(false);
+  const [allocError, setAllocError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!active) {
@@ -172,6 +186,43 @@ export default function PlanScreen() {
   function accountName(id: string | null): string {
     if (!id) return t('planning.budgets.unassignedAccount');
     return accounts.find((a) => a.id === id)?.name ?? t('planning.budgets.unassignedAccount');
+  }
+
+  function onStartEditAlloc(row: BudgetStatusRow) {
+    setEditAllocId(row.allocation_id);
+    setEditCategoryId(row.category_id);
+    setEditName(categoryName(row.category_id));
+    setEditLimit(String(toMajorUnits(money(row.limit_minor, row.currency_code))));
+    setAllocError(null);
+  }
+
+  function onCancelEditAlloc() {
+    setEditAllocId(null);
+    setAllocError(null);
+  }
+
+  async function onSaveAlloc(row: BudgetStatusRow) {
+    const amount = Number(editLimit);
+    if (!Number.isFinite(amount) || amount < 0) {
+      setAllocError('errors.validation');
+      return;
+    }
+    setSavingAlloc(true);
+    try {
+      await updateAllocation(row.allocation_id, toMinorUnits(amount, row.currency_code));
+      const trimmed = editName.trim();
+      // Rename the category too (only when it's a real category and actually changed).
+      if (editCategoryId && trimmed && trimmed !== categoryName(row.category_id)) {
+        await renameCategory(editCategoryId, trimmed);
+      }
+      setEditAllocId(null);
+      await load();
+      showToast(t('planning.budgets.saved'));
+    } catch (err) {
+      setAllocError(toAppError(err).messageKey);
+    } finally {
+      setSavingAlloc(false);
+    }
   }
 
   const debtsOwedByCurrency = debtRows.reduce<Record<string, number>>((acc, d) => {
@@ -307,12 +358,12 @@ export default function PlanScreen() {
                         scopedStatus.map((row) => {
                           const remaining = budgetRemainingMinor(row.limit_minor, row.spent_minor);
                           return (
+                            <View key={row.allocation_id} style={styles.allocRow}>
                             <Pressable
-                              key={row.allocation_id}
                               accessibilityRole="button"
                               accessibilityLabel={categoryName(row.category_id)}
-                              onPress={() => router.push('/finance/budgets')}
-                              style={({ pressed }) => [styles.allocRow, pressed ? styles.pressed : null]}
+                              onPress={() => onStartEditAlloc(row)}
+                              style={({ pressed }) => [pressed ? styles.pressed : null]}
                             >
                               <View style={styles.allocHeader}>
                                 <View style={styles.catIcon}>
@@ -340,6 +391,32 @@ export default function PlanScreen() {
                                 {t('planning.budgets.paidFrom', { account: accountName(row.account_id) })}
                               </Text>
                             </Pressable>
+                            {editAllocId === row.allocation_id ? (
+                              <InlineEditor
+                                onSave={() => void onSaveAlloc(row)}
+                                onCancel={onCancelEditAlloc}
+                                saveLabel={t('common.save')}
+                                cancelLabel={t('common.cancel')}
+                                saving={savingAlloc}
+                                error={allocError ? t(allocError) : null}
+                              >
+                                {editCategoryId ? (
+                                  <TextField
+                                    label={t('planning.budgets.categoryNameLabel')}
+                                    value={editName}
+                                    onChangeText={setEditName}
+                                    autoCapitalize="words"
+                                  />
+                                ) : null}
+                                <TextField
+                                  label={t('planning.budgets.limitLabel')}
+                                  value={editLimit}
+                                  onChangeText={setEditLimit}
+                                  keyboardType="numeric"
+                                />
+                              </InlineEditor>
+                            ) : null}
+                            </View>
                           );
                         })
                       )}
