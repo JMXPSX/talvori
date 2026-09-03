@@ -22,12 +22,16 @@ const rawSchema = z.object({
     .default('development'),
   EXPO_PUBLIC_SUPABASE_URL: z.string().default(''),
   EXPO_PUBLIC_SUPABASE_ANON_KEY: z.string().default(''),
+  // Public base URL for shareable links (invite links, etc.). Defaults to the
+  // current dev deployment so shared invites resolve without extra config.
+  EXPO_PUBLIC_APP_URL: z.string().default('https://talvori.vercel.app'),
 });
 
 const parsed = rawSchema.safeParse({
   EXPO_PUBLIC_APP_ENV: process.env.EXPO_PUBLIC_APP_ENV,
   EXPO_PUBLIC_SUPABASE_URL: process.env.EXPO_PUBLIC_SUPABASE_URL,
   EXPO_PUBLIC_SUPABASE_ANON_KEY: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+  EXPO_PUBLIC_APP_URL: process.env.EXPO_PUBLIC_APP_URL,
 });
 
 const raw = parsed.success
@@ -65,4 +69,6 @@ export const env = {
   supabaseUrl,
   supabaseAnonKey,
   isSupabaseConfigured,
+  // No trailing slash, so `${appUrl}/join/...` is always well-formed.
+  appUrl: raw.EXPO_PUBLIC_APP_URL.trim().replace(/\/+$/, ''),
 } as const;

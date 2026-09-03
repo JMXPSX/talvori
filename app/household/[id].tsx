@@ -19,6 +19,7 @@ import { Avatar, Button, Card, CONTENT_MAX_WIDTH, Text, Toggle } from '@/compone
 import { getHousehold, listMembers, setCrossBorder, type MemberWithProfile } from '@/features/household/api';
 import { useAuth } from '@/features/auth/AuthProvider';
 import type { HouseholdRow } from '@/lib/database.types';
+import { env } from '@/lib/env';
 import { toAppError } from '@/lib/errors';
 
 export default function HouseholdDetailScreen() {
@@ -65,7 +66,15 @@ export default function HouseholdDetailScreen() {
     setTimeout(() => setCopied(false), 1500);
   }
   async function onShare() {
-    if (household) await Share.share({ message: household.code });
+    if (!household) return;
+    // Share a complete invitation (name + join link + code + a hint), not just the
+    // bare code — the URL is embedded in the message so SMS/WhatsApp/email/etc. all
+    // carry the clickable link. The link opens the /join/<code> flow.
+    const url = `${env.appUrl}/join/${household.code}`;
+    await Share.share({
+      title: t('household.shareTitle'),
+      message: t('household.shareMessage', { code: household.code, url }),
+    });
   }
   async function onToggleCrossBorder(value: boolean) {
     if (!household) return;
