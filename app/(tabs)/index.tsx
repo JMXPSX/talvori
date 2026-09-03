@@ -672,7 +672,11 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   rowPressed: { opacity: 0.6 },
   hero: {
-    flex: 1,
+    // Size to content (top-aligned) — not flex:1, which stretched the card to
+    // match the taller accounts ledger in the equal-height BentoRow and left a
+    // large empty purple gap below the balance line.
+    alignSelf: 'flex-start',
+    width: '100%',
     backgroundColor: c.brand,
     borderRadius: radius.xl,
     padding: spacing.lg,
