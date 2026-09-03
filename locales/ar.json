@@ -348,7 +348,8 @@
       "tapHint": "انقر ✎ لتغيير الفئة",
       "addCategory": "＋ إضافة فئة",
       "noneInScope": "لا توجد فئات مدفوعة من {{account}} بعد.",
-      "selectMonth": "اختر الشهر"
+      "selectMonth": "اختر الشهر",
+      "newMonth": "+ شهر جديد"
     },
     "goals": {
       "title": "أهداف الادخار",

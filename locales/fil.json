@@ -348,7 +348,8 @@
       "tapHint": "i-tap ang ✎ para baguhin ang kategorya",
       "addCategory": "＋ Magdagdag ng kategorya",
       "noneInScope": "Wala pang kategoryang binabayaran mula sa {{account}}.",
-      "selectMonth": "Pumili ng buwan"
+      "selectMonth": "Pumili ng buwan",
+      "newMonth": "+ Bagong buwan"
     },
     "goals": {
       "title": "Mga Layunin sa Ipon",

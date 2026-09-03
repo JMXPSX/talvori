@@ -58,6 +58,9 @@ import { formatAmount } from '@/lib/format';
 
 type FeatherName = keyof typeof Feather.glyphMap;
 
+/** Sentinel option value for the month picker's "create a new month" action. */
+const NEW_MONTH = '__new_month__';
+
 /** Best-effort Feather icon for a category by name (§6.7 icon tiles). No icon
  *  field in the data model, so match common seed names; fall back to a tag. */
 function categoryIcon(name: string): FeatherName {
@@ -192,11 +195,23 @@ export default function PlanScreen() {
     budget ? new Date(budget.period_start) : new Date(),
   );
 
-  // Month picker options — every budget period the household has, oldest first.
+  // Month picker options — every budget period the household has (oldest first),
+  // plus a trailing action to create a month you don't have yet.
   const monthFmt = new Intl.DateTimeFormat(i18n.language, { month: 'long', year: 'numeric' });
-  const monthOptions = [...budgets]
-    .sort((a, b) => a.period_start.localeCompare(b.period_start))
-    .map((b) => ({ value: b.id, label: monthFmt.format(new Date(b.period_start)) }));
+  const monthOptions = [
+    ...[...budgets]
+      .sort((a, b) => a.period_start.localeCompare(b.period_start))
+      .map((b) => ({ value: b.id, label: monthFmt.format(new Date(b.period_start)) })),
+    { value: NEW_MONTH, label: t('planning.budgets.newMonth') },
+  ];
+
+  const onMonthChange = (value: string) => {
+    if (value === NEW_MONTH) {
+      router.push('/finance/budget-new');
+      return;
+    }
+    setSelectedBudgetId(value);
+  };
 
   // §5.2 scope: filter category rows by their funding account.
   const scopedStatus = scope === 'all' ? status : status.filter((r) => r.account_id === scope);
@@ -220,7 +235,7 @@ export default function PlanScreen() {
                 accessibilityLabel={t('planning.budgets.selectMonth')}
                 options={monthOptions}
                 value={budget.id}
-                onChange={setSelectedBudgetId}
+                onChange={onMonthChange}
                 style={styles.monthSelect}
               />
             ) : null}

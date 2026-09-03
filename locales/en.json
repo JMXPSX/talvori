@@ -348,7 +348,8 @@
       "tapHint": "tap ✎ to change a category",
       "addCategory": "＋ Add category",
       "noneInScope": "No categories paid from {{account}} yet.",
-      "selectMonth": "Select month"
+      "selectMonth": "Select month",
+      "newMonth": "+ New month"
     },
     "goals": {
       "title": "Savings goals",
