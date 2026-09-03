@@ -9,12 +9,14 @@
  */
 
 import { Feather } from '@expo/vector-icons';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { radius, spacing } from '@/components/theme';
 import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Avatar } from '@/components/ui/Avatar';
 import { Text } from '@/components/ui/Text';
+
+const MARK = require('@/assets/brand/talvori-mark.png');
 
 export interface SideNavItem {
   key: string;
@@ -52,9 +54,7 @@ export function SideNav({ brand, sections, footer }: SideNavProps) {
   return (
     <View style={styles.sidebar}>
       <View style={styles.brandRow}>
-        <View style={styles.brandMark}>
-          <Feather name="layers" size={16} color={palette.white} />
-        </View>
+        <Image source={MARK} style={styles.brandMark} accessibilityIgnoresInvertColors />
         <Text variant="heading" style={styles.brand}>
           {brand}
         </Text>
@@ -144,14 +144,7 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     paddingTop: spacing.lg,
     paddingBottom: spacing.md,
   },
-  brandMark: {
-    width: 28,
-    height: 28,
-    borderRadius: radius.md,
-    backgroundColor: c.brand,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  brandMark: { width: 28, height: 28 },
   brand: { color: c.brand },
   content: {
     paddingHorizontal: spacing.md,

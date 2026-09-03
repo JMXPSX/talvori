@@ -7,15 +7,21 @@
     "scheme": "globalhousehold",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "icon": "./assets/brand/icon.png",
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/brand/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
     },
     "web": {
       "bundler": "metro",
-      "output": "static"
+      "output": "static",
+      "favicon": "./assets/brand/favicon.png"
     },
     "plugins": [
       "expo-router",
