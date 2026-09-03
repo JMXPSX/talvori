@@ -260,7 +260,7 @@ export default function HomeScreen() {
             </View>
           ) : null}
 
-          {/* Row 1 — the balance hero leads; quick actions ride beside it on wide. */}
+          {/* Row 1 — spend hero + accounts ledger (01-home) */}
           <BentoRow>
             <View style={styles.heroSlot}>
               {budget ? (
@@ -350,46 +350,6 @@ export default function HomeScreen() {
                 </View>
               )}
             </View>
-
-            {/* Quick actions ride beside the hero on mobile; on wide the desktop
-                top bar already carries Income / Expense / transfer. */}
-            {!isWide ? (
-              <Card style={styles.actionsSlot}>
-                <View style={styles.tiles}>
-                  {actions.map((a) => (
-                    <Pressable key={a.href} style={styles.tile} onPress={() => router.push(a.href as never)}>
-                      <View style={[styles.tileIcon, { backgroundColor: a.bg }]}>
-                        <Feather name={a.icon} size={20} color={a.fg} />
-                      </View>
-                      <Text variant="caption" style={styles.tileLabel}>{a.label}</Text>
-                    </Pressable>
-                  ))}
-                </View>
-              </Card>
-            ) : null}
-          </BentoRow>
-
-          {/* Row 2 — spending breakdown beside the accounts ledger. */}
-          <BentoRow>
-            {breakdown.slices.length > 0 ? (
-              <Card style={styles.donutSlot}>
-                <Text variant="heading">{t('finance.spendingByCategory')}</Text>
-                <View style={styles.donutRow}>
-                  <Donut segments={segments} size={140} stroke={20} />
-                  <View style={styles.legend}>
-                    {breakdown.slices.slice(0, 6).map((s) => (
-                      <View key={s.label} style={styles.legendRow}>
-                        <View style={[styles.dot, { backgroundColor: s.color }]} />
-                        <Text variant="caption" style={styles.legendLabel} numberOfLines={1}>
-                          {s.label}
-                        </Text>
-                        <Text variant="caption" muted>{formatAmount(s.amountMinor, reporting)}</Text>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              </Card>
-            ) : null}
 
             {/* One tile holding the account rows (balance per account, matching the
                 Flow Prototype), not one tile per account. */}
@@ -494,9 +454,27 @@ export default function HomeScreen() {
             </Card>
           </BentoRow>
 
-          {/* Row 3 — recent activity (scoped to the selected account, #4). */}
-          {visibleTxns.length > 0 ? (
+          {/* Quick actions — mobile only; the desktop top bar carries them on wide. */}
+          {!isWide ? (
             <BentoRow>
+              <Card style={styles.actionsSlot}>
+                <View style={styles.tiles}>
+                  {actions.map((a) => (
+                    <Pressable key={a.href} style={styles.tile} onPress={() => router.push(a.href as never)}>
+                      <View style={[styles.tileIcon, { backgroundColor: a.bg }]}>
+                        <Feather name={a.icon} size={20} color={a.fg} />
+                      </View>
+                      <Text variant="caption" style={styles.tileLabel}>{a.label}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              </Card>
+            </BentoRow>
+          ) : null}
+
+          {/* Row 2 — recent · where it went · this month + coming up */}
+          <BentoRow>
+            {visibleTxns.length > 0 ? (
               <Card style={styles.recentSlot}>
                 <View style={styles.recentHeader}>
                   <Text variant="heading">{t('finance.recentTitle')}</Text>
@@ -539,11 +517,29 @@ export default function HomeScreen() {
                   );
                 })}
               </Card>
-            </BentoRow>
-          ) : null}
+            ) : null}
 
-          {/* Row — this month (In/Out/Net) + coming-up bills, per the mock. */}
-          <BentoRow>
+            {breakdown.slices.length > 0 ? (
+              <Card style={styles.donutSlot}>
+                <Text variant="heading">{t('finance.spendingByCategory')}</Text>
+                <View style={styles.donutRow}>
+                  <Donut segments={segments} size={140} stroke={20} />
+                  <View style={styles.legend}>
+                    {breakdown.slices.slice(0, 6).map((s) => (
+                      <View key={s.label} style={styles.legendRow}>
+                        <View style={[styles.dot, { backgroundColor: s.color }]} />
+                        <Text variant="caption" style={styles.legendLabel} numberOfLines={1}>
+                          {s.label}
+                        </Text>
+                        <Text variant="caption" muted>{formatAmount(s.amountMinor, reporting)}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </Card>
+            ) : null}
+
+            <View style={styles.rightCol}>
             <Card style={styles.summaryTile}>
               <Text variant="heading">{t('finance.thisMonth')}</Text>
               <View style={styles.flowRow}>
@@ -598,6 +594,7 @@ export default function HomeScreen() {
                 })
               )}
             </Card>
+            </View>
           </BentoRow>
         </BentoPage>
       </ScrollView>
@@ -759,7 +756,8 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   recentMid: { flex: 1, gap: 2 },
   recentIn: { color: c.success },
   // This month + Coming up cards (Phase B).
-  summaryTile: { flex: 1, gap: spacing.sm },
+  summaryTile: { gap: spacing.sm },
+  rightCol: { flex: 1, gap: spacing.lg },
   flowRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   flowNet: { borderTopWidth: 1, borderTopColor: c.border, paddingTop: spacing.sm, marginTop: spacing.xs },
   flowIn: { color: c.success },
