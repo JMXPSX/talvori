@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { BentoPage, Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
+import { BentoPage, BentoRow, Card, CONTENT_MAX_WIDTH, EmptyState, ErrorNotice, Text, useActionSheet } from '@/components/ui';
 import { AccountScopePicker } from '@/features/finance/AccountScopePicker';
 import { listAccounts, listTransactions, type TransactionWithRefs } from '@/features/finance/api';
 import { monthFlow } from '@/features/finance/flow';
@@ -201,22 +201,27 @@ export default function TransactionsScreen() {
         <AccountScopePicker accounts={accounts} value={scope} onChange={setSelectedAccountId} />
 
         {visible.length > 0 ? (
-          <Card style={styles.summary}>
-            <View style={styles.summaryCol}>
+          <BentoRow>
+            <Card style={styles.summaryCard}>
               <Text variant="caption" muted>{t('finance.ledger.in')}</Text>
-              <Text variant="moneyMin" style={styles.inAmt}>+{formatAmount(flow.inMinor, reporting)}</Text>
-            </View>
-            <View style={styles.summaryCol}>
+              <Text variant="title" style={styles.inAmt}>+{formatAmount(flow.inMinor, reporting)}</Text>
+            </Card>
+            <Card style={styles.summaryCard}>
               <Text variant="caption" muted>{t('finance.ledger.out')}</Text>
-              <Text variant="moneyMin">−{formatAmount(flow.outMinor, reporting)}</Text>
-            </View>
-            <View style={styles.summaryCol}>
+              <Text variant="title">−{formatAmount(flow.outMinor, reporting)}</Text>
+            </Card>
+            <Card style={styles.summaryCard}>
               <Text variant="caption" muted>{t('finance.ledger.net')}</Text>
-              <Text variant="moneyMin" style={flow.netMinor >= 0 ? styles.inAmt : styles.netNeg}>
+              <Text variant="title" style={flow.netMinor >= 0 ? styles.inAmt : styles.netNeg}>
                 {flow.netMinor >= 0 ? '+' : '−'}{formatAmount(Math.abs(flow.netMinor), reporting)}
               </Text>
-            </View>
-          </Card>
+            </Card>
+            {isWide ? (
+              <Card style={styles.noteCard}>
+                <Text variant="caption" style={styles.noteText}>{t('finance.activity.transferNote')}</Text>
+              </Card>
+            ) : null}
+          </BentoRow>
         ) : null}
         {flow.missing.length > 0 ? (
           <Text variant="caption" muted style={styles.missingNote}>
@@ -383,8 +388,9 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   scopeEmpty: { paddingVertical: spacing.lg, textAlign: 'center' },
-  summary: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  summaryCol: { flex: 1, gap: 2, alignItems: 'center' },
+  summaryCard: { flex: 1, gap: spacing.xs, alignItems: 'flex-start' },
+  noteCard: { flex: 1.6, justifyContent: 'center', backgroundColor: c.infoTint },
+  noteText: { color: c.infoStrong, lineHeight: 18 },
   inAmt: { color: c.positiveStrong },
   netNeg: { color: c.danger },
   missingNote: { marginTop: -spacing.xs },

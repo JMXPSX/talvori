@@ -249,8 +249,10 @@ export default function PlanScreen() {
             <ErrorNotice message={t(errorKey)} retryLabel={t('common.retry')} onRetry={() => void load()} />
           ) : (
             <>
+              <BentoRow>
+              <View style={styles.leftCol}>
               {budget ? (
-                <BentoRow>
+                <>
                   <Card style={styles.ringTile}>
                   <View style={styles.ringRow}>
                     <ProgressRing fraction={agg.fraction} state={agg.state} size={92} stroke={10}>
@@ -351,7 +353,7 @@ export default function PlanScreen() {
                       </Pressable>
                     </Card>
                   ) : null}
-                </BentoRow>
+                </>
               ) : (
                 <EmptyState
                   icon="pie-chart"
@@ -360,8 +362,8 @@ export default function PlanScreen() {
                   onCta={() => router.push('/finance/budget-new')}
                 />
               )}
-
-              <BentoRow>
+              </View>
+              <View style={styles.rightCol}>
                 {/* Savings goals — inline progress + Contribute (opens the Goals screen). */}
                 <Card style={styles.tile}>
                   <Text variant="subheading">{t('planning.goals.title')}</Text>
@@ -454,6 +456,7 @@ export default function PlanScreen() {
                     <Text variant="button" style={styles.addRowText}>{t('planning.debts.addDebt')}</Text>
                   </Pressable>
                 </Card>
+              </View>
               </BentoRow>
             </>
           )}
@@ -501,12 +504,14 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   allocHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   allocName: { flex: 1 },
   pressed: { opacity: 0.7 },
-  tile: { flex: 1 },
+  tile: { gap: spacing.md },
+  leftCol: { flex: 2, gap: spacing.md },
+  rightCol: { flex: 1, gap: spacing.md },
   planItem: { gap: spacing.xs, paddingVertical: spacing.sm },
   pct: { color: c.accent },
   recordLink: { color: c.tertiary },
   smallBtn: { minHeight: 34, paddingHorizontal: spacing.md, borderRadius: radius.pill },
   // 2a desktop: ring beside the budget meters (weights collapse to a stack on mobile).
-  ringTile: { flex: 1 },
-  budgetsTile: { flex: 2 },
+  ringTile: { gap: spacing.md },
+  budgetsTile: { gap: spacing.md },
 });
