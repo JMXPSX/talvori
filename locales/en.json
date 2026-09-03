@@ -347,7 +347,8 @@
       "scopeFrom": "Showing categories paid from {{account}}",
       "tapHint": "tap ✎ to change a category",
       "addCategory": "＋ Add category",
-      "noneInScope": "No categories paid from {{account}} yet."
+      "noneInScope": "No categories paid from {{account}} yet.",
+      "selectMonth": "Select month"
     },
     "goals": {
       "title": "Savings goals",

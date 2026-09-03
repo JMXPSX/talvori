@@ -347,7 +347,8 @@
       "scopeFrom": "Ipinapakita ang mga kategoryang binabayaran mula sa {{account}}",
       "tapHint": "i-tap ang ✎ para baguhin ang kategorya",
       "addCategory": "＋ Magdagdag ng kategorya",
-      "noneInScope": "Wala pang kategoryang binabayaran mula sa {{account}}."
+      "noneInScope": "Wala pang kategoryang binabayaran mula sa {{account}}.",
+      "selectMonth": "Pumili ng buwan"
     },
     "goals": {
       "title": "Mga Layunin sa Ipon",

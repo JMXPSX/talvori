@@ -347,7 +347,8 @@
       "scopeFrom": "عرض الفئات المدفوعة من {{account}}",
       "tapHint": "انقر ✎ لتغيير الفئة",
       "addCategory": "＋ إضافة فئة",
-      "noneInScope": "لا توجد فئات مدفوعة من {{account}} بعد."
+      "noneInScope": "لا توجد فئات مدفوعة من {{account}} بعد.",
+      "selectMonth": "اختر الشهر"
     },
     "goals": {
       "title": "أهداف الادخار",

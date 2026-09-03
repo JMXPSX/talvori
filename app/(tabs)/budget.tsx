@@ -5,7 +5,7 @@
 
 import { Feather } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -80,7 +80,10 @@ export default function PlanScreen() {
   const styles = useThemedStyles(makeStyles);
   const { palette } = useTheme();
 
-  const [budget, setBudget] = useState<BudgetRow | null>(null);
+  const [budgets, setBudgets] = useState<BudgetRow[]>([]);
+  // The month on view — an existing budget period. Defaults to the current month,
+  // and the pill lets the user switch to any other budget the household has.
+  const [selectedBudgetId, setSelectedBudgetId] = useState<string | null>(null);
   const [status, setStatus] = useState<BudgetStatusRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [accounts, setAccounts] = useState<AccountRow[]>([]);
@@ -101,7 +104,7 @@ export default function PlanScreen() {
     }
     setErrorKey(null);
     try {
-      const [budgets, cats, accs, gRows, gStat, dRows, dStat] = await Promise.all([
+      const [budgetRows, cats, accs, gRows, gStat, dRows, dStat] = await Promise.all([
         listBudgets(active.id),
         listCategories(active.id, 'expense'),
         listAccounts(active.id),
@@ -116,9 +119,12 @@ export default function PlanScreen() {
       setGoalStatus(Object.fromEntries(gStat.map((r) => [r.goal_id, r])));
       setDebtRows(dRows);
       setDebtStatus(Object.fromEntries(dStat.map((r) => [r.debt_id, r])));
-      const current = pickCurrentBudget(budgets, new Date().toISOString());
-      setBudget(current);
-      setStatus(current ? await listBudgetStatus(current.id) : []);
+      setBudgets(budgetRows);
+      // Keep the user's chosen month if it still exists; else default to current.
+      const current = pickCurrentBudget(budgetRows, new Date().toISOString());
+      setSelectedBudgetId((prev) =>
+        prev && budgetRows.some((b) => b.id === prev) ? prev : current?.id ?? null,
+      );
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
     } finally {
@@ -131,6 +137,29 @@ export default function PlanScreen() {
       void load();
     }, [load]),
   );
+
+  // The budget on view, derived from the selected month.
+  const budget = budgets.find((b) => b.id === selectedBudgetId) ?? null;
+
+  // Reload the per-category status whenever the viewed month changes.
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      if (!selectedBudgetId) {
+        setStatus([]);
+        return;
+      }
+      try {
+        const rows = await listBudgetStatus(selectedBudgetId);
+        if (!cancelled) setStatus(rows);
+      } catch (err) {
+        if (!cancelled) setErrorKey(toAppError(err).messageKey);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedBudgetId]);
 
   function categoryName(id: string | null): string {
     if (!id) return t('planning.budgets.uncategorized');
@@ -163,6 +192,12 @@ export default function PlanScreen() {
     budget ? new Date(budget.period_start) : new Date(),
   );
 
+  // Month picker options — every budget period the household has, oldest first.
+  const monthFmt = new Intl.DateTimeFormat(i18n.language, { month: 'long', year: 'numeric' });
+  const monthOptions = [...budgets]
+    .sort((a, b) => a.period_start.localeCompare(b.period_start))
+    .map((b) => ({ value: b.id, label: monthFmt.format(new Date(b.period_start)) }));
+
   // §5.2 scope: filter category rows by their funding account.
   const scopedStatus = scope === 'all' ? status : status.filter((r) => r.account_id === scope);
   const scopeOptions = [
@@ -181,9 +216,13 @@ export default function PlanScreen() {
           <View style={styles.titleRow}>
             <Text variant="title">{t('planning.hubTitle')}</Text>
             {budget ? (
-              <View style={styles.monthPill}>
-                <Text variant="button">{monthLabel}</Text>
-              </View>
+              <Select
+                accessibilityLabel={t('planning.budgets.selectMonth')}
+                options={monthOptions}
+                value={budget.id}
+                onChange={setSelectedBudgetId}
+                style={styles.monthSelect}
+              />
             ) : null}
           </View>
 
@@ -412,14 +451,7 @@ export default function PlanScreen() {
 const makeStyles = (c: Palette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: c.background },
   titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  monthPill: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-    backgroundColor: c.surface,
-    borderWidth: 1,
-    borderColor: c.border,
-  },
+  monthSelect: { minWidth: 150 },
   scopeSelect: { minWidth: 150 },
   scopeEmpty: { paddingVertical: spacing.sm },
   catIcon: {
