@@ -20,7 +20,11 @@ import { EntitlementsProvider } from '@/features/billing/EntitlementsProvider';
 import { ActiveHouseholdProvider, useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { fontMap } from '@/lib/fonts';
 
-const AUTH_ROUTES = ['login', 'signup'];
+// Routes reachable without a session. Password recovery must be here: a
+// logged-out user reaches forgot-password from login, and the reset-password
+// landing runs before its recovery session is fully settled — omitting them
+// makes the gate bounce both back to /login.
+const AUTH_ROUTES = ['login', 'signup', 'forgot-password', 'reset-password'];
 
 /** Redirect based on session state once the initial session is known. */
 function useAuthGate() {
@@ -33,6 +37,10 @@ function useAuthGate() {
     if (initializing) return;
     const seg0 = segments[0] ?? '';
     const inAuthRoute = AUTH_ROUTES.includes(seg0);
+    // Only the true entry screens kick a signed-in user back to the app. Password
+    // recovery must NOT: reset-password runs inside a recovery session, so bouncing
+    // it to '/' would prevent setting the new password.
+    const inEntryRoute = seg0 === 'login' || seg0 === 'signup';
     const inOnboarding = seg0 === 'onboarding';
     // The design-system gallery under /dev is reachable without a session so the
     // primitives can be reviewed without signing in. __DEV__ only, and the route
@@ -41,7 +49,7 @@ function useAuthGate() {
 
     if (!session && !inAuthRoute && !inDevRoute) {
       router.replace('/login');
-    } else if (session && inAuthRoute) {
+    } else if (session && inEntryRoute) {
       router.replace('/');
     } else if (
       // New user / no household → Onboarding (§6.3, navigation map §4).
