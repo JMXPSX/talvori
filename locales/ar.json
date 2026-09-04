@@ -346,6 +346,8 @@
       "confirmDeleteBody": "ستُزال حدود الفئات الخاصة بها أيضًا. لن تتأثر المعاملات.",
       "confirmDeleteAllocationTitle": "إزالة هذا الحد؟",
       "confirmDeleteAllocationBody": "لن يتأثر سجل الإنفاق.",
+      "confirmDeleteCatTitle": "حذف {{name}}؟",
+      "confirmDeleteCatBody": "سيؤدي هذا إلى إزالة فئة الميزانية هذه من خطتك. لا يمكن التراجع عن هذا الإجراء.",
       "spentOf": "أُنفق {{spent}} من {{limit}}",
       "unassignedAccount": "غير مخصّص",
       "scopeAll": "كل الحسابات",

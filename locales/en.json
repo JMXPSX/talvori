@@ -346,6 +346,8 @@
       "confirmDeleteBody": "Its category limits are removed too. Transactions are not affected.",
       "confirmDeleteAllocationTitle": "Remove this limit?",
       "confirmDeleteAllocationBody": "Spending history is not affected.",
+      "confirmDeleteCatTitle": "Delete {{name}}?",
+      "confirmDeleteCatBody": "This will remove this budget category from your plan. This action cannot be undone.",
       "spentOf": "{{spent}} spent of {{limit}}",
       "unassignedAccount": "unassigned",
       "scopeAll": "All accounts",

@@ -346,6 +346,8 @@
       "confirmDeleteBody": "Aalisin din ang mga limitasyon nito sa kategorya. Hindi maaapektuhan ang mga transaksyon.",
       "confirmDeleteAllocationTitle": "Alisin ang limitasyong ito?",
       "confirmDeleteAllocationBody": "Hindi maaapektuhan ang kasaysayan ng paggastos.",
+      "confirmDeleteCatTitle": "Burahin ang {{name}}?",
+      "confirmDeleteCatBody": "Aalisin nito ang budget category na ito sa iyong plano. Hindi na ito mababawi.",
       "spentOf": "{{spent}} nagastos sa {{limit}}",
       "unassignedAccount": "walang account",
       "scopeAll": "Lahat ng account",

@@ -45,6 +45,7 @@ import {
   listGoalStatus,
   listGoals,
   addAllocation,
+  deleteAllocation,
   deleteBudget,
   updateAllocation,
 } from '@/features/finance/planningApi';
@@ -240,6 +241,32 @@ export default function PlanScreen() {
     } finally {
       setSavingAlloc(false);
     }
+  }
+
+  function onDeleteAlloc(row: BudgetStatusRow) {
+    const name = categoryName(row.category_id);
+    sheet.show({
+      title: t('planning.budgets.confirmDeleteCatTitle', { name }),
+      message: t('planning.budgets.confirmDeleteCatBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteAllocation(row.allocation_id);
+                setEditAllocId(null);
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
   }
 
   // + Add category: no budget month yet → send them to create one; otherwise open
@@ -527,6 +554,13 @@ export default function PlanScreen() {
                                 cancelLabel={t('common.cancel')}
                                 saving={savingAlloc}
                                 error={allocError ? t(allocError) : null}
+                                destructive={
+                                  <Button
+                                    label={t('finance.delete')}
+                                    variant="dangerQuiet"
+                                    onPress={() => onDeleteAlloc(row)}
+                                  />
+                                }
                               >
                                 {editCategoryId ? (
                                   <TextField
