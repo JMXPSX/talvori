@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CurrencyField, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
+import { setPendingBudgetSelect } from '@/features/finance/pendingBudgetSelect';
 import { createBudget } from '@/features/finance/planningApi';
 import { createBudgetSchema } from '@/features/finance/planningSchemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -66,7 +67,9 @@ export default function BudgetNewScreen() {
     setFieldErrors({});
     setSubmitting(true);
     try {
-      await createBudget(active.id, result.data);
+      const created = await createBudget(active.id, result.data);
+      // Tell the Budget tab to select the month we just made (not keep the old one).
+      setPendingBudgetSelect(created.id);
       if (router.canGoBack()) router.back();
       else router.replace('/finance/budgets');
     } catch (err) {

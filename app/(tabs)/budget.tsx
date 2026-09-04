@@ -36,6 +36,7 @@ import {
   spentFraction,
   pickCurrentBudget,
 } from '@/features/finance/plan';
+import { takePendingBudgetSelect } from '@/features/finance/pendingBudgetSelect';
 import {
   listBudgetStatus,
   listBudgets,
@@ -137,10 +138,16 @@ export default function PlanScreen() {
       setDebtRows(dRows);
       setDebtStatus(Object.fromEntries(dStat.map((r) => [r.debt_id, r])));
       setBudgets(budgetRows);
-      // Keep the user's chosen month if it still exists; else default to current.
+      // A month just created via "+ New month" takes priority; otherwise keep the
+      // user's chosen month if it still exists, else default to the current one.
       const current = pickCurrentBudget(budgetRows, new Date().toISOString());
+      const justCreated = takePendingBudgetSelect();
       setSelectedBudgetId((prev) =>
-        prev && budgetRows.some((b) => b.id === prev) ? prev : current?.id ?? null,
+        justCreated && budgetRows.some((b) => b.id === justCreated)
+          ? justCreated
+          : prev && budgetRows.some((b) => b.id === prev)
+            ? prev
+            : current?.id ?? null,
       );
     } catch (err) {
       setErrorKey(toAppError(err).messageKey);
