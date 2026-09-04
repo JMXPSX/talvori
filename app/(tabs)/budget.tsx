@@ -27,7 +27,7 @@ import {
   useActionSheet,
   useToast,
 } from '@/components/ui';
-import { listAccounts, listCategories, renameCategory } from '@/features/finance/api';
+import { createCategory, listAccounts, listCategories, renameCategory } from '@/features/finance/api';
 import {
   aggregateBudget,
   daysRemaining,
@@ -44,6 +44,7 @@ import {
   listDebts,
   listGoalStatus,
   listGoals,
+  addAllocation,
   deleteBudget,
   updateAllocation,
 } from '@/features/finance/planningApi';
@@ -116,6 +117,13 @@ export default function PlanScreen() {
   const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
   const [savingAlloc, setSavingAlloc] = useState(false);
   const [allocError, setAllocError] = useState<string | null>(null);
+
+  // Inline "Add category" (name + budget amount) opened by the + Add category row.
+  const [addingCat, setAddingCat] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatLimit, setNewCatLimit] = useState('');
+  const [savingNewCat, setSavingNewCat] = useState(false);
+  const [newCatError, setNewCatError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!active) {
@@ -231,6 +239,55 @@ export default function PlanScreen() {
       setAllocError(toAppError(err).messageKey);
     } finally {
       setSavingAlloc(false);
+    }
+  }
+
+  // + Add category: no budget month yet → send them to create one; otherwise open
+  // the inline name + amount form.
+  function onAddCategoryPress() {
+    if (!budget) {
+      router.push('/finance/budget-new');
+      return;
+    }
+    setNewCatName('');
+    setNewCatLimit('');
+    setNewCatError(null);
+    setAddingCat(true);
+  }
+
+  function onCancelAddCat() {
+    setAddingCat(false);
+    setNewCatError(null);
+  }
+
+  async function onAddCategory() {
+    if (!active || !budget) return;
+    const name = newCatName.trim();
+    const amount = Number(newCatLimit);
+    if (!name || !Number.isFinite(amount) || amount < 0) {
+      setNewCatError('errors.validation');
+      return;
+    }
+    setSavingNewCat(true);
+    setNewCatError(null);
+    try {
+      const category = await createCategory(active.id, { name, kind: 'expense' });
+      // Fund from the account currently in scope, else the first account (nullable).
+      const accountId = scope !== 'all' ? scope : accounts[0]?.id ?? null;
+      await addAllocation({
+        budgetId: budget.id,
+        householdId: active.id,
+        categoryId: category.id,
+        limitMinor: toMinorUnits(amount, budget.currency_code),
+        accountId,
+      });
+      setAddingCat(false);
+      await load();
+      showToast(t('planning.budgets.saved'));
+    } catch (err) {
+      setNewCatError(toAppError(err).messageKey);
+    } finally {
+      setSavingNewCat(false);
     }
   }
 
@@ -494,13 +551,37 @@ export default function PlanScreen() {
                   </>
                 )}
 
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() => router.push('/finance/budgets')}
-                  style={({ pressed }) => [styles.addRow, pressed ? styles.pressed : null]}
-                >
-                  <Text variant="button" style={styles.addRowText}>{t('planning.budgets.addCategory')}</Text>
-                </Pressable>
+                {addingCat ? (
+                  <InlineEditor
+                    onSave={() => void onAddCategory()}
+                    onCancel={onCancelAddCat}
+                    saveLabel={t('common.save')}
+                    cancelLabel={t('common.cancel')}
+                    saving={savingNewCat}
+                    error={newCatError ? t(newCatError) : null}
+                  >
+                    <TextField
+                      label={t('planning.budgets.categoryNameLabel')}
+                      value={newCatName}
+                      onChangeText={setNewCatName}
+                      autoCapitalize="words"
+                    />
+                    <TextField
+                      label={t('planning.budgets.limitLabel')}
+                      value={newCatLimit}
+                      onChangeText={setNewCatLimit}
+                      keyboardType="numeric"
+                    />
+                  </InlineEditor>
+                ) : (
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={onAddCategoryPress}
+                    style={({ pressed }) => [styles.addRow, pressed ? styles.pressed : null]}
+                  >
+                    <Text variant="button" style={styles.addRowText}>{t('planning.budgets.addCategory')}</Text>
+                  </Pressable>
+                )}
               </Card>
               </View>
               <View style={styles.rightCol}>

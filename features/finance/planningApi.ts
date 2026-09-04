@@ -109,7 +109,9 @@ export async function addAllocation(input: {
   householdId: string;
   categoryId?: string;
   limitMinor: number;
-  accountId: string;
+  // Nullable: households without accounts (and the inline add on the Budget tab
+  // when no account is in scope) leave the funding account unset.
+  accountId?: string | null;
 }): Promise<BudgetAllocationRow> {
   const { data, error } = await getSupabase()
     .from('budget_allocations')
@@ -118,7 +120,7 @@ export async function addAllocation(input: {
       household_id: input.householdId,
       category_id: input.categoryId ?? null,
       limit_minor: input.limitMinor,
-      account_id: input.accountId,
+      account_id: input.accountId ?? null,
     })
     .select('*')
     .single();
