@@ -350,6 +350,7 @@
       "confirmDeleteCatBody": "Aalisin nito ang budget category na ito sa iyong plano. Hindi na ito mababawi.",
       "spentOf": "{{spent}} nagastos sa {{limit}}",
       "unassignedAccount": "walang account",
+      "paidFromLabel": "Bayad mula sa",
       "scopeAll": "Lahat ng account",
       "scopeFrom": "Ipinapakita ang mga kategoryang binabayaran mula sa {{account}}",
       "tapHint": "i-tap ang ✎ para baguhin ang kategorya",

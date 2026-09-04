@@ -350,6 +350,7 @@
       "confirmDeleteCatBody": "سيؤدي هذا إلى إزالة فئة الميزانية هذه من خطتك. لا يمكن التراجع عن هذا الإجراء.",
       "spentOf": "أُنفق {{spent}} من {{limit}}",
       "unassignedAccount": "غير مخصّص",
+      "paidFromLabel": "يُدفع من",
       "scopeAll": "كل الحسابات",
       "scopeFrom": "عرض الفئات المدفوعة من {{account}}",
       "tapHint": "انقر ✎ لتغيير الفئة",

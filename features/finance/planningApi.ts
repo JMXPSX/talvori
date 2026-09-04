@@ -128,11 +128,21 @@ export async function addAllocation(input: {
   return data as BudgetAllocationRow;
 }
 
-/** Update a category allocation's monthly limit (inline edit on the Budget tab). */
-export async function updateAllocation(id: string, limitMinor: number): Promise<void> {
+/**
+ * Update a category allocation's monthly limit and, optionally, its funding
+ * ("Paid from") account (inline edit on the Budget tab). Pass `accountId`
+ * (id or null) to change the account; omit it to leave the account untouched.
+ */
+export async function updateAllocation(
+  id: string,
+  limitMinor: number,
+  accountId?: string | null,
+): Promise<void> {
+  const patch: { limit_minor: number; account_id?: string | null } = { limit_minor: limitMinor };
+  if (accountId !== undefined) patch.account_id = accountId;
   const { error } = await getSupabase()
     .from('budget_allocations')
-    .update({ limit_minor: limitMinor })
+    .update(patch)
     .eq('id', id);
   if (error) fail('planning.errors.allocationFailed', error);
 }

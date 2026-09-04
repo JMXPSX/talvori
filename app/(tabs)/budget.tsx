@@ -70,6 +70,9 @@ type FeatherName = keyof typeof Feather.glyphMap;
 /** Sentinel option value for the month picker's "create a new month" action. */
 const NEW_MONTH = '__new_month__';
 
+/** Sentinel "Paid from" value meaning no funding account (allocation account_id null). */
+const UNASSIGNED_ACCOUNT = '__unassigned__';
+
 /** Best-effort Feather icon for a category by name (§6.7 icon tiles). No icon
  *  field in the data model, so match common seed names; fall back to a tag. */
 function categoryIcon(name: string): FeatherName {
@@ -116,13 +119,15 @@ export default function PlanScreen() {
   const [editName, setEditName] = useState('');
   const [editLimit, setEditLimit] = useState('');
   const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
+  const [editAccountId, setEditAccountId] = useState<string | null>(null);
   const [savingAlloc, setSavingAlloc] = useState(false);
   const [allocError, setAllocError] = useState<string | null>(null);
 
-  // Inline "Add category" (name + budget amount) opened by the + Add category row.
+  // Inline "Add category" (name + budget amount + Paid from) opened by the + row.
   const [addingCat, setAddingCat] = useState(false);
   const [newCatName, setNewCatName] = useState('');
   const [newCatLimit, setNewCatLimit] = useState('');
+  const [newCatAccount, setNewCatAccount] = useState<string | null>(null);
   const [savingNewCat, setSavingNewCat] = useState(false);
   const [newCatError, setNewCatError] = useState<string | null>(null);
 
@@ -209,6 +214,7 @@ export default function PlanScreen() {
   function onStartEditAlloc(row: BudgetStatusRow) {
     setEditAllocId(row.allocation_id);
     setEditCategoryId(row.category_id);
+    setEditAccountId(row.account_id);
     setEditName(categoryName(row.category_id));
     setEditLimit(String(toMajorUnits(money(row.limit_minor, row.currency_code))));
     setAllocError(null);
@@ -227,7 +233,7 @@ export default function PlanScreen() {
     }
     setSavingAlloc(true);
     try {
-      await updateAllocation(row.allocation_id, toMinorUnits(amount, row.currency_code));
+      await updateAllocation(row.allocation_id, toMinorUnits(amount, row.currency_code), editAccountId);
       const trimmed = editName.trim();
       // Rename the category too (only when it's a real category and actually changed).
       if (editCategoryId && trimmed && trimmed !== categoryName(row.category_id)) {
@@ -278,6 +284,8 @@ export default function PlanScreen() {
     }
     setNewCatName('');
     setNewCatLimit('');
+    // Default the funding account to the one in scope, else the first account.
+    setNewCatAccount(scope !== 'all' ? scope : accounts[0]?.id ?? null);
     setNewCatError(null);
     setAddingCat(true);
   }
@@ -299,14 +307,12 @@ export default function PlanScreen() {
     setNewCatError(null);
     try {
       const category = await createCategory(active.id, { name, kind: 'expense' });
-      // Fund from the account currently in scope, else the first account (nullable).
-      const accountId = scope !== 'all' ? scope : accounts[0]?.id ?? null;
       await addAllocation({
         budgetId: budget.id,
         householdId: active.id,
         categoryId: category.id,
         limitMinor: toMinorUnits(amount, budget.currency_code),
-        accountId,
+        accountId: newCatAccount,
       });
       setAddingCat(false);
       await load();
@@ -400,6 +406,13 @@ export default function PlanScreen() {
     scope === 'all'
       ? `${t('planning.budgets.scopeAll')} · ${t('planning.budgets.tapHint')}`
       : t('planning.budgets.scopeFrom', { account: accountName(scope) });
+
+  // "Paid from" options for the category form: the household's accounts, plus an
+  // Unassigned choice (allocation account_id null).
+  const paidFromOptions = [
+    ...accounts.map((a) => ({ value: a.id, label: a.name })),
+    { value: UNASSIGNED_ACCOUNT, label: t('planning.budgets.unassignedAccount') },
+  ];
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
@@ -576,6 +589,17 @@ export default function PlanScreen() {
                                   onChangeText={setEditLimit}
                                   keyboardType="numeric"
                                 />
+                                {accounts.length > 0 ? (
+                                  <>
+                                    <Text variant="caption" muted>{t('planning.budgets.paidFromLabel')}</Text>
+                                    <Select
+                                      accessibilityLabel={t('planning.budgets.paidFromLabel')}
+                                      options={paidFromOptions}
+                                      value={editAccountId ?? UNASSIGNED_ACCOUNT}
+                                      onChange={(v) => setEditAccountId(v === UNASSIGNED_ACCOUNT ? null : v)}
+                                    />
+                                  </>
+                                ) : null}
                               </InlineEditor>
                             ) : null}
                             </View>
@@ -606,6 +630,17 @@ export default function PlanScreen() {
                       onChangeText={setNewCatLimit}
                       keyboardType="numeric"
                     />
+                    {accounts.length > 0 ? (
+                      <>
+                        <Text variant="caption" muted>{t('planning.budgets.paidFromLabel')}</Text>
+                        <Select
+                          accessibilityLabel={t('planning.budgets.paidFromLabel')}
+                          options={paidFromOptions}
+                          value={newCatAccount ?? UNASSIGNED_ACCOUNT}
+                          onChange={(v) => setNewCatAccount(v === UNASSIGNED_ACCOUNT ? null : v)}
+                        />
+                      </>
+                    ) : null}
                   </InlineEditor>
                 ) : (
                   <Pressable

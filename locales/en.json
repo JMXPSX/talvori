@@ -350,6 +350,7 @@
       "confirmDeleteCatBody": "This will remove this budget category from your plan. This action cannot be undone.",
       "spentOf": "{{spent}} spent of {{limit}}",
       "unassignedAccount": "unassigned",
+      "paidFromLabel": "Paid from",
       "scopeAll": "All accounts",
       "scopeFrom": "Showing categories paid from {{account}}",
       "tapHint": "tap ✎ to change a category",
