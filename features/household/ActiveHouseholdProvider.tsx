@@ -7,6 +7,7 @@
  */
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { AppState } from 'react-native';
 
 import { useAuth } from '@/features/auth/AuthProvider';
 import { listMyHouseholds } from '@/features/household/api';
@@ -58,6 +59,18 @@ export function ActiveHouseholdProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     void refresh();
+  }, [refresh]);
+
+  // Keep the list in sync across devices: refetch whenever the app/tab returns to
+  // the foreground, so a household created on another device shows up here without
+  // a full re-login (the session reference doesn't change, so nothing else would
+  // trigger a refetch). On web AppState maps to tab visibility; on native to app
+  // foreground.
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') void refresh();
+    });
+    return () => sub.remove();
   }, [refresh]);
 
   // Derived, not stored (see the note on `loadedUserId`): we're "loading" whenever

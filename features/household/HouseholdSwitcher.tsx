@@ -43,9 +43,12 @@ export function HouseholdSwitcher({ visible, onClose }: { visible: boolean; onCl
     if (visible) {
       setPanel('none');
       setError(null);
+      // Pull the latest households (and counts) so a household created on another
+      // device is present the moment the list is opened — never a stale snapshot.
+      void refresh();
       listMyMemberCounts().then(setCounts).catch(() => setCounts({}));
     }
-  }, [visible]);
+  }, [visible, refresh]);
 
   function switchTo(id: string) {
     if (id !== active?.id) {
