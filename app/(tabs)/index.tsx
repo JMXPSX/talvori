@@ -352,8 +352,11 @@ export default function HomeScreen() {
             </View>
 
             {/* One tile holding the account rows (balance per account, matching the
-                Flow Prototype), not one tile per account. */}
-            <Card style={styles.accountsSlot}>
+                Flow Prototype), not one tile per account. The flex weight applies
+                only when the row is side-by-side (wide); stacked on mobile the Card
+                must size to its content, else flex-basis:0% collapses the painted
+                box and the last row spills outside the card's rounded boundary. */}
+            <Card style={isWide ? styles.accountsSlot : undefined}>
               <View style={styles.byAcctHeader}>
                 <View style={styles.byAcctHeadText}>
                   <Text variant="heading">{t('finance.byAccount.title')}</Text>
