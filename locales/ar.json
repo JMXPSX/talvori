@@ -352,6 +352,8 @@
       "scopeFrom": "عرض الفئات المدفوعة من {{account}}",
       "tapHint": "انقر ✎ لتغيير الفئة",
       "addCategory": "＋ إضافة فئة",
+      "noCatsTitle": "لا توجد فئات ميزانية بعد.",
+      "noCatsBody": "أنشئ فئات لتبدأ التخطيط لإنفاقك الشهري.",
       "noneInScope": "لا توجد فئات مدفوعة من {{account}} بعد.",
       "selectMonth": "اختر الشهر",
       "newMonth": "+ شهر جديد",

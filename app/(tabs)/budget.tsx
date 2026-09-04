@@ -17,7 +17,6 @@ import {
   BentoRow,
   Button,
   Card,
-  EmptyState,
   ErrorNotice,
   InlineEditor,
   ProgressBar,
@@ -366,8 +365,7 @@ export default function PlanScreen() {
               <BentoRow>
               <View style={styles.leftCol}>
               {budget ? (
-                <>
-                  <Card style={styles.ringTile}>
+                <Card style={styles.ringTile}>
                   <View style={styles.ringRow}>
                     <ProgressRing fraction={agg.fraction} state={agg.state} size={92} stroke={10}>
                       <Text variant="caption" style={styles.ringCenter}>
@@ -397,28 +395,38 @@ export default function PlanScreen() {
                     </View>
                   </View>
                 </Card>
-                  {status.length > 0 ? (
-                    <Card style={styles.budgetsTile}>
-                      <View style={styles.cardHeader}>
-                        <Text variant="subheading">{t('planning.budgets.title')}</Text>
-                        {accounts.length > 1 ? (
-                          <Select
-                            accessibilityLabel={t('planning.budgets.title')}
-                            options={scopeOptions}
-                            value={scope}
-                            onChange={setScope}
-                            style={styles.scopeSelect}
-                          />
-                        ) : null}
-                      </View>
-                      <Text variant="caption" muted>{scopeCaption}</Text>
+              ) : null}
 
-                      {scopedStatus.length === 0 ? (
-                        <Text variant="caption" muted style={styles.scopeEmpty}>
-                          {t('planning.budgets.noneInScope', { account: accountName(scope) })}
-                        </Text>
-                      ) : (
-                        scopedStatus.map((row) => {
+              {/* Budget Categories — always visible. Shows an empty state + Add Category
+                  when there are none, so the section never disappears for lack of data. */}
+              <Card style={styles.budgetsTile}>
+                <View style={styles.cardHeader}>
+                  <Text variant="subheading">{t('planning.budgets.title')}</Text>
+                  {status.length > 0 && accounts.length > 1 ? (
+                    <Select
+                      accessibilityLabel={t('planning.budgets.title')}
+                      options={scopeOptions}
+                      value={scope}
+                      onChange={setScope}
+                      style={styles.scopeSelect}
+                    />
+                  ) : null}
+                </View>
+
+                {status.length === 0 ? (
+                  <View style={styles.catsEmpty}>
+                    <Text variant="button">{t('planning.budgets.noCatsTitle')}</Text>
+                    <Text variant="caption" muted>{t('planning.budgets.noCatsBody')}</Text>
+                  </View>
+                ) : (
+                  <>
+                    <Text variant="caption" muted>{scopeCaption}</Text>
+                    {scopedStatus.length === 0 ? (
+                      <Text variant="caption" muted style={styles.scopeEmpty}>
+                        {t('planning.budgets.noneInScope', { account: accountName(scope) })}
+                      </Text>
+                    ) : (
+                      scopedStatus.map((row) => {
                           const remaining = budgetRemainingMinor(row.limit_minor, row.spent_minor);
                           return (
                             <View key={row.allocation_id} style={styles.allocRow}>
@@ -482,26 +490,18 @@ export default function PlanScreen() {
                             </View>
                           );
                         })
-                      )}
+                    )}
+                  </>
+                )}
 
-                      <Pressable
-                        accessibilityRole="button"
-                        onPress={() => router.push('/finance/budgets')}
-                        style={({ pressed }) => [styles.addRow, pressed ? styles.pressed : null]}
-                      >
-                        <Text variant="button" style={styles.addRowText}>{t('planning.budgets.addCategory')}</Text>
-                      </Pressable>
-                    </Card>
-                  ) : null}
-                </>
-              ) : (
-                <EmptyState
-                  icon="pie-chart"
-                  message={t('planning.budgets.empty')}
-                  ctaLabel={t('planning.budgets.newCta')}
-                  onCta={() => router.push('/finance/budget-new')}
-                />
-              )}
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => router.push('/finance/budgets')}
+                  style={({ pressed }) => [styles.addRow, pressed ? styles.pressed : null]}
+                >
+                  <Text variant="button" style={styles.addRowText}>{t('planning.budgets.addCategory')}</Text>
+                </Pressable>
+              </Card>
               </View>
               <View style={styles.rightCol}>
                 {/* Savings goals — inline progress + Contribute (opens the Goals screen). */}
@@ -622,6 +622,7 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   monthSelect: { minWidth: 150 },
   scopeSelect: { minWidth: 150 },
   scopeEmpty: { paddingVertical: spacing.sm },
+  catsEmpty: { paddingVertical: spacing.md, gap: spacing.xs },
   catIcon: {
     width: 34,
     height: 34,

@@ -352,6 +352,8 @@
       "scopeFrom": "Showing categories paid from {{account}}",
       "tapHint": "tap ✎ to change a category",
       "addCategory": "＋ Add category",
+      "noCatsTitle": "No budget categories yet.",
+      "noCatsBody": "Create categories to start planning your monthly spending.",
       "noneInScope": "No categories paid from {{account}} yet.",
       "selectMonth": "Select month",
       "newMonth": "+ New month",

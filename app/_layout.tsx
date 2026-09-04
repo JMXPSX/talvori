@@ -35,8 +35,9 @@ function useAuthGate() {
   const segments = useSegments();
   const router = useRouter();
 
-  // A join code stashed by /join while signed out; re-read on session change so
-  // the gate can resume the invite once the user authenticates.
+  // A join code stashed by /join while signed out; re-read on session or route
+  // change so the gate resumes the invite after auth, and clears once consumed
+  // (the redirect below empties storage, so the next read here returns null).
   const [pendingJoin, setPendingJoin] = useState<string | null>(null);
   useEffect(() => {
     let alive = true;
@@ -46,7 +47,7 @@ function useAuthGate() {
     return () => {
       alive = false;
     };
-  }, [session]);
+  }, [session, segments]);
 
   useEffect(() => {
     if (initializing) return;
@@ -67,9 +68,9 @@ function useAuthGate() {
     } else if (session && pendingJoin && seg0 !== 'join') {
       // Resume a shared invite the user opened before signing in — takes
       // precedence over the home/onboarding redirects below (joining gives them
-      // a household, so onboarding isn't needed).
+      // a household, so onboarding isn't needed). Clearing storage here means the
+      // loader effect re-reads null on the resulting navigation, so no bounce-back.
       void clearPendingJoinCode();
-      setPendingJoin(null);
       router.replace(`/join/${pendingJoin}`);
     } else if (session && inEntryRoute) {
       router.replace('/');
