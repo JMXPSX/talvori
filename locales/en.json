@@ -83,7 +83,7 @@
     "title": "Households",
     "shareTitle": "Talvori Household Invitation",
     "shareMessage": "Join my household on Talvori!\n\nI've invited you to join my household.\n\nTap here to join:\n{{url}}\n\nInvite code: {{code}}\n\nDon't have Talvori yet? Open the link above to get started.",
-    "joinTitle": "Join a household",
+    "joinInvitePrompt": "You've been invited to join a household (code {{code}}). Sign in or create an account to continue.",
     "empty": "You're not in a household yet. Create one to get started.",
     "createTitle": "Create household",
     "nameLabel": "Household name",

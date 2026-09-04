@@ -1,25 +1,29 @@
 /**
  * Deep-link join: /join/<code>. The shared invite link lands here with the
- * standing invite code prefilled from the path; the user confirms to join via
- * the existing join_household_by_code RPC (same flow as the Household switcher).
- * The root auth gate sends signed-out visitors to /login first, so this renders
- * for signed-in users — full signed-out code-preservation is deferred.
+ * standing invite code prefilled from the path.
+ *  - Signed in: confirm to join via the join_household_by_code RPC (same flow
+ *    as the Household switcher).
+ *  - Signed out: stash the code and offer sign in / create account; the auth
+ *    gate resumes the join here once a session exists (see app/_layout.tsx).
  */
 
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '@/components/ThemeProvider';
 import { Button, Screen, Text, TextField } from '@/components/ui';
+import { useAuth } from '@/features/auth/AuthProvider';
 import { joinHouseholdByCode } from '@/features/household/api';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
+import { clearPendingJoinCode, setPendingJoinCode } from '@/features/household/pendingJoin';
 import { toAppError } from '@/lib/errors';
 
 export default function JoinByCodeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { palette } = useTheme();
+  const { session } = useAuth();
   const { code: raw } = useLocalSearchParams<{ code?: string }>();
   const { refresh, setActiveId } = useActiveHousehold();
 
@@ -28,6 +32,14 @@ export default function JoinByCodeScreen() {
   const [error, setError] = useState<string | null>(null);
   const [errorArg, setErrorArg] = useState<Record<string, string> | undefined>(undefined);
 
+  const signedOut = !session;
+
+  // Signed out: remember the code so the gate can resume the join after auth.
+  useEffect(() => {
+    const c = (raw ?? '').trim().toUpperCase();
+    if (signedOut && c) void setPendingJoinCode(c);
+  }, [signedOut, raw]);
+
   async function onJoin() {
     setError(null);
     setErrorArg(undefined);
@@ -35,6 +47,7 @@ export default function JoinByCodeScreen() {
     setBusy(true);
     try {
       const joined = await joinHouseholdByCode(code);
+      await clearPendingJoinCode();
       await refresh();
       setActiveId(joined.id);
       router.replace('/');
@@ -45,6 +58,18 @@ export default function JoinByCodeScreen() {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (signedOut) {
+    return (
+      <Screen>
+        <Stack.Screen options={{ title: t('household.joinTitle') }} />
+        <Text variant="title">{t('household.joinTitle')}</Text>
+        <Text muted>{t('household.joinInvitePrompt', { code })}</Text>
+        <Button label={t('auth.loginCta')} onPress={() => router.push('/login')} />
+        <Button label={t('auth.signupCta')} variant="secondary" onPress={() => router.push('/signup')} />
+      </Screen>
+    );
   }
 
   return (
