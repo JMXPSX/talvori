@@ -81,6 +81,29 @@ export async function createBudget(
   return data as BudgetRow;
 }
 
+/** Fetch a single budget by id (for the edit-month form). */
+export async function getBudget(id: string): Promise<BudgetRow | null> {
+  const { data, error } = await getSupabase()
+    .from('budgets')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+  if (error) fail('planning.errors.loadFailed', error);
+  return (data ?? null) as BudgetRow | null;
+}
+
+/** Rename a budget month and/or change its period (edit-month). RLS gates writers. */
+export async function updateBudget(
+  id: string,
+  input: { name: string; periodStart: string; periodEnd: string },
+): Promise<void> {
+  const { error } = await getSupabase()
+    .from('budgets')
+    .update({ name: input.name, period_start: input.periodStart, period_end: input.periodEnd })
+    .eq('id', id);
+  if (error) fail('planning.errors.budgetFailed', error);
+}
+
 export async function addAllocation(input: {
   budgetId: string;
   householdId: string;

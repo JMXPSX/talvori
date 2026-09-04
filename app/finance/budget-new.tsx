@@ -2,8 +2,8 @@
  *  Same fields/validation/createBudget call; closes itself on success. */
 
 import { getLocales } from 'expo-localization';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,7 +12,7 @@ import { spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { Button, CurrencyField, FORM_MAX_WIDTH, Text, TextField } from '@/components/ui';
 import { setPendingBudgetSelect } from '@/features/finance/pendingBudgetSelect';
-import { createBudget } from '@/features/finance/planningApi';
+import { createBudget, getBudget, updateBudget } from '@/features/finance/planningApi';
 import { createBudgetSchema } from '@/features/finance/planningSchemas';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
@@ -43,6 +43,10 @@ export default function BudgetNewScreen() {
   const { palette } = useTheme();
   const bounds = monthBounds();
 
+  // With an `id` param this screen edits an existing month; otherwise it creates one.
+  const { id } = useLocalSearchParams<{ id?: string }>();
+  const editing = Boolean(id);
+
   const [name, setName] = useState('');
   const [currency, setCurrency] = useState(deviceCurrency());
   const [start, setStart] = useState(bounds.start);
@@ -51,7 +55,29 @@ export default function BudgetNewScreen() {
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  async function onCreate() {
+  // Prefill from the budget being edited.
+  useEffect(() => {
+    if (!id) return;
+    let alive = true;
+    void (async () => {
+      try {
+        const b = await getBudget(String(id));
+        if (alive && b) {
+          setName(b.name);
+          setCurrency(b.currency_code);
+          setStart(b.period_start.slice(0, 10));
+          setEnd(b.period_end.slice(0, 10));
+        }
+      } catch (err) {
+        if (alive) setFormError(toAppError(err).messageKey);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [id]);
+
+  async function onSubmit() {
     if (!active) return;
     setFormError(null);
     const result = validate(createBudgetSchema, {
@@ -67,9 +93,18 @@ export default function BudgetNewScreen() {
     setFieldErrors({});
     setSubmitting(true);
     try {
-      const created = await createBudget(active.id, result.data);
-      // Tell the Budget tab to select the month we just made (not keep the old one).
-      setPendingBudgetSelect(created.id);
+      if (editing) {
+        await updateBudget(String(id), {
+          name: result.data.name,
+          periodStart: result.data.periodStart,
+          periodEnd: result.data.periodEnd,
+        });
+        setPendingBudgetSelect(String(id));
+      } else {
+        const created = await createBudget(active.id, result.data);
+        // Tell the Budget tab to select the month we just made (not keep the old one).
+        setPendingBudgetSelect(created.id);
+      }
       if (router.canGoBack()) router.back();
       else router.replace('/finance/budgets');
     } catch (err) {
@@ -92,13 +127,16 @@ export default function BudgetNewScreen() {
               autoCapitalize="sentences"
               error={fieldErrors.name ? t('errors.validation') : undefined}
             />
-            <CurrencyField
-              label={t('planning.budgets.currencyLabel')}
-              value={currency}
-              onChange={setCurrency}
-              suggested={[deviceCurrency(), active.reporting_currency_code].filter(Boolean)}
-              error={fieldErrors.currencyCode ? t('errors.validation') : undefined}
-            />
+            {/* Currency is fixed after creation (allocations are entered in it). */}
+            {editing ? null : (
+              <CurrencyField
+                label={t('planning.budgets.currencyLabel')}
+                value={currency}
+                onChange={setCurrency}
+                suggested={[deviceCurrency(), active.reporting_currency_code].filter(Boolean)}
+                error={fieldErrors.currencyCode ? t('errors.validation') : undefined}
+              />
+            )}
             <TextField
               label={t('planning.budgets.startLabel')}
               value={start}
@@ -117,8 +155,14 @@ export default function BudgetNewScreen() {
               </Text>
             ) : null}
             <Button
-              label={submitting ? t('auth.processing') : t('planning.budgets.createCta')}
-              onPress={onCreate}
+              label={
+                submitting
+                  ? t('auth.processing')
+                  : editing
+                    ? t('planning.budgets.editCta')
+                    : t('planning.budgets.createCta')
+              }
+              onPress={onSubmit}
               loading={submitting}
             />
           </>

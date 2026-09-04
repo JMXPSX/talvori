@@ -355,6 +355,9 @@
       "noneInScope": "No categories paid from {{account}} yet.",
       "selectMonth": "Select month",
       "newMonth": "+ New month",
+      "editMonth": "Edit month",
+      "deleteMonth": "Delete month",
+      "editCta": "Save changes",
       "categoryNameLabel": "Category name",
       "saved": "Budget updated"
     },

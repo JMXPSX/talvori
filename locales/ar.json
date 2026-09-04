@@ -355,6 +355,9 @@
       "noneInScope": "لا توجد فئات مدفوعة من {{account}} بعد.",
       "selectMonth": "اختر الشهر",
       "newMonth": "+ شهر جديد",
+      "editMonth": "تعديل الشهر",
+      "deleteMonth": "حذف الشهر",
+      "editCta": "حفظ التغييرات",
       "categoryNameLabel": "اسم الفئة",
       "saved": "تم تحديث الميزانية"
     },

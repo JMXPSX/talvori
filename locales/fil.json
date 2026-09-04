@@ -355,6 +355,9 @@
       "noneInScope": "Wala pang kategoryang binabayaran mula sa {{account}}.",
       "selectMonth": "Pumili ng buwan",
       "newMonth": "+ Bagong buwan",
+      "editMonth": "I-edit ang buwan",
+      "deleteMonth": "Burahin ang buwan",
+      "editCta": "I-save ang mga pagbabago",
       "categoryNameLabel": "Pangalan ng kategorya",
       "saved": "Na-update ang badyet"
     },

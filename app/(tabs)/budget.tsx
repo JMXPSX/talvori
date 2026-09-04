@@ -25,6 +25,7 @@ import {
   Select,
   Text,
   TextField,
+  useActionSheet,
   useToast,
 } from '@/components/ui';
 import { listAccounts, listCategories, renameCategory } from '@/features/finance/api';
@@ -44,6 +45,7 @@ import {
   listDebts,
   listGoalStatus,
   listGoals,
+  deleteBudget,
   updateAllocation,
 } from '@/features/finance/planningApi';
 import { budgetRemainingMinor, progressRatio } from '@/features/finance/progress';
@@ -108,6 +110,7 @@ export default function PlanScreen() {
 
   // Inline category edit (limit + rename) opened under a budget row.
   const { show: showToast } = useToast();
+  const sheet = useActionSheet();
   const [editAllocId, setEditAllocId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
   const [editLimit, setEditLimit] = useState('');
@@ -271,6 +274,39 @@ export default function PlanScreen() {
     setSelectedBudgetId(value);
   };
 
+  function onEditMonth() {
+    if (!budget) return;
+    router.push({ pathname: '/finance/budget-new', params: { id: budget.id } });
+  }
+
+  function onDeleteMonth() {
+    if (!budget) return;
+    const target = budget;
+    sheet.show({
+      title: t('planning.budgets.confirmDeleteTitle'),
+      message: t('planning.budgets.confirmDeleteBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('finance.delete'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              try {
+                await deleteBudget(target.id);
+                setSelectedBudgetId(null);
+                setStatus([]);
+                await load();
+              } catch (err) {
+                setErrorKey(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
+  }
+
   // §5.2 scope: filter category rows by their funding account.
   const scopedStatus = scope === 'all' ? status : status.filter((r) => r.account_id === scope);
   const scopeOptions = [
@@ -289,13 +325,33 @@ export default function PlanScreen() {
           <View style={styles.titleRow}>
             <Text variant="title">{t('planning.hubTitle')}</Text>
             {budget ? (
-              <Select
-                accessibilityLabel={t('planning.budgets.selectMonth')}
-                options={monthOptions}
-                value={budget.id}
-                onChange={onMonthChange}
-                style={styles.monthSelect}
-              />
+              <View style={styles.monthControls}>
+                <Select
+                  accessibilityLabel={t('planning.budgets.selectMonth')}
+                  options={monthOptions}
+                  value={budget.id}
+                  onChange={onMonthChange}
+                  style={styles.monthSelect}
+                />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('planning.budgets.editMonth')}
+                  onPress={onEditMonth}
+                  hitSlop={8}
+                  style={({ pressed }) => [styles.monthIcon, pressed ? styles.pressed : null]}
+                >
+                  <Feather name="edit-2" size={16} color={palette.primary} />
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('planning.budgets.deleteMonth')}
+                  onPress={onDeleteMonth}
+                  hitSlop={8}
+                  style={({ pressed }) => [styles.monthIcon, pressed ? styles.pressed : null]}
+                >
+                  <Feather name="trash-2" size={16} color={palette.danger} />
+                </Pressable>
+              </View>
             ) : null}
           </View>
 
@@ -546,6 +602,7 @@ export default function PlanScreen() {
           )}
         </BentoPage>
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }
@@ -553,6 +610,15 @@ export default function PlanScreen() {
 const makeStyles = (c: Palette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: c.background },
   titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
+  monthControls: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  monthIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: c.field,
+  },
   monthSelect: { minWidth: 150 },
   scopeSelect: { minWidth: 150 },
   scopeEmpty: { paddingVertical: spacing.sm },
