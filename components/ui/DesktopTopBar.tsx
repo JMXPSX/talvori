@@ -14,10 +14,12 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { radius, spacing } from '@/components/theme';
 import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
 import { Avatar } from '@/components/ui/Avatar';
+import { NotificationBadge } from '@/components/ui/NotificationBadge';
 import { Text } from '@/components/ui/Text';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { HouseholdSwitcher } from '@/features/household/HouseholdSwitcher';
+import { useNotifications } from '@/features/notifications/NotificationsProvider';
 
 export interface DesktopTopBarProps {
   /** Optional lead title; omitted when the screen keeps its own H1. */
@@ -32,6 +34,7 @@ export function DesktopTopBar({ title, subtitle }: DesktopTopBarProps) {
   const styles = useThemedStyles(makeStyles);
   const { active } = useActiveHousehold();
   const { user } = useAuth();
+  const { count } = useNotifications();
   const [switcherOpen, setSwitcherOpen] = useState(false);
 
   const avatarName =
@@ -104,6 +107,18 @@ export function DesktopTopBar({ title, subtitle }: DesktopTopBarProps) {
 
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={t('notifications.title')}
+          onPress={() => router.push('/notifications')}
+          style={({ pressed }) => [styles.iconAction, pressed ? styles.pressed : null]}
+        >
+          <Feather name="bell" size={17} color={palette.brand} />
+          <View style={styles.badge}>
+            <NotificationBadge count={count} />
+          </View>
+        </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
           accessibilityLabel={avatarName}
           onPress={() => router.push('/account')}
         >
@@ -163,5 +178,6 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  badge: { position: 'absolute', top: -4, right: -4 },
   pressed: { opacity: 0.85 },
 });

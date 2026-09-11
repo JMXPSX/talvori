@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { elevation, radius, spacing } from '@/components/theme';
 import { useTheme, useThemedStyles, type Palette } from '@/components/ThemeProvider';
+import { NotificationBadge } from '@/components/ui/NotificationBadge';
 import type { SideNavItem } from '@/components/ui/SideNav';
 import { Text } from '@/components/ui/Text';
 
@@ -35,6 +36,11 @@ export function BottomTabBar({ items }: BottomTabBarProps) {
           style={styles.item}
         >
           <View style={[styles.slot, item.active ? styles.slotActive : null]}>
+            {item.badge ? (
+              <View style={styles.badge}>
+                <NotificationBadge count={item.badge} />
+              </View>
+            ) : null}
             <Feather
               name={item.icon}
               size={20}
@@ -78,6 +84,7 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.xs,
   },
+  badge: { position: 'absolute', top: 2, right: 14 },
   slotActive: {
     backgroundColor: c.brand,
   },

@@ -19,7 +19,14 @@ import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 import { EntitlementsProvider } from '@/features/billing/EntitlementsProvider';
 import { ActiveHouseholdProvider, useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { clearPendingJoinCode, getPendingJoinCode } from '@/features/household/pendingJoin';
+import { NotificationsProvider } from '@/features/notifications/NotificationsProvider';
 import { fontMap } from '@/lib/fonts';
+
+// Guarantees the tab group is the base of the root stack even when the app is
+// deep-linked or reloaded (Fast Refresh / web refresh) straight onto a detail
+// screen like /notifications — otherwise that screen is the only entry and its
+// header back button fires an unhandled GO_BACK.
+export const unstable_settings = { initialRouteName: '(tabs)' };
 
 // Routes reachable without a session. Password recovery must be here: a
 // logged-out user reaches forgot-password from login, and the reset-password
@@ -119,6 +126,7 @@ function RootNavigator() {
       <Stack.Screen name="subscription" options={{ title: t('billing.title') }} />
       <Stack.Screen name="account" options={{ title: t('account.title') }} />
       <Stack.Screen name="settings" options={{ title: t('settings.title') }} />
+      <Stack.Screen name="notifications" options={{ title: t('notifications.title') }} />
       <Stack.Screen name="help" options={{ title: t('help.title') }} />
       <Stack.Screen name="bills" options={{ title: t('bills.title') }} />
     </Stack>
@@ -144,7 +152,9 @@ export default function RootLayout() {
           <ActiveHouseholdProvider>
             <EntitlementsProvider>
               <ToastProvider>
-                <RootNavigator />
+                <NotificationsProvider>
+                  <RootNavigator />
+                </NotificationsProvider>
               </ToastProvider>
             </EntitlementsProvider>
           </ActiveHouseholdProvider>

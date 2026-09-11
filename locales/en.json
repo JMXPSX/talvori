@@ -908,6 +908,8 @@
     "householdSub": "Members, invites and permissions",
     "reports": "Reports & Insights",
     "reportsSub": "Spending, trends and cash flow",
+    "notifications": "Notifications",
+    "notificationsSub": "Recent household activity",
     "settings": "Settings",
     "settingsSub": "Currency, region, security and privacy",
     "help": "Help & Support",
@@ -917,6 +919,22 @@
     "planFree": "Personal plan",
     "planPremium": "Premium plan",
     "planHousehold": "Household plan"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "sub": "Recent activity across your household.",
+    "empty": "No activity yet. Actions by household members show up here.",
+    "msg": {
+      "grocery_item_added": "{{actor}} added {{subject}}",
+      "member_joined": "{{actor}} joined the household",
+      "transaction_added": "{{actor}} recorded {{subject}}",
+      "bill_added": "{{actor}} added a bill: {{subject}}",
+      "budget_allocation_added": "{{actor}} set a budget for {{subject}}"
+    },
+    "errors": {
+      "loadFailed": "Couldn't load notifications.",
+      "saveFailed": "Couldn't update notifications."
+    }
   },
   "help": {
     "title": "Help & Support",

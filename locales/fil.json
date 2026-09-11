@@ -908,6 +908,8 @@
     "householdSub": "Mga miyembro, imbitasyon at pahintulot",
     "reports": "Mga Ulat at Insight",
     "reportsSub": "Gastos, trend at daloy ng pera",
+    "notifications": "Mga Abiso",
+    "notificationsSub": "Kamakailang aktibidad ng household",
     "settings": "Mga Setting",
     "settingsSub": "Pera, rehiyon, seguridad at privacy",
     "help": "Tulong at Suporta",
@@ -917,6 +919,22 @@
     "planFree": "Personal na plano",
     "planPremium": "Premium na plano",
     "planHousehold": "Household na plano"
+  },
+  "notifications": {
+    "title": "Mga Abiso",
+    "sub": "Kamakailang aktibidad sa iyong household.",
+    "empty": "Wala pang aktibidad. Lilitaw dito ang mga ginawa ng mga miyembro ng household.",
+    "msg": {
+      "grocery_item_added": "Idinagdag ni {{actor}} ang {{subject}}",
+      "member_joined": "Sumali si {{actor}} sa household",
+      "transaction_added": "Itinala ni {{actor}} ang {{subject}}",
+      "bill_added": "Nagdagdag si {{actor}} ng bill: {{subject}}",
+      "budget_allocation_added": "Nagtakda si {{actor}} ng budget para sa {{subject}}"
+    },
+    "errors": {
+      "loadFailed": "Hindi ma-load ang mga abiso.",
+      "saveFailed": "Hindi ma-update ang mga abiso."
+    }
   },
   "help": {
     "title": "Tulong at Suporta",

@@ -42,6 +42,20 @@ export interface HouseholdMemberRow {
   role: HouseholdRole;
   status: MemberStatus;
   joined_at: string;
+  /** Watermark for the notifications feed (migration 19); null = never opened. */
+  notifications_seen_at: string | null;
+}
+
+/** Household activity feed entry (migration 19). Written by DB triggers only. */
+export interface NotificationRow {
+  id: string;
+  household_id: string;
+  actor_id: string | null;
+  actor_name: string;
+  /** Message kind, e.g. 'grocery_item_added' → i18n key notifications.msg.<type>. */
+  type: string;
+  subject: string;
+  created_at: string;
 }
 
 export interface HouseholdInvitationRow {
@@ -318,6 +332,12 @@ export interface Database {
         Update: Partial<HouseholdInvitationRow>;
         Relationships: [];
       };
+      notifications: {
+        Row: NotificationRow;
+        Insert: Partial<NotificationRow> & { household_id: string; type: string };
+        Update: Partial<NotificationRow>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -336,6 +356,14 @@ export interface Database {
       join_household_by_code: {
         Args: { _code: string };
         Returns: HouseholdRow;
+      };
+      notifications_unread_count: {
+        Args: { _household_id: string };
+        Returns: number;
+      };
+      mark_notifications_seen: {
+        Args: { _household_id: string };
+        Returns: void;
       };
     };
     Enums: {

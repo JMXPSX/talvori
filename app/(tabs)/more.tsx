@@ -11,13 +11,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { Avatar, CONTENT_MAX_WIDTH, Text } from '@/components/ui';
+import { Avatar, CONTENT_MAX_WIDTH, NotificationBadge, Text } from '@/components/ui';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { usePlan } from '@/features/billing/EntitlementsProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
+import { useNotifications } from '@/features/notifications/NotificationsProvider';
 
 type FeatherName = keyof typeof Feather.glyphMap;
-interface HubItem { icon: FeatherName; label: string; sub: string; href: string }
+interface HubItem { icon: FeatherName; label: string; sub: string; href: string; badge?: number }
 
 export default function MoreScreen() {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export default function MoreScreen() {
   const { user } = useAuth();
   const { plan } = usePlan();
   const { active } = useActiveHousehold();
+  const { count } = useNotifications();
   const { palette } = useTheme();
   const styles = useThemedStyles(makeStyles);
 
@@ -41,6 +43,7 @@ export default function MoreScreen() {
     { icon: 'bar-chart-2', label: t('more.reports'), sub: t('more.reportsSub'), href: '/finance/reports' },
   ];
   const app: HubItem[] = [
+    { icon: 'bell', label: t('more.notifications'), sub: t('more.notificationsSub'), href: '/notifications', badge: count },
     { icon: 'settings', label: t('more.settings'), sub: t('more.settingsSub'), href: '/settings' },
     { icon: 'help-circle', label: t('more.help'), sub: t('more.helpSub'), href: '/help' },
   ];
@@ -63,6 +66,7 @@ export default function MoreScreen() {
               <Text variant="button">{it.label}</Text>
               <Text variant="caption" muted>{it.sub}</Text>
             </View>
+            {it.badge ? <NotificationBadge count={it.badge} /> : null}
             <Feather name="chevron-right" size={20} color={palette.textTertiary} />
           </Pressable>
         ))}

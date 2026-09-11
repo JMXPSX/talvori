@@ -266,6 +266,13 @@ async function main() {
     .single();
   ok('A can add an item; trigger sets household_id', !giErr && gi?.household_id === hid);
 
+  // Adding the item fired the activity-notification trigger.
+  const { data: aNotifs } = await a.from('notifications').select('type').eq('household_id', hid);
+  ok(
+    'adding a grocery item created a notification',
+    (aNotifs ?? []).some((n) => n.type === 'grocery_item_added'),
+  );
+
   // Mark purchased with an actual price, then complete the trip.
   await a
     .from('grocery_items')
@@ -481,6 +488,10 @@ async function main() {
   });
   ok("B cannot complete A's list via RPC", Boolean(bCoErr));
 
+  // B CANNOT read A's activity notifications (not a member yet).
+  const { data: bNotifs } = await b.from('notifications').select('id').eq('household_id', hid);
+  ok("B cannot read A's notifications (RLS)", (bNotifs ?? []).length === 0);
+
   // B CANNOT read or write A's retail catalog (not a member yet).
   const { data: bRet } = await b.from('retailers').select('id').eq('household_id', hid);
   ok("B cannot read A's retailers (RLS)", (bRet ?? []).length === 0);
@@ -559,6 +570,13 @@ async function main() {
 
   const { data: bSubAfter } = await b.from('household_subscriptions').select('plan_code').eq('household_id', hid);
   ok('B can read the plan after joining', (bSubAfter ?? []).length === 1);
+
+  // After joining, B can read the shared activity feed, and unread counts A's
+  // actions (not B's own) via the watermark RPC.
+  const { data: bNotifsAfter } = await b.from('notifications').select('id').eq('household_id', hid);
+  ok('B can read notifications after joining', (bNotifsAfter ?? []).length >= 1);
+  const { data: bUnread } = await b.rpc('notifications_unread_count', { _household_id: hid });
+  ok('B has unread notifications from A after joining', Number(bUnread) >= 1);
   // B is a 'member', not owner -> still cannot change the plan.
   const { error: bMemberPlanErr } = await b.rpc('set_household_plan', { _household_id: hid, _plan_code: 'free' });
   ok('member B still cannot change the plan', Boolean(bMemberPlanErr));

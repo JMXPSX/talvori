@@ -23,6 +23,7 @@ import { DesktopTopBar } from '@/components/ui/DesktopTopBar';
 import { SideNav, type SideNavItem, type SideNavSection } from '@/components/ui/SideNav';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
+import { useNotifications } from '@/features/notifications/NotificationsProvider';
 import { useIsWideLayout } from '@/lib/breakpoints';
 
 type FeatherName = keyof typeof Feather.glyphMap;
@@ -93,6 +94,7 @@ export default function TabsLayout() {
   const router = useRouter();
   const { active } = useActiveHousehold();
   const { user } = useAuth();
+  const { count } = useNotifications();
   const sections = useSideNavSections();
 
   const displayName =
@@ -114,6 +116,7 @@ export default function TabsLayout() {
                   label: options?.title ?? route.name,
                   icon: TAB_ICONS[route.name] ?? 'circle',
                   active: isActive,
+                  badge: route.name === 'more' ? count : undefined,
                   onPress: () => {
                     const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
                     if (!isActive && !event.defaultPrevented) navigation.navigate(route.name, route.params);

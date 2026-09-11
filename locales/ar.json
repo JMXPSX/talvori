@@ -908,6 +908,8 @@
     "householdSub": "الأعضاء والدعوات والأذونات",
     "reports": "التقارير والرؤى",
     "reportsSub": "الإنفاق والاتجاهات والتدفّق النقدي",
+    "notifications": "الإشعارات",
+    "notificationsSub": "نشاط الأسرة الأخير",
     "settings": "الإعدادات",
     "settingsSub": "العملة والمنطقة والأمان والخصوصية",
     "help": "المساعدة والدعم",
@@ -917,6 +919,22 @@
     "planFree": "خطة شخصية",
     "planPremium": "خطة Premium",
     "planHousehold": "خطة المنزل"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "sub": "النشاط الأخير في أسرتك.",
+    "empty": "لا يوجد نشاط بعد. تظهر هنا الإجراءات التي يقوم بها أفراد الأسرة.",
+    "msg": {
+      "grocery_item_added": "أضاف {{actor}} {{subject}}",
+      "member_joined": "انضم {{actor}} إلى الأسرة",
+      "transaction_added": "سجّل {{actor}} {{subject}}",
+      "bill_added": "أضاف {{actor}} فاتورة: {{subject}}",
+      "budget_allocation_added": "حدّد {{actor}} ميزانية لـ {{subject}}"
+    },
+    "errors": {
+      "loadFailed": "تعذّر تحميل الإشعارات.",
+      "saveFailed": "تعذّر تحديث الإشعارات."
+    }
   },
   "help": {
     "title": "المساعدة والدعم",
