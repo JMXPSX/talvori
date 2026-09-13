@@ -26,7 +26,7 @@ import {
   TextField,
 } from '@/components/ui';
 import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
-import { createHousehold } from '@/features/household/api';
+import { createHousehold, joinHouseholdByCode } from '@/features/household/api';
 import { useRouter } from 'expo-router';
 import type { HouseholdRow } from '@/lib/database.types';
 import { defaultCurrencyCode } from '@/lib/defaults';
@@ -58,6 +58,11 @@ export default function OnboardingScreen() {
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showJoin, setShowJoin] = useState(false);
+  const [joinCode, setJoinCode] = useState('');
+  const [joining, setJoining] = useState(false);
+  const [joinError, setJoinError] = useState<string | null>(null);
+  const [joinErrorArg, setJoinErrorArg] = useState<Record<string, string> | undefined>(undefined);
 
   async function onContinue() {
     setFormError(null);
@@ -81,6 +86,27 @@ export default function OnboardingScreen() {
       setFormError(toAppError(err).messageKey);
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function onJoin() {
+    setJoinError(null);
+    setJoinErrorArg(undefined);
+    if (!joinCode.trim()) return;
+    setJoining(true);
+    try {
+      const joined = await joinHouseholdByCode(joinCode);
+      await refresh();
+      setActiveId(joined.id);
+      router.replace('/');
+    } catch (err) {
+      const key = toAppError(err).messageKey;
+      setJoinError(key);
+      if (key === 'household.errors.codeNotFound') {
+        setJoinErrorArg({ code: joinCode.trim().toUpperCase() });
+      }
+    } finally {
+      setJoining(false);
     }
   }
 
@@ -137,6 +163,39 @@ export default function OnboardingScreen() {
                 onPress={onContinue}
                 loading={submitting}
               />
+
+              {/* Invitees join an existing household by its code instead of
+                  creating one — otherwise the gate would force a new household. */}
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => setShowJoin((s) => !s)}
+                style={styles.skip}
+              >
+                <Text variant="button" style={styles.joinLink}>
+                  {t('home.joinWithCode')}
+                </Text>
+              </Pressable>
+              {showJoin ? (
+                <>
+                  <TextField
+                    label={t('home.joinWithCode')}
+                    value={joinCode}
+                    onChangeText={(v) => setJoinCode(v.toUpperCase())}
+                    placeholder={t('home.joinPlaceholder')}
+                    autoCapitalize="characters"
+                  />
+                  {joinError ? (
+                    <Text variant="caption" style={{ color: palette.danger }}>
+                      {t(joinError, joinErrorArg)}
+                    </Text>
+                  ) : null}
+                  <Button
+                    label={joining ? t('auth.processing') : t('home.join')}
+                    onPress={onJoin}
+                    loading={joining}
+                  />
+                </>
+              ) : null}
             </View>
           </>
         ) : (
@@ -246,5 +305,6 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   },
   confirmText: { color: c.positiveStrong },
   skip: { alignItems: 'center', minHeight: 44, justifyContent: 'center' },
+  joinLink: { color: c.primary },
   helper: { textAlign: 'center', lineHeight: 16 },
 });
