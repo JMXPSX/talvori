@@ -485,7 +485,7 @@ export default function ShopScreen() {
             {nMore ? (
               <>
                 <TextField label={t('shop.noteOptional')} value={nNote} onChangeText={setNNote} />
-                <TextField label={t('shop.estPrice')} value={nPrice} onChangeText={setNPrice} keyboardType="numeric" hint={t('shop.estHelper')} />
+                <TextField label={t('shop.estPrice')} value={nPrice} onChangeText={setNPrice} keyboardType="decimal-pad" hint={t('shop.estHelper')} />
               </>
             ) : null}
           </InlineEditor>
@@ -553,7 +553,7 @@ export default function ShopScreen() {
               <Select accessibilityLabel={t('shop.unit')} options={UNITS.map((u) => ({ value: u, label: u }))} value={eUnit} onChange={setEUnit} />
             </View>
           </View>
-          <TextField label={t('shop.editPricePerUnit', { unit: eUnit })} value={ePrice} onChangeText={setEPrice} keyboardType="numeric" />
+          <TextField label={t('shop.editPricePerUnit', { unit: eUnit })} value={ePrice} onChangeText={setEPrice} keyboardType="decimal-pad" />
         </InlineEditor>
       );
     }

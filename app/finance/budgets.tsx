@@ -333,7 +333,7 @@ export default function BudgetsScreen() {
                 label={`${t('planning.budgets.limitLabel')} (${selected.currency_code})`}
                 value={allocLimit}
                 onChangeText={setAllocLimit}
-                keyboardType="numeric"
+                keyboardType="decimal-pad"
               />
               {allocError ? (
                 <Text variant="caption" style={{ color: palette.danger }}>

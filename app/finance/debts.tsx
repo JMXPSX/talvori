@@ -239,7 +239,7 @@ export default function DebtsScreen() {
                               label={t('planning.debts.amountLabel')}
                               value={payInputs[d.id] ?? ''}
                               onChangeText={(v) => setPayInputs((prev) => ({ ...prev, [d.id]: v }))}
-                              keyboardType="numeric"
+                              keyboardType="decimal-pad"
                             />
                           </View>
                           <Button label={t('planning.debts.payCta')} onPress={() => onPay(d)} />
@@ -281,7 +281,7 @@ export default function DebtsScreen() {
             label={t('planning.debts.principalLabel')}
             value={principal}
             onChangeText={setPrincipal}
-            keyboardType="numeric"
+            keyboardType="decimal-pad"
             error={fieldErrors.principalMajor ? t('errors.validation') : undefined}
           />
           {formError ? (

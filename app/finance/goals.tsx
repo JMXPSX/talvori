@@ -239,7 +239,7 @@ export default function GoalsScreen() {
                               label={t('planning.goals.amountLabel')}
                               value={contribInputs[g.id] ?? ''}
                               onChangeText={(v) => setContribInputs((prev) => ({ ...prev, [g.id]: v }))}
-                              keyboardType="numeric"
+                              keyboardType="decimal-pad"
                             />
                           </View>
                           <Button label={t('planning.goals.contributeCta')} onPress={() => onContribute(g)} />
@@ -281,7 +281,7 @@ export default function GoalsScreen() {
             label={t('planning.goals.targetLabel')}
             value={target}
             onChangeText={setTarget}
-            keyboardType="numeric"
+            keyboardType="decimal-pad"
             error={fieldErrors.targetMajor ? t('errors.validation') : undefined}
           />
           {formError ? (

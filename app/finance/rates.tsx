@@ -131,7 +131,7 @@ export default function RatesScreen() {
             label={t('fx.rateLabel')}
             value={rate}
             onChangeText={setRate}
-            keyboardType="numeric"
+            keyboardType="decimal-pad"
             error={fieldErrors.rate ? t('errors.validation') : undefined}
           />
           {formError ? (

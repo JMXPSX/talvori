@@ -392,7 +392,7 @@ export default function BillsScreen() {
               label={t('bills.amountLabel')}
               value={amount}
               onChangeText={setAmount}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
               error={fieldErrors.amountMajor ? t('errors.validation') : undefined}
             />
 

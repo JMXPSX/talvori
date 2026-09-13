@@ -347,7 +347,7 @@ export default function GroceryListScreen() {
                 error={fieldErrors.name ? t('errors.validation') : undefined}
               />
               <TextField label={t('grocery.quantityLabel')} value={qty} onChangeText={setQty} keyboardType="numeric" />
-              <TextField label={t('grocery.estimatedLabel')} value={est} onChangeText={setEst} keyboardType="numeric" />
+              <TextField label={t('grocery.estimatedLabel')} value={est} onChangeText={setEst} keyboardType="decimal-pad" />
               <Button label={t('grocery.addCta')} onPress={onAdd} />
             </View>
 
@@ -432,7 +432,7 @@ export default function GroceryListScreen() {
               label={`${t('grocery.actualLabel')} (${ccy})`}
               value={promptValue}
               onChangeText={setPromptValue}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
             />
             <View style={styles.modalActions}>
               <Button

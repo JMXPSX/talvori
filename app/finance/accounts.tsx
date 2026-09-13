@@ -202,7 +202,7 @@ export default function AccountsScreen() {
                         label={t('finance.accounts.openingBalanceLabel')}
                         value={editOpening}
                         onChangeText={setEditOpening}
-                        keyboardType="numeric"
+                        keyboardType="decimal-pad"
                       />
                       <Text variant="caption" muted>
                         {t('finance.accounts.currentBalanceNote', {
@@ -313,7 +313,7 @@ export default function AccountsScreen() {
             label={t('finance.accounts.openingBalanceLabel')}
             value={opening}
             onChangeText={setOpening}
-            keyboardType="numeric"
+            keyboardType="decimal-pad"
             error={fieldErrors.openingBalanceMajor ? t('errors.validation') : undefined}
           />
 

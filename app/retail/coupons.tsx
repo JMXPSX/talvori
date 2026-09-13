@@ -307,18 +307,18 @@ export default function CouponsScreen() {
 
           {type === 'fixed' ? (
             <>
-              <TextField label={t('coupons.amount')} value={amount} onChangeText={setAmount} keyboardType="numeric"
+              <TextField label={t('coupons.amount')} value={amount} onChangeText={setAmount} keyboardType="decimal-pad"
                 error={fieldErrors.amountMajor ? t('errors.validation') : undefined} />
               <TextField label={t('coupons.currency')} value={currency} onChangeText={setCurrency}
                 autoCapitalize="characters" error={fieldErrors.currencyCode ? t('errors.validation') : undefined} />
             </>
           ) : (
-            <TextField label={t('coupons.percentValue')} value={percent} onChangeText={setPercent} keyboardType="numeric"
+            <TextField label={t('coupons.percentValue')} value={percent} onChangeText={setPercent} keyboardType="decimal-pad"
               error={fieldErrors.percent ? t('errors.validation') : undefined} />
           )}
 
-          <TextField label={t('coupons.minPurchase')} value={minPurchase} onChangeText={setMinPurchase} keyboardType="numeric" />
-          <TextField label={t('coupons.maxDiscount')} value={maxDiscount} onChangeText={setMaxDiscount} keyboardType="numeric" />
+          <TextField label={t('coupons.minPurchase')} value={minPurchase} onChangeText={setMinPurchase} keyboardType="decimal-pad" />
+          <TextField label={t('coupons.maxDiscount')} value={maxDiscount} onChangeText={setMaxDiscount} keyboardType="decimal-pad" />
           <TextField label={t('coupons.code')} value={code} onChangeText={setCode} />
           <TextField label={t('coupons.sourceUrl')} value={url} onChangeText={setUrl} autoCapitalize="none" />
           <TextField label={t('coupons.expiresAt')} value={expires} onChangeText={setExpires} autoCapitalize="none" />

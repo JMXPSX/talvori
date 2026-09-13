@@ -587,7 +587,7 @@ export default function PlanScreen() {
                                   label={t('planning.budgets.limitLabel')}
                                   value={editLimit}
                                   onChangeText={setEditLimit}
-                                  keyboardType="numeric"
+                                  keyboardType="decimal-pad"
                                 />
                                 {accounts.length > 0 ? (
                                   <>
@@ -628,7 +628,7 @@ export default function PlanScreen() {
                       label={t('planning.budgets.limitLabel')}
                       value={newCatLimit}
                       onChangeText={setNewCatLimit}
-                      keyboardType="numeric"
+                      keyboardType="decimal-pad"
                     />
                     {accounts.length > 0 ? (
                       <>

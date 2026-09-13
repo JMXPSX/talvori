@@ -304,8 +304,8 @@ export default function ProductPricesScreen() {
               </View>
 
               <TextField label={t('retail.regularPrice')} value={regular} onChangeText={setRegular}
-                keyboardType="numeric" error={fieldErrors.regularMajor ? t('errors.validation') : undefined} />
-              <TextField label={t('retail.salePrice')} value={sale} onChangeText={setSale} keyboardType="numeric" />
+                keyboardType="decimal-pad" error={fieldErrors.regularMajor ? t('errors.validation') : undefined} />
+              <TextField label={t('retail.salePrice')} value={sale} onChangeText={setSale} keyboardType="decimal-pad" />
               <Button label={busy ? t('auth.processing') : t('retail.addPrice')} onPress={onAddPrice} loading={busy} />
             </View>
           </>
