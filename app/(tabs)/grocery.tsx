@@ -215,7 +215,7 @@ export default function ShopScreen() {
         name: nName.trim(),
         quantity: qty,
         unit: nUnit,
-        estimatedPriceMinor: priceNum != null ? toMinorUnits(priceNum, currency) : undefined,
+        estimatedPriceMinor: priceNum != null ? Math.round(toMinorUnits(priceNum, currency) * qty) : undefined,
       });
       setNName(''); setNQty('1'); setNUnit('each'); setNNote(''); setNPrice(''); setNMore(false); setAddOpen(false);
       await load();
@@ -239,7 +239,7 @@ export default function ShopScreen() {
     setEName(it.name);
     setEQty(String(it.quantity));
     setEUnit(it.unit ?? 'each');
-    setEPrice(it.estimated_price_minor != null ? majorStr(it.estimated_price_minor, currency) : '');
+    setEPrice(it.estimated_price_minor != null ? majorStr(Math.round(it.estimated_price_minor / it.quantity), currency) : '');
     setEditError(null);
   }
 
@@ -256,7 +256,7 @@ export default function ShopScreen() {
         name: eName.trim(),
         quantity: qty,
         unit: eUnit,
-        estimatedPriceMinor: priceNum != null ? toMinorUnits(priceNum, currency) : null,
+        estimatedPriceMinor: priceNum != null ? Math.round(toMinorUnits(priceNum, currency) * qty) : null,
       });
       setEditId(null);
       await load();
@@ -485,7 +485,7 @@ export default function ShopScreen() {
             {nMore ? (
               <>
                 <TextField label={t('shop.noteOptional')} value={nNote} onChangeText={setNNote} />
-                <TextField label={t('shop.estPrice')} value={nPrice} onChangeText={setNPrice} keyboardType="decimal-pad" hint={t('shop.estHelper')} />
+                <TextField label={t('shop.editPricePerUnit', { unit: nUnit })} value={nPrice} onChangeText={setNPrice} keyboardType="decimal-pad" hint={t('shop.estHelper')} />
               </>
             ) : null}
           </InlineEditor>
