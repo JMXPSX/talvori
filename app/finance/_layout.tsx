@@ -4,10 +4,12 @@ import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '@/components/ThemeProvider';
+import { useIsWideLayout } from '@/lib/breakpoints';
 
 export default function FinanceLayout() {
   const { t } = useTranslation();
   const { palette } = useTheme();
+  const isWide = useIsWideLayout();
   return (
     <Stack
       screenOptions={{
@@ -33,6 +35,9 @@ export default function FinanceLayout() {
       <Stack.Screen name="debts" options={{ title: t('planning.debts.title') }} />
       <Stack.Screen name="rates" options={{ title: t('fx.title') }} />
       <Stack.Screen name="insights" options={{ title: t('insights.title') }} />
+      {/* Reports draws its own H1; on wide the shell provides chrome, so hide the
+          native header there to avoid a double title. Mobile keeps it (title + back). */}
+      <Stack.Screen name="reports" options={{ title: t('reports.title'), headerShown: !isWide }} />
     </Stack>
   );
 }

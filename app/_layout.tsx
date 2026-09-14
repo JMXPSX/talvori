@@ -15,11 +15,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ThemeProvider, useTheme } from '@/components/ThemeProvider';
 import { Splash, ToastProvider } from '@/components/ui';
+import { DesktopShell } from '@/components/ui/DesktopShell';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 import { EntitlementsProvider } from '@/features/billing/EntitlementsProvider';
 import { ActiveHouseholdProvider, useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { clearPendingJoinCode, getPendingJoinCode } from '@/features/household/pendingJoin';
 import { NotificationsProvider } from '@/features/notifications/NotificationsProvider';
+import { useIsWideLayout } from '@/lib/breakpoints';
 import { fontMap } from '@/lib/fonts';
 
 // Guarantees the tab group is the base of the root stack even when the app is
@@ -96,17 +98,32 @@ function useAuthGate() {
 
 function RootNavigator() {
   const { t } = useTranslation();
-  const { initializing } = useAuth();
+  const { initializing, session } = useAuth();
   const { palette: c, isDark } = useTheme();
+  const isWide = useIsWideLayout();
+  const segments = useSegments();
+  const { households } = useActiveHousehold();
   useAuthGate();
 
   if (initializing) {
     return <Splash />;
   }
 
-  return (
-    <>
-    <StatusBar style={isDark ? 'light' : 'dark'} />
+  const seg0 = segments[0] ?? '';
+  const inAuthRoute = AUTH_ROUTES.includes(seg0);
+  const inOnboarding = seg0 === 'onboarding';
+  const inDevRoute = __DEV__ && seg0 === 'dev';
+  // The persistent desktop shell (sidebar + top bar) wraps the WHOLE stack on wide
+  // in-app routes, so every destination keeps the same chrome — not just the tabs.
+  // Auth/onboarding routes and all mobile viewports render the bare stack.
+  const showShell =
+    isWide && !!session && households.length > 0 && !inAuthRoute && !inOnboarding && !inDevRoute;
+
+  // Leaf routes hand their title to the shell's top bar on wide (native header off,
+  // else it doubles); on mobile they keep the native header + back button. Nested
+  // stacks (finance/*, household/*) keep their own headers, so the shell shows no
+  // title for them (see DesktopShell.usePageTitle).
+  const stack = (
     <Stack
       screenOptions={{
         headerStyle: { backgroundColor: c.background },
@@ -123,13 +140,19 @@ function RootNavigator() {
       <Stack.Screen name="signup" options={{ headerShown: false }} />
       <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
       <Stack.Screen name="reset-password" options={{ headerShown: false }} />
-      <Stack.Screen name="subscription" options={{ title: t('billing.title') }} />
-      <Stack.Screen name="account" options={{ title: t('account.title') }} />
-      <Stack.Screen name="settings" options={{ title: t('settings.title') }} />
-      <Stack.Screen name="notifications" options={{ title: t('notifications.title') }} />
-      <Stack.Screen name="help" options={{ title: t('help.title') }} />
-      <Stack.Screen name="bills" options={{ title: t('bills.title') }} />
+      <Stack.Screen name="subscription" options={{ title: t('billing.title'), headerShown: !isWide }} />
+      <Stack.Screen name="account" options={{ title: t('account.title'), headerShown: !isWide }} />
+      <Stack.Screen name="settings" options={{ title: t('settings.title'), headerShown: !isWide }} />
+      <Stack.Screen name="notifications" options={{ title: t('notifications.title'), headerShown: !isWide }} />
+      <Stack.Screen name="help" options={{ title: t('help.title'), headerShown: !isWide }} />
+      <Stack.Screen name="bills" options={{ title: t('bills.title'), headerShown: !isWide }} />
     </Stack>
+  );
+
+  return (
+    <>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      {showShell ? <DesktopShell>{stack}</DesktopShell> : stack}
     </>
   );
 }

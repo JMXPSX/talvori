@@ -153,7 +153,12 @@
     "deleteConfirmBody": "This permanently removes the household and all its data for everyone.",
     "leftToast": "Left {{name}}",
     "deletedToast": "Deleted {{name}}",
-    "active": "In view"
+    "active": "In view",
+    "reportingIn": "reporting in {{currency}}",
+    "joinCodeHint": "Anyone with this code can join {{name}} and see its shared money.",
+    "manageMember": "Manage member",
+    "yourHouseholds": "Your households",
+    "switchHint": "Switching happens from the header pill"
   },
   "finance": {
     "overviewTitle": "Accounts",
@@ -267,7 +272,10 @@
     "spendingByCategory": "Spending by category",
     "hero": {
       "ofBudget": "of {{amount}} budgeted",
-      "balance": "Balance {{amount}}"
+      "balance": "Balance {{amount}}",
+      "daysLeft": "{{count}} days remaining",
+      "viewBudget": "View budget",
+      "totalBalance": "Total balance · {{currency}}"
     },
     "byAccount": {
       "title": "By account",
@@ -308,7 +316,19 @@
     "filterByAccount": "Filter by account",
     "income": "Income",
     "expense": "Expense",
-    "thisMonth": "This month"
+    "thisMonth": "This month",
+    "reports": {
+      "netCashFlow": "Net cash flow",
+      "keptOfIncome": "You kept {{pct}}% of what came in this range.",
+      "noIncome": "No income recorded in this range.",
+      "avgPerDay": "Avg / day",
+      "transactions": "Transactions",
+      "inVsOut": "In vs out",
+      "lastMonthsCcy": "Last {{count}} months · {{currency}}",
+      "transfersExcluded": "Transfers and goal contributions are excluded — they move money between your own accounts.",
+      "whereItWent": "Where it went",
+      "categoriesCount": "{{count}} categories"
+    }
   },
   "planning": {
     "hubTitle": "Plan",
@@ -788,7 +808,13 @@
     "exportSub": "CSV of transactions and budgets",
     "exportQueued": "Export queued — a CSV of transactions and budgets would download here.",
     "deleteAccount": "Delete account",
-    "deleteAccountSub": "Removes your data permanently"
+    "deleteAccountSub": "Removes your data permanently",
+    "navGeneral": "General",
+    "navNotifications": "Notifications",
+    "navSecurity": "Security & privacy",
+    "generalSub": "Customize how the app works.",
+    "notificationsSub": "What the app tells you about, and when",
+    "securitySub": "Locking the app, and taking your data with you"
   },
   "brand": {
     "wordmark": "talvori",
@@ -955,7 +981,14 @@
     "feedbackEmpty": "Write a note first.",
     "feedbackSent": "✓ Thanks — feedback sent.",
     "contactTitle": "Contact support",
-    "contactBody": "Email support@example.com and we usually reply within a day. Live chat is not wired up in this prototype."
+    "contactBody": "Email support@example.com and we usually reply within a day. Live chat is not wired up in this prototype.",
+    "searchPlaceholder": "Search help — e.g. grocery list, budget, currency",
+    "faqOneAtATime": "One opens at a time",
+    "noResults": "No results for \"{{query}}\"",
+    "s1": "Grocery list",
+    "s2": "Budgets by account",
+    "s3": "Goals & debts",
+    "s4": "Reporting currency"
   },
   "bills": {
     "title": "Bills & Subscriptions",
@@ -1000,6 +1033,20 @@
       "saveFailed": "Couldnt save the bill.",
       "deleteFailed": "Couldnt delete the bill."
     },
-    "comingUp": "Coming up"
+    "comingUp": "Coming up",
+    "allBills": "All bills",
+    "listCaption": "Soonest due first · paused rows sit at the end",
+    "formCaption": "It records a real transaction when marked paid",
+    "filter": {
+      "all": "All",
+      "overdue": "Overdue",
+      "paused": "Paused"
+    },
+    "stats": {
+      "dueThisMonth": "Due this month",
+      "overdue": "Overdue",
+      "expectedIn": "Expected in",
+      "activePaused": "Active · paused"
+    }
   }
 }

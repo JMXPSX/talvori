@@ -9,10 +9,12 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { chartSeries, radius, spacing } from '@/components/theme';
+import { chartSeries, elevation, radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
 import { BentoPage, BentoRow, Card, ErrorNotice, Select, Text } from '@/components/ui';
 import { listTransactions, listCategories, type TransactionWithRefs } from '@/features/finance/api';
+import { monthFlow } from '@/features/finance/flow';
+import { monthKeyOf } from '@/features/finance/insights';
 import { listBudgetStatus, listBudgets } from '@/features/finance/planningApi';
 import { pickCurrentBudget } from '@/features/finance/plan';
 import { budgetRemainingMinor } from '@/features/finance/progress';
@@ -29,6 +31,24 @@ const RANGE_KEYS: Record<RangePreset, string> = {
   'last-3-months': 'reports.range3Months',
   ytd: 'reports.rangeYtd',
 };
+
+/** Inclusive whole days between two 'YYYY-MM-DD' dates (>= 1). */
+function daysInRange(from: string, to: string): number {
+  const ms = Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`);
+  return Math.max(1, Math.round(ms / 86_400_000) + 1);
+}
+
+/** The last `n` month keys (oldest first) ending at `todayISO`'s month. */
+function lastMonthKeys(todayISO: string, n: number): string[] {
+  const y = +todayISO.slice(0, 4);
+  const m = +todayISO.slice(5, 7); // 1-based
+  const keys: string[] = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(Date.UTC(y, m - 1 - i, 1));
+    keys.push(`${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`);
+  }
+  return keys;
+}
 
 export default function ReportsScreen() {
   const { t, i18n } = useTranslation();
@@ -100,8 +120,23 @@ export default function ReportsScreen() {
   }, [budgetId]);
 
   const reporting = active?.reporting_currency_code ?? 'USD';
-  const range = presetRange(preset, new Date().toISOString());
-  const report = reportForRange(txns, range, reporting, makeRateLookup(rates));
+  const todayISO = new Date().toISOString();
+  const range = presetRange(preset, todayISO);
+  const rateFor = makeRateLookup(rates);
+  const report = reportForRange(txns, range, reporting, rateFor);
+
+  // Range-derived stat tiles: average expense per elapsed day, transaction count.
+  const days = daysInRange(range.from, range.to);
+  const avgPerDayMinor = Math.round(report.outMinor / days);
+
+  // Last-6-months In / Out series (transfers excluded, reporting currency), for the
+  // bar chart. Heights scale to the largest single In-or-Out value across the window.
+  const monthFmt = new Intl.DateTimeFormat(i18n.language, { month: 'short' });
+  const bars = lastMonthKeys(todayISO, 6).map((key) => {
+    const f = monthFlow(txns, key, reporting, rateFor);
+    return { key, label: monthFmt.format(new Date(`${key}-01T00:00:00Z`)), inMinor: f.inMinor, outMinor: f.outMinor };
+  });
+  const barMax = Math.max(1, ...bars.map((b) => Math.max(b.inMinor, b.outMinor)));
 
   const categoryName = (id: string | null): string =>
     id ? (categories.find((c) => c.id === id)?.name ?? t('planning.budgets.uncategorized')) : t('finance.categories.none');
@@ -116,6 +151,10 @@ export default function ReportsScreen() {
   const budgetLimit = status.reduce((s, r) => s + r.limit_minor, 0);
   const budgetSpent = status.reduce((s, r) => s + r.spent_minor, 0);
   const bccy = status[0]?.currency_code ?? reporting;
+
+  // Net hero copy: what share of income was kept this range (guard divide-by-zero).
+  const keptPct = report.inMinor > 0 ? Math.round((report.netMinor / report.inMinor) * 100) : 0;
+  const catMax = Math.max(1, ...report.byCategory.map((c) => c.amountMinor));
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
@@ -146,48 +185,132 @@ export default function ReportsScreen() {
                 <Text muted>{t('reports.empty')}</Text>
               ) : (
                 <>
+                  {/* Row 1 — purple net-flow hero + a grid of range stat tiles. */}
                   <BentoRow>
-                    <Card style={styles.tile}>
-                      <Text variant="caption" muted>{t('reports.income')}</Text>
-                      <Text variant="title" style={styles.income}>{formatAmount(report.inMinor, reporting)}</Text>
-                    </Card>
-                    <Card style={styles.tile}>
-                      <Text variant="caption" muted>{t('reports.expenses')}</Text>
-                      <Text variant="title">{formatAmount(report.outMinor, reporting)}</Text>
-                    </Card>
-                    <Card style={styles.tile}>
-                      <Text variant="caption" muted>{t('reports.net')}</Text>
-                      <Text variant="title" style={report.netMinor >= 0 ? styles.income : styles.over}>
-                        {report.netMinor >= 0 ? '+' : '−'}{formatAmount(Math.abs(report.netMinor), reporting)}
-                      </Text>
+                    <View style={styles.heroSlot}>
+                      <View style={styles.hero}>
+                        <Text variant="caption" style={styles.heroLabel}>
+                          {t('reports.netCashFlow')}
+                        </Text>
+                        <Text style={styles.heroAmount}>
+                          {report.netMinor >= 0 ? '+' : '−'}
+                          {formatAmount(Math.abs(report.netMinor), reporting)}
+                        </Text>
+                        <Text variant="caption" style={styles.heroHint}>
+                          {report.inMinor > 0
+                            ? t('reports.keptOfIncome', { pct: keptPct })
+                            : t('reports.noIncome')}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <Card style={styles.statsSlot}>
+                      <View style={styles.statGrid}>
+                        <View style={styles.statTile}>
+                          <Text variant="caption" muted>{t('reports.income')}</Text>
+                          <Text style={[styles.statValue, styles.income]}>{formatAmount(report.inMinor, reporting)}</Text>
+                        </View>
+                        <View style={styles.statTile}>
+                          <Text variant="caption" muted>{t('reports.expenses')}</Text>
+                          <Text style={styles.statValue}>{formatAmount(report.outMinor, reporting)}</Text>
+                        </View>
+                        <View style={styles.statTile}>
+                          <Text variant="caption" muted>{t('reports.avgPerDay')}</Text>
+                          <Text style={styles.statValue}>{formatAmount(avgPerDayMinor, reporting)}</Text>
+                        </View>
+                        <View style={styles.statTile}>
+                          <Text variant="caption" muted>{t('reports.transactions')}</Text>
+                          <Text style={styles.statValue}>{report.count}</Text>
+                        </View>
+                      </View>
                     </Card>
                   </BentoRow>
 
-                  {report.byCategory.length > 0 ? (
-                    <Card>
-                      <Text variant="subheading">{t('reports.spendingByCategory')}</Text>
-                      {report.byCategory.slice(0, 10).map((c, i) => {
-                        const frac = report.outMinor > 0 ? c.amountMinor / report.outMinor : 0;
-                        const color = chartSeries[i % chartSeries.length];
-                        return (
-                          <View key={c.categoryId ?? 'none'} style={styles.catRow}>
-                            <View style={styles.catHead}>
-                              <Text variant="caption" numberOfLines={1} style={styles.catLabel}>
-                                {categoryName(c.categoryId)}
-                              </Text>
-                              <Text variant="moneyMin" muted>
-                                {formatAmount(c.amountMinor, reporting)} · {Math.round(frac * 100)}%
-                              </Text>
-                            </View>
-                            <View style={styles.barTrack}>
-                              <View style={{ flex: frac, backgroundColor: color }} />
-                              <View style={{ flex: 1 - frac }} />
-                            </View>
+                  {/* Row 2 — In vs out bars + Where it went category list. */}
+                  <BentoRow>
+                    <Card style={styles.chartSlot}>
+                      <View style={styles.chartHead}>
+                        <View style={styles.chartHeadText}>
+                          <Text variant="subheading">{t('reports.inVsOut')}</Text>
+                          <Text variant="caption" muted>
+                            {t('reports.lastMonthsCcy', { count: 6, currency: reporting })}
+                          </Text>
+                        </View>
+                        <View style={styles.legend}>
+                          <View style={styles.legendItem}>
+                            <View style={[styles.legendDot, { backgroundColor: palette.positive }]} />
+                            <Text variant="caption" muted>{t('finance.ledger.in')}</Text>
                           </View>
-                        );
-                      })}
+                          <View style={styles.legendItem}>
+                            <View style={[styles.legendDot, { backgroundColor: palette.primary }]} />
+                            <Text variant="caption" muted>{t('finance.ledger.out')}</Text>
+                          </View>
+                        </View>
+                      </View>
+
+                      <View style={styles.chart}>
+                        {bars.map((b) => (
+                          <View key={b.key} style={styles.barGroupCol}>
+                            <View style={styles.barPair}>
+                              <View
+                                style={[
+                                  styles.bar,
+                                  { height: `${(b.inMinor / barMax) * 100}%`, backgroundColor: palette.positive },
+                                ]}
+                              />
+                              <View
+                                style={[
+                                  styles.bar,
+                                  { height: `${(b.outMinor / barMax) * 100}%`, backgroundColor: palette.primary },
+                                ]}
+                              />
+                            </View>
+                            <Text variant="caption" muted style={styles.barLabel}>{b.label}</Text>
+                          </View>
+                        ))}
+                      </View>
+
+                      <Text variant="caption" muted style={styles.chartNote}>
+                        {t('reports.transfersExcluded')}
+                      </Text>
                     </Card>
-                  ) : null}
+
+                    <Card style={styles.catSlot}>
+                      <Text variant="subheading">{t('reports.whereItWent')}</Text>
+                      <Text variant="caption" muted>
+                        {t('reports.categoriesCount', { count: report.byCategory.length })}
+                      </Text>
+                      {report.byCategory.length === 0 ? (
+                        <Text muted style={styles.catEmpty}>{t('reports.empty')}</Text>
+                      ) : (
+                        <View style={styles.catList}>
+                          {report.byCategory.slice(0, 6).map((c, i) => {
+                            const color = chartSeries[i % chartSeries.length];
+                            return (
+                              <View key={c.categoryId ?? 'none'}>
+                                <View style={styles.catHead}>
+                                  <Text variant="caption" numberOfLines={1} style={styles.catLabel}>
+                                    {categoryName(c.categoryId)}
+                                  </Text>
+                                  <Text variant="moneyMin" muted>{formatAmount(c.amountMinor, reporting)}</Text>
+                                </View>
+                                <View style={styles.barTrack}>
+                                  <View
+                                    style={{
+                                      height: '100%',
+                                      borderRadius: radius.pill,
+                                      width: `${(c.amountMinor / catMax) * 100}%`,
+                                      backgroundColor: color,
+                                    }}
+                                  />
+                                </View>
+                              </View>
+                            );
+                          })}
+                        </View>
+                      )}
+                    </Card>
+                  </BentoRow>
 
                   {report.missing.length > 0 ? (
                     <Text variant="caption" muted>
@@ -262,19 +385,69 @@ const makeStyles = (c: Palette) => StyleSheet.create({
     marginTop: spacing.sm,
   },
   rangeSelect: { minWidth: 160 },
-  tile: { flex: 1 },
   income: { color: c.positiveStrong },
   over: { color: c.danger },
-  catRow: { gap: spacing.xs, paddingVertical: spacing.xs },
-  catHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
-  catLabel: { flex: 1 },
-  barTrack: {
-    flexDirection: 'row',
-    height: 8,
-    borderRadius: radius.pill,
-    backgroundColor: c.field,
-    overflow: 'hidden',
+
+  // Row 1 — net hero + stat grid.
+  heroSlot: { flex: 1, minWidth: 0 },
+  hero: {
+    alignSelf: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+    gap: spacing.sm,
+    backgroundColor: c.primary,
+    borderRadius: radius.xl,
+    padding: spacing.lg,
+    boxShadow: elevation.raised,
   },
+  heroLabel: { color: c.white, opacity: 0.82 },
+  heroAmount: { color: c.white, fontSize: 40, fontWeight: '800', letterSpacing: -1, fontVariant: ['tabular-nums'] },
+  heroHint: { color: c.white, opacity: 0.9 },
+  statsSlot: { flex: 1.35, minWidth: 0 },
+  statGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  statTile: {
+    flexGrow: 1,
+    flexBasis: '40%',
+    minWidth: 0,
+    gap: spacing.xs,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    backgroundColor: c.fillSoft,
+  },
+  statValue: { fontSize: 22, fontWeight: '700', fontVariant: ['tabular-nums'] },
+
+  // Row 2 — In vs out chart.
+  chartSlot: { flex: 1.35, minWidth: 0 },
+  chartHead: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: spacing.md },
+  chartHeadText: { flex: 1, minWidth: 0, gap: 2 },
+  legend: { flexDirection: 'row', gap: spacing.md },
+  legendItem: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  legendDot: { width: 9, height: 9, borderRadius: 2 },
+  chart: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: spacing.md,
+    height: 180,
+    marginTop: spacing.lg,
+    paddingBottom: spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: c.divider,
+  },
+  barGroupCol: { flex: 1, minWidth: 0, height: '100%', justifyContent: 'flex-end', alignItems: 'center', gap: spacing.xs },
+  barPair: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', gap: spacing.xs, width: '100%', flex: 1 },
+  bar: { width: 22, minHeight: 2, borderTopLeftRadius: radius.sm, borderTopRightRadius: radius.sm },
+  barLabel: { flexShrink: 0 },
+  chartNote: { marginTop: spacing.md, lineHeight: 17 },
+
+  // Row 2 — Where it went category list.
+  catSlot: { flex: 1, minWidth: 0, gap: 2 },
+  catEmpty: { marginTop: spacing.md },
+  catList: { gap: spacing.md, marginTop: spacing.md },
+  catHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md, marginBottom: spacing.xs },
+  catLabel: { flex: 1 },
+  barTrack: { height: 8, borderRadius: radius.pill, backgroundColor: c.fill, overflow: 'hidden' },
+
+  // Budget vs actual table.
   vaHead: {
     flexDirection: 'row',
     alignItems: 'center',

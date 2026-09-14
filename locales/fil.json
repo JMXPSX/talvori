@@ -153,7 +153,12 @@
     "deleteConfirmBody": "Permanenteng inaalis nito ang sambahayan at lahat ng datos nito para sa lahat.",
     "leftToast": "Umalis sa {{name}}",
     "deletedToast": "Binura ang {{name}}",
-    "active": "Nakatingin"
+    "active": "Nakatingin",
+    "reportingIn": "nag-uulat sa {{currency}}",
+    "joinCodeHint": "Makakasali sa {{name}} ang sinumang may code na ito at makikita ang pinagsasaluhang pera nito.",
+    "manageMember": "Pamahalaan ang miyembro",
+    "yourHouseholds": "Mga sambahayan mo",
+    "switchHint": "Ang paglipat ay ginagawa sa header pill"
   },
   "finance": {
     "overviewTitle": "Mga Account",
@@ -267,7 +272,10 @@
     "spendingByCategory": "Gastos ayon sa kategorya",
     "hero": {
       "ofBudget": "sa {{amount}} na budget",
-      "balance": "Balanse {{amount}}"
+      "balance": "Balanse {{amount}}",
+      "daysLeft": "{{count}} (na) araw na natitira",
+      "viewBudget": "Tingnan ang badyet",
+      "totalBalance": "Kabuuang balanse · {{currency}}"
     },
     "byAccount": {
       "title": "Ayon sa account",
@@ -308,7 +316,19 @@
     "filterByAccount": "I-filter ayon sa account",
     "income": "Kita",
     "expense": "Gastos",
-    "thisMonth": "Ngayong buwan"
+    "thisMonth": "Ngayong buwan",
+    "reports": {
+      "netCashFlow": "Netong daloy ng pera",
+      "keptOfIncome": "Naitabi mo ang {{pct}}% ng pumasok sa saklaw na ito.",
+      "noIncome": "Walang naitalang kita sa saklaw na ito.",
+      "avgPerDay": "Karaniwan / araw",
+      "transactions": "Mga transaksyon",
+      "inVsOut": "Pasok vs labas",
+      "lastMonthsCcy": "Huling {{count}} buwan · {{currency}}",
+      "transfersExcluded": "Hindi kasama ang mga transfer at ambag sa goal — naglilipat lang ang mga ito ng pera sa pagitan ng iyong mga account.",
+      "whereItWent": "Saan napunta",
+      "categoriesCount": "{{count}} kategorya"
+    }
   },
   "planning": {
     "hubTitle": "Plano",
@@ -788,7 +808,13 @@
     "exportSub": "CSV ng mga transaksyon at badyet",
     "exportQueued": "Naka-queue ang export — dito mag-do-download ang CSV ng mga transaksyon at badyet.",
     "deleteAccount": "Burahin ang account",
-    "deleteAccountSub": "Permanenteng inaalis ang iyong datos"
+    "deleteAccountSub": "Permanenteng inaalis ang iyong datos",
+    "navGeneral": "Pangkalahatan",
+    "navNotifications": "Mga abiso",
+    "navSecurity": "Seguridad at privacy",
+    "generalSub": "I-customize kung paano gumagana ang app.",
+    "notificationsSub": "Kung ano ang sinasabi sa iyo ng app, at kailan",
+    "securitySub": "Pag-lock ng app, at pagdadala ng iyong data"
   },
   "brand": {
     "wordmark": "talvori",
@@ -955,7 +981,14 @@
     "feedbackEmpty": "Magsulat muna ng tala.",
     "feedbackSent": "✓ Salamat — naipadala ang feedback.",
     "contactTitle": "Makipag-ugnayan sa suporta",
-    "contactBody": "Mag-email sa support@example.com at karaniwang tumutugon kami sa loob ng isang araw. Hindi pa naka-wire ang live chat sa prototype na ito."
+    "contactBody": "Mag-email sa support@example.com at karaniwang tumutugon kami sa loob ng isang araw. Hindi pa naka-wire ang live chat sa prototype na ito.",
+    "searchPlaceholder": "Maghanap ng tulong — hal. grocery list, badyet, pera",
+    "faqOneAtATime": "Isa ang nagbubukas sa bawat oras",
+    "noResults": "Walang resulta para sa \"{{query}}\"",
+    "s1": "Grocery list",
+    "s2": "Badyet ayon sa account",
+    "s3": "Mga goal at utang",
+    "s4": "Reporting na pera"
   },
   "bills": {
     "title": "Mga Bill at Subscription",
@@ -1000,6 +1033,20 @@
       "saveFailed": "Hindi ma-save ang bill.",
       "deleteFailed": "Hindi ma-delete ang bill."
     },
-    "comingUp": "Paparating"
+    "comingUp": "Paparating",
+    "allBills": "Lahat ng bill",
+    "listCaption": "Pinakamalapit na due muna · nasa dulo ang naka-pause",
+    "formCaption": "Nagtatala ito ng totoong transaksyon kapag minarkahang bayad",
+    "filter": {
+      "all": "Lahat",
+      "overdue": "Lampas na",
+      "paused": "Naka-pause"
+    },
+    "stats": {
+      "dueThisMonth": "Due ngayong buwan",
+      "overdue": "Lampas na",
+      "expectedIn": "Inaasahang papasok",
+      "activePaused": "Aktibo · naka-pause"
+    }
   }
 }

@@ -209,6 +209,9 @@ export default function HomeScreen() {
   const flow = monthFlow(visibleTxns, monthKeyOf(now.toISOString()), reporting, rateFor);
   // "Coming up" — the soonest active bills (already due-sorted by the api).
   const upcomingBills = bills.filter((b) => b.is_active).slice(0, 4);
+  // Days left in the current month, for the budget hero's pace line.
+  const daysLeftInMonth =
+    new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - now.getDate();
 
   // Quick actions — Income · Expense · Transfer (§6.4). Income gets the positive
   // (green) circle; Expense and Transfer use the purple tint.
@@ -264,43 +267,74 @@ export default function HomeScreen() {
           <BentoRow>
             <View style={styles.heroSlot}>
               {budget ? (
-                <View style={styles.hero}>
-                  <Text variant="eyebrow" style={styles.heroLabel}>{budget.name}</Text>
-                  <Text variant="title" style={styles.heroAmount}>
-                    {formatAmount(budgetAgg.spentMinor, budgetCcy)}
-                  </Text>
-                  <Text variant="caption" style={styles.heroHint}>
-                    {t('finance.hero.ofBudget', { amount: formatAmount(budgetAgg.limitMinor, budgetCcy) })}
-                    {' · '}
-                    {t('planning.plan.usedPct', { pct: budgetPct })}
-                  </Text>
-                  <View style={styles.heroTrack}>
-                    <View
-                      style={[
-                        styles.heroFill,
-                        { width: heroFillPct },
-                        budgetAgg.state === 'over' ? styles.heroFillOver : null,
-                      ]}
-                    />
-                  </View>
-                  <Text
-                    variant="caption"
-                    style={budgetAgg.remainingMinor < 0 ? styles.heroOver : styles.heroHint}
-                  >
-                    {budgetAgg.remainingMinor < 0
-                      ? t('planning.budgets.overBy', {
-                          amount: formatAmount(-budgetAgg.remainingMinor, budgetCcy),
-                        })
-                      : t('planning.budgets.left', {
-                          amount: formatAmount(budgetAgg.remainingMinor, budgetCcy),
-                        })}
-                  </Text>
-                  {/* Premium keeps its consolidated total, now a quiet caption. */}
-                  {has('multi_currency_dashboard') && consolidated ? (
-                    <Text variant="caption" style={styles.heroBalance}>
-                      {t('finance.hero.balance', { amount: formatAmount(consolidated.totalMinor, reporting) })}
+                <View style={[styles.hero, styles.heroBudget]}>
+                  <View style={styles.heroTopBlock}>
+                    <Text variant="eyebrow" style={styles.heroLabel}>{budget.name}</Text>
+                    <Text variant="title" style={styles.heroAmount}>
+                      {formatAmount(budgetAgg.spentMinor, budgetCcy)}
                     </Text>
-                  ) : null}
+                    <Text variant="caption" style={styles.heroHint}>
+                      {t('finance.hero.ofBudget', { amount: formatAmount(budgetAgg.limitMinor, budgetCcy) })}
+                      {' · '}
+                      {t('planning.plan.usedPct', { pct: budgetPct })}
+                    </Text>
+                  </View>
+
+                  <View style={styles.heroProgressBlock}>
+                    <View style={styles.heroTrack}>
+                      <View
+                        style={[
+                          styles.heroFill,
+                          { width: heroFillPct },
+                          budgetAgg.state === 'over' ? styles.heroFillOver : null,
+                        ]}
+                      />
+                    </View>
+                    <View style={styles.heroProgressRow}>
+                      <Text
+                        variant="caption"
+                        style={budgetAgg.remainingMinor < 0 ? styles.heroOverStrong : styles.heroLeftStrong}
+                      >
+                        {budgetAgg.remainingMinor < 0
+                          ? t('planning.budgets.overBy', {
+                              amount: formatAmount(-budgetAgg.remainingMinor, budgetCcy),
+                            })
+                          : t('planning.budgets.left', {
+                              amount: formatAmount(budgetAgg.remainingMinor, budgetCcy),
+                            })}
+                      </Text>
+                      <Text variant="caption" style={styles.heroHint}>
+                        {t('finance.hero.daysLeft', { count: daysLeftInMonth })}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.heroRule} />
+
+                  <View style={styles.heroBottom}>
+                    <View style={styles.heroBottomMain}>
+                      {has('multi_currency_dashboard') && consolidated ? (
+                        <>
+                          <Text variant="caption" style={styles.heroHint}>
+                            {t('finance.hero.totalBalance', { currency: reporting })}
+                          </Text>
+                          <Text style={styles.heroBalanceAmount}>
+                            {formatAmount(consolidated.totalMinor, reporting)}
+                          </Text>
+                        </>
+                      ) : null}
+                    </View>
+                    <Pressable
+                      accessibilityRole="button"
+                      onPress={() => router.push('/finance/budgets')}
+                      style={({ pressed }) => [styles.heroCta, pressed ? styles.rowPressed : null]}
+                    >
+                      <Text variant="button" style={styles.heroCtaText}>
+                        {t('finance.hero.viewBudget')}
+                      </Text>
+                      <Feather name="arrow-right" size={14} color={palette.white} />
+                    </Pressable>
+                  </View>
                 </View>
               ) : has('multi_currency_dashboard') ? (
                 <View style={styles.hero}>
@@ -475,8 +509,9 @@ export default function HomeScreen() {
             </BentoRow>
           ) : null}
 
-          {/* Row 2 — recent · where it went · this month + coming up */}
-          <BentoRow>
+          {/* Row 2 — recent activity + where it went */}
+          {visibleTxns.length > 0 || breakdown.slices.length > 0 ? (
+            <BentoRow>
             {visibleTxns.length > 0 ? (
               <Card style={styles.recentSlot}>
                 <View style={styles.recentHeader}>
@@ -542,18 +577,32 @@ export default function HomeScreen() {
               </Card>
             ) : null}
 
-            <View style={styles.rightCol}>
-            <Card style={styles.summaryTile}>
+          </BentoRow>
+          ) : null}
+
+          {/* Row 3 — this month + coming up */}
+          <BentoRow>
+            <Card style={styles.thisMonthSlot}>
               <Text variant="heading">{t('finance.thisMonth')}</Text>
-              <View style={styles.flowRow}>
-                <Text variant="caption" muted>{t('finance.ledger.in')}</Text>
-                <Text variant="moneyMin" style={styles.flowIn}>+{formatAmount(flow.inMinor, reporting)}</Text>
+              <View style={styles.flowGrid}>
+                <View style={styles.flowTile}>
+                  <View style={styles.flowTileHead}>
+                    <Feather name="arrow-down-left" size={13} color={palette.positiveStrong} />
+                    <Text variant="caption" muted>{t('finance.ledger.in')}</Text>
+                  </View>
+                  <Text style={[styles.flowTileAmount, styles.flowIn]}>
+                    +{formatAmount(flow.inMinor, reporting)}
+                  </Text>
+                </View>
+                <View style={styles.flowTile}>
+                  <View style={styles.flowTileHead}>
+                    <Feather name="arrow-up-right" size={13} color={palette.primary} />
+                    <Text variant="caption" muted>{t('finance.ledger.out')}</Text>
+                  </View>
+                  <Text style={styles.flowTileAmount}>−{formatAmount(flow.outMinor, reporting)}</Text>
+                </View>
               </View>
-              <View style={styles.flowRow}>
-                <Text variant="caption" muted>{t('finance.ledger.out')}</Text>
-                <Text variant="moneyMin">−{formatAmount(flow.outMinor, reporting)}</Text>
-              </View>
-              <View style={[styles.flowRow, styles.flowNet]}>
+              <View style={styles.flowNetRow}>
                 <Text variant="caption" muted>{t('finance.ledger.net')}</Text>
                 <Text variant="moneyMin" style={flow.netMinor >= 0 ? styles.flowIn : styles.flowNeg}>
                   {flow.netMinor >= 0 ? '+' : '−'}{formatAmount(Math.abs(flow.netMinor), reporting)}
@@ -564,7 +613,7 @@ export default function HomeScreen() {
               ) : null}
             </Card>
 
-            <Card style={styles.summaryTile}>
+            <Card style={styles.comingSlot}>
               <View style={styles.cardHeaderRow}>
                 <Text variant="heading">{t('bills.comingUp')}</Text>
                 <Pressable accessibilityRole="button" onPress={() => router.push('/bills')}>
@@ -583,6 +632,9 @@ export default function HomeScreen() {
                       onPress={() => router.push('/bills')}
                       style={({ pressed }) => [styles.comingRow, pressed ? styles.rowPressed : null]}
                     >
+                      <View style={[styles.comingIcon, overdue ? styles.comingIconOverdue : null]}>
+                        <Feather name="file-text" size={16} color={overdue ? palette.danger : palette.primary} />
+                      </View>
                       <View style={styles.comingMain}>
                         <Text variant="button" numberOfLines={1}>{b.name}</Text>
                         <Text variant="caption" style={overdue ? styles.flowNeg : undefined} muted={!overdue}>
@@ -597,7 +649,6 @@ export default function HomeScreen() {
                 })
               )}
             </Card>
-            </View>
           </BentoRow>
         </BentoPage>
       </ScrollView>
@@ -627,10 +678,10 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   scope: { gap: spacing.xs },
   // Flex weights: on wide viewports the hero takes two thirds beside the
   // actions; BentoRow collapses both to full width on narrow.
-  heroSlot: { flex: 2 },
+  heroSlot: { flex: 1, minWidth: 0 },
   actionsSlot: { flex: 1 },
-  donutSlot: { flex: 1 },
-  accountsSlot: { flex: 1 },
+  donutSlot: { flex: 1, minWidth: 0 },
+  accountsSlot: { flex: 1.4, minWidth: 0 },
   accountRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -749,7 +800,7 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   legendRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   legendLabel: { flex: 1 },
   dot: { width: 10, height: 10, borderRadius: radius.pill },
-  recentSlot: { flex: 1 },
+  recentSlot: { flex: 1.4, minWidth: 0 },
   recentHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   recentAll: { color: c.brand },
   recentRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 48 },
@@ -774,4 +825,67 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   emptyLine: { paddingVertical: spacing.sm },
   comingRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.sm },
   comingMain: { flex: 1, gap: 2 },
+  comingIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.md,
+    backgroundColor: c.primaryTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  comingIconOverdue: { backgroundColor: c.dangerTint },
+  // Budget hero: fill the slot height (so it matches the taller accounts card)
+  // and distribute its three blocks — heading, progress, footer — top to bottom.
+  heroBudget: { alignSelf: 'stretch', flex: 1, justifyContent: 'space-between', gap: spacing.md },
+  heroTopBlock: { gap: spacing.xs },
+  heroProgressBlock: { gap: spacing.xs },
+  heroProgressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+    marginTop: spacing.sm,
+  },
+  heroLeftStrong: { color: c.white, fontWeight: '700' },
+  heroOverStrong: { color: c.accent, fontWeight: '700' },
+  heroBottom: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+  },
+  heroBottomMain: { flex: 1, gap: 2 },
+  heroBalanceAmount: { color: c.white, fontSize: 20, fontWeight: '700' },
+  heroCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    height: 34,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.control,
+    backgroundColor: 'rgba(255,255,255,0.16)',
+  },
+  heroCtaText: { color: c.white },
+  thisMonthSlot: { flex: 1, minWidth: 0, gap: spacing.sm },
+  comingSlot: { flex: 1.4, minWidth: 0 },
+  flowGrid: { flexDirection: 'row', gap: spacing.sm },
+  flowTile: {
+    flex: 1,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    backgroundColor: c.fillSoft,
+    gap: spacing.xs,
+  },
+  flowTileHead: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  flowTileAmount: { fontSize: 20, fontWeight: '700', fontVariant: ['tabular-nums'] },
+  flowNetRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: c.divider,
+    paddingTop: spacing.sm,
+    marginTop: spacing.xs,
+  },
 });

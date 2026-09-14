@@ -479,8 +479,14 @@ export default function ShopScreen() {
                 <Select accessibilityLabel={t('shop.unit')} options={UNITS.map((u) => ({ value: u, label: u }))} value={nUnit} onChange={setNUnit} />
               </View>
             </View>
-            <Pressable accessibilityRole="button" onPress={() => setNMore((m) => !m)}>
-              <Text variant="caption" style={styles.link}>{t('shop.moreOptions')}</Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ expanded: nMore }}
+              onPress={() => setNMore((m) => !m)}
+              style={({ pressed }) => [styles.moreToggle, pressed ? styles.moreTogglePressed : null]}
+            >
+              <Feather name={nMore ? 'chevron-up' : 'chevron-down'} size={18} color={palette.primary} />
+              <Text variant="button" style={styles.link}>{t('shop.moreOptions')}</Text>
             </Pressable>
             {nMore ? (
               <>
@@ -562,7 +568,7 @@ export default function ShopScreen() {
     return (
       <View key={it.id} style={styles.itemRow}>
         <View style={styles.itemMid}>
-          <Text variant="button" numberOfLines={1}>{it.name}</Text>
+          <Text variant="subheading" numberOfLines={1}>{it.name}</Text>
           <Text variant="caption" muted>{it.quantity} {it.unit ?? ''}</Text>
           <View style={styles.addedBy}>
             <Avatar name={names[it.added_by ?? ''] || '?'} size={16} />
@@ -723,14 +729,23 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   leftText: { color: c.positiveStrong },
   overText: { color: c.danger },
   link: { color: c.primary },
+  moreToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    alignSelf: 'flex-start',
+    minHeight: 44,
+    paddingVertical: spacing.xs,
+  },
+  moreTogglePressed: { opacity: 0.6 },
   chips: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   buyAgain: { gap: spacing.sm, marginTop: spacing.xs },
   emptyText: { paddingVertical: spacing.sm },
   qtyRow: { flexDirection: 'row', gap: spacing.md, alignItems: 'flex-end' },
   qtyField: { width: 90 },
   unitField: { flex: 1, gap: spacing.xs },
-  itemRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.sm, borderTopWidth: 1, borderTopColor: c.divider },
-  itemMid: { flex: 1, gap: 2 },
+  itemRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 56, paddingVertical: spacing.md, borderTopWidth: 1, borderTopColor: c.divider },
+  itemMid: { flex: 1, gap: spacing.xs },
   addedBy: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   itemRight: { alignItems: 'flex-end', gap: spacing.xs, flexDirection: 'row' },
   purchasedSection: { gap: spacing.sm, marginTop: spacing.sm },

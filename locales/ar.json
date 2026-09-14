@@ -153,7 +153,12 @@
     "deleteConfirmBody": "يزيل هذا المنزل وجميع بياناته نهائيًا للجميع.",
     "leftToast": "غادرت {{name}}",
     "deletedToast": "تم حذف {{name}}",
-    "active": "قيد العرض"
+    "active": "قيد العرض",
+    "reportingIn": "التقارير بعملة {{currency}}",
+    "joinCodeHint": "يمكن لأي شخص لديه هذا الرمز الانضمام إلى {{name}} ورؤية أمواله المشتركة.",
+    "manageMember": "إدارة العضو",
+    "yourHouseholds": "أسرك",
+    "switchHint": "يتم التبديل من زر الرأس"
   },
   "finance": {
     "overviewTitle": "الحسابات",
@@ -267,7 +272,10 @@
     "spendingByCategory": "الإنفاق حسب الفئة",
     "hero": {
       "ofBudget": "من {{amount}} مخصّصة",
-      "balance": "الرصيد {{amount}}"
+      "balance": "الرصيد {{amount}}",
+      "daysLeft": "{{count}} يومًا متبقيًا",
+      "viewBudget": "عرض الميزانية",
+      "totalBalance": "إجمالي الرصيد · {{currency}}"
     },
     "byAccount": {
       "title": "حسب الحساب",
@@ -308,7 +316,19 @@
     "filterByAccount": "تصفية حسب الحساب",
     "income": "دخل",
     "expense": "مصروف",
-    "thisMonth": "هذا الشهر"
+    "thisMonth": "هذا الشهر",
+    "reports": {
+      "netCashFlow": "صافي التدفّق النقدي",
+      "keptOfIncome": "احتفظت بنسبة {{pct}}٪ ممّا ورد في هذه الفترة.",
+      "noIncome": "لا يوجد دخل مسجّل في هذه الفترة.",
+      "avgPerDay": "المتوسط / يوم",
+      "transactions": "المعاملات",
+      "inVsOut": "الوارد مقابل الصادر",
+      "lastMonthsCcy": "آخر {{count}} أشهر · {{currency}}",
+      "transfersExcluded": "لا تُحتسب التحويلات ومساهمات الأهداف — فهي تنقل المال بين حساباتك.",
+      "whereItWent": "أين ذهبت",
+      "categoriesCount": "{{count}} فئات"
+    }
   },
   "planning": {
     "hubTitle": "الخطة",
@@ -788,7 +808,13 @@
     "exportSub": "ملف CSV للمعاملات والميزانيات",
     "exportQueued": "تم إدراج التصدير — سيُنزَّل هنا ملف CSV للمعاملات والميزانيات.",
     "deleteAccount": "حذف الحساب",
-    "deleteAccountSub": "يزيل بياناتك نهائيًا"
+    "deleteAccountSub": "يزيل بياناتك نهائيًا",
+    "navGeneral": "عام",
+    "navNotifications": "الإشعارات",
+    "navSecurity": "الأمان والخصوصية",
+    "generalSub": "خصّص طريقة عمل التطبيق.",
+    "notificationsSub": "ما الذي يخبرك به التطبيق ومتى",
+    "securitySub": "قفل التطبيق، وأخذ بياناتك معك"
   },
   "brand": {
     "wordmark": "talvori",
@@ -955,7 +981,14 @@
     "feedbackEmpty": "اكتب ملاحظة أولًا.",
     "feedbackSent": "✓ شكرًا — تم إرسال الملاحظات.",
     "contactTitle": "التواصل مع الدعم",
-    "contactBody": "راسِل support@example.com وعادةً نردّ خلال يوم. الدردشة المباشرة غير مفعّلة في هذا النموذج."
+    "contactBody": "راسِل support@example.com وعادةً نردّ خلال يوم. الدردشة المباشرة غير مفعّلة في هذا النموذج.",
+    "searchPlaceholder": "ابحث في المساعدة — مثل قائمة البقالة، الميزانية، العملة",
+    "faqOneAtATime": "يُفتح واحد في كل مرة",
+    "noResults": "لا نتائج لـ \"{{query}}\"",
+    "s1": "قائمة البقالة",
+    "s2": "الميزانيات حسب الحساب",
+    "s3": "الأهداف والديون",
+    "s4": "عملة التقارير"
   },
   "bills": {
     "title": "الفواتير والاشتراكات",
@@ -1000,6 +1033,20 @@
       "saveFailed": "تعذّر حفظ الفاتورة.",
       "deleteFailed": "تعذّر حذف الفاتورة."
     },
-    "comingUp": "القادمة"
+    "comingUp": "القادمة",
+    "allBills": "كل الفواتير",
+    "listCaption": "الأقرب استحقاقًا أولًا · تظهر المتوقّفة في النهاية",
+    "formCaption": "يسجّل معاملة فعلية عند وضع علامة مدفوع",
+    "filter": {
+      "all": "الكل",
+      "overdue": "متأخرة",
+      "paused": "متوقّفة"
+    },
+    "stats": {
+      "dueThisMonth": "مستحقة هذا الشهر",
+      "overdue": "متأخرة",
+      "expectedIn": "الوارد المتوقّع",
+      "activePaused": "نشطة · متوقّفة"
+    }
   }
 }
