@@ -1,4 +1,15 @@
 {
+  "assistant": {
+    "title": "TAVI",
+    "openLabel": "Open TAVI, your assistant",
+    "greetingTitle": "Hi, I'm TAVI",
+    "greetingBody": "Your calm guide to budgeting, bills, and shared money. Ask me anything about planning your household finances or using Talvori.",
+    "disclaimer": "TAVI gives general guidance and can't see your account data yet.",
+    "placeholder": "Ask TAVI…",
+    "send": "Send",
+    "thinking": "TAVI is thinking…",
+    "error": "TAVI couldn't respond just now. Please try again."
+  },
   "common": {
     "appName": "Talvori",
     "loading": "Loading…",

@@ -1,4 +1,15 @@
 {
+  "assistant": {
+    "title": "TAVI",
+    "openLabel": "افتح TAVI، مساعدك",
+    "greetingTitle": "مرحبًا، أنا TAVI",
+    "greetingBody": "دليلك الهادئ للميزانية والفواتير والأموال المشتركة. اسألني أي شيء عن تخطيط أموال منزلك أو استخدام Talvori.",
+    "disclaimer": "يقدّم TAVI إرشادات عامة ولا يمكنه بعد رؤية بيانات حسابك.",
+    "placeholder": "اسأل TAVI…",
+    "send": "إرسال",
+    "thinking": "‏TAVI يفكّر…",
+    "error": "لم يتمكّن TAVI من الرد الآن. حاول مرة أخرى."
+  },
   "common": {
     "appName": "تالفوري",
     "loading": "جارٍ التحميل…",

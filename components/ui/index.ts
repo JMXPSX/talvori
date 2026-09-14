@@ -15,6 +15,7 @@ export { Card, type CardProps } from '@/components/ui/Card';
 export { BrandLockup, type BrandLockupProps } from '@/components/ui/BrandLockup';
 export { Splash } from '@/components/ui/Splash';
 export { EmptyState, type EmptyStateProps } from '@/components/ui/EmptyState';
+export { Tavi, type TaviProps, type TaviPose } from '@/components/ui/Tavi';
 export { Donut, type DonutProps, type DonutSegment } from '@/components/ui/Donut';
 export { ProgressBar, type ProgressBarProps, type ProgressState } from '@/components/ui/ProgressBar';
 export { ProgressRing, type ProgressRingProps } from '@/components/ui/ProgressRing';

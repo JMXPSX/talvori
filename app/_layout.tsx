@@ -16,6 +16,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from '@/components/ThemeProvider';
 import { Splash, ToastProvider } from '@/components/ui';
 import { DesktopShell } from '@/components/ui/DesktopShell';
+import { TaviLauncher } from '@/features/assistant/TaviLauncher';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 import { EntitlementsProvider } from '@/features/billing/EntitlementsProvider';
 import { ActiveHouseholdProvider, useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
@@ -118,6 +119,16 @@ function RootNavigator() {
   // Auth/onboarding routes and all mobile viewports render the bare stack.
   const showShell =
     isWide && !!session && households.length > 0 && !inAuthRoute && !inOnboarding && !inDevRoute;
+  // The floating TAVI launcher rides above the WHOLE stack (every in-app page),
+  // mounted once here rather than per screen. Hidden on the auth/onboarding/dev
+  // routes and on the assistant screen itself (you're already talking to TAVI).
+  const showTavi =
+    !!session &&
+    households.length > 0 &&
+    !inAuthRoute &&
+    !inOnboarding &&
+    !inDevRoute &&
+    seg0 !== 'assistant';
 
   // Leaf routes hand their title to the shell's top bar on wide (native header off,
   // else it doubles); on mobile they keep the native header + back button. Nested
@@ -145,6 +156,7 @@ function RootNavigator() {
       <Stack.Screen name="settings" options={{ title: t('settings.title'), headerShown: !isWide }} />
       <Stack.Screen name="notifications" options={{ title: t('notifications.title'), headerShown: !isWide }} />
       <Stack.Screen name="help" options={{ title: t('help.title'), headerShown: !isWide }} />
+      <Stack.Screen name="assistant" options={{ title: t('assistant.title'), headerShown: !isWide }} />
       <Stack.Screen name="bills" options={{ title: t('bills.title'), headerShown: !isWide }} />
     </Stack>
   );
@@ -153,6 +165,7 @@ function RootNavigator() {
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       {showShell ? <DesktopShell>{stack}</DesktopShell> : stack}
+      {showTavi ? <TaviLauncher /> : null}
     </>
   );
 }
