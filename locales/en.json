@@ -130,7 +130,9 @@
       "joinFailed": "Couldn't join that household. Please try again.",
       "saveFailed": "Couldn't save the change.",
       "leaveFailed": "Couldn't leave — an owner must transfer or delete the household first.",
-      "deleteFailed": "Couldn't delete the household."
+      "deleteFailed": "Couldn't delete the household.",
+      "removeFailed": "Couldn't remove that member.",
+      "lastOwner": "Can't remove the last owner — transfer ownership or delete the household instead."
     },
     "detailSub": "People who share this budget.",
     "activeMembers_one": "{{count}} active member",
@@ -158,7 +160,11 @@
     "joinCodeHint": "Anyone with this code can join {{name}} and see its shared money.",
     "manageMember": "Manage member",
     "yourHouseholds": "Your households",
-    "switchHint": "Switching happens from the header pill"
+    "switchHint": "Switching happens from the header pill",
+    "remove": "Remove",
+    "removeConfirmTitle": "Remove {{name}}?",
+    "removeConfirmBody": "They lose access to this household's shared budgets and lists. They can rejoin with the code.",
+    "removedToast": "Removed {{name}}"
   },
   "finance": {
     "overviewTitle": "Accounts",

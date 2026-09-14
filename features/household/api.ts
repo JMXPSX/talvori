@@ -118,6 +118,24 @@ export async function leaveHousehold(householdId: string): Promise<void> {
   if (error) fail('household.errors.leaveFailed', error);
 }
 
+/**
+ * Remove another member from a household. RLS confines this to owner/admin; the
+ * DB's last-owner guard rejects removing the final owner (surfaced as its own
+ * message so the UI can explain the fix).
+ */
+export async function removeMember(householdId: string, userId: string): Promise<void> {
+  const { error } = await getSupabase()
+    .from('household_members')
+    .delete()
+    .eq('household_id', householdId)
+    .eq('user_id', userId);
+  if (!error) return;
+  if ((error.message ?? '').toLowerCase().includes('last owner')) {
+    fail('household.errors.lastOwner', error);
+  }
+  fail('household.errors.removeFailed', error);
+}
+
 /** Delete a household and (via FK cascade) all its data. RLS narrows to owners. */
 export async function deleteHousehold(householdId: string): Promise<void> {
   const { error } = await getSupabase().from('households').delete().eq('id', householdId);

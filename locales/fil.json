@@ -130,7 +130,9 @@
       "joinFailed": "Hindi makasali sa sambahayang iyon. Pakisubukan muli.",
       "saveFailed": "Hindi na-save ang pagbabago.",
       "leaveFailed": "Hindi makaalis — kailangang ilipat o burahin muna ng owner ang sambahayan.",
-      "deleteFailed": "Hindi mabura ang sambahayan."
+      "deleteFailed": "Hindi mabura ang sambahayan.",
+      "removeFailed": "Hindi maalis ang miyembrong iyon.",
+      "lastOwner": "Hindi maaalis ang huling may-ari — ilipat ang pagmamay-ari o burahin na lang ang sambahayan."
     },
     "detailSub": "Mga taong naghahati sa budget na ito.",
     "activeMembers_one": "{{count}} aktibong miyembro",
@@ -158,7 +160,11 @@
     "joinCodeHint": "Makakasali sa {{name}} ang sinumang may code na ito at makikita ang pinagsasaluhang pera nito.",
     "manageMember": "Pamahalaan ang miyembro",
     "yourHouseholds": "Mga sambahayan mo",
-    "switchHint": "Ang paglipat ay ginagawa sa header pill"
+    "switchHint": "Ang paglipat ay ginagawa sa header pill",
+    "remove": "Alisin",
+    "removeConfirmTitle": "Alisin si {{name}}?",
+    "removeConfirmBody": "Mawawalan sila ng access sa mga shared na badyet at listahan ng sambahayang ito. Maaari silang sumali muli gamit ang code.",
+    "removedToast": "Inalis si {{name}}"
   },
   "finance": {
     "overviewTitle": "Mga Account",

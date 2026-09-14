@@ -6,6 +6,7 @@
  * toggle. All writes are RLS-gated (the DB rejects unauthorized changes).
  */
 
+import { Feather } from '@expo/vector-icons';
 import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +16,8 @@ import * as Clipboard from 'expo-clipboard';
 
 import { radius, spacing } from '@/components/theme';
 import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvider';
-import { Avatar, Button, Card, CONTENT_MAX_WIDTH, Text, Toggle } from '@/components/ui';
-import { getHousehold, listMembers, setCrossBorder, type MemberWithProfile } from '@/features/household/api';
+import { Avatar, Button, Card, CONTENT_MAX_WIDTH, Text, Toggle, useActionSheet, useToast } from '@/components/ui';
+import { getHousehold, listMembers, removeMember, setCrossBorder, type MemberWithProfile } from '@/features/household/api';
 import { useAuth } from '@/features/auth/AuthProvider';
 import type { HouseholdRow } from '@/lib/database.types';
 import { env } from '@/lib/env';
@@ -36,6 +37,8 @@ export default function HouseholdDetailScreen() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const sheet = useActionSheet();
+  const { show: showToast } = useToast();
 
   const load = useCallback(async () => {
     setLoadError(null);
@@ -76,6 +79,33 @@ export default function HouseholdDetailScreen() {
       message: t('household.shareMessage', { code: household.code, url }),
     });
   }
+  function onRemoveMember(m: MemberWithProfile) {
+    const name = m.profile?.display_name || m.profile?.email || m.user_id;
+    sheet.show({
+      title: t('household.removeConfirmTitle', { name }),
+      message: t('household.removeConfirmBody'),
+      cancelLabel: t('common.cancel'),
+      actions: [
+        {
+          label: t('household.remove'),
+          destructive: true,
+          onPress: () => {
+            void (async () => {
+              setLoadError(null);
+              try {
+                await removeMember(householdId, m.user_id);
+                showToast(t('household.removedToast', { name }));
+                await load();
+              } catch (err) {
+                setLoadError(toAppError(err).messageKey);
+              }
+            })();
+          },
+        },
+      ],
+    });
+  }
+
   async function onToggleCrossBorder(value: boolean) {
     if (!household) return;
     setHousehold({ ...household, is_cross_border: value });
@@ -155,6 +185,17 @@ export default function HouseholdDetailScreen() {
                 <View style={[styles.badge, isOwner ? styles.badgeOwner : styles.badgeMember]}>
                   <Text variant="caption" style={isOwner ? styles.badgeOwnerText : undefined}>{t(`household.roles.${m.role}`)}</Text>
                 </View>
+                {canManage && m.user_id !== user?.id ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={t('household.remove')}
+                    hitSlop={8}
+                    onPress={() => onRemoveMember(m)}
+                    style={({ pressed }) => [styles.removeBtn, pressed ? styles.removePressed : null]}
+                  >
+                    <Feather name="user-minus" size={18} color={palette.danger} />
+                  </Pressable>
+                ) : null}
               </View>
             );
           })}
@@ -183,6 +224,7 @@ export default function HouseholdDetailScreen() {
           </Card>
         ) : null}
       </ScrollView>
+      {sheet.element}
     </SafeAreaView>
   );
 }
@@ -208,5 +250,14 @@ const makeStyles = (c: Palette) => StyleSheet.create({
   badgeOwner: { backgroundColor: c.primaryTint },
   badgeMember: { backgroundColor: c.fill },
   badgeOwnerText: { color: c.primary },
+  removeBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: c.dangerMuted,
+  },
+  removePressed: { opacity: 0.6 },
   roleHead: { marginTop: spacing.sm },
 });
