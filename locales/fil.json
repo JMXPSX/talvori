@@ -1,4 +1,15 @@
 {
+  "assistant": {
+    "title": "TAVI",
+    "openLabel": "Buksan si TAVI, ang iyong assistant",
+    "greetingTitle": "Kumusta, ako si TAVI",
+    "greetingBody": "Ang kalmadong gabay mo sa badyet, mga bayarin, at pinagsasaluhang pera. Magtanong tungkol sa pagpaplano ng pananalapi ng sambahayan o paggamit ng Talvori.",
+    "disclaimer": "Nagbibigay si TAVI ng pangkalahatang gabay at hindi pa nakikita ang datos ng iyong account.",
+    "placeholder": "Magtanong kay TAVI…",
+    "send": "Ipadala",
+    "thinking": "Nag-iisip si TAVI…",
+    "error": "Hindi nakasagot si TAVI ngayon. Pakisubukan muli."
+  },
   "common": {
     "appName": "Talvori",
     "loading": "Naglo-load…",
