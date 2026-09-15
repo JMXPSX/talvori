@@ -972,7 +972,8 @@
       "member_joined": "Sumali si {{actor}} sa household",
       "transaction_added": "Itinala ni {{actor}} ang {{subject}}",
       "bill_added": "Nagdagdag si {{actor}} ng bill: {{subject}}",
-      "budget_allocation_added": "Nagtakda si {{actor}} ng budget para sa {{subject}}"
+      "budget_allocation_added": "Nagtakda si {{actor}} ng budget para sa {{subject}}",
+      "bill_due_soon": "Babayaran ang {{subject}} sa loob ng 3 araw"
     },
     "errors": {
       "loadFailed": "Hindi ma-load ang mga abiso.",

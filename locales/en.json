@@ -972,7 +972,8 @@
       "member_joined": "{{actor}} joined the household",
       "transaction_added": "{{actor}} recorded {{subject}}",
       "bill_added": "{{actor}} added a bill: {{subject}}",
-      "budget_allocation_added": "{{actor}} set a budget for {{subject}}"
+      "budget_allocation_added": "{{actor}} set a budget for {{subject}}",
+      "bill_due_soon": "{{subject}} is due in 3 days"
     },
     "errors": {
       "loadFailed": "Couldn't load notifications.",
