@@ -972,7 +972,8 @@
       "member_joined": "انضم {{actor}} إلى الأسرة",
       "transaction_added": "سجّل {{actor}} {{subject}}",
       "bill_added": "أضاف {{actor}} فاتورة: {{subject}}",
-      "budget_allocation_added": "حدّد {{actor}} ميزانية لـ {{subject}}"
+      "budget_allocation_added": "حدّد {{actor}} ميزانية لـ {{subject}}",
+      "bill_due_soon": "{{subject}} مستحقة خلال 3 أيام"
     },
     "errors": {
       "loadFailed": "تعذّر تحميل الإشعارات.",

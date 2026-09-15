@@ -15,10 +15,14 @@ export interface ChatMessage {
   content: string;
 }
 
-/** Send the conversation to TAVI and return its reply. Throws a typed AppError. */
-export async function sendChat(history: ChatMessage[]): Promise<string> {
+/**
+ * Send the conversation to TAVI and return its reply. Throws a typed AppError.
+ * `householdId` lets the Edge Function pull an RLS-scoped finance snapshot so TAVI
+ * can answer about the user's real balances/transactions.
+ */
+export async function sendChat(history: ChatMessage[], householdId?: string): Promise<string> {
   const { data, error } = await getSupabase().functions.invoke('assistant-chat', {
-    body: { messages: history },
+    body: { messages: history, householdId },
   });
   if (error) {
     throw new AppError('network', { messageKey: 'assistant.error', cause: error });
