@@ -26,6 +26,7 @@ import { useThemedStyles, useTheme, type Palette } from '@/components/ThemeProvi
 import { Text, useToast } from '@/components/ui';
 import { Tavi } from '@/components/ui/Tavi';
 import { sendChat, type ChatMessage } from '@/features/assistant/api';
+import { useActiveHousehold } from '@/features/household/ActiveHouseholdProvider';
 import { toAppError } from '@/lib/errors';
 
 const webNoOutline: TextStyle | null =
@@ -36,6 +37,7 @@ export default function AssistantScreen() {
   const toast = useToast();
   const { palette } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { active } = useActiveHousehold();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -50,7 +52,7 @@ export default function AssistantScreen() {
     setInput('');
     setSending(true);
     try {
-      const reply = await sendChat(next);
+      const reply = await sendChat(next, active?.id);
       setMessages((m) => [...m, { role: 'assistant', content: reply }]);
     } catch (err) {
       toast.show(t(toAppError(err).messageKey), { tone: 'error' });
